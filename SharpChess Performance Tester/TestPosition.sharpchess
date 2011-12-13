@@ -1,0 +1,25 @@
+<Game FEN="" TurnNo="22" WhitePlayer="Human" BlackPlayer="Computer" BoardOrientation="White" Version="2.5.2.0" DifficultyLevel="0" ClockMoves="3" ClockSeconds="5940" MaximumSearchDepth="9" Pondering="0" UseRandomOpeningMoves="0">
+  <Move MoveNo="1" Name="Standard" From="g1" To="f3" SecondsElapsed="0" />
+  <Move MoveNo="1" Name="Standard" From="g8" To="f6" SecondsElapsed="0" />
+  <Move MoveNo="2" Name="Standard" From="d2" To="d4" SecondsElapsed="30" />
+  <Move MoveNo="2" Name="Standard" From="d7" To="d5" SecondsElapsed="30" />
+  <Move MoveNo="3" Name="Standard" From="b1" To="d2" SecondsElapsed="60" />
+  <Move MoveNo="3" Name="Standard" From="b8" To="c6" SecondsElapsed="60" />
+  <Move MoveNo="4" Name="Standard" From="e2" To="e3" SecondsElapsed="90" />
+  <Move MoveNo="4" Name="Standard" From="c8" To="g4" SecondsElapsed="90" />
+  <Move MoveNo="5" Name="Standard" From="c2" To="c4" SecondsElapsed="120" />
+  <Move MoveNo="5" Name="Standard" From="e7" To="e6" SecondsElapsed="120" />
+  <Move MoveNo="6" Name="Standard" From="h2" To="h3" SecondsElapsed="150" />
+  <Move MoveNo="6" Name="Standard" From="g4" To="f3" SecondsElapsed="150" />
+  <Move MoveNo="7" Name="Standard" From="d1" To="f3" SecondsElapsed="180" />
+  <Move MoveNo="7" Name="Standard" From="f8" To="b4" SecondsElapsed="180" />
+  <Move MoveNo="8" Name="Standard" From="c4" To="d5" SecondsElapsed="210" />
+  <Move MoveNo="8" Name="Standard" From="e6" To="d5" SecondsElapsed="210" />
+  <Move MoveNo="9" Name="Standard" From="f1" To="d3" SecondsElapsed="240" />
+  <Move MoveNo="9" Name="CastleKingSide" From="e8" To="g8" SecondsElapsed="240" />
+  <Move MoveNo="10" Name="CastleKingSide" From="e1" To="g1" SecondsElapsed="270" />
+  <Move MoveNo="10" Name="Standard" From="f8" To="e8" SecondsElapsed="270" />
+  <Move MoveNo="11" Name="Standard" From="f1" To="d1" SecondsElapsed="300" />
+  <Move MoveNo="11" Name="Standard" From="e8" To="e6" SecondsElapsed="300" />
+  <Move MoveNo="12" Name="Standard" From="d3" To="f5" SecondsElapsed="360" />
+</Game>

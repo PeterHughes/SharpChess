@@ -1,0 +1,293 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F5FD2F27-6DCB-453C-B018-0AC8D4BC4109}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon>SharpChessIcon.ico</ApplicationIcon>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyName>SharpChess2</AssemblyName>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>SharpChess</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject>SharpChess.frmMain</StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>
+    </DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>false</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <Name>System.Drawing</Name>
+    </Reference>
+    <Reference Include="System.Windows.Forms">
+      <Name>System.Windows.Forms</Name>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classes\Board.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classes\FEN.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Forms\frmAbout.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmDifficulty.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmMoveAnalysis.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmPieceSelector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmWinBoard.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Classes\Game.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classes\HashTable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classes\HashTableCheck.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classes\HashTablePawnKing.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classes\History.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classes\IPieceTop.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classes\KillerMoves.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classes\Move.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classes\Moves.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classes\OpeningBook.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classes\OpeningBookSimple.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classes\PGNtoXML.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classes\Piece.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classes\PieceBishop.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classes\PieceKing.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classes\PieceKnight.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classes\PiecePawn.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classes\PieceQueen.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classes\PieceRook.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classes\Pieces.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classes\Player.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classes\PlayerBlack.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classes\PlayerWhite.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classes\Square.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classes\Squares.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classes\WinBoard.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <EmbeddedResource Include="Forms\frmAbout.resx">
+      <DependentUpon>frmAbout.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmDifficulty.resx">
+      <DependentUpon>frmDifficulty.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmMain.resx">
+      <DependentUpon>frmMain.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmMoveAnalysis.resx">
+      <DependentUpon>frmMoveAnalysis.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmPieceSelector.resx">
+      <DependentUpon>frmPieceSelector.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmWinBoard.resx">
+      <DependentUpon>frmWinBoard.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Content Include="Backup\xBackup.txt" />
+    <Content Include="Backup\xFutilityPruning.txt">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Backup\xHashTable.txt" />
+    <Content Include="Backup\xImport.txt" />
+    <Content Include="Backup\xOpeningBook.txt" />
+    <Content Include="Backup\xQuiesce.txt" />
+    <Content Include="Backup\xVerifiedNullMove.txt">
+      <SubType>Code</SubType>
+    </Content>
+    <EmbeddedResource Include="Cursors\BlackBishop.cur" />
+    <EmbeddedResource Include="Cursors\BlackKing.cur" />
+    <EmbeddedResource Include="Cursors\BlackKnight.cur" />
+    <EmbeddedResource Include="Cursors\BlackPawn.cur" />
+    <EmbeddedResource Include="Cursors\BlackQueen.cur" />
+    <EmbeddedResource Include="Cursors\BlackRook.cur" />
+    <EmbeddedResource Include="Cursors\WhiteBishop.cur" />
+    <EmbeddedResource Include="Cursors\WhiteKing.cur" />
+    <EmbeddedResource Include="Cursors\WhiteKnight.cur" />
+    <EmbeddedResource Include="Cursors\WhitePawn.cur" />
+    <EmbeddedResource Include="Cursors\WhiteQueen.cur" />
+    <EmbeddedResource Include="Cursors\WhiteRook.cur" />
+    <Content Include="SharpChessIcon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>

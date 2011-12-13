@@ -1,0 +1,48 @@
+using System;
+
+namespace SharpChess.Backup
+{
+	/// <summary>
+	/// Summary description for VerifiedNullMove.
+	/// </summary>
+	public class VerifiedNullMove
+	{
+		bool failhigh = false;
+
+		// Verified Null-move forward pruning. The is also MEGA, and improved search depth from 6 plies up to 10 !
+		const int R = 3;
+		if (depth>0 && !this.IsInCheck && moveAnalysed!=null && moveAnalysed.Name!=Move.enmName.NullMove && (!verify || depth > 1) )
+		{
+			Move moveNull = new Move(Game.TurnNo, 0, Move.enmName.NullMove, null, null, null, null, 0, 0);
+			val = -AlphaBeta(player.OtherPlayer, ply-1, Math.Max(depth - R - 1, 0), -beta, -beta + 1, verify, moveNull, movesPV, intTotalExtensions);
+			if (m_blnForceImmediateMove) goto TimeExpired;
+			if (val >= beta)
+			{
+				if (verify) 
+				{
+					depth--; // reduce the depth by one ply 
+					// turn verification off for the sub-tree 
+					verify = false;
+					// mark a fail-high flag, to detect zugzwangs later
+					failhigh = true;
+				}
+				else // cutoff in a sub-tree with fail-high report 
+				{
+					//return val;
+					return beta;
+				}
+			}
+		}
+
+		ReSearch:
+
+		if(failhigh && alpha < beta)
+		{
+			depth++;
+			failhigh = false;
+			verify = true;
+			goto ReSearch;
+		}
+
+	}
+}

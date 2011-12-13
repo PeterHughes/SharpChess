@@ -1,0 +1,162 @@
+using System;
+using System.Xml;
+
+namespace SharpChess
+{
+	public class OpeningBook
+	{
+		private struct HashEntry
+		{
+			public ulong	HashCodeA;
+			public ulong	HashCodeB;
+			public byte		From;
+			public byte		To;
+			public Move.enmName MoveName;
+		}
+
+		public int HASH_TABLE_SIZE = 0;
+		public const Move UNKNOWN = null;
+		static HashEntry[] m_arrHashEntry = new HashEntry[HASH_TABLE_SIZE];
+
+		static OpeningBook()
+		{
+			Clear();
+		}
+
+		public static void ResetStats()
+		{
+			Entries = 0;
+			Collisions = 0;
+			Probes = 0;
+			Hits = 0;
+		}
+
+		public static void Clear()
+		{
+			ResetStats();
+			for (uint intIndex=0; intIndex<HASH_TABLE_SIZE; intIndex++)
+			{
+				m_arrHashEntry[intIndex].HashCodeA = 0;
+				m_arrHashEntry[intIndex].HashCodeB = 0;
+				m_arrHashEntry[intIndex].From = 0xff;
+				m_arrHashEntry[intIndex].To   = 0xff;
+				m_arrHashEntry[intIndex].MoveName = Move.enmName.NullMove;
+			}
+		}
+
+		public static Move SearchForGoodMove(ulong BoardHashCodeA, ulong BoardHashCodeB, Player.enmColour colour)
+		{
+			return ProbeForBestMove(BoardHashCodeA, BoardHashCodeB, colour);
+		}
+
+		public static void BookConvert(Player player)
+		{
+			XmlDocument xmldoc=new XmlDocument();
+			//xmldoc.Load(@"d:\ob6.xml");
+			xmldoc.Load(@"d:\OpeningBook.xml");
+			//xmldoc.Load(@"d:\OpeningBook_16plys_146027.xml");
+
+			int intScanMove = ScanPly(player, (XmlElement)xmldoc.SelectSingleNode("OpeningBook"));
+			if (intScanMove!=0)
+			{
+				RecordHash(Board.HashCodeA, Board.HashCodeB, (byte)(intScanMove>>8 & 0xff), (byte)(intScanMove & 0xff), Move.enmName.Standard, player.Colour );
+			}
+		}
+
+		static unsafe int ScanPly(Player player, XmlElement xmlnodeParent)
+		{
+			Move moveUndo;
+			int intReturnScore = 0;
+			int intReturnMove = 0;
+			int intScanMove;
+			int intScore;
+
+			foreach (XmlElement xmlnodeMove in xmlnodeParent.ChildNodes)
+			{
+				Move.enmName movename = xmlnodeMove.GetAttribute("N")==null ? Move.enmName.Standard : Move.MoveNameFromString(xmlnodeMove.GetAttribute("N"));
+				Square from = Board.GetSquare(xmlnodeMove.GetAttribute("F"));
+				Square to   = Board.GetSquare(xmlnodeMove.GetAttribute("T"));
+				Piece piece = from.Piece;
+
+				intScore = Convert.ToInt32(xmlnodeMove.GetAttribute(player.Colour==Player.enmColour.White ? "W":"B"));
+				if (intScore>intReturnScore)
+				{
+					intReturnScore = intScore;
+					intReturnMove = from.Ordinal<<8 | to.Ordinal;
+				}
+				
+				moveUndo = piece.Move(movename, to);
+
+				intScanMove = ScanPly(player.OtherPlayer, xmlnodeMove);
+				if (intScanMove!=0)
+				{
+					RecordHash(Board.HashCodeA, Board.HashCodeB, (byte)(intScanMove>>8 & 0xff), (byte)(intScanMove & 0xff), movename, player.OtherPlayer.Colour );
+				}
+
+				Move.Undo(moveUndo);
+			}
+			return intReturnMove;
+		}
+
+		private unsafe static void RecordHash(ulong HashCodeA, ulong HashCodeB, byte From, byte To, Move.enmName MoveName, Player.enmColour colour)
+		{
+			if (colour==Player.enmColour.Black)
+			{
+				HashCodeA |= 0x1;
+				HashCodeB |= 0x1;
+			}
+			else
+			{
+				HashCodeA &= 0xFFFFFFFFFFFFFFFE;
+				HashCodeB &= 0xFFFFFFFFFFFFFFFE;
+			}
+
+			Entries++;
+
+			fixed (HashEntry* phashBase = &m_arrHashEntry[0])
+			{
+				HashEntry* phashEntry = phashBase;
+				phashEntry += ((uint)(HashCodeA % HASH_TABLE_SIZE));
+				if (phashEntry->HashCodeA!=0 && phashEntry->HashCodeA!=HashCodeA  && phashEntry->HashCodeB!=HashCodeB)
+				{
+					Collisions++;
+				}
+				phashEntry->HashCodeA = HashCodeA;
+				phashEntry->HashCodeB = HashCodeB;
+				phashEntry->From = From;
+				phashEntry->To = To;
+				phashEntry->MoveName = MoveName;
+			}
+		}
+
+		private unsafe static Move ProbeForBestMove(ulong HashCodeA, ulong HashCodeB, Player.enmColour colour)
+		{
+			if (colour==Player.enmColour.Black)
+			{
+				HashCodeA |= 0x1;
+				HashCodeB |= 0x1;
+			}
+			else
+			{
+				HashCodeA &= 0xFFFFFFFFFFFFFFFE;
+				HashCodeB &= 0xFFFFFFFFFFFFFFFE;
+			}
+
+			Probes++;
+
+			fixed (HashEntry* phashBase = &m_arrHashEntry[0])
+			{
+				HashEntry* phashEntry = phashBase;
+				phashEntry += ((uint)(HashCodeA % HASH_TABLE_SIZE));
+				
+				if (phashEntry->HashCodeA == HashCodeA && phashEntry->HashCodeB == HashCodeB)
+				{
+					Hits++;
+					return new Move(0, 0, phashEntry->MoveName, Board.GetPiece(phashEntry->From), Board.GetSquare(phashEntry->From), Board.GetSquare(phashEntry->To), null, 0, 0);
+				}
+			}
+			return UNKNOWN;
+		}
+		
+	}
+}

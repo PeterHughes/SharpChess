@@ -1,0 +1,65 @@
+using System;
+
+namespace SharpChess.Backup
+{
+	/// <summary>
+	/// Summary description for FutilityPruning.
+	/// </summary>
+	public class FutilityPruning
+	{
+			// Futility Pruning
+			bool blnEvalDone = false;
+			int intLazyEval = 0;
+			if (intTotalExtensions==0)
+			{
+				switch (depth)
+				{
+					case 2:
+					case 3:
+					case 4:
+						if (moveThis.pieceCaptured==null && !player.IsInCheck && !move.IsEnemyInCheck)
+						{
+
+							if (!blnEvalDone)
+							{
+								intLazyEval = this.TotalPieceValue - this.OtherPlayer.TotalPieceValue;
+								blnEvalDone = true;
+
+//								if (Math.Abs( intLazyEval - this.Score) > 2000)
+//								{
+//									Console.WriteLine("too big");
+//								}
+							}
+
+							switch (depth)
+							{
+								case 2:
+									// Standard Futility Pruning
+									if (intLazyEval+3000<=alpha)
+									{
+										intExtension--;
+									}
+									break;
+
+								case 3:
+									// Extended Futility Pruning
+									if (intLazyEval+6000<=alpha)
+									{
+										intExtension--;
+									}
+									break;
+
+								case 4:
+									// Razoring
+									if (intLazyEval+9750<=alpha)
+									{
+										intExtension--;
+									}
+									break;
+							}
+						}
+						break;					}
+			}
+
+	}
+}

@@ -1,0 +1,225 @@
+
+//					else
+//					{
+//						if ( phashEntry->Type==enmHashType.Exact )
+//						{
+//							m_intHits++;
+//							return -phashEntry->Result;
+//						}
+//						if ( (phashEntry->Type==enmHashType.Alpha) && (phashEntry->Result<=alpha))
+//						{
+//							m_intHits++;
+//							return alpha;
+//						}
+//						if ( (phashEntry->Type==enmHashType.Beta) && (phashEntry->Result>=beta))
+//						{
+//							m_intHits++;
+//							return beta;
+//						}
+//					}
+
+
+
+
+using System;
+
+namespace SharpChess
+{
+	public class xHashTable
+	{
+		public enum HashType
+		{
+				Exact
+			,	Alpha
+			,	Beta
+		}
+
+		private struct HashEntry
+		{
+			public ulong	Key;
+			public sbyte	Depth;
+			public HashType	Type;
+			public int		Result;
+			public sbyte		BestFrom;
+			public sbyte		BestTo;
+			public Move.enmName MoveName;
+		}
+
+		public const int HASH_TABLE_SIZE = 1000007;
+		public const int UNKNOWN = int.MinValue;
+		static HashEntry[] m_arrHashEntry = new HashEntry[HASH_TABLE_SIZE];
+		private static int m_intProbes = 0;
+		private static int m_intHits = 0;
+		private static int m_intEntries = 0;
+
+		public static int Probes
+		{
+			get {return m_intProbes;}
+		}
+
+		public static int Hits
+		{
+			get {return m_intHits;}
+		}
+
+		public static int Entries
+		{
+			get {return m_intEntries;}
+		}
+
+		public xHashTable()
+		{
+			Clear();
+		}
+
+		public unsafe static Move BestMoveAtDepth(int depth, Player.enmColour colour)
+		{
+			Move moveBest = null;
+			int intBest = int.MinValue;
+			int intIndex=0 ;
+
+			fixed (HashEntry* phashBase = &m_arrHashEntry[0])
+			{
+				HashEntry* phashEntry = phashBase;
+
+				if (colour==Player.enmColour.Black)
+				{
+					intIndex++;
+					phashEntry++;
+				}
+
+				for (; intIndex<HASH_TABLE_SIZE; intIndex++, intIndex++, phashEntry++, phashEntry++)
+				{
+					if (phashEntry->Depth == depth && phashEntry->Key > 0 && phashEntry->Type == HashType.Exact) 
+					{
+						if (phashEntry->Result > intBest)
+						{
+							intBest = phashEntry->Result;
+							moveBest = new Move(0, 0, phashEntry->MoveName, null, Board.GetSquare(phashEntry->BestFrom), Board.GetSquare(phashEntry->BestTo), null, 0, 0);
+						}
+					}
+				}
+			}
+			return moveBest;
+		}
+
+		public static void Clear()
+		{
+			ResetStats();
+			for (uint intIndex=0; intIndex<HASH_TABLE_SIZE; intIndex++)
+			{
+				m_arrHashEntry[intIndex].Key = 0;
+				m_arrHashEntry[intIndex].Depth=sbyte.MinValue;
+				m_arrHashEntry[intIndex].BestFrom=-1;
+			}
+		}
+
+		public static void ResetStats()
+		{
+			m_intProbes = 0;
+			m_intHits = 0;
+			m_intEntries = 0;
+		}
+
+		public unsafe static int ProbeHash(ulong HashKey, int depth, int alpha, int beta, Player.enmColour colour)
+		{
+			if (colour==Player.enmColour.Black)
+			{
+				HashKey |= 0x1;
+			}
+			else
+			{
+				HashKey &= 0xFFFFFFFFFFFFFFFE;
+			}
+
+			if (depth<0)
+			{
+				depth=0;
+			}
+
+			m_intProbes++;
+
+			fixed (HashEntry* phashBase = &m_arrHashEntry[0])
+			{
+				HashEntry* phashEntry = phashBase;
+				phashEntry += ((uint)(HashKey % HASH_TABLE_SIZE));
+				
+				if (phashEntry->Key == HashKey && phashEntry->Depth >= depth)
+				{
+					if ( phashEntry->Type == HashType.Exact )
+					{
+						m_intHits++;
+						return phashEntry->Result;
+					}
+					if ( phashEntry->Type == HashType.Alpha && phashEntry->Result <= alpha)
+					{
+						m_intHits++;
+						return alpha;
+					}
+					if ( phashEntry->Type == HashType.Beta && phashEntry->Result >= beta)
+					{
+						m_intHits++;
+						return beta;
+					}
+				}
+			}
+			return UNKNOWN;
+		}
+		
+		public unsafe static void RecordHash(ulong HashKey, int depth, int val, HashType type, int BestFrom, int BestTo, Move.enmName MoveName, Player.enmColour colour)
+		{
+			if (colour==Player.enmColour.Black)
+			{
+				HashKey |= 0x1;
+			}
+			else
+			{
+				HashKey &= 0xFFFFFFFFFFFFFFFE;
+			}
+
+			if (depth<0)
+			{
+				depth=0;
+			}
+
+			fixed (HashEntry* phashBase = &m_arrHashEntry[0])
+			{
+				HashEntry* phashEntry = phashBase;
+				phashEntry += ((uint)(HashKey % HASH_TABLE_SIZE));
+				phashEntry->Key = HashKey;
+				phashEntry->Result = val;
+				phashEntry->Type = type;
+				phashEntry->Depth = (sbyte)depth;
+				phashEntry->BestFrom = (sbyte)BestFrom;
+				phashEntry->BestTo = (sbyte)BestTo;
+				phashEntry->MoveName = MoveName;
+			}
+			m_intEntries++;
+		}
+
+		public unsafe static Move ProbeForBestMove(ulong HashKey, Player.enmColour colour)
+		{
+			if (colour==Player.enmColour.Black)
+			{
+				HashKey |= 0x1;
+			}
+			else
+			{
+				HashKey &= 0xFFFFFFFFFFFFFFFE;
+			}
+
+			fixed (HashEntry* phashBase = &m_arrHashEntry[0])
+			{
+				HashEntry* phashEntry = phashBase;
+				phashEntry += ((uint)(HashKey % HASH_TABLE_SIZE));
+				
+				if (phashEntry->Key == HashKey && phashEntry->BestFrom >= 0)
+				{
+					return new Move(0, 0, phashEntry->MoveName, Board.GetPiece(phashEntry->BestFrom), Board.GetSquare(phashEntry->BestFrom), Board.GetSquare(phashEntry->BestTo), null, 0, phashEntry->Result);
+				}
+			}
+			return null;
+		}
+	
+	}
+}

@@ -1,0 +1,328 @@
+		private void btnConvert_Click(object sender, System.EventArgs e)
+		{
+			btnConvert.Enabled = false;
+			Game.New();
+			OpeningBook.BookConvert(Game.PlayerWhite);
+			btnConvert.Enabled = true;
+			sbr.Text = "Entries: " + OpeningBook.Entries.ToString() + " Collisions: " + OpeningBook.Collisions;
+		}
+
+
+
+
+	enum enmState
+		{
+				MoveNo
+			,	MoveNotation
+		}
+
+
+		public static void Import(string strFileName)
+		{
+			New();
+			XmlDocument xmldoc = new XmlDocument();
+			XmlElement xmlnodeRoot = xmldoc.CreateElement("OpeningBook");
+			XmlElement xmlnodeParent = null;
+			XmlElement xmlnodeMove = null;
+			FileStream filestream = new FileStream(strFileName, System.IO.FileMode.Open);
+			int intByte = 0;
+			char charNext;
+			enmState state = enmState.MoveNo;
+			Move move = null;
+			int intWhiteScore = 0;
+			int intBlackScore = 0;
+			int intGameNo = 0;
+			int intNoOfErrors = 0;
+
+			xmldoc.AppendChild(xmlnodeRoot);
+
+			while (intByte>-1)
+			{
+				try
+				{
+					New();
+
+					intGameNo++;
+
+					// Read game info
+					string strInfo = "";
+					while ((intByte=filestream.ReadByte())!=-1)
+					{
+						charNext = Convert.ToChar((intByte & 0xFF));
+						if (intByte==13 || intByte==10)
+						{
+							if (intByte==13) filestream.ReadByte(); // skip char 10
+							if (strInfo.Length==0) break;
+							if (strInfo.StartsWith("[Result \"") && strInfo.Length==14)
+							{
+								intWhiteScore=Convert.ToInt32(strInfo.Substring(9,1),10);
+								intBlackScore=Convert.ToInt32(strInfo.Substring(11,1),10);
+							}
+							strInfo="";
+						}
+						else
+						{
+							strInfo += charNext;
+						}
+					}
+
+					xmlnodeParent = xmlnodeRoot;
+					state=enmState.MoveNo;
+					string strNotation = "";
+					int intPly = 1;
+					while ((intByte=filestream.ReadByte())!=-1)
+					{
+						charNext = Convert.ToChar((intByte & 0xFF));
+						if (charNext=='[')
+						{
+							filestream.Seek(-1, SeekOrigin.Current); break;
+						}
+						if (intPly<=16 ) // && charNext!=10
+						{
+							switch (state)
+							{
+								case enmState.MoveNo:
+									if (char.IsWhiteSpace(charNext)) state=enmState.MoveNotation;
+									if (char.IsLetter(charNext)) {state=enmState.MoveNotation; filestream.Seek(-1, SeekOrigin.Current); }
+									break;
+								case enmState.MoveNotation:
+									if (char.IsWhiteSpace(charNext)) 
+									{
+										move = PlayerToPlay.MoveFromNotation( strNotation );
+										MakeAHumanMove(move.Name, move.Piece, move.To);
+
+										xmlnodeMove = null;
+										foreach (XmlElement xmlnodeSearch in xmlnodeParent.ChildNodes)
+										{
+											if (xmlnodeSearch.GetAttribute("F")==move.From.Name && xmlnodeSearch.GetAttribute("T")==move.To.Name )
+											{
+												xmlnodeMove = xmlnodeSearch;
+												break;
+											}
+										}
+										if (xmlnodeMove==null)
+										{
+											xmlnodeMove = xmldoc.CreateElement("M");
+											xmlnodeMove.SetAttribute("W", "0" );
+											xmlnodeMove.SetAttribute("B", "0" ); 
+										}
+
+										xmlnodeMove.SetAttribute("F", move.From.Name);
+										xmlnodeMove.SetAttribute("T", move.To.Name);
+										if (move.Name!=Move.enmName.Standard) { xmlnodeMove.SetAttribute("N", move.Name.ToString());	}
+										xmlnodeMove.SetAttribute("W", (Convert.ToInt32(xmlnodeMove.GetAttribute("W"))+ intWhiteScore).ToString() );
+										xmlnodeMove.SetAttribute("B", (Convert.ToInt32(xmlnodeMove.GetAttribute("B"))+ intBlackScore).ToString() ); 
+
+										xmlnodeParent.AppendChild(xmlnodeMove);
+										xmlnodeParent = xmlnodeMove;
+
+										state=enmState.MoveNo; 
+										strNotation=""; 
+										intPly++;
+									}
+									if (char.IsLetterOrDigit(charNext) ) { strNotation += charNext.ToString();}
+									break;
+							}
+						}
+					}
+				}
+				catch
+				{
+					intNoOfErrors++;
+					xmlnodeRoot.SetAttribute("NoOfErrors", intNoOfErrors.ToString());
+				}
+
+
+				xmlnodeRoot.SetAttribute("NoOfGames", intGameNo.ToString());
+
+				if (intGameNo%10000==0)
+				{
+					xmldoc.Save(@"c:\OpeningBook_16plys_" + intGameNo.ToString() + ".xml");
+				}
+				// Next game			
+
+				if (intGameNo>1000)
+				{
+					break;
+				}
+			}
+
+			filestream.Close();
+			xmldoc.Save(@"c:\OB6.xml");
+
+		}
+
+
+		public Move MoveFromNotation(string Text)
+		{
+			Piece piece = null;
+			Square from = null;
+			Square square;
+			Square to = null;
+			Piece pieceTaken = null;
+			Move.enmName MoveName = Move.enmName.Standard;
+			Player.enmColour colour;
+			string strTo = "";
+			string strAction="";
+			string strFromFile = "";
+			string strFromRank = "";
+			string strPieceName = "";
+			int intPos;
+
+			Text.Trim();
+
+			if (Text=="")
+			{
+				Text="";
+			}
+
+			// Castle king-side
+			if (Text.ToUpper()=="OO" || Text.ToUpper()=="O-O") { from=this.King.Square; to=Board.GetSquare(this.King.Square.Ordinal+2); piece=this.King; MoveName=Move.enmName.CastleKingSide; goto exithere;}
+			// Castle queen-side
+			if (Text.ToUpper()=="OOO" || Text.ToUpper()=="O-O-O") { from=this.King.Square; to=Board.GetSquare(this.King.Square.Ordinal-3); piece=this.King; MoveName=Move.enmName.CastleQueenSide; goto exithere;}
+
+
+			intPos = Text.Length;
+			// To square;
+			intPos-=2;
+			strTo = Text.Substring(intPos);
+			// Action
+			intPos--;
+			if (intPos>=0 && Text.Substring(intPos,1).ToUpper()=="X")
+			{
+				strAction = Text.Substring(intPos,1).ToUpper();
+				intPos--; // skip the "x"
+			}
+			// Rank number
+			if (intPos>=0 && Char.IsDigit(Convert.ToChar(Text.Substring(intPos,1))))
+			{
+				strFromRank = Text.Substring(intPos,1);
+				intPos--;
+			}
+			// File letter
+			if (intPos>=0 && Text.Substring(intPos,1)!=Text.Substring(intPos,1).ToUpper())
+			{
+				strFromFile = Text.Substring(intPos,1);
+				intPos--;
+			}
+			if (intPos>=0)
+			{
+				strPieceName = Text.Substring(intPos,1);
+			}
+			else
+			{
+				strPieceName = "P";
+			}
+
+			to=Board.GetSquare(strTo);
+			pieceTaken = to.Piece;
+			
+			switch (strPieceName)
+			{
+				case "P":
+					if (strAction!="X")
+					{
+						square = Board.GetSquare(to.Ordinal-this.PawnForwardOffset);
+						piece = square.Piece;
+						while (piece==null || piece.Name!=Piece.enmName.Pawn || piece.Player.Colour!=this.Colour)
+						{
+							square = Board.GetSquare(square.Ordinal-this.PawnForwardOffset);
+							if (square==null)
+							{
+								square=null;
+							}
+							piece = square.Piece;
+						}
+						from=square; 
+						piece=from.Piece; 
+					}
+					else
+					{
+						piece = Board.GetPiece(to.Ordinal+this.OtherPlayer.PawnAttackLeftOffset);
+						if (piece==null || piece.Name!=Piece.enmName.Pawn || piece.Player.Colour!=this.Colour || strFromFile!="" && piece.Square.FileName!=strFromFile)
+						{
+							piece = Board.GetPiece(to.Ordinal+this.OtherPlayer.PawnAttackRightOffset);
+						}
+						// En passent not currently handled
+						if (piece==null)
+						{
+							piece=null;
+						}
+						from = piece.Square;
+					}
+					break;
+
+				case "N":
+					if ( (square = Board.GetSquare(to.Ordinal+33 ))!=null && square.Piece!=null && square.Piece.Name==Piece.enmName.Knight && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile)) piece=square.Piece; else
+					if ( (square = Board.GetSquare(to.Ordinal+18 ))!=null && square.Piece!=null && square.Piece.Name==Piece.enmName.Knight && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece; else
+					if ( (square = Board.GetSquare(to.Ordinal-14 ))!=null && square.Piece!=null && square.Piece.Name==Piece.enmName.Knight && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece; else
+					if ( (square = Board.GetSquare(to.Ordinal-31 ))!=null && square.Piece!=null && square.Piece.Name==Piece.enmName.Knight && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece; else
+					if ( (square = Board.GetSquare(to.Ordinal-33 ))!=null && square.Piece!=null && square.Piece.Name==Piece.enmName.Knight && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece; else
+					if ( (square = Board.GetSquare(to.Ordinal-18 ))!=null && square.Piece!=null && square.Piece.Name==Piece.enmName.Knight && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece; else
+					if ( (square = Board.GetSquare(to.Ordinal+14 ))!=null && square.Piece!=null && square.Piece.Name==Piece.enmName.Knight && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece; else
+					if ( (square = Board.GetSquare(to.Ordinal+31 ))!=null && square.Piece!=null && square.Piece.Name==Piece.enmName.Knight && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece;
+					if (piece==null)
+					{
+						piece=null;
+					}
+					from = piece.Square;					
+					break;
+
+				case "B":
+					colour = (strAction=="X" ? this.OtherPlayer.Colour : this.Colour);
+					if ((piece=Board.LinesFirstPiece(this.Colour, Piece.enmName.Bishop, to, 15))!=null && piece.Name==Piece.enmName.Bishop && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
+					if ((piece=Board.LinesFirstPiece(this.Colour, Piece.enmName.Bishop, to, 17))!=null && piece.Name==Piece.enmName.Bishop && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
+					if ((piece=Board.LinesFirstPiece(this.Colour, Piece.enmName.Bishop, to, -15))!=null && piece.Name==Piece.enmName.Bishop && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
+					if ((piece=Board.LinesFirstPiece(this.Colour, Piece.enmName.Bishop, to, -17))!=null && piece.Name==Piece.enmName.Bishop && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else piece=null;
+					if (piece==null)
+					{
+						piece=null;
+					}
+					from = piece.Square;					
+					break;
+
+				case "R":
+					if ((piece=Board.LinesFirstPiece(this.Colour, Piece.enmName.Rook, to, 1))!=null && piece.Name==Piece.enmName.Rook && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
+					if ((piece=Board.LinesFirstPiece(this.Colour, Piece.enmName.Rook, to, -1))!=null && piece.Name==Piece.enmName.Rook && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
+					if ((piece=Board.LinesFirstPiece(this.Colour, Piece.enmName.Rook, to, 16))!=null && piece.Name==Piece.enmName.Rook && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
+					if ((piece=Board.LinesFirstPiece(this.Colour, Piece.enmName.Rook, to, -16))!=null && piece.Name==Piece.enmName.Rook && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else piece=null;
+					if (piece==null)
+					{
+						piece=null;
+					}
+					from = piece.Square;					
+					break;
+
+				case "Q":
+					if ((piece=Board.LinesFirstPiece(this.Colour, Piece.enmName.Queen, to, 15))!=null && piece.Name==Piece.enmName.Queen && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
+					if ((piece=Board.LinesFirstPiece(this.Colour, Piece.enmName.Queen, to, 17))!=null && piece.Name==Piece.enmName.Queen && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
+					if ((piece=Board.LinesFirstPiece(this.Colour, Piece.enmName.Queen, to, -15))!=null && piece.Name==Piece.enmName.Queen && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
+					if ((piece=Board.LinesFirstPiece(this.Colour, Piece.enmName.Queen, to, -17))!=null && piece.Name==Piece.enmName.Queen && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
+					if ((piece=Board.LinesFirstPiece(this.Colour, Piece.enmName.Queen, to, 1))!=null && piece.Name==Piece.enmName.Queen && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
+					if ((piece=Board.LinesFirstPiece(this.Colour, Piece.enmName.Queen, to, -1))!=null && piece.Name==Piece.enmName.Queen && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
+					if ((piece=Board.LinesFirstPiece(this.Colour, Piece.enmName.Queen, to, 16))!=null && piece.Name==Piece.enmName.Queen && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
+					if ((piece=Board.LinesFirstPiece(this.Colour, Piece.enmName.Queen, to, -16))!=null && piece.Name==Piece.enmName.Queen && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else piece=null;
+					from = piece.Square;					
+					break;
+
+				case "K":
+					if ( (square = Board.GetSquare(to.Ordinal+15))!=null && square.Piece!=null && square.Piece.Name==Piece.enmName.King && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile)) piece=square.Piece; else
+					if ( (square = Board.GetSquare(to.Ordinal+17 ))!=null && square.Piece!=null && square.Piece.Name==Piece.enmName.King && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece; else
+					if ( (square = Board.GetSquare(to.Ordinal-15 ))!=null && square.Piece!=null && square.Piece.Name==Piece.enmName.King && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece; else
+					if ( (square = Board.GetSquare(to.Ordinal-17 ))!=null && square.Piece!=null && square.Piece.Name==Piece.enmName.King && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece; else
+					if ( (square = Board.GetSquare(to.Ordinal+ 1 ))!=null && square.Piece!=null && square.Piece.Name==Piece.enmName.King && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece; else
+					if ( (square = Board.GetSquare(to.Ordinal- 1 ))!=null && square.Piece!=null && square.Piece.Name==Piece.enmName.King && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece; else
+					if ( (square = Board.GetSquare(to.Ordinal+16 ))!=null && square.Piece!=null && square.Piece.Name==Piece.enmName.King && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece; else
+					if ( (square = Board.GetSquare(to.Ordinal-16 ))!=null && square.Piece!=null && square.Piece.Name==Piece.enmName.King && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece;
+					if (piece==null)
+					{
+						piece=null;
+					}
+					from = piece.Square;					
+					break;
+			}
+
+		exithere:
+			return new Move(0, 0, MoveName, piece, from, to, pieceTaken, 0, 0);
+		}
+

@@ -1,0 +1,98 @@
+using System;
+
+namespace SharpChess.Backup
+{
+	/// <summary>
+	/// Summary description for xQuiesce.
+	/// </summary>
+	public class xQuiesce
+	{
+
+		private int Quiesce(Player player, int alpha, int beta, Move moveFromPreviousPly, Moves movesPV_Parent)
+		{
+			int val = player.Score;
+			if (val >= beta)
+			{
+				return beta;
+			}
+			if (val > alpha)
+			{
+				alpha = val;
+			}
+
+			Moves movesPV = new Moves();
+			Moves movesPossible = new Moves();
+			player.GenerateLazyMoves(-999, movesPossible, Moves.enmMovesType.CapturesChecksPromotions, moveFromPreviousPly);
+
+			// Sort moves
+			foreach (Move movex in movesPossible)
+			{
+				movex.Score = 0;
+
+				switch (movex.Name)
+				{
+					case Move.enmName.PawnPromotionQueen:
+						movex.Score += 975000;
+						break;
+					case Move.enmName.PawnPromotionRook:
+						movex.Score += 500000;
+						break;
+					case Move.enmName.PawnPromotionBishop:
+						movex.Score += 325000;
+						break;
+					case Move.enmName.PawnPromotionKnight:
+						movex.Score += 325000;
+						break;
+				}
+					
+				if (movex.pieceCaptured!=null)
+				{
+//					movex.Score += SEE(movex)*100;
+					movex.Score += (movex.pieceCaptured.Value*10 - movex.Piece.Value);
+				}
+			
+			}
+			movesPossible.SortByScore();
+
+
+			Move moveThis = null;
+			foreach (Move move in movesPossible)
+			{
+				moveThis = move.Piece.Move(move.Name, move.To);
+				if (player.IsInCheck) { Move.Undo(moveThis); continue; }
+
+				if (m_blnDisplayMoveAnalysisTree)
+				{
+					// Add moves to post-move analysis tree, if option set by user
+					moveFromPreviousPly.Moves.Add(moveThis);
+				}
+
+				val = -Quiesce(player.OtherPlayer, -beta, -alpha, moveThis, movesPV);
+
+				Move.Undo(moveThis);
+
+				if (val >= beta)
+				{
+					return beta;
+				}
+
+				if (val > alpha)
+				{
+					alpha = val;
+					// Collect the Prinicial Variation
+					movesPV_Parent.Clear();
+					movesPV_Parent.Add(moveThis);
+					foreach (Move moveCopy in movesPV)
+					{
+						movesPV_Parent.Add(moveCopy);
+					}
+				}
+			}
+			
+			return alpha;
+		}
+
+
+
+	}
+}
