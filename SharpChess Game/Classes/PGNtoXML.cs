@@ -1,27 +1,63 @@
-using System;
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="PGNtoXML.cs" company="SharpChess">
+//   Peter Hughes
+// </copyright>
+// <summary>
+//   Summary description for PGNtoXML.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+#region License
+
+// SharpChess
+// Copyright (C) 2011 Peter Hughes
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#endregion
 
 namespace SharpChess
 {
-	/// <summary>
-	/// Summary description for PGNtoXML.
-	/// </summary>
-	public class PGNtoXML
-	{
-		enum enmState
-		{
-			MoveNo
-				,	MoveNotation
-		}
+    /// <summary>
+    /// Summary description for PGNtoXML.
+    /// </summary>
+    public class PGNtoXML
+    {
+        #region Enums
 
-		public PGNtoXML()
-		{
-			//
-			// TODO: Add constructor logic here
-			//
-		}
-		public static void Go()
-		{
-/*
+        /// <summary>
+        /// The enm state.
+        /// </summary>
+        private enum enmState
+        {
+            /// <summary>
+            ///   The move no.
+            /// </summary>
+            MoveNo, 
+
+            /// <summary>
+            ///   The move notation.
+            /// </summary>
+            MoveNotation
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// The go.
+        /// </summary>
+        public static void Go()
+        {
+            /*
 			const string strSourceFileName = @"d:\eco.pgn";
 			const string strRootOutputFileName = @"c:\OpeningBook_";
 			const int NO_OF_PLYS = 8;
@@ -164,8 +200,11 @@ namespace SharpChess
 			filestream.Close();
 			xmldoc.Save(strRootOutputFileName + NO_OF_PLYS.ToString() + "plys_" + intGameNo.ToString() + ".xml");
 */
-		}
-		/*
+        }
+
+        #endregion
+
+        /*
 				private struct BookEntry
 				{
 					public ulong	HashCodeA;
@@ -190,6 +229,5 @@ namespace SharpChess
 					int intNodeCount = xmlnodelist.Count;
 				}
 		*/
-
-	}
+    }
 }

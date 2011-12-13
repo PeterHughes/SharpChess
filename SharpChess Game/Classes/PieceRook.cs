@@ -39,8 +39,8 @@ namespace SharpChess
 			}
 		}
 
-		private static int[] m_aintSquareValues =
-		{
+        private static readonly int[] m_aintSquareValues =
+        {
 			10,10,10,10,10,10,10,10,    0,0,0,0,0,0,0,0,
 			10,20,20,20,20,20,20,10,    0,0,0,0,0,0,0,0,
 			10,20,30,30,30,30,20,10,    0,0,0,0,0,0,0,0,
@@ -49,7 +49,7 @@ namespace SharpChess
 			10,20,30,30,30,30,20,10,    0,0,0,0,0,0,0,0,
 			10,20,20,20,20,20,20,10 ,   0,0,0,0,0,0,0,0,
 			10,10,10,10,10,10,10,10 ,   0,0,0,0,0,0,0,0
-		};
+        };
 
 		public int PositionalPoints
 		{

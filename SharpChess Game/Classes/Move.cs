@@ -1,400 +1,766 @@
-using System;
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Move.cs" company="SharpChess">
+//   Peter Hughes
+// </copyright>
+// <summary>
+//   The move.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+#region License
+
+// SharpChess
+// Copyright (C) 2011 Peter Hughes
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#endregion
 
 namespace SharpChess
 {
-	public class Move: IComparable
-	{
-		public enum enmName
-		{
-				Standard
-			,	CastleQueenSide
-			,	CastleKingSide
-			,	PawnPromotionQueen
-			,	PawnPromotionRook
-			,	PawnPromotionKnight
-			,	PawnPromotionBishop
-			,	EnPassent
-			,	NullMove
-		}
+    #region Using
 
-		private Piece m_Piece;
-		private Square m_From;
-		private Square m_To;
-		private Piece m_pieceCaptured;
-		private Moves m_moves;
-		private enmName m_Name;
-		private int m_TurnNo;
-		private int m_LastMoveTurnNo;
-		private int m_pieceCapturedOrdinal;
-		private int m_Score;
-		private int m_Alpha;
-		private int m_Beta;
-		private ulong m_HashCodeA;
-		private ulong m_HashCodeB;
-		private bool m_IsInCheck = false;
-		private bool m_IsEnemyInCheck = false;
-		private Player.enmStatus m_EnemyStatus = Player.enmStatus.Normal;
-		private TimeSpan m_TimeStamp;
-		private bool m_IsThreeMoveRepetition = false;
-		private int m_intFiftyMoveDrawCounter = 0;
-		private int m_intChangeInScore = 0;
+    using System;
+    using System.Text;
 
-		public int MoveGeneratorPoints = 0;
+    #endregion
 
-		public Move(int TurnNo, int LastMoveTurnNo, Move.enmName Name, Piece piece, Square From, Square To, Piece pieceCaptured, int pieceCapturedOrdinal, int Score)
-		{
-			m_TurnNo = TurnNo;
-			m_LastMoveTurnNo = LastMoveTurnNo;
-			m_Name = Name;
-			m_Piece = piece;
-			m_From = From;
-			m_To = To;
-			m_pieceCaptured = pieceCaptured;
-			m_pieceCapturedOrdinal = pieceCapturedOrdinal;
-			m_Score = Score;
-			if (Name != Move.enmName.NullMove && pieceCaptured == null && piece!=null && piece.Name != Piece.enmName.Pawn)
-			{
-				m_intFiftyMoveDrawCounter = Game.MoveHistory.Count > 0 ? Game.MoveHistory.Last.FiftyMoveDrawCounter + 1 : Game.FiftyMoveDrawBase / 2 + 1;
-			}
-		}
+    /// <summary>
+    /// The move.
+    /// </summary>
+    public class Move : IComparable
+    {
+        #region Constants and Fields
 
-		public int CompareTo(object move)
-		{
-			if ( this.m_Score < ((Move)move).Score) return 1;
-			if ( this.m_Score > ((Move)move).Score) return -1;
-			return 0;
-		}
+        /// <summary>
+        /// The move generator points.
+        /// </summary>
+        public int MoveGeneratorPoints;
 
-		public string DebugText
-		{
-			get
-			{
-				return (Piece!=null ? this.Piece.Player.Colour.ToString() + " " + this.Piece.Name.ToString() : "") + " " + this.From.Name+(this.pieceCaptured==null ? "-" : "x")+this.To.Name + " " + (this.pieceCaptured==null ? "" : this.pieceCaptured.Name.ToString()) + " " + this.Name.ToString(); // + " A: " + this.Alpha + " B: " + this.Beta + " Score: " + this.Score;// + " h: " + this.m_HashEntries.ToString() + " c:" + this.m_HashCaptures.ToString();
-			}
-		}
+        /// <summary>
+        /// The m_ from.
+        /// </summary>
+        private readonly Square m_From;
 
-		public int FiftyMoveDrawCounter
-		{
-			get { return m_intFiftyMoveDrawCounter; }
-		}
+        /// <summary>
+        /// The m_ last move turn no.
+        /// </summary>
+        private readonly int m_LastMoveTurnNo;
 
-		public bool IsFiftyMoveDraw
-		{
-			get { return m_intFiftyMoveDrawCounter>=100; }
-		}
+        /// <summary>
+        /// The m_ name.
+        /// </summary>
+        private readonly enmName m_Name;
 
-		public string Description
-		{
-			get
-			{
-				System.Text.StringBuilder strbMove = new System.Text.StringBuilder();
-				switch (this.Name)
-				{
-					case Move.enmName.CastleKingSide:
-						strbMove.Append("O-O");
-						break;
+        /// <summary>
+        /// The m_ to.
+        /// </summary>
+        private readonly Square m_To;
 
-					case Move.enmName.CastleQueenSide:
-						strbMove.Append("O-O-O");
-						break;
+        /// <summary>
+        /// The m_ turn no.
+        /// </summary>
+        private readonly int m_TurnNo;
 
-					default:
-						if ((this.Piece.Name != Piece.enmName.Pawn) &&
-							!this.Piece.HasBeenPromoted)
-							strbMove.Append(this.Piece.Abbreviation);
-						strbMove.Append(this.From.Name);
-						if (this.pieceCaptured != null)
-						{
-							strbMove.Append("x");
-							if (this.pieceCaptured.Name != Piece.enmName.Pawn)
-								strbMove.Append(this.pieceCaptured.Abbreviation);
-						}
-						else
-							strbMove.Append("-");
-						strbMove.Append(this.To.Name);
-						break;
-				}
+        /// <summary>
+        /// The m_int fifty move draw counter.
+        /// </summary>
+        private readonly int m_intFiftyMoveDrawCounter;
 
-				if (this.Piece.HasBeenPromoted)
-				{
-					strbMove.Append(":");
-					strbMove.Append(this.Piece.Abbreviation);
-				}
-				switch (m_EnemyStatus)
-				{
-					case Player.enmStatus.InCheckMate:
-						strbMove.Append((this.m_Piece.Player.Colour == Player.enmColour.White) ?
-							"# 1-0" : "# 0-1");   break;
+        /// <summary>
+        /// The m_piece captured.
+        /// </summary>
+        private readonly Piece m_pieceCaptured;
 
-					case Player.enmStatus.InStaleMate:
-						strbMove.Append(" 1/2-1/2"); break;
-               
-					case Player.enmStatus.InCheck:
-						strbMove.Append("+"); break;
-				}
-				if (this.IsThreeMoveRepetition || this.IsFiftyMoveDraw)
-					strbMove.Append(" 1/2-1/2");
+        /// <summary>
+        /// The m_piece captured ordinal.
+        /// </summary>
+        private readonly int m_pieceCapturedOrdinal;
 
-				return strbMove.ToString();
-			}
-		}
+        /// <summary>
+        /// The m_ enemy status.
+        /// </summary>
+        private Player.enmStatus m_EnemyStatus = Player.enmStatus.Normal;
 
-		public Moves Moves
-		{
-			get { return m_moves; }
-			set { m_moves = value; }
-		}
+        /// <summary>
+        /// The m_ piece.
+        /// </summary>
+        private Piece m_Piece;
 
-		public int TurnNo
-		{
-			get {return m_TurnNo;}
-		}
+        /// <summary>
+        /// The m_ score.
+        /// </summary>
+        private int m_Score;
 
-		public int LastMoveTurnNo
-		{
-			get {return m_LastMoveTurnNo;}
-		}
+        #endregion
 
-		public int MoveNo
-		{
-			get { return m_TurnNo/2+1; }
-		}
+        #region Constructors and Destructors
 
-		public enmName Name
-		{
-			get {return m_Name;}
-		}
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Move"/> class.
+        /// </summary>
+        /// <param name="TurnNo">
+        /// The turn no.
+        /// </param>
+        /// <param name="LastMoveTurnNo">
+        /// The last move turn no.
+        /// </param>
+        /// <param name="Name">
+        /// The name.
+        /// </param>
+        /// <param name="piece">
+        /// The piece.
+        /// </param>
+        /// <param name="From">
+        /// The from.
+        /// </param>
+        /// <param name="To">
+        /// The to.
+        /// </param>
+        /// <param name="pieceCaptured">
+        /// The piece captured.
+        /// </param>
+        /// <param name="pieceCapturedOrdinal">
+        /// The piece captured ordinal.
+        /// </param>
+        /// <param name="Score">
+        /// The score.
+        /// </param>
+        public Move(int TurnNo, int LastMoveTurnNo, enmName Name, Piece piece, Square From, Square To, Piece pieceCaptured, int pieceCapturedOrdinal, int Score)
+        {
+            this.m_TurnNo = TurnNo;
+            this.m_LastMoveTurnNo = LastMoveTurnNo;
+            this.m_Name = Name;
+            this.m_Piece = piece;
+            this.m_From = From;
+            this.m_To = To;
+            this.m_pieceCaptured = pieceCaptured;
+            this.m_pieceCapturedOrdinal = pieceCapturedOrdinal;
+            this.m_Score = Score;
+            if (Name != enmName.NullMove && pieceCaptured == null && piece != null && piece.Name != Piece.enmName.Pawn)
+            {
+                this.m_intFiftyMoveDrawCounter = Game.MoveHistory.Count > 0 ? Game.MoveHistory.Last.FiftyMoveDrawCounter + 1 : Game.FiftyMoveDrawBase / 2 + 1;
+            }
+        }
 
-		public Piece Piece
-		{
-			get {return m_Piece;}
-			set {m_Piece = value;}
-		}
+        #endregion
 
-		public Player.enmStatus EnemyStatus
-		{
-			get {return m_EnemyStatus;}
-			set {m_EnemyStatus = value;}
-		}
+        #region Enums
 
-		public Square From
-		{
-			get {return m_From;}
-		}
+        /// <summary>
+        /// The enm name.
+        /// </summary>
+        public enum enmName
+        {
+            /// <summary>
+            /// The standard.
+            /// </summary>
+            Standard, 
 
-		public Square To
-		{
-			get {return m_To;}
-		}
+            /// <summary>
+            /// The castle queen side.
+            /// </summary>
+            CastleQueenSide, 
 
-		public Piece pieceCaptured
-		{
-			get {return m_pieceCaptured;}
-		}
+            /// <summary>
+            /// The castle king side.
+            /// </summary>
+            CastleKingSide, 
 
-		public int pieceCapturedOrdinal
-		{
-			get {return m_pieceCapturedOrdinal;}
-		}
+            /// <summary>
+            /// The pawn promotion queen.
+            /// </summary>
+            PawnPromotionQueen, 
 
-		public ulong HashCodeA
-		{
-			get {return m_HashCodeA;}
-			set {m_HashCodeA = value;}
-		}
+            /// <summary>
+            /// The pawn promotion rook.
+            /// </summary>
+            PawnPromotionRook, 
 
-		public ulong HashCodeB
-		{
-			get {return m_HashCodeB;}
-			set {m_HashCodeB = value;}
-		}
+            /// <summary>
+            /// The pawn promotion knight.
+            /// </summary>
+            PawnPromotionKnight, 
 
-		public int Score
-		{
-			get {return m_Score;}
-			set {m_Score = value;}
-		}
+            /// <summary>
+            /// The pawn promotion bishop.
+            /// </summary>
+            PawnPromotionBishop, 
 
-		public int ChangeInScore
-		{
-			get {return m_intChangeInScore;}
-			set {m_intChangeInScore= value;}
-		}
+            /// <summary>
+            /// The en passent.
+            /// </summary>
+            EnPassent, 
 
-		public int Alpha
-		{
-			get {return m_Alpha;}
-			set {m_Alpha = value;}
-		}
+            /// <summary>
+            /// The null move.
+            /// </summary>
+            NullMove
+        }
 
-		public int Beta
-		{
-			get {return m_Beta;}
-			set {m_Beta = value;}
-		}
+        #endregion
 
-		public bool IsInCheck
-		{
-			get {return m_IsInCheck;}
-			set {m_IsInCheck = value;}
-		}
+        #region Public Properties
 
-		public bool IsEnemyInCheck
-		{
-			get {return m_IsEnemyInCheck;}
-			set {m_IsEnemyInCheck = value;}
-		}
+        /// <summary>
+        /// Gets or sets Alpha.
+        /// </summary>
+        public int Alpha { get; set; }
 
-		public TimeSpan TimeStamp
-		{
-			get { return m_TimeStamp; }
-			set { m_TimeStamp = value; }
-		}
+        /// <summary>
+        /// Gets or sets Beta.
+        /// </summary>
+        public int Beta { get; set; }
 
-		public bool IsThreeMoveRepetition
-		{
-			get {return m_IsThreeMoveRepetition;}
-			set {m_IsThreeMoveRepetition = value;}
-		}
+        /// <summary>
+        /// Gets or sets ChangeInScore.
+        /// </summary>
+        public int ChangeInScore { get; set; }
 
-		public static void Undo(Move move)
-		{
-			Board.HashCodeA ^= move.To.Piece.HashCodeA; // un_XOR the piece from where it was previously moved to
-			Board.HashCodeB ^= move.To.Piece.HashCodeB; // un_XOR the piece from where it was previously moved to
-			if (move.Piece.Name==Piece.enmName.Pawn) 
-			{
-				Board.PawnHashCodeA ^= move.To.Piece.HashCodeA;
-				Board.PawnHashCodeB ^= move.To.Piece.HashCodeB;
-			}
+        /// <summary>
+        /// Gets DebugText.
+        /// </summary>
+        public string DebugText
+        {
+            get
+            {
+                return (this.Piece != null ? this.Piece.Player.Colour.ToString() + " " 
+                    + this.Piece.Name.ToString() : string.Empty) + " " 
+                    + this.From.Name + (this.pieceCaptured == null ? "-" : "x") + this.To.Name + " " 
+                    + (this.pieceCaptured == null ? string.Empty : this.pieceCaptured.Name.ToString()) + " " 
+                    + this.Name.ToString(); // + " A: " + this.Alpha + " B: " + this.Beta + " Score: " + this.Score;// + " h: " + this.m_HashEntries.ToString() + " c:" + this.m_HashCaptures.ToString();
+            }
+        }
 
-			move.Piece.Square = move.From;			// Set piece board location
-			move.From.Piece = move.Piece;			// Set piece on board
-			move.Piece.LastMoveTurnNo = move.LastMoveTurnNo;
-			move.Piece.NoOfMoves--;
+        /// <summary>
+        /// Gets Description.
+        /// </summary>
+        public string Description
+        {
+            get
+            {
+                StringBuilder strbMove = new StringBuilder();
+                switch (this.Name)
+                {
+                    case enmName.CastleKingSide:
+                        strbMove.Append("O-O");
+                        break;
 
-			if (move.Name!=Move.enmName.EnPassent)
-			{
-				move.To.Piece = move.pieceCaptured;	// Return piece taken
-			}
-			else
-			{
-				move.To.Piece = null;	// Blank square where this pawn was
-				Board.GetSquare(move.To.Ordinal - move.Piece.Player.PawnForwardOffset ).Piece = move.pieceCaptured; // Return En Passent pawn taken
-			}
+                    case enmName.CastleQueenSide:
+                        strbMove.Append("O-O-O");
+                        break;
 
-			if (move.pieceCaptured != null)
-			{
-				move.pieceCaptured.Uncapture(move.pieceCapturedOrdinal);
-				Board.HashCodeA ^= move.pieceCaptured.HashCodeA; // XOR back into play the piece that was taken
-				Board.HashCodeB ^= move.pieceCaptured.HashCodeB; // XOR back into play the piece that was taken
-				if (move.pieceCaptured.Name==Piece.enmName.Pawn) 
-				{
-					Board.PawnHashCodeA ^= move.pieceCaptured.HashCodeA;
-					Board.PawnHashCodeB ^= move.pieceCaptured.HashCodeB;
-				}
-			}
+                    default:
+                        if ((this.Piece.Name != Piece.enmName.Pawn) && !this.Piece.HasBeenPromoted)
+                        {
+                            strbMove.Append(this.Piece.Abbreviation);
+                        }
 
-			Piece pieceRook;
-			switch (move.Name)
-			{
-				case Move.enmName.CastleKingSide:
-					pieceRook = move.Piece.Player.Colour==Player.enmColour.White ? Board.GetPiece(5,0):Board.GetPiece(5,7);
-					Board.HashCodeA ^= pieceRook.HashCodeA;
-					Board.HashCodeB ^= pieceRook.HashCodeB;
-					pieceRook.Square = Board.GetSquare(7, move.Piece.Square.Rank);
-					pieceRook.LastMoveTurnNo = move.LastMoveTurnNo;
-					pieceRook.NoOfMoves--;
-					Board.GetSquare(7, move.Piece.Square.Rank).Piece = pieceRook;
-					Board.GetSquare(5, move.Piece.Square.Rank).Piece = null;
-					move.Piece.Player.HasCastled = false;
-					Board.HashCodeA ^= pieceRook.HashCodeA;
-					Board.HashCodeB ^= pieceRook.HashCodeB;
-					break;
+                        strbMove.Append(this.From.Name);
+                        if (this.pieceCaptured != null)
+                        {
+                            strbMove.Append("x");
+                            if (this.pieceCaptured.Name != Piece.enmName.Pawn)
+                            {
+                                strbMove.Append(this.pieceCaptured.Abbreviation);
+                            }
+                        }
+                        else
+                        {
+                            strbMove.Append("-");
+                        }
 
-				case Move.enmName.CastleQueenSide:
-					pieceRook = move.Piece.Player.Colour==Player.enmColour.White ? Board.GetPiece(3,0):Board.GetPiece(3,7);
-					Board.HashCodeA ^= pieceRook.HashCodeA;
-					Board.HashCodeB ^= pieceRook.HashCodeB;
-					pieceRook.Square = Board.GetSquare(0, move.Piece.Square.Rank);
-					pieceRook.LastMoveTurnNo = move.LastMoveTurnNo;
-					pieceRook.NoOfMoves--;
-					Board.GetSquare(0, move.Piece.Square.Rank).Piece = pieceRook;
-					Board.GetSquare(3, move.Piece.Square.Rank).Piece = null;
-					move.Piece.Player.HasCastled = false;
-					Board.HashCodeA ^= pieceRook.HashCodeA;
-					Board.HashCodeB ^= pieceRook.HashCodeB;
-					break;
+                        strbMove.Append(this.To.Name);
+                        break;
+                }
 
-				case Move.enmName.PawnPromotionQueen:
-				case Move.enmName.PawnPromotionRook:
-				case Move.enmName.PawnPromotionBishop:
-				case Move.enmName.PawnPromotionKnight:
-					move.Piece.Demote();
-					break;
-			}
+                if (this.Piece.HasBeenPromoted)
+                {
+                    strbMove.Append(":");
+                    strbMove.Append(this.Piece.Abbreviation);
+                }
 
-			Board.HashCodeA ^= move.From.Piece.HashCodeA; // XOR the piece back into the square it moved back to
-			Board.HashCodeB ^= move.From.Piece.HashCodeB; // XOR the piece back into the square it moved back to
-			if (move.From.Piece.Name==Piece.enmName.Pawn) 
-			{
-				Board.PawnHashCodeA ^= move.From.Piece.HashCodeA;
-				Board.PawnHashCodeB ^= move.From.Piece.HashCodeB;
-			}
+                switch (this.m_EnemyStatus)
+                {
+                    case Player.enmStatus.InCheckMate:
+                        strbMove.Append((this.m_Piece.Player.Colour == Player.enmColour.White) ? "# 1-0" : "# 0-1");
+                        break;
 
-			if (move.IsThreeMoveRepetition)
-			{
-				Board.HashCodeA ^= 31;
-				Board.HashCodeB ^= 29;
-			}
+                    case Player.enmStatus.InStaleMate:
+                        strbMove.Append(" 1/2-1/2");
+                        break;
 
-			Game.TurnNo--;
+                    case Player.enmStatus.InCheck:
+                        strbMove.Append("+");
+                        break;
+                }
 
-			Game.MoveHistory.RemoveLast();
-		}
-		
-		public static Move.enmName MoveNameFromString(string strMoveName)
-		{
-			if (strMoveName==Move.enmName.Standard.ToString()) return Move.enmName.Standard;
-			if (strMoveName==Move.enmName.CastleKingSide.ToString()) return Move.enmName.CastleKingSide;
-			if (strMoveName==Move.enmName.CastleQueenSide.ToString()) return Move.enmName.CastleQueenSide;
-			if (strMoveName==Move.enmName.EnPassent.ToString()) return Move.enmName.EnPassent;
-			if (strMoveName=="PawnPromotion") return Move.enmName.PawnPromotionQueen;
-			if (strMoveName==Move.enmName.PawnPromotionQueen.ToString()) return Move.enmName.PawnPromotionQueen;
-			if (strMoveName==Move.enmName.PawnPromotionRook.ToString()) return Move.enmName.PawnPromotionRook;
-			if (strMoveName==Move.enmName.PawnPromotionBishop.ToString()) return Move.enmName.PawnPromotionBishop;
-			if (strMoveName==Move.enmName.PawnPromotionKnight.ToString()) return Move.enmName.PawnPromotionKnight;
-			return 0;
-		}
+                if (this.IsThreeMoveRepetition || this.IsFiftyMoveDraw)
+                {
+                    strbMove.Append(" 1/2-1/2");
+                }
 
-		public static bool IsValid(Move moveProposed)
-		{
-			if (moveProposed.Piece != Board.GetPiece(moveProposed.From.Ordinal) ) return false;
+                return strbMove.ToString();
+            }
+        }
 
-			Moves movesPossible = new Moves();
-			moveProposed.Piece.GenerateLazyMoves(movesPossible, Moves.enmMovesType.All);
-			foreach (Move move in movesPossible)
-			{
-				if ( moveProposed.Name==move.Name && moveProposed.To.Ordinal==move.To.Ordinal )
-				return true;
-			}
+        /// <summary>
+        /// Gets or sets EnemyStatus.
+        /// </summary>
+        public Player.enmStatus EnemyStatus
+        {
+            get
+            {
+                return this.m_EnemyStatus;
+            }
 
-			return false;
-		}
+            set
+            {
+                this.m_EnemyStatus = value;
+            }
+        }
 
-		public static bool MovesMatch(Move moveA, Move moveB)
-		{
-			return (moveA!=null && moveB!=null && moveA.Piece==moveB.Piece && moveA.From==moveB.From && moveA.To==moveB.To && moveA.Name==moveB.Name && ( moveA.pieceCaptured==null && moveB.pieceCaptured==null || moveA.pieceCaptured!=null && moveB.pieceCaptured!=null && moveA.pieceCaptured==moveB.pieceCaptured  ) );
-		}
+        /// <summary>
+        /// Gets FiftyMoveDrawCounter.
+        /// </summary>
+        public int FiftyMoveDrawCounter
+        {
+            get
+            {
+                return this.m_intFiftyMoveDrawCounter;
+            }
+        }
 
-		  /// <summary>Is the move a promotion of pawn</summary>
-		  /// <returns>true if promotion otherwise false</returns>
-		  /// <remarks>Keep the order of the enumeration <see cref="enmName"/>.PawnPromotionQueen before PawnPromotionBishop</remarks>
-		  public bool IsPromotion()
-		  {
-			 return   (m_Name >= SharpChess.Move.enmName.PawnPromotionQueen) &&
-				(m_Name <= SharpChess.Move.enmName.PawnPromotionBishop);
+        /// <summary>
+        /// Gets From.
+        /// </summary>
+        public Square From
+        {
+            get
+            {
+                return this.m_From;
+            }
+        }
 
-		  } // end IsPromotion
-	
-	}
+        /// <summary>
+        /// Gets or sets HashCodeA.
+        /// </summary>
+        public ulong HashCodeA { get; set; }
+
+        /// <summary>
+        /// Gets or sets HashCodeB.
+        /// </summary>
+        public ulong HashCodeB { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether IsEnemyInCheck.
+        /// </summary>
+        public bool IsEnemyInCheck { get; set; }
+
+        /// <summary>
+        /// Gets a value indicating whether IsFiftyMoveDraw.
+        /// </summary>
+        public bool IsFiftyMoveDraw
+        {
+            get
+            {
+                return this.m_intFiftyMoveDrawCounter >= 100;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether IsInCheck.
+        /// </summary>
+        public bool IsInCheck { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether IsThreeMoveRepetition.
+        /// </summary>
+        public bool IsThreeMoveRepetition { get; set; }
+
+        /// <summary>
+        /// Gets LastMoveTurnNo.
+        /// </summary>
+        public int LastMoveTurnNo
+        {
+            get
+            {
+                return this.m_LastMoveTurnNo;
+            }
+        }
+
+        /// <summary>
+        /// Gets MoveNo.
+        /// </summary>
+        public int MoveNo
+        {
+            get
+            {
+                return this.m_TurnNo / 2 + 1;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets Moves.
+        /// </summary>
+        public Moves Moves { get; set; }
+
+        /// <summary>
+        /// Gets Name.
+        /// </summary>
+        public enmName Name
+        {
+            get
+            {
+                return this.m_Name;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets Piece.
+        /// </summary>
+        public Piece Piece
+        {
+            get
+            {
+                return this.m_Piece;
+            }
+
+            set
+            {
+                this.m_Piece = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets Score.
+        /// </summary>
+        public int Score
+        {
+            get
+            {
+                return this.m_Score;
+            }
+
+            set
+            {
+                this.m_Score = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets TimeStamp.
+        /// </summary>
+        public TimeSpan TimeStamp { get; set; }
+
+        /// <summary>
+        /// Gets To.
+        /// </summary>
+        public Square To
+        {
+            get
+            {
+                return this.m_To;
+            }
+        }
+
+        /// <summary>
+        /// Gets TurnNo.
+        /// </summary>
+        public int TurnNo
+        {
+            get
+            {
+                return this.m_TurnNo;
+            }
+        }
+
+        /// <summary>
+        /// Gets pieceCaptured.
+        /// </summary>
+        public Piece pieceCaptured
+        {
+            get
+            {
+                return this.m_pieceCaptured;
+            }
+        }
+
+        /// <summary>
+        /// Gets pieceCapturedOrdinal.
+        /// </summary>
+        public int pieceCapturedOrdinal
+        {
+            get
+            {
+                return this.m_pieceCapturedOrdinal;
+            }
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// The is valid.
+        /// </summary>
+        /// <param name="moveProposed">
+        /// The move proposed.
+        /// </param>
+        /// <returns>
+        /// The is valid.
+        /// </returns>
+        public static bool IsValid(Move moveProposed)
+        {
+            if (moveProposed.Piece != Board.GetPiece(moveProposed.From.Ordinal))
+            {
+                return false;
+            }
+
+            Moves movesPossible = new Moves();
+            moveProposed.Piece.GenerateLazyMoves(movesPossible, Moves.enmMovesType.All);
+            foreach (Move move in movesPossible)
+            {
+                if (moveProposed.Name == move.Name && moveProposed.To.Ordinal == move.To.Ordinal)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// The move name from string.
+        /// </summary>
+        /// <param name="strMoveName">
+        /// The str move name.
+        /// </param>
+        /// <returns>
+        /// </returns>
+        public static enmName MoveNameFromString(string strMoveName)
+        {
+            if (strMoveName == enmName.Standard.ToString())
+            {
+                return enmName.Standard;
+            }
+
+            if (strMoveName == enmName.CastleKingSide.ToString())
+            {
+                return enmName.CastleKingSide;
+            }
+
+            if (strMoveName == enmName.CastleQueenSide.ToString())
+            {
+                return enmName.CastleQueenSide;
+            }
+
+            if (strMoveName == enmName.EnPassent.ToString())
+            {
+                return enmName.EnPassent;
+            }
+
+            if (strMoveName == "PawnPromotion")
+            {
+                return enmName.PawnPromotionQueen;
+            }
+
+            if (strMoveName == enmName.PawnPromotionQueen.ToString())
+            {
+                return enmName.PawnPromotionQueen;
+            }
+
+            if (strMoveName == enmName.PawnPromotionRook.ToString())
+            {
+                return enmName.PawnPromotionRook;
+            }
+
+            if (strMoveName == enmName.PawnPromotionBishop.ToString())
+            {
+                return enmName.PawnPromotionBishop;
+            }
+
+            if (strMoveName == enmName.PawnPromotionKnight.ToString())
+            {
+                return enmName.PawnPromotionKnight;
+            }
+
+            return 0;
+        }
+
+        /// <summary>
+        /// The moves match.
+        /// </summary>
+        /// <param name="moveA">
+        /// The move a.
+        /// </param>
+        /// <param name="moveB">
+        /// The move b.
+        /// </param>
+        /// <returns>
+        /// The moves match.
+        /// </returns>
+        public static bool MovesMatch(Move moveA, Move moveB)
+        {
+            return moveA != null 
+                && moveB != null 
+                && moveA.Piece == moveB.Piece 
+                && moveA.From == moveB.From 
+                && moveA.To == moveB.To 
+                && moveA.Name == moveB.Name 
+                && (
+                    (moveA.pieceCaptured == null && moveB.pieceCaptured == null)
+                    || (moveA.pieceCaptured != null && moveB.pieceCaptured != null && moveA.pieceCaptured == moveB.pieceCaptured));
+        }
+
+        /// <summary>
+        /// The undo.
+        /// </summary>
+        /// <param name="move">
+        /// The move.
+        /// </param>
+        public static void Undo(Move move)
+        {
+            Board.HashCodeA ^= move.To.Piece.HashCodeA; // un_XOR the piece from where it was previously moved to
+            Board.HashCodeB ^= move.To.Piece.HashCodeB; // un_XOR the piece from where it was previously moved to
+            if (move.Piece.Name == Piece.enmName.Pawn)
+            {
+                Board.PawnHashCodeA ^= move.To.Piece.HashCodeA;
+                Board.PawnHashCodeB ^= move.To.Piece.HashCodeB;
+            }
+
+            move.Piece.Square = move.From; // Set piece board location
+            move.From.Piece = move.Piece; // Set piece on board
+            move.Piece.LastMoveTurnNo = move.LastMoveTurnNo;
+            move.Piece.NoOfMoves--;
+
+            if (move.Name != enmName.EnPassent)
+            {
+                move.To.Piece = move.pieceCaptured; // Return piece taken
+            }
+            else
+            {
+                move.To.Piece = null; // Blank square where this pawn was
+                Board.GetSquare(move.To.Ordinal - move.Piece.Player.PawnForwardOffset).Piece = move.pieceCaptured; // Return En Passent pawn taken
+            }
+
+            if (move.pieceCaptured != null)
+            {
+                move.pieceCaptured.Uncapture(move.pieceCapturedOrdinal);
+                Board.HashCodeA ^= move.pieceCaptured.HashCodeA; // XOR back into play the piece that was taken
+                Board.HashCodeB ^= move.pieceCaptured.HashCodeB; // XOR back into play the piece that was taken
+                if (move.pieceCaptured.Name == Piece.enmName.Pawn)
+                {
+                    Board.PawnHashCodeA ^= move.pieceCaptured.HashCodeA;
+                    Board.PawnHashCodeB ^= move.pieceCaptured.HashCodeB;
+                }
+            }
+
+            Piece pieceRook;
+            switch (move.Name)
+            {
+                case enmName.CastleKingSide:
+                    pieceRook = move.Piece.Player.Colour == Player.enmColour.White ? Board.GetPiece(5, 0) : Board.GetPiece(5, 7);
+                    Board.HashCodeA ^= pieceRook.HashCodeA;
+                    Board.HashCodeB ^= pieceRook.HashCodeB;
+                    pieceRook.Square = Board.GetSquare(7, move.Piece.Square.Rank);
+                    pieceRook.LastMoveTurnNo = move.LastMoveTurnNo;
+                    pieceRook.NoOfMoves--;
+                    Board.GetSquare(7, move.Piece.Square.Rank).Piece = pieceRook;
+                    Board.GetSquare(5, move.Piece.Square.Rank).Piece = null;
+                    move.Piece.Player.HasCastled = false;
+                    Board.HashCodeA ^= pieceRook.HashCodeA;
+                    Board.HashCodeB ^= pieceRook.HashCodeB;
+                    break;
+
+                case enmName.CastleQueenSide:
+                    pieceRook = move.Piece.Player.Colour == Player.enmColour.White ? Board.GetPiece(3, 0) : Board.GetPiece(3, 7);
+                    Board.HashCodeA ^= pieceRook.HashCodeA;
+                    Board.HashCodeB ^= pieceRook.HashCodeB;
+                    pieceRook.Square = Board.GetSquare(0, move.Piece.Square.Rank);
+                    pieceRook.LastMoveTurnNo = move.LastMoveTurnNo;
+                    pieceRook.NoOfMoves--;
+                    Board.GetSquare(0, move.Piece.Square.Rank).Piece = pieceRook;
+                    Board.GetSquare(3, move.Piece.Square.Rank).Piece = null;
+                    move.Piece.Player.HasCastled = false;
+                    Board.HashCodeA ^= pieceRook.HashCodeA;
+                    Board.HashCodeB ^= pieceRook.HashCodeB;
+                    break;
+
+                case enmName.PawnPromotionQueen:
+                case enmName.PawnPromotionRook:
+                case enmName.PawnPromotionBishop:
+                case enmName.PawnPromotionKnight:
+                    move.Piece.Demote();
+                    break;
+            }
+
+            Board.HashCodeA ^= move.From.Piece.HashCodeA; // XOR the piece back into the square it moved back to
+            Board.HashCodeB ^= move.From.Piece.HashCodeB; // XOR the piece back into the square it moved back to
+            if (move.From.Piece.Name == Piece.enmName.Pawn)
+            {
+                Board.PawnHashCodeA ^= move.From.Piece.HashCodeA;
+                Board.PawnHashCodeB ^= move.From.Piece.HashCodeB;
+            }
+
+            if (move.IsThreeMoveRepetition)
+            {
+                Board.HashCodeA ^= 31;
+                Board.HashCodeB ^= 29;
+            }
+
+            Game.TurnNo--;
+
+            Game.MoveHistory.RemoveLast();
+        }
+
+        /// <summary>
+        /// The compare to.
+        /// </summary>
+        /// <param name="move">
+        /// The move.
+        /// </param>
+        /// <returns>
+        /// The compare to.
+        /// </returns>
+        public int CompareTo(object move)
+        {
+            if (this.m_Score < ((Move)move).Score)
+            {
+                return 1;
+            }
+
+            if (this.m_Score > ((Move)move).Score)
+            {
+                return -1;
+            }
+
+            return 0;
+        }
+
+        /// <summary>
+        /// Is the move a promotion of pawn
+        /// </summary>
+        /// <returns>
+        /// true if promotion otherwise false
+        /// </returns>
+        /// <remarks>
+        /// Keep the order of the enumeration <see cref="enmName"/>.PawnPromotionQueen before PawnPromotionBishop
+        /// </remarks>
+        public bool IsPromotion()
+        {
+            return (this.m_Name >= enmName.PawnPromotionQueen) && (this.m_Name <= enmName.PawnPromotionBishop);
+        }
+
+        #endregion
+
+        // end IsPromotion
+    }
 }

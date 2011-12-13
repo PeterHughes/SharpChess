@@ -1,568 +1,49 @@
-using System;
-using SharpChess;
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Piece.cs" company="SharpChess">
+//   Peter Hughes
+// </copyright>
+// <summary>
+//   The piece.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+#region License
+
+// SharpChess
+// Copyright (C) 2011 Peter Hughes
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#endregion
 
 namespace SharpChess
 {
-	public class Piece: IPieceTop
-	{
-		public enum enmName
-		{
-					Pawn
-				,	Bishop
-				,	Knight
-				,	Rook
-				,	Queen
-				,	King
-		}
-
-		public enum enmID
-		{
-				WhiteQueensRook
-			,	WhiteQueensKnight
-			,	WhiteQueensBishop
-			,	WhiteQueen
-			,	WhiteKing
-			,	WhiteKingsBishop
-			,	WhiteKingsKnight
-			,	WhiteKingsRook
-			,	WhitePawn1
-			,	WhitePawn2
-			,	WhitePawn3
-			,	WhitePawn4
-			,	WhitePawn5
-			,	WhitePawn6
-			,	WhitePawn7
-			,	WhitePawn8
-			,	BlackQueensRook
-			,	BlackQueensKnight
-			,	BlackQueensBishop
-			,	BlackQueen
-			,	BlackKing
-			,	BlackKingsBishop
-			,	BlackKingsKnight
-			,	BlackKingsRook
-			,	BlackPawn1
-			,	BlackPawn2
-			,	BlackPawn3
-			,	BlackPawn4
-			,	BlackPawn5
-			,	BlackPawn6
-			,	BlackPawn7
-			,	BlackPawn8
-		}
-
-		private IPieceTop m_Top;
-		private Square m_square;
-		private Square m_squareStartLocation;
-		private Player m_player;
-		private int m_LastMoveTurnNo = -1;
-		private int m_NoOfMoves = 0;
-		private bool m_HasBeenPromoted = false;
-		private bool m_IsInPlay = true;
-		private int m_Points = 0;
-		private enmID m_ID;
-
-		public Piece Base
-		{
-			get { return this; }
-		}
-
-		public IPieceTop Top
-		{
-			get { return m_Top; }
-		}
-
-		public Square StartLocation
-		{
-			get { return m_squareStartLocation; }
-		}
-
-		public Piece(Piece.enmName name, Player player, int Col, int Row, enmID ID)
-		{
-			Square square = Board.GetSquare(Col, Row);
-
-			this.m_player = player;
-			this.m_squareStartLocation = this.m_square = square;
-			square.Piece = this;
-			this.m_ID = ID;
-
-			switch (name)
-			{
-				case Piece.enmName.Pawn:
-					m_Top = new PiecePawn(this);
-					break;
-				
-				case Piece.enmName.Bishop:
-					m_Top = new PieceBishop(this);
-					break;
-				
-				case Piece.enmName.Knight:
-					m_Top = new PieceKnight(this);
-					break;
-				
-				case Piece.enmName.Rook:
-					m_Top = new PieceRook(this);
-					break;
-				
-				case Piece.enmName.Queen:
-					m_Top = new PieceQueen(this);
-					break;
-
-				case Piece.enmName.King:
-					m_Top = new PieceKing(this);
-					break;
-			}
-		}
-
-		public ulong HashCodeAForSquareOrdinal(int Ordinal)
-		{
-			uint a = (uint)(m_ID);
-			uint x = (((uint)(m_ID))<<7);
-			ulong ulongPromotionModifier = 0;
-			if (m_HasBeenPromoted)
-			{
-				switch (this.m_Top.Name)
-				{
-					case Piece.enmName.Queen:
-						ulongPromotionModifier = 830859827498573475;
-						break;
-					case Piece.enmName.Rook:
-						ulongPromotionModifier = 37500384876452947;
-						break;
-					case Piece.enmName.Bishop:
-						ulongPromotionModifier = 448573857309865743;
-						break;
-					case Piece.enmName.Knight:
-						ulongPromotionModifier = 294375032850265937;
-						break;
-				}
-			}
-			return m_aulongHashCodesA[(((uint)(m_ID))<<7) + Ordinal] + ulongPromotionModifier;
-		}
-
-		public ulong HashCodeBForSquareOrdinal(int Ordinal)
-		{
-			uint a = (uint)(m_ID);
-			uint x = (((uint)(m_ID))<<7);
-			ulong ulongPromotionModifier = 0;
-			if (m_HasBeenPromoted)
-			{
-				switch (this.m_Top.Name)
-				{
-					case Piece.enmName.Queen:
-						ulongPromotionModifier = 790423450762398573;
-						break;
-					case Piece.enmName.Rook:
-						ulongPromotionModifier = 394756026094872034;
-						break;
-					case Piece.enmName.Bishop:
-						ulongPromotionModifier = 629385632983478593;
-						break;
-					case Piece.enmName.Knight:
-						ulongPromotionModifier = 283469276067858673;
-						break;
-				}
-			}
-			return m_aulongHashCodesB[(((uint)(m_ID))<<7) + Ordinal] + ulongPromotionModifier;
-		}
-
-		public ulong HashCodeA
-		{
-			get { return HashCodeAForSquareOrdinal(this.m_square.Ordinal); }
-		}
-
-		public ulong HashCodeB
-		{
-			get { return HashCodeBForSquareOrdinal(this.m_square.Ordinal); }
-		}
-
-		public string Abbreviation
-		{
-			get { return m_Top.Abbreviation; }
-		}
-	
-		public enmName Name
-		{
-			get { return m_Top.Name; }
-		}
-	
-		public int LastMoveTurnNo
-		{
-			get { return m_LastMoveTurnNo; }
-			set { m_LastMoveTurnNo = value; }
-		}
-
-		public int ImageIndex
-		{
-			get { return m_Top.ImageIndex; }
-		}
-	
-		public bool HasMoved
-		{
-			get { return m_NoOfMoves!=0 || !this.IsInPlay; }
-		}
-
-		public bool HasBeenPromoted
-		{
-			get { return m_HasBeenPromoted; }
-			set { m_HasBeenPromoted = value; }
-		}
-
-		public bool IsInPlay
-		{
-			get { return m_IsInPlay; }
-			set { m_IsInPlay = value; }
-		}
-
-		public int NoOfMoves
-		{
-			get { return m_NoOfMoves; }
-			set { m_NoOfMoves = value; }
-		}
-
-		public bool MovedLastMove
-		{
-			get {return m_LastMoveTurnNo == Game.TurnNo-2;}
-		}
-
-		public Square Square
-		{
-			get { return m_square; }
-			set { m_square = value; }
-		}
-	
-		public Player Player
-		{
-			get { return m_player; }
-		}
-	
-		public int BasicValue
-		{
-			get { return m_Top.BasicValue;	}
-		}
-
-		public int Value
-		{
-			get { return m_Top.Value; }
-		}
-
-		public int Points
-		{
-			get {return m_Points;}
-			set {m_Points = value;}
-		}
-
-		public bool IsCapturable
-		{
-			get { return m_Top.IsCapturable; }
-		}
-
-		public void GenerateLegalMoves(Moves moves)
-		{
-			GenerateLazyMoves(moves, Moves.enmMovesType.All);
-			Move move;
-			for(int intIndex=moves.Count-1; intIndex>=0; intIndex--)
-			{
-				move = moves[intIndex];
-				Move moveUndo = move.Piece.Move(move.Name, move.To);
-				if (move.Piece.Player.IsInCheck)
-				{
-					moves.Remove(move);
-				}
-				SharpChess.Move.Undo(moveUndo);
-			}
-		}
-			
-		public void GenerateLazyMoves(Moves moves, Moves.enmMovesType movesType)
-		{
-			m_Top.GenerateLazyMoves(moves, movesType);
-		}
-			
-		public void Promote(Piece.enmName name)
-		{
-			if (m_HasBeenPromoted)
-			{
-				throw new ApplicationException("Piece has already been promoted!");
-			}
-
-			if (this.Name != Piece.enmName.Pawn) 
-			{
-				throw new ApplicationException("Attempt to promote piece that is not a pawn");
-			}
-
-			switch (name)
-			{
-				case Piece.enmName.Bishop:
-					m_Top = new PieceBishop(this);
-					break;
-				
-				case Piece.enmName.Knight:
-					m_Top = new PieceKnight(this);
-					break;
-				
-				case Piece.enmName.Rook:
-					m_Top = new PieceRook(this);
-					break;
-				
-				case Piece.enmName.Queen:
-					m_Top = new PieceQueen(this);
-					break;
-
-				default:
-					throw new ApplicationException("Can only promote pawn to either Bishop, Knight, Rook or Queen");
-			}
-			this.m_player.DecreasePawnCount();
-			this.m_player.IncreaseMaterialCount();
-			m_HasBeenPromoted = true;
-		}
-
-		public void Demote()
-		{
-			if (!m_HasBeenPromoted)
-			{
-				throw new ApplicationException("Cannot demote piece that hasnt been promoted");
-			}
-			m_Top = new PiecePawn(this);
-			this.m_player.IncreasePawnCount();
-			this.m_player.DecreaseMaterialCount();
-			m_HasBeenPromoted = false;
-		}
-
-		public Move Move(Move.enmName MoveName, Square square)
-		{
-			Square squarepieceCaptured = square;
-
-			if (MoveName==SharpChess.Move.enmName.EnPassent) // Override when en passent
-			{
-				squarepieceCaptured = Board.GetSquare( square.Ordinal - this.m_player.PawnForwardOffset );
-			}
-
-			Board.HashCodeA ^= this.HashCodeA; // Un-XOR current piece position
-			Board.HashCodeB ^= this.HashCodeB; // Un-XOR current piece position
-			if (this.Name==Piece.enmName.Pawn)
-			{
-				Board.PawnHashCodeA ^= this.HashCodeA;
-				Board.PawnHashCodeB ^= this.HashCodeB;
-			}
-
-			Move move = new Move(Game.TurnNo, this.m_LastMoveTurnNo, MoveName, this, this.m_square, square, squarepieceCaptured.Piece, squarepieceCaptured.Piece==null ? -1 : squarepieceCaptured.Piece.Player.Pieces.IndexOf(squarepieceCaptured.Piece), 0);
-
-			if (square.Piece != null)
-			{
-				Board.HashCodeA ^= squarepieceCaptured.Piece.HashCodeA; // un-XOR the piece taken
-				Board.HashCodeB ^= squarepieceCaptured.Piece.HashCodeB; // un-XOR the piece taken
-				if (squarepieceCaptured.Piece.Name==Piece.enmName.Pawn)
-				{
-					Board.PawnHashCodeA ^= squarepieceCaptured.Piece.HashCodeA;
-					Board.PawnHashCodeB ^= squarepieceCaptured.Piece.HashCodeB;
-				}
-				squarepieceCaptured.Piece.Capture();
-			}
-
-			Game.TurnNo++;
-
-			this.m_square.Piece = null;
-			square.Piece = this;
-			this.m_square = square;
-			
-			this.m_LastMoveTurnNo = Game.TurnNo;
-			this.m_NoOfMoves++;
-
-			Piece pieceRook;
-			switch (MoveName)
-			{
-				case SharpChess.Move.enmName.CastleKingSide:
-					pieceRook = move.Piece.Player.Colour==Player.enmColour.White ? Board.GetPiece(7,0):Board.GetPiece(7,7);
-					Board.HashCodeA ^= pieceRook.HashCodeA;
-					Board.HashCodeB ^= pieceRook.HashCodeB;
-					pieceRook.Square.Piece = null;
-					pieceRook.m_LastMoveTurnNo = Game.TurnNo;
-					pieceRook.m_NoOfMoves++;
-					Board.GetSquare(5,square.Rank).Piece = pieceRook;
-					pieceRook.Square = Board.GetSquare(5,square.Rank);
-					Board.HashCodeA ^= pieceRook.HashCodeA;
-					Board.HashCodeB ^= pieceRook.HashCodeB;
-					m_player.HasCastled = true;
-					break;
-
-				case SharpChess.Move.enmName.CastleQueenSide:
-					pieceRook = move.Piece.Player.Colour==Player.enmColour.White ? Board.GetPiece(0,0):Board.GetPiece(0,7);
-					Board.HashCodeA ^= pieceRook.HashCodeA;
-					Board.HashCodeB ^= pieceRook.HashCodeB;
-					pieceRook.Square.Piece = null;
-					pieceRook.m_LastMoveTurnNo = Game.TurnNo;
-					pieceRook.m_NoOfMoves++;
-					Board.GetSquare(3,square.Rank).Piece = pieceRook;
-					pieceRook.Square = Board.GetSquare(3,square.Rank);
-					Board.HashCodeA ^= pieceRook.HashCodeA;
-					Board.HashCodeB ^= pieceRook.HashCodeB;
-					m_player.HasCastled = true;
-					break;
-
-				case SharpChess.Move.enmName.PawnPromotionQueen:
-					this.Promote(Piece.enmName.Queen);
-					break;
-
-				case SharpChess.Move.enmName.PawnPromotionRook:
-					this.Promote(Piece.enmName.Rook);
-					break;
-
-				case SharpChess.Move.enmName.PawnPromotionBishop:
-					this.Promote(Piece.enmName.Bishop);
-					break;
-
-				case SharpChess.Move.enmName.PawnPromotionKnight:
-					this.Promote(Piece.enmName.Knight);
-					break;
-
-				case SharpChess.Move.enmName.EnPassent:
-					Board.HashCodeA ^= Board.GetPiece(this.m_square.Ordinal - this.m_player.PawnForwardOffset ).HashCodeA;
-					Board.HashCodeB ^= Board.GetPiece(this.m_square.Ordinal - this.m_player.PawnForwardOffset ).HashCodeB;
-					Board.PawnHashCodeA ^= Board.GetPiece(this.m_square.Ordinal - this.m_player.PawnForwardOffset ).HashCodeA;
-					Board.PawnHashCodeB ^= Board.GetPiece(this.m_square.Ordinal - this.m_player.PawnForwardOffset ).HashCodeB;
-					Board.GetPiece(this.m_square.Ordinal - this.m_player.PawnForwardOffset ).Capture(); // Take enemy pawn that is now behind us
-					break;
-			}
-
-			Board.HashCodeA ^= this.HashCodeA; // XOR piece into new piece position
-			Board.HashCodeB ^= this.HashCodeB; // XOR piece into new piece position
-			if (this.Name==Piece.enmName.Pawn) 
-			{
-				Board.PawnHashCodeA ^= this.HashCodeA;
-				Board.PawnHashCodeB ^= this.HashCodeB;
-			}
-
-			move.IsInCheck = move.Piece.Player.IsInCheck;
-			move.IsEnemyInCheck = move.Piece.Player.OtherPlayer.IsInCheck;
-
-			move.HashCodeA = Board.HashCodeA;
-			move.HashCodeB = Board.HashCodeB;
-
-			Game.MoveHistory.Add(move);
-
-			if (move.Piece.Player.CanClaimThreeMoveRepetitionDraw)
-			{
-				Board.HashCodeA ^= 31;
-				Board.HashCodeB ^= 29;
-				move.HashCodeA = Board.HashCodeA;
-				move.HashCodeB = Board.HashCodeB;
-				move.IsThreeMoveRepetition = true;
-			}
-
-			return move;
-		}
-
-		public Piece Capture()
-		{
-			this.m_player.OtherPlayer.CapturedEnemyPieces.Add(this);
-			this.m_player.Pieces.Remove(this);
-			this.Square.Piece = null;
-			this.IsInPlay = false;
-			if (this.Name == Piece.enmName.Pawn)
-			{
-				this.m_player.DecreasePawnCount();
-			}
-			else
-			{
-				this.m_player.DecreaseMaterialCount();
-			}
-			return this;
-		}
-
-		public void Uncapture(int Ordinal)
-		{
-			this.Player.Pieces.Insert(Ordinal, this); 
-			this.Player.OtherPlayer.CapturedEnemyPieces.Remove(this);
-			this.IsInPlay = true;
-			if (this.Name == Piece.enmName.Pawn)
-			{
-				this.Player.IncreasePawnCount();
-			}
-			else
-			{
-				this.Player.IncreaseMaterialCount();
-			}
-		}
-
-		public int PointsTotal
-		{
-			get
-			{
-				return	this.Value //+ m_square.Value;
-					  + this.PositionalPoints;
-			}
-		}
-
-		public int PositionalPoints
-		{
-			get 
-			{
-					return m_Top.PositionalPoints;
-			}
-		}
-
-		public int DefensePoints
-		{
-			get
-			{	
-				Piece piece = m_square.DefendedBy(this.m_player);
-				if (piece!=null)
-				{
-					switch (piece.Name)
-					{
-						case Piece.enmName.Pawn:
-							return 60;
-
-						case Piece.enmName.Knight:
-						case Piece.enmName.Bishop:
-							return 45;
-
-						case Piece.enmName.Rook:
-							return 30;
-
-						case Piece.enmName.Queen:
-							return 20;
-					
-						case Piece.enmName.King:
-							return 20;
-					
-					}
-				}
-				return 0;
-			}
-
-		}
-
-		public bool CanBeDrivenAwayByPawn()
-		{
-			Piece piece;
-
-			piece = Board.GetPiece(m_square.Ordinal+m_player.PawnAttackLeftOffset+m_player.PawnForwardOffset);
-			if (piece!=null && piece.Player.Colour!=m_player.Colour && piece.Name==Piece.enmName.Pawn) return true;
-
-			piece = Board.GetPiece(m_square.Ordinal+m_player.PawnAttackRightOffset+m_player.PawnForwardOffset);
-			if (piece!=null && piece.Player.Colour!=m_player.Colour && piece.Name==Piece.enmName.Pawn) return true;
-
-			piece = Board.GetPiece(m_square.Ordinal+m_player.PawnAttackLeftOffset+m_player.PawnForwardOffset+m_player.PawnForwardOffset);
-			if (piece!=null && piece.Player.Colour!=m_player.Colour && piece.Name==Piece.enmName.Pawn && !piece.HasMoved) return true;
-
-			piece = Board.GetPiece(m_square.Ordinal+m_player.PawnAttackRightOffset+m_player.PawnForwardOffset+m_player.PawnForwardOffset);
-			if (piece!=null && piece.Player.Colour!=m_player.Colour && piece.Name==Piece.enmName.Pawn && !piece.HasMoved) return true;
-
-			return false;
-		}
-
-		public int TaxiCabDistanceToEnemyKingPenalty()
-		{
-			return (Math.Abs(this.m_square.Rank-this.m_player.OtherPlayer.King.Square.Rank) + Math.Abs(this.m_square.File-this.m_player.OtherPlayer.King.Square.File));
-		}
-
-
-
-
-	
-		private static ulong[] m_aulongHashCodesA =
-		{
+    #region Using
+
+    using System;
+
+    #endregion
+
+    /// <summary>
+    /// The piece.
+    /// </summary>
+    public class Piece : IPieceTop
+    {
+        #region Constants and Fields
+
+        #region HashCodesA
+        /// <summary>
+        /// The m_aulong hash codes a.
+        /// </summary>
+        private static readonly ulong[] m_aulongHashCodesA =
+        {
 			6557995217205458958, 3216546429887213718, 10981975557637945592, 13117948053612451546, 16462319544570117268, 14109089931958414830, 7784257433824872028, 12575758863506724218, 0, 0, 0, 0, 0, 0, 0, 0, 
 			5452803369408346770, 17504272207519905704, 10076908662681196056, 12181556996310766954, 6618282532582206852, 886584768689976646, 5337735909196723884, 1518236921046637970, 0, 0, 0, 0, 0, 0, 0, 0, 
 			15827119029725512510, 9082962233660957234, 1263297098503346738, 13875222574635967674, 16609127610647298318, 10435515111652777838, 18329661936892632940, 5331746027401435792, 0, 0, 0, 0, 0, 0, 0, 0, 
@@ -850,14 +331,15 @@ namespace SharpChess
 			893073461423457380, 17683758848367226490, 16527097393569827420, 2735142674099284328, 9662802877124375424, 8321713552188327638, 8173669471044320106, 17793811270367016646, 0, 0, 0, 0, 0, 0, 0, 0, 
 			6469010582208754026, 385263916836220764, 13997178071016099374, 6493273471255733094, 16398223291507912746, 12982011291321345124, 8398222169031995414, 12525029543551683222, 0, 0, 0, 0, 0, 0, 0, 0, 
 			3838106435186607694, 16363275646207100230, 8157924686814188156, 10345999663263833660, 5885189947705602570, 11295261360414968882, 5944773567884435270, 3462668301945089422, 0, 0, 0, 0, 0, 0, 0, 0
+        };
+        #endregion
 
-	};
-
-
-	
-		private static ulong[] m_aulongHashCodesB =
-		{
-
+        #region HashCodesB
+        /// <summary>
+        /// The m_aulong hash codes b.
+        /// </summary>
+        private static readonly ulong[] m_aulongHashCodesB =
+        {
 			16164111449390318276, 11419626980698143882, 3217985813656852606, 11925939290598446094, 16807230890854361004, 8132383134553493882, 16234001359038311548, 2222980806129073348, 0, 0, 0, 0, 0, 0, 0, 0, 
 			12147126317193968708, 12662676227780305028, 7659016084700499920, 15919405972837025858, 5336156159565083352, 8423454768724593766, 2169585031632404044, 14142541111985433560, 0, 0, 0, 0, 0, 0, 0, 0, 
 			2583011259453287228, 11286844808399943576, 8374353354055572742, 6722194691202237510, 3911546955319814036, 14360802384881332098, 6382525139320483186, 11397912141720563588, 0, 0, 0, 0, 0, 0, 0, 0, 
@@ -1145,7 +627,1029 @@ namespace SharpChess
 			7079568573131857870, 17463207697321781860, 10673273525780713024, 4208978758881610544, 8283083076309309622, 2755991034385475388, 13199066122313278856, 15647147990663949628, 0, 0, 0, 0, 0, 0, 0, 0, 
 			2032444034691397282, 531489711211049572, 3938448369147987384, 13444972959689344786, 6257518099028975776, 2796815787615533756, 13700228577489310564, 3160185983542576612, 0, 0, 0, 0, 0, 0, 0, 0, 
 			2200040045247455020, 15327288303752387800, 10495710256153793502, 16273505662658112490, 14721398773463347032, 5206466328696068152, 11485607232664799858, 10023668604770321902, 0, 0, 0, 0, 0, 0, 0, 0
-		};
+        };
+        #endregion
 
-	}
+        /// <summary>
+        /// The m_ id.
+        /// </summary>
+        private readonly enmID m_ID;
+
+        /// <summary>
+        /// The m_player.
+        /// </summary>
+        private readonly Player m_player;
+
+        /// <summary>
+        /// The m_square start location.
+        /// </summary>
+        private readonly Square m_squareStartLocation;
+
+        /// <summary>
+        /// The m_ has been promoted.
+        /// </summary>
+        private bool m_HasBeenPromoted;
+
+        /// <summary>
+        /// The m_ is in play.
+        /// </summary>
+        private bool m_IsInPlay = true;
+
+        /// <summary>
+        /// The m_ last move turn no.
+        /// </summary>
+        private int m_LastMoveTurnNo = -1;
+
+        /// <summary>
+        /// The m_ no of moves.
+        /// </summary>
+        private int m_NoOfMoves;
+
+        /// <summary>
+        /// The m_ top.
+        /// </summary>
+        private IPieceTop m_Top;
+
+        /// <summary>
+        /// The m_square.
+        /// </summary>
+        private Square m_square;
+
+        #endregion
+
+        #region Constructors and Destructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Piece"/> class.
+        /// </summary>
+        /// <param name="name">
+        /// The name.
+        /// </param>
+        /// <param name="player">
+        /// The player.
+        /// </param>
+        /// <param name="Col">
+        /// The col.
+        /// </param>
+        /// <param name="Row">
+        /// The row.
+        /// </param>
+        /// <param name="ID">
+        /// The id.
+        /// </param>
+        public Piece(enmName name, Player player, int Col, int Row, enmID ID)
+        {
+            Square square = Board.GetSquare(Col, Row);
+
+            this.m_player = player;
+            this.m_squareStartLocation = this.m_square = square;
+            square.Piece = this;
+            this.m_ID = ID;
+
+            switch (name)
+            {
+                case enmName.Pawn:
+                    this.m_Top = new PiecePawn(this);
+                    break;
+
+                case enmName.Bishop:
+                    this.m_Top = new PieceBishop(this);
+                    break;
+
+                case enmName.Knight:
+                    this.m_Top = new PieceKnight(this);
+                    break;
+
+                case enmName.Rook:
+                    this.m_Top = new PieceRook(this);
+                    break;
+
+                case enmName.Queen:
+                    this.m_Top = new PieceQueen(this);
+                    break;
+
+                case enmName.King:
+                    this.m_Top = new PieceKing(this);
+                    break;
+            }
+        }
+
+        #endregion
+
+        #region Enums
+
+        /// <summary>
+        /// The enm id.
+        /// </summary>
+        public enum enmID
+        {
+            /// <summary>
+            /// The white queens rook.
+            /// </summary>
+            WhiteQueensRook, 
+
+            /// <summary>
+            /// The white queens knight.
+            /// </summary>
+            WhiteQueensKnight, 
+
+            /// <summary>
+            /// The white queens bishop.
+            /// </summary>
+            WhiteQueensBishop, 
+
+            /// <summary>
+            /// The white queen.
+            /// </summary>
+            WhiteQueen, 
+
+            /// <summary>
+            /// The white king.
+            /// </summary>
+            WhiteKing, 
+
+            /// <summary>
+            /// The white kings bishop.
+            /// </summary>
+            WhiteKingsBishop, 
+
+            /// <summary>
+            /// The white kings knight.
+            /// </summary>
+            WhiteKingsKnight, 
+
+            /// <summary>
+            /// The white kings rook.
+            /// </summary>
+            WhiteKingsRook, 
+
+            /// <summary>
+            /// The white pawn 1.
+            /// </summary>
+            WhitePawn1, 
+
+            /// <summary>
+            /// The white pawn 2.
+            /// </summary>
+            WhitePawn2, 
+
+            /// <summary>
+            /// The white pawn 3.
+            /// </summary>
+            WhitePawn3, 
+
+            /// <summary>
+            /// The white pawn 4.
+            /// </summary>
+            WhitePawn4, 
+
+            /// <summary>
+            /// The white pawn 5.
+            /// </summary>
+            WhitePawn5, 
+
+            /// <summary>
+            /// The white pawn 6.
+            /// </summary>
+            WhitePawn6, 
+
+            /// <summary>
+            /// The white pawn 7.
+            /// </summary>
+            WhitePawn7, 
+
+            /// <summary>
+            /// The white pawn 8.
+            /// </summary>
+            WhitePawn8, 
+
+            /// <summary>
+            /// The black queens rook.
+            /// </summary>
+            BlackQueensRook, 
+
+            /// <summary>
+            /// The black queens knight.
+            /// </summary>
+            BlackQueensKnight, 
+
+            /// <summary>
+            /// The black queens bishop.
+            /// </summary>
+            BlackQueensBishop, 
+
+            /// <summary>
+            /// The black queen.
+            /// </summary>
+            BlackQueen, 
+
+            /// <summary>
+            /// The black king.
+            /// </summary>
+            BlackKing, 
+
+            /// <summary>
+            /// The black kings bishop.
+            /// </summary>
+            BlackKingsBishop, 
+
+            /// <summary>
+            /// The black kings knight.
+            /// </summary>
+            BlackKingsKnight, 
+
+            /// <summary>
+            /// The black kings rook.
+            /// </summary>
+            BlackKingsRook, 
+
+            /// <summary>
+            /// The black pawn 1.
+            /// </summary>
+            BlackPawn1, 
+
+            /// <summary>
+            /// The black pawn 2.
+            /// </summary>
+            BlackPawn2, 
+
+            /// <summary>
+            /// The black pawn 3.
+            /// </summary>
+            BlackPawn3, 
+
+            /// <summary>
+            /// The black pawn 4.
+            /// </summary>
+            BlackPawn4, 
+
+            /// <summary>
+            /// The black pawn 5.
+            /// </summary>
+            BlackPawn5, 
+
+            /// <summary>
+            /// The black pawn 6.
+            /// </summary>
+            BlackPawn6, 
+
+            /// <summary>
+            /// The black pawn 7.
+            /// </summary>
+            BlackPawn7, 
+
+            /// <summary>
+            /// The black pawn 8.
+            /// </summary>
+            BlackPawn8
+        }
+
+        /// <summary>
+        /// The enm name.
+        /// </summary>
+        public enum enmName
+        {
+            /// <summary>
+            /// The pawn.
+            /// </summary>
+            Pawn, 
+
+            /// <summary>
+            /// The bishop.
+            /// </summary>
+            Bishop, 
+
+            /// <summary>
+            /// The knight.
+            /// </summary>
+            Knight, 
+
+            /// <summary>
+            /// The rook.
+            /// </summary>
+            Rook, 
+
+            /// <summary>
+            /// The queen.
+            /// </summary>
+            Queen, 
+
+            /// <summary>
+            /// The king.
+            /// </summary>
+            King
+        }
+
+        #endregion
+
+        #region Public Properties
+
+        /// <summary>
+        /// Gets Abbreviation.
+        /// </summary>
+        public string Abbreviation
+        {
+            get
+            {
+                return this.m_Top.Abbreviation;
+            }
+        }
+
+        /// <summary>
+        /// Gets Base.
+        /// </summary>
+        public Piece Base
+        {
+            get
+            {
+                return this;
+            }
+        }
+
+        /// <summary>
+        /// Gets BasicValue.
+        /// </summary>
+        public int BasicValue
+        {
+            get
+            {
+                return this.m_Top.BasicValue;
+            }
+        }
+
+        /// <summary>
+        /// Gets DefensePoints.
+        /// </summary>
+        public int DefensePoints
+        {
+            get
+            {
+                Piece piece = this.m_square.DefendedBy(this.m_player);
+                if (piece != null)
+                {
+                    switch (piece.Name)
+                    {
+                        case enmName.Pawn:
+                            return 60;
+
+                        case enmName.Knight:
+                        case enmName.Bishop:
+                            return 45;
+
+                        case enmName.Rook:
+                            return 30;
+
+                        case enmName.Queen:
+                            return 20;
+
+                        case enmName.King:
+                            return 20;
+                    }
+                }
+
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether HasBeenPromoted.
+        /// </summary>
+        public bool HasBeenPromoted
+        {
+            get
+            {
+                return this.m_HasBeenPromoted;
+            }
+
+            set
+            {
+                this.m_HasBeenPromoted = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether HasMoved.
+        /// </summary>
+        public bool HasMoved
+        {
+            get
+            {
+                return this.m_NoOfMoves != 0 || !this.IsInPlay;
+            }
+        }
+
+        /// <summary>
+        /// Gets HashCodeA.
+        /// </summary>
+        public ulong HashCodeA
+        {
+            get
+            {
+                return this.HashCodeAForSquareOrdinal(this.m_square.Ordinal);
+            }
+        }
+
+        /// <summary>
+        /// Gets HashCodeB.
+        /// </summary>
+        public ulong HashCodeB
+        {
+            get
+            {
+                return this.HashCodeBForSquareOrdinal(this.m_square.Ordinal);
+            }
+        }
+
+        /// <summary>
+        /// Gets ImageIndex.
+        /// </summary>
+        public int ImageIndex
+        {
+            get
+            {
+                return this.m_Top.ImageIndex;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether IsCapturable.
+        /// </summary>
+        public bool IsCapturable
+        {
+            get
+            {
+                return this.m_Top.IsCapturable;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether IsInPlay.
+        /// </summary>
+        public bool IsInPlay
+        {
+            get
+            {
+                return this.m_IsInPlay;
+            }
+
+            set
+            {
+                this.m_IsInPlay = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets LastMoveTurnNo.
+        /// </summary>
+        public int LastMoveTurnNo
+        {
+            get
+            {
+                return this.m_LastMoveTurnNo;
+            }
+
+            set
+            {
+                this.m_LastMoveTurnNo = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether MovedLastMove.
+        /// </summary>
+        public bool MovedLastMove
+        {
+            get
+            {
+                return this.m_LastMoveTurnNo == Game.TurnNo - 2;
+            }
+        }
+
+        /// <summary>
+        /// Gets Name.
+        /// </summary>
+        public enmName Name
+        {
+            get
+            {
+                return this.m_Top.Name;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets NoOfMoves.
+        /// </summary>
+        public int NoOfMoves
+        {
+            get
+            {
+                return this.m_NoOfMoves;
+            }
+
+            set
+            {
+                this.m_NoOfMoves = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets Player.
+        /// </summary>
+        public Player Player
+        {
+            get
+            {
+                return this.m_player;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets Points.
+        /// </summary>
+        public int Points { get; set; }
+
+        /// <summary>
+        /// Gets PointsTotal.
+        /// </summary>
+        public int PointsTotal
+        {
+            get
+            {
+                return this.Value // + m_square.Value;
+                       + this.PositionalPoints;
+            }
+        }
+
+        /// <summary>
+        /// Gets PositionalPoints.
+        /// </summary>
+        public int PositionalPoints
+        {
+            get
+            {
+                return this.m_Top.PositionalPoints;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets Square.
+        /// </summary>
+        public Square Square
+        {
+            get
+            {
+                return this.m_square;
+            }
+
+            set
+            {
+                this.m_square = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets StartLocation.
+        /// </summary>
+        public Square StartLocation
+        {
+            get
+            {
+                return this.m_squareStartLocation;
+            }
+        }
+
+        /// <summary>
+        /// Gets Top.
+        /// </summary>
+        public IPieceTop Top
+        {
+            get
+            {
+                return this.m_Top;
+            }
+        }
+
+        /// <summary>
+        /// Gets Value.
+        /// </summary>
+        public int Value
+        {
+            get
+            {
+                return this.m_Top.Value;
+            }
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// The can be driven away by pawn.
+        /// </summary>
+        /// <returns>
+        /// The can be driven away by pawn.
+        /// </returns>
+        public bool CanBeDrivenAwayByPawn()
+        {
+            Piece piece;
+
+            piece = Board.GetPiece(this.m_square.Ordinal + this.m_player.PawnAttackLeftOffset + this.m_player.PawnForwardOffset);
+            if (piece != null && piece.Player.Colour != this.m_player.Colour && piece.Name == enmName.Pawn)
+            {
+                return true;
+            }
+
+            piece = Board.GetPiece(this.m_square.Ordinal + this.m_player.PawnAttackRightOffset + this.m_player.PawnForwardOffset);
+            if (piece != null && piece.Player.Colour != this.m_player.Colour && piece.Name == enmName.Pawn)
+            {
+                return true;
+            }
+
+            piece = Board.GetPiece(this.m_square.Ordinal + this.m_player.PawnAttackLeftOffset + this.m_player.PawnForwardOffset + this.m_player.PawnForwardOffset);
+            if (piece != null && piece.Player.Colour != this.m_player.Colour && piece.Name == enmName.Pawn && !piece.HasMoved)
+            {
+                return true;
+            }
+
+            piece = Board.GetPiece(this.m_square.Ordinal + this.m_player.PawnAttackRightOffset + this.m_player.PawnForwardOffset + this.m_player.PawnForwardOffset);
+            if (piece != null && piece.Player.Colour != this.m_player.Colour && piece.Name == enmName.Pawn && !piece.HasMoved)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// The capture.
+        /// </summary>
+        /// <returns>
+        /// </returns>
+        public Piece Capture()
+        {
+            this.m_player.OtherPlayer.CapturedEnemyPieces.Add(this);
+            this.m_player.Pieces.Remove(this);
+            this.Square.Piece = null;
+            this.IsInPlay = false;
+            if (this.Name == enmName.Pawn)
+            {
+                this.m_player.DecreasePawnCount();
+            }
+            else
+            {
+                this.m_player.DecreaseMaterialCount();
+            }
+
+            return this;
+        }
+
+        /// <summary>
+        /// The demote.
+        /// </summary>
+        /// <exception cref="ApplicationException">
+        /// </exception>
+        public void Demote()
+        {
+            if (!this.m_HasBeenPromoted)
+            {
+                throw new ApplicationException("Cannot demote piece that hasnt been promoted");
+            }
+
+            this.m_Top = new PiecePawn(this);
+            this.m_player.IncreasePawnCount();
+            this.m_player.DecreaseMaterialCount();
+            this.m_HasBeenPromoted = false;
+        }
+
+        /// <summary>
+        /// The generate lazy moves.
+        /// </summary>
+        /// <param name="moves">
+        /// The moves.
+        /// </param>
+        /// <param name="movesType">
+        /// The moves type.
+        /// </param>
+        public void GenerateLazyMoves(Moves moves, Moves.enmMovesType movesType)
+        {
+            this.m_Top.GenerateLazyMoves(moves, movesType);
+        }
+
+        /// <summary>
+        /// The generate legal moves.
+        /// </summary>
+        /// <param name="moves">
+        /// The moves.
+        /// </param>
+        public void GenerateLegalMoves(Moves moves)
+        {
+            this.GenerateLazyMoves(moves, Moves.enmMovesType.All);
+            Move move;
+            for (int intIndex = moves.Count - 1; intIndex >= 0; intIndex--)
+            {
+                move = moves[intIndex];
+                Move moveUndo = move.Piece.Move(move.Name, move.To);
+                if (move.Piece.Player.IsInCheck)
+                {
+                    moves.Remove(move);
+                }
+
+                SharpChess.Move.Undo(moveUndo);
+            }
+        }
+
+        /// <summary>
+        /// The hash code a for square ordinal.
+        /// </summary>
+        /// <param name="Ordinal">
+        /// The ordinal.
+        /// </param>
+        /// <returns>
+        /// The hash code a for square ordinal.
+        /// </returns>
+        public ulong HashCodeAForSquareOrdinal(int Ordinal)
+        {
+            uint a = (uint)this.m_ID;
+            uint x = ((uint)(this.m_ID)) << 7;
+            ulong ulongPromotionModifier = 0;
+            if (this.m_HasBeenPromoted)
+            {
+                switch (this.m_Top.Name)
+                {
+                    case enmName.Queen:
+                        ulongPromotionModifier = 830859827498573475;
+                        break;
+                    case enmName.Rook:
+                        ulongPromotionModifier = 37500384876452947;
+                        break;
+                    case enmName.Bishop:
+                        ulongPromotionModifier = 448573857309865743;
+                        break;
+                    case enmName.Knight:
+                        ulongPromotionModifier = 294375032850265937;
+                        break;
+                }
+            }
+
+            return m_aulongHashCodesA[(((uint)this.m_ID) << 7) + Ordinal] + ulongPromotionModifier;
+        }
+
+        /// <summary>
+        /// The hash code b for square ordinal.
+        /// </summary>
+        /// <param name="Ordinal">
+        /// The ordinal.
+        /// </param>
+        /// <returns>
+        /// The hash code b for square ordinal.
+        /// </returns>
+        public ulong HashCodeBForSquareOrdinal(int Ordinal)
+        {
+            uint a = (uint)this.m_ID;
+            ulong ulongPromotionModifier = 0;
+            if (this.m_HasBeenPromoted)
+            {
+                switch (this.m_Top.Name)
+                {
+                    case enmName.Queen:
+                        ulongPromotionModifier = 790423450762398573;
+                        break;
+                    case enmName.Rook:
+                        ulongPromotionModifier = 394756026094872034;
+                        break;
+                    case enmName.Bishop:
+                        ulongPromotionModifier = 629385632983478593;
+                        break;
+                    case enmName.Knight:
+                        ulongPromotionModifier = 283469276067858673;
+                        break;
+                }
+            }
+
+            return m_aulongHashCodesB[(((uint)this.m_ID) << 7) + Ordinal] + ulongPromotionModifier;
+        }
+
+        /// <summary>
+        /// The move.
+        /// </summary>
+        /// <param name="MoveName">
+        /// The move name.
+        /// </param>
+        /// <param name="square">
+        /// The square.
+        /// </param>
+        /// <returns>
+        /// </returns>
+        public Move Move(Move.enmName MoveName, Square square)
+        {
+            Square squarepieceCaptured = square;
+
+            if (MoveName == SharpChess.Move.enmName.EnPassent)
+            {
+                // Override when en passent
+                squarepieceCaptured = Board.GetSquare(square.Ordinal - this.m_player.PawnForwardOffset);
+            }
+
+            Board.HashCodeA ^= this.HashCodeA; // Un-XOR current piece position
+            Board.HashCodeB ^= this.HashCodeB; // Un-XOR current piece position
+            if (this.Name == enmName.Pawn)
+            {
+                Board.PawnHashCodeA ^= this.HashCodeA;
+                Board.PawnHashCodeB ^= this.HashCodeB;
+            }
+
+            Move move = new Move(Game.TurnNo, this.m_LastMoveTurnNo, MoveName, this, this.m_square, square, squarepieceCaptured.Piece, squarepieceCaptured.Piece == null ? -1 : squarepieceCaptured.Piece.Player.Pieces.IndexOf(squarepieceCaptured.Piece), 0);
+
+            if (square.Piece != null)
+            {
+                Board.HashCodeA ^= squarepieceCaptured.Piece.HashCodeA; // un-XOR the piece taken
+                Board.HashCodeB ^= squarepieceCaptured.Piece.HashCodeB; // un-XOR the piece taken
+                if (squarepieceCaptured.Piece.Name == enmName.Pawn)
+                {
+                    Board.PawnHashCodeA ^= squarepieceCaptured.Piece.HashCodeA;
+                    Board.PawnHashCodeB ^= squarepieceCaptured.Piece.HashCodeB;
+                }
+
+                squarepieceCaptured.Piece.Capture();
+            }
+
+            Game.TurnNo++;
+
+            this.m_square.Piece = null;
+            square.Piece = this;
+            this.m_square = square;
+
+            this.m_LastMoveTurnNo = Game.TurnNo;
+            this.m_NoOfMoves++;
+
+            Piece pieceRook;
+            switch (MoveName)
+            {
+                case SharpChess.Move.enmName.CastleKingSide:
+                    pieceRook = move.Piece.Player.Colour == Player.enmColour.White ? Board.GetPiece(7, 0) : Board.GetPiece(7, 7);
+                    Board.HashCodeA ^= pieceRook.HashCodeA;
+                    Board.HashCodeB ^= pieceRook.HashCodeB;
+                    pieceRook.Square.Piece = null;
+                    pieceRook.m_LastMoveTurnNo = Game.TurnNo;
+                    pieceRook.m_NoOfMoves++;
+                    Board.GetSquare(5, square.Rank).Piece = pieceRook;
+                    pieceRook.Square = Board.GetSquare(5, square.Rank);
+                    Board.HashCodeA ^= pieceRook.HashCodeA;
+                    Board.HashCodeB ^= pieceRook.HashCodeB;
+                    this.m_player.HasCastled = true;
+                    break;
+
+                case SharpChess.Move.enmName.CastleQueenSide:
+                    pieceRook = move.Piece.Player.Colour == Player.enmColour.White ? Board.GetPiece(0, 0) : Board.GetPiece(0, 7);
+                    Board.HashCodeA ^= pieceRook.HashCodeA;
+                    Board.HashCodeB ^= pieceRook.HashCodeB;
+                    pieceRook.Square.Piece = null;
+                    pieceRook.m_LastMoveTurnNo = Game.TurnNo;
+                    pieceRook.m_NoOfMoves++;
+                    Board.GetSquare(3, square.Rank).Piece = pieceRook;
+                    pieceRook.Square = Board.GetSquare(3, square.Rank);
+                    Board.HashCodeA ^= pieceRook.HashCodeA;
+                    Board.HashCodeB ^= pieceRook.HashCodeB;
+                    this.m_player.HasCastled = true;
+                    break;
+
+                case SharpChess.Move.enmName.PawnPromotionQueen:
+                    this.Promote(enmName.Queen);
+                    break;
+
+                case SharpChess.Move.enmName.PawnPromotionRook:
+                    this.Promote(enmName.Rook);
+                    break;
+
+                case SharpChess.Move.enmName.PawnPromotionBishop:
+                    this.Promote(enmName.Bishop);
+                    break;
+
+                case SharpChess.Move.enmName.PawnPromotionKnight:
+                    this.Promote(enmName.Knight);
+                    break;
+
+                case SharpChess.Move.enmName.EnPassent:
+                    Board.HashCodeA ^= Board.GetPiece(this.m_square.Ordinal - this.m_player.PawnForwardOffset).HashCodeA;
+                    Board.HashCodeB ^= Board.GetPiece(this.m_square.Ordinal - this.m_player.PawnForwardOffset).HashCodeB;
+                    Board.PawnHashCodeA ^= Board.GetPiece(this.m_square.Ordinal - this.m_player.PawnForwardOffset).HashCodeA;
+                    Board.PawnHashCodeB ^= Board.GetPiece(this.m_square.Ordinal - this.m_player.PawnForwardOffset).HashCodeB;
+                    Board.GetPiece(this.m_square.Ordinal - this.m_player.PawnForwardOffset).Capture(); // Take enemy pawn that is now behind us
+                    break;
+            }
+
+            Board.HashCodeA ^= this.HashCodeA; // XOR piece into new piece position
+            Board.HashCodeB ^= this.HashCodeB; // XOR piece into new piece position
+            if (this.Name == enmName.Pawn)
+            {
+                Board.PawnHashCodeA ^= this.HashCodeA;
+                Board.PawnHashCodeB ^= this.HashCodeB;
+            }
+
+            move.IsInCheck = move.Piece.Player.IsInCheck;
+            move.IsEnemyInCheck = move.Piece.Player.OtherPlayer.IsInCheck;
+
+            move.HashCodeA = Board.HashCodeA;
+            move.HashCodeB = Board.HashCodeB;
+
+            Game.MoveHistory.Add(move);
+
+            if (move.Piece.Player.CanClaimThreeMoveRepetitionDraw)
+            {
+                Board.HashCodeA ^= 31;
+                Board.HashCodeB ^= 29;
+                move.HashCodeA = Board.HashCodeA;
+                move.HashCodeB = Board.HashCodeB;
+                move.IsThreeMoveRepetition = true;
+            }
+
+            return move;
+        }
+
+        /// <summary>
+        /// The promote.
+        /// </summary>
+        /// <param name="name">
+        /// The name.
+        /// </param>
+        /// <exception cref="ApplicationException">
+        /// </exception>
+        /// <exception cref="ApplicationException">
+        /// </exception>
+        /// <exception cref="ApplicationException">
+        /// </exception>
+        public void Promote(enmName name)
+        {
+            if (this.m_HasBeenPromoted)
+            {
+                throw new ApplicationException("Piece has already been promoted!");
+            }
+
+            if (this.Name != enmName.Pawn)
+            {
+                throw new ApplicationException("Attempt to promote piece that is not a pawn");
+            }
+
+            switch (name)
+            {
+                case enmName.Bishop:
+                    this.m_Top = new PieceBishop(this);
+                    break;
+
+                case enmName.Knight:
+                    this.m_Top = new PieceKnight(this);
+                    break;
+
+                case enmName.Rook:
+                    this.m_Top = new PieceRook(this);
+                    break;
+
+                case enmName.Queen:
+                    this.m_Top = new PieceQueen(this);
+                    break;
+
+                default:
+                    throw new ApplicationException("Can only promote pawn to either Bishop, Knight, Rook or Queen");
+            }
+
+            this.m_player.DecreasePawnCount();
+            this.m_player.IncreaseMaterialCount();
+            this.m_HasBeenPromoted = true;
+        }
+
+        /// <summary>
+        /// The taxi cab distance to enemy king penalty.
+        /// </summary>
+        /// <returns>
+        /// The taxi cab distance to enemy king penalty.
+        /// </returns>
+        public int TaxiCabDistanceToEnemyKingPenalty()
+        {
+            return Math.Abs(this.m_square.Rank - this.m_player.OtherPlayer.King.Square.Rank) + Math.Abs(this.m_square.File - this.m_player.OtherPlayer.King.Square.File);
+        }
+
+        /// <summary>
+        /// The uncapture.
+        /// </summary>
+        /// <param name="Ordinal">
+        /// The ordinal.
+        /// </param>
+        public void Uncapture(int Ordinal)
+        {
+            this.Player.Pieces.Insert(Ordinal, this);
+            this.Player.OtherPlayer.CapturedEnemyPieces.Remove(this);
+            this.IsInPlay = true;
+            if (this.Name == enmName.Pawn)
+            {
+                this.Player.IncreasePawnCount();
+            }
+            else
+            {
+                this.Player.IncreaseMaterialCount();
+            }
+        }
+
+        #endregion
+    }
 }
