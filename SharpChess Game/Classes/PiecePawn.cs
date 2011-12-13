@@ -106,25 +106,25 @@ namespace SharpChess
         }
 
         /*
-		public int DefencePoints
-		{
-			get 
-			{
-				// Add further subtraction, then add on a defense bonus
-				if (blnIsIsolatedLeft || blnIsIsolatedRight || blnIsBackward)
-				{
-					switch (Game.Stage)
-					{
-						case Game.enmStage.Opening:
-							intPoints += (m_Base.DefensePoints>>1) - 30;
-							break;
-						case Game.enmStage.Middle:
-							intPoints += (m_Base.DefensePoints>>2) - 15;
-							break;
-					}
-				}
-			}
-		}
+        public int DefencePoints
+        {
+            get 
+            {
+                // Add further subtraction, then add on a defense bonus
+                if (blnIsIsolatedLeft || blnIsIsolatedRight || blnIsBackward)
+                {
+                    switch (Game.Stage)
+                    {
+                        case Game.enmStage.Opening:
+                            intPoints += (m_Base.DefensePoints>>1) - 30;
+                            break;
+                        case Game.enmStage.Middle:
+                            intPoints += (m_Base.DefensePoints>>2) - 15;
+                            break;
+                    }
+                }
+            }
+        }
 */
 
         /// <summary>
@@ -299,10 +299,10 @@ namespace SharpChess
 
                 if (Game.Stage != Game.enmStage.End)
                 {
-                    // 	Pawns on D or E files
+                    // Pawns on D or E files
                     if (this.m_Base.Square.File == 3 || this.m_Base.Square.File == 4)
                     {
-                        // 	still at rank 2
+                        // still at rank 2
                         if (this.m_Base.Player.Colour == Player.enmColour.White && this.m_Base.Square.Rank == 1 || this.m_Base.Player.Colour == Player.enmColour.Black && this.m_Base.Square.Rank == 6)
                         {
                             intPoints -= 200;
@@ -312,7 +312,7 @@ namespace SharpChess
 
                 if (Game.Stage == Game.enmStage.Opening)
                 {
-                    // 	Pawns on D or E files
+                    // Pawns on D or E files
                     if (this.m_Base.Square.File == 3 || this.m_Base.Square.File == 4)
                     {
                         // Bonus for rank 5
@@ -374,17 +374,17 @@ namespace SharpChess
         #endregion
 
         /*
-		private Move.enmName MoveName(Player.enmColour colourPlayer, Square squareTo)
-		{
-			if (colourPlayer==Player.enmColour.White && squareTo.Rank==7 || colourPlayer==Player.enmColour.Black && squareTo.Rank==0)
-			{
-				return Move.enmName.PawnPromotion;
-			}
-			else
-			{
-				return Move.enmName.Standard;
-			}
-		}
+        private Move.enmName MoveName(Player.enmColour colourPlayer, Square squareTo)
+        {
+            if (colourPlayer==Player.enmColour.White && squareTo.Rank==7 || colourPlayer==Player.enmColour.Black && squareTo.Rank==0)
+            {
+                return Move.enmName.PawnPromotion;
+            }
+            else
+            {
+                return Move.enmName.Standard;
+            }
+        }
 */
         #region Public Methods
 

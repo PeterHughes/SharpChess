@@ -33,7 +33,7 @@ namespace SharpChess
     #endregion
 
     /// <summary>
-    /// Summary description for FENParser.
+    /// Converts a FEN string into a SharpChess board position.
     /// </summary>
     public class FEN
     {
@@ -829,10 +829,10 @@ namespace SharpChess
         /// FEN helper naming each field
         /// </summary>
         /// <param name="iField">
-        /// 1..6
+        /// A value between 1 and 6
         /// </param>
         /// <returns>
-        /// "FEN field {iField}: help message"
+        /// FEN field {iField}: help message
         /// </returns>
         /// <remarks>
         /// Used in a Warning message
@@ -945,6 +945,7 @@ namespace SharpChess
         /// The bln allow promotion.
         /// </param>
         /// <exception cref="ValidationException">
+        /// Unknow character in FEN string.
         /// </exception>
         private static void SetPiecePlacement(ref char[] acharPiecePlacement, bool blnAnyLocation, bool blnAllowPromotion)
         {
@@ -1004,6 +1005,7 @@ namespace SharpChess
         /// The achar piece placement.
         /// </param>
         /// <exception cref="ValidationException">
+        /// Raised when unable to place piece.
         /// </exception>
         private static void VerifyPiecePlacement(ref char[] acharPiecePlacement)
         {

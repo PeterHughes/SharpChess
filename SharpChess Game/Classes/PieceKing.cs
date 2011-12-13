@@ -37,14 +37,14 @@ namespace SharpChess
         /// </summary>
         private static readonly int[] m_aintSquareValues =
         {
-			1, 1, 1, 1, 1, 1, 1, 1,    0,0,0,0,0,0,0,0,
-			1, 7, 7, 7, 7, 7, 7, 1,    0,0,0,0,0,0,0,0,
-			1, 7,18,18,18,18, 7, 1,    0,0,0,0,0,0,0,0,
-			1, 7,18,27,27,18, 7, 1,    0,0,0,0,0,0,0,0,
-			1, 7,18,27,27,18, 7, 1,    0,0,0,0,0,0,0,0,
-			1, 7,18,18,18,18, 7, 1,    0,0,0,0,0,0,0,0,
-			1, 7, 7, 7, 7, 7, 7, 1 ,   0,0,0,0,0,0,0,0,
-			1, 1, 1, 1, 1, 1, 1, 1 ,   0,0,0,0,0,0,0,0
+            1, 1, 1, 1, 1, 1, 1, 1,    0,0,0,0,0,0,0,0,
+            1, 7, 7, 7, 7, 7, 7, 1,    0,0,0,0,0,0,0,0,
+            1, 7,18,18,18,18, 7, 1,    0,0,0,0,0,0,0,0,
+            1, 7,18,27,27,18, 7, 1,    0,0,0,0,0,0,0,0,
+            1, 7,18,27,27,18, 7, 1,    0,0,0,0,0,0,0,0,
+            1, 7,18,18,18,18, 7, 1,    0,0,0,0,0,0,0,0,
+            1, 7, 7, 7, 7, 7, 7, 1 ,   0,0,0,0,0,0,0,0,
+            1, 1, 1, 1, 1, 1, 1, 1 ,   0,0,0,0,0,0,0,0
         };
 
         /// <summary>
@@ -691,7 +691,7 @@ namespace SharpChess
                 goto exitpoint;
             }
 
-            // 			intOpenness += Board.LineIsOpen(this.m_Base.Player.Colour, square,  1); if (intOpenness>900) goto exitpoint;
+            // intOpenness += Board.LineIsOpen(this.m_Base.Player.Colour, square,  1); if (intOpenness>900) goto exitpoint;
             intOpenness += Board.LineIsOpen(this.m_Base.Player.Colour, square, -15);
             if (intOpenness > 900)
             {
@@ -710,7 +710,7 @@ namespace SharpChess
                 goto exitpoint;
             }
 
-            // 			intOpenness += Board.LineIsOpen(this.m_Base.Player.Colour, square, -1); if (intOpenness>900) goto exitpoint;
+            // intOpenness += Board.LineIsOpen(this.m_Base.Player.Colour, square, -1); if (intOpenness>900) goto exitpoint;
             intOpenness += Board.LineIsOpen(this.m_Base.Player.Colour, square, 15);
             if (intOpenness > 900)
             {
@@ -718,24 +718,24 @@ namespace SharpChess
             }
 
             /*
-						square = Board.GetSquare(squareKing.Ordinal-1);
-						if (square!=null)
-						{
-							intOpenness += Board.LineIsOpen(this.m_Base.Player.Colour, square, 17); if (intOpenness>900) goto exitpoint;
-							intOpenness += Board.LineIsOpen(this.m_Base.Player.Colour, square,-15); if (intOpenness>900) goto exitpoint;
-							intOpenness += Board.LineIsOpen(this.m_Base.Player.Colour, square,-17); if (intOpenness>900) goto exitpoint;
-							intOpenness += Board.LineIsOpen(this.m_Base.Player.Colour, square, 15); if (intOpenness>900) goto exitpoint;
-						}
+                        square = Board.GetSquare(squareKing.Ordinal-1);
+                        if (square!=null)
+                        {
+                            intOpenness += Board.LineIsOpen(this.m_Base.Player.Colour, square, 17); if (intOpenness>900) goto exitpoint;
+                            intOpenness += Board.LineIsOpen(this.m_Base.Player.Colour, square,-15); if (intOpenness>900) goto exitpoint;
+                            intOpenness += Board.LineIsOpen(this.m_Base.Player.Colour, square,-17); if (intOpenness>900) goto exitpoint;
+                            intOpenness += Board.LineIsOpen(this.m_Base.Player.Colour, square, 15); if (intOpenness>900) goto exitpoint;
+                        }
 
-						square = Board.GetSquare(squareKing.Ordinal+1);
-						if (square!=null)
-						{
-							intOpenness += Board.LineIsOpen(this.m_Base.Player.Colour, square, 17); if (intOpenness>900) goto exitpoint;
-							intOpenness += Board.LineIsOpen(this.m_Base.Player.Colour, square,-15); if (intOpenness>900) goto exitpoint;
-							intOpenness += Board.LineIsOpen(this.m_Base.Player.Colour, square,-17); if (intOpenness>900) goto exitpoint;
-							intOpenness += Board.LineIsOpen(this.m_Base.Player.Colour, square, 15); if (intOpenness>900) goto exitpoint;
-						}
-			*/
+                        square = Board.GetSquare(squareKing.Ordinal+1);
+                        if (square!=null)
+                        {
+                            intOpenness += Board.LineIsOpen(this.m_Base.Player.Colour, square, 17); if (intOpenness>900) goto exitpoint;
+                            intOpenness += Board.LineIsOpen(this.m_Base.Player.Colour, square,-15); if (intOpenness>900) goto exitpoint;
+                            intOpenness += Board.LineIsOpen(this.m_Base.Player.Colour, square,-17); if (intOpenness>900) goto exitpoint;
+                            intOpenness += Board.LineIsOpen(this.m_Base.Player.Colour, square, 15); if (intOpenness>900) goto exitpoint;
+                        }
+            */
             exitpoint:
             return intOpenness;
         }

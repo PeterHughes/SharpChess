@@ -147,20 +147,7 @@ namespace SharpChess
         /// The str message.
         /// </param>
         /// <exception cref="WinBoardInputException">
-        /// </exception>
-        /// <exception cref="WinBoardInputException">
-        /// </exception>
-        /// <exception cref="WinBoardInputException">
-        /// </exception>
-        /// <exception cref="WinBoardInputException">
-        /// </exception>
-        /// <exception cref="WinBoardInputException">
-        /// </exception>
-        /// <exception cref="WinBoardInputException">
-        /// </exception>
-        /// <exception cref="WinBoardInputException">
-        /// </exception>
-        /// <exception cref="WinBoardInputException">
+        /// Indicates failure to process winboard command.
         /// </exception>
         public static void ProcessInputEvent(string strMessage)
         {
@@ -173,8 +160,8 @@ namespace SharpChess
                         You can use it to put your engine into "xboard mode" if that is needed. 
                         If your engine prints a prompt to ask for user input, you must turn off the prompt and output a 
                         newline when the "xboard" command comes in.
+                        This will be a false 2nd "ghost" message, so ignore it.
                     */
-                    // This will be a false 2nd "ghost" message, so ignore it.
                 }
                 else if (strMessage.StartsWith("protover "))
                 {
@@ -500,8 +487,8 @@ namespace SharpChess
                         draw offer to have been withdrawn by the time you accept it, so don't assume the game is over because 
                         you accept a draw offer. Continue playing until xboard tells you the game is over. See also 
                         "offer draw" below. 
+                        Ignore all draw offer for now.
                     */
-                    // Ignore all draw offer for now.
                 }
                 else if (strMessage.StartsWith("result "))
                 {
@@ -909,12 +896,13 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// The make move.
+        /// Make move.
         /// </summary>
         /// <param name="strMove">
-        /// The str move.
+        /// The move.
         /// </param>
         /// <exception cref="WinBoardInputException">
+        /// Winboard exception
         /// </exception>
         private static void MakeMove(string strMove)
         {

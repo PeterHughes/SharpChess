@@ -34,7 +34,7 @@ namespace SharpChess
     #endregion
 
     /// <summary>
-    /// Summary description for OpeningBookSimple.
+    /// Simple Opening Book.
     /// </summary>
     public class OpeningBookSimple
     {

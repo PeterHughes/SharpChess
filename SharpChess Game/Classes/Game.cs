@@ -1263,6 +1263,7 @@ namespace SharpChess
         /// The player_ ready to make move.
         /// </summary>
         /// <exception cref="ApplicationException">
+        /// Raised when prinipal variation is empty.
         /// </exception>
         private static void Player_ReadyToMakeMove()
         {

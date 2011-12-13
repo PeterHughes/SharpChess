@@ -1,9 +1,9 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Program.cs" company="SharpChess">
+// <copyright file="ForceImmediateMoveException.cs" company="SharpChess">
 //   Peter Hughes
 // </copyright>
 // <summary>
-//   The program.
+//   The force immediate move exception.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -23,33 +23,18 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-namespace SharpChess_Performance_Tester
+namespace SharpChess
 {
     #region Using
 
     using System;
-    using System.Windows.Forms;
 
     #endregion
 
     /// <summary>
-    /// The program.
+    /// The force immediate move exception.
     /// </summary>
-    internal static class Program
+    public class ForceImmediateMoveException : ApplicationException
     {
-        #region Methods
-
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
-        [STAThread]
-        private static void Main()
-        {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Main());
-        }
-
-        #endregion
     }
 }

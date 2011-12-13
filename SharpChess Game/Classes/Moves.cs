@@ -308,7 +308,7 @@ namespace SharpChess
         /// </summary>
         public void SortByScore()
         {
-            // 			m_colMoves.Sort();
+            // m_colMoves.Sort();
             QuickSort(this.m_colMoves, 0, this.m_colMoves.Count - 1);
         }
 

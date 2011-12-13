@@ -114,6 +114,8 @@
     <Compile Include="Classes\Board.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Classes\ForceImmediateMoveException.cs" />
+    <Compile Include="Classes\PlayerClock.cs" />
     <Compile Include="Classes\FEN.cs">
       <SubType>Code</SubType>
     </Compile>

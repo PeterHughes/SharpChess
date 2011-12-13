@@ -43,14 +43,14 @@ namespace SharpChess
         /// </summary>
         private static readonly int[] m_aintSquareValues =
         {
-			1, 1, 1, 1, 1, 1, 1, 1,    0,0,0,0,0,0,0,0,
-			1,10,10,10,10,10,10, 1,    0,0,0,0,0,0,0,0,
-			1,10,25,25,25,25,10, 1,    0,0,0,0,0,0,0,0,
-			1,10,25,50,50,25,10, 1,    0,0,0,0,0,0,0,0,
-			1,10,25,50,50,25,10, 1,    0,0,0,0,0,0,0,0,
-			1,10,25,25,25,25,10, 1,    0,0,0,0,0,0,0,0,
-			1,10,10,10,10,10,10, 1 ,   0,0,0,0,0,0,0,0,
-			1, 1, 1, 1, 1, 1, 1, 1 ,   0,0,0,0,0,0,0,0
+            1, 1, 1, 1, 1, 1, 1, 1,    0,0,0,0,0,0,0,0,
+            1,10,10,10,10,10,10, 1,    0,0,0,0,0,0,0,0,
+            1,10,25,25,25,25,10, 1,    0,0,0,0,0,0,0,0,
+            1,10,25,50,50,25,10, 1,    0,0,0,0,0,0,0,0,
+            1,10,25,50,50,25,10, 1,    0,0,0,0,0,0,0,0,
+            1,10,25,25,25,25,10, 1,    0,0,0,0,0,0,0,0,
+            1,10,10,10,10,10,10, 1 ,   0,0,0,0,0,0,0,0,
+            1, 1, 1, 1, 1, 1, 1, 1 ,   0,0,0,0,0,0,0,0
         };
 
         /// <summary>
@@ -78,48 +78,47 @@ namespace SharpChess
         /// </summary>
         private static char[] m_aintKingAttackers = 
         {
-			'.','.','.','.','.','.','.','.',   '.','.','.','.','.','.','.','.',
-			'.','.','.','.','.','.','.','.',   '.','.','.','.','.','.','.','.',
-			'.','.','.','.','.','.','.','.',   '.','.','.','.','.','.','.','.',
-			'.','.','.','.','.','.','.','.',   '.','.','.','.','.','.','.','.',
-			'.','.','.','.','.','.','.','.',   '.','.','.','.','.','.','.','.',
-			'.','.','.','.','.','.','.','.',   '.','.','.','.','.','.','.','.',
-			'.','.','.','.','.','.','.','.' ,  '.','.','.','.','.','.','.','K',
-			'K','K','.','.','.','.','.','.' ,  '.','.','.','.','.','.','.','K',
-			'.',
-			'K','.','.','.','.','.','.','.',   '.','.','.','.','.','.','K','K',
-			'K','.','.','.','.','.','.','.',   '.','.','.','.','.','.','.','.',
-			'.','.','.','.','.','.','.','.',   '.','.','.','.','.','.','.','.',
-			'.','.','.','.','.','.','.','.',   '.','.','.','.','.','.','.','.',
-			'.','.','.','.','.','.','.','.',   '.','.','.','.','.','.','.','.',
-			'.','.','.','.','.','.','.','.',   '.','.','.','.','.','.','.','.',
-			'.','.','.','.','.','.','.','.' ,  '.','.','.','.','.','.','.','.',
-			'.','.','.','.','.','.','.','.' ,  '.','.','.','.','.','.','.','.'
+            '.','.','.','.','.','.','.','.',   '.','.','.','.','.','.','.','.',
+            '.','.','.','.','.','.','.','.',   '.','.','.','.','.','.','.','.',
+            '.','.','.','.','.','.','.','.',   '.','.','.','.','.','.','.','.',
+            '.','.','.','.','.','.','.','.',   '.','.','.','.','.','.','.','.',
+            '.','.','.','.','.','.','.','.',   '.','.','.','.','.','.','.','.',
+            '.','.','.','.','.','.','.','.',   '.','.','.','.','.','.','.','.',
+            '.','.','.','.','.','.','.','.' ,  '.','.','.','.','.','.','.','K',
+            'K','K','.','.','.','.','.','.' ,  '.','.','.','.','.','.','.','K',
+            '.',
+            'K','.','.','.','.','.','.','.',   '.','.','.','.','.','.','K','K',
+            'K','.','.','.','.','.','.','.',   '.','.','.','.','.','.','.','.',
+            '.','.','.','.','.','.','.','.',   '.','.','.','.','.','.','.','.',
+            '.','.','.','.','.','.','.','.',   '.','.','.','.','.','.','.','.',
+            '.','.','.','.','.','.','.','.',   '.','.','.','.','.','.','.','.',
+            '.','.','.','.','.','.','.','.',   '.','.','.','.','.','.','.','.',
+            '.','.','.','.','.','.','.','.' ,  '.','.','.','.','.','.','.','.',
+            '.','.','.','.','.','.','.','.' ,  '.','.','.','.','.','.','.','.'
         };
-
 
         /// <summary>
         /// The m_aint minor attackers.
         /// </summary>
         private static char[] m_aintMinorAttackers = 
         {
-			'.','.','.','.','.','.','.','.',   'B','B','.','.','.','.','.','.',
-			'R','.','.','.','.','.','.','B',   '.','.','B','.','.','.','.','.',
-			'R','.','.','.','.','.','B','.',   '.','.','.','B','.','.','.','.',
-			'R','.','.','.','.','B','.','.',   '.','.','.','.','B','.','.','.',
-			'R','.','.','.','B','.','.','.',   '.','.','.','.','.','B','.','.',
-			'R','.','.','B','.','.','.','.',   '.','.','.','.','.','.','B','N',
-			'R','N','B','.','.','.','.','.' ,  '.','.','.','.','.','.','N','B',
-			'R','B','N','.','.','.','.','.' ,  '.','R','R','R','R','R','R','R',
-			'.',
-			'R','R','R','R','R','R','R','.',   '.','.','.','.','.','N','B','R',
-			'B','N','.','.','.','.','.','.',   '.','.','.','.','.','B','N','R',
-			'N','B','.','.','.','.','.','.',   '.','.','.','.','B','.','.','R',
-			'.','.','B','.','.','.','.','.',   '.','.','.','B','.','.','.','R',
-			'.','.','.','B','.','.','.','.',   '.','.','B','.','.','.','.','R',
-			'.','.','.','.','B','.','.','.',   '.','B','.','.','.','.','.','R',
-			'.','.','.','.','.','B','.','.' ,  'B','.','.','.','.','.','.','R',
-			'.','.','.','.','.','.','B','B' ,  '.','.','.','.','.','.','.','.'
+            '.','.','.','.','.','.','.','.',   'B','B','.','.','.','.','.','.',
+            'R','.','.','.','.','.','.','B',   '.','.','B','.','.','.','.','.',
+            'R','.','.','.','.','.','B','.',   '.','.','.','B','.','.','.','.',
+            'R','.','.','.','.','B','.','.',   '.','.','.','.','B','.','.','.',
+            'R','.','.','.','B','.','.','.',   '.','.','.','.','.','B','.','.',
+            'R','.','.','B','.','.','.','.',   '.','.','.','.','.','.','B','N',
+            'R','N','B','.','.','.','.','.' ,  '.','.','.','.','.','.','N','B',
+            'R','B','N','.','.','.','.','.' ,  '.','R','R','R','R','R','R','R',
+            '.',
+            'R','R','R','R','R','R','R','.',   '.','.','.','.','.','N','B','R',
+            'B','N','.','.','.','.','.','.',   '.','.','.','.','.','B','N','R',
+            'N','B','.','.','.','.','.','.',   '.','.','.','.','B','.','.','R',
+            '.','.','B','.','.','.','.','.',   '.','.','.','B','.','.','.','R',
+            '.','.','.','B','.','.','.','.',   '.','.','B','.','.','.','.','R',
+            '.','.','.','.','B','.','.','.',   '.','B','.','.','.','.','.','R',
+            '.','.','.','.','.','B','.','.' ,  'B','.','.','.','.','.','.','R',
+            '.','.','.','.','.','.','B','B' ,  '.','.','.','.','.','.','.','.'
         };
 
         /// <summary>
@@ -127,23 +126,23 @@ namespace SharpChess
         /// </summary>
         private static char[] m_aintQueenAttackers =
         {
-			'.','.','.','.','.','.','.','.',   'Q','Q','.','.','.','.','.','.',
-			'Q','.','.','.','.','.','.','Q',   '.','.','Q','.','.','.','.','.',
-			'Q','.','.','.','.','.','Q','.',   '.','.','.','Q','.','.','.','.',
-			'Q','.','.','.','.','Q','.','.',   '.','.','.','.','Q','.','.','.',
-			'Q','.','.','.','Q','.','.','.',   '.','.','.','.','.','Q','.','.',
-			'Q','.','.','Q','.','.','.','.',   '.','.','.','.','.','.','Q','.',
-			'Q','.','Q','.','.','.','.','.' ,  '.','.','.','.','.','.','.','Q',
-			'Q','Q','.','.','.','.','.','.' ,  '.','Q','Q','Q','Q','Q','Q','Q',
-			'.',
-			'Q','Q','Q','Q','Q','Q','Q','.',   '.','.','.','.','.','.','Q','Q',
-			'Q','.','.','.','.','.','.','.',   '.','.','.','.','.','Q','.','Q',
-			'.','Q','.','.','.','.','.','.',   '.','.','.','.','Q','.','.','Q',
-			'.','.','Q','.','.','.','.','.',   '.','.','.','Q','.','.','.','Q',
-			'.','.','.','Q','.','.','.','.',   '.','.','Q','.','.','.','.','Q',
-			'.','.','.','.','Q','.','.','.',   '.','Q','.','.','.','.','.','Q',
-			'.','.','.','.','.','Q','.','.' ,  'Q','.','.','.','.','.','.','Q',
-			'.','.','.','.','.','.','Q','Q' ,  '.','.','.','.','.','.','.','.'
+            '.','.','.','.','.','.','.','.',   'Q','Q','.','.','.','.','.','.',
+            'Q','.','.','.','.','.','.','Q',   '.','.','Q','.','.','.','.','.',
+            'Q','.','.','.','.','.','Q','.',   '.','.','.','Q','.','.','.','.',
+            'Q','.','.','.','.','Q','.','.',   '.','.','.','.','Q','.','.','.',
+            'Q','.','.','.','Q','.','.','.',   '.','.','.','.','.','Q','.','.',
+            'Q','.','.','Q','.','.','.','.',   '.','.','.','.','.','.','Q','.',
+            'Q','.','Q','.','.','.','.','.' ,  '.','.','.','.','.','.','.','Q',
+            'Q','Q','.','.','.','.','.','.' ,  '.','Q','Q','Q','Q','Q','Q','Q',
+            '.',
+            'Q','Q','Q','Q','Q','Q','Q','.',   '.','.','.','.','.','.','Q','Q',
+            'Q','.','.','.','.','.','.','.',   '.','.','.','.','.','Q','.','Q',
+            '.','Q','.','.','.','.','.','.',   '.','.','.','.','Q','.','.','Q',
+            '.','.','Q','.','.','.','.','.',   '.','.','.','Q','.','.','.','Q',
+            '.','.','.','Q','.','.','.','.',   '.','.','Q','.','.','.','.','Q',
+            '.','.','.','.','Q','.','.','.',   '.','Q','.','.','.','.','.','Q',
+            '.','.','.','.','.','Q','.','.' ,  'Q','.','.','.','.','.','.','Q',
+            '.','.','.','.','.','.','Q','Q' ,  '.','.','.','.','.','.','.','.'
         };
 
 
@@ -152,26 +151,24 @@ namespace SharpChess
         /// </summary>
         private static int[] m_aintVectors = 
         {
-			0,  0,  0,  0,  0,  0,  0,  0,   -15,-17,  0,  0,  0,  0,  0,  0,
-			-16,  0,  0,  0,  0,  0,  0,-15,     0,  0,-17,  0,  0,  0,  0,  0,
-			-16,  0,  0,  0,  0,  0,-15,  0,     0,  0,  0,-17,  0,  0,  0,  0,
-			-16,  0,  0,  0,  0,-15,  0,  0,     0,  0,  0,  0,-17,  0,  0,  0,
-			-16,  0,  0,  0,-15,  0,  0,  0,     0,  0,  0,  0,  0,-17,  0,  0,
-			-16,  0,  0,-15,  0,  0,  0,  0,     0,  0,  0,  0,  0,  0,-17,100,
-			-16,100,-15,  0,  0,  0,  0,  0 ,    0,  0,  0,  0,  0,  0,100,-17,
-			-16,-15,100,  0,  0,  0,  0,  0 ,    0, -1, -1, -1, -1, -1, -1, -1,
-			0,
-			1,  1,  1,  1,  1,  1,  1,  0,     0,  0,  0,  0,  0,100, 15, 16,
-			17,100,  0,  0,  0,  0,  0,  0,     0,  0,  0,  0,  0, 15,100, 16,
-			100, 17,  0,  0,  0,  0,  0,  0,     0,  0,  0,  0, 15,  0,  0, 16,
-			0,  0, 17,  0,  0,  0,  0,  0,     0,  0,  0, 15,  0,  0,  0, 16,
-			0,  0,  0, 17,  0,  0,  0,  0,     0,  0, 15,  0,  0,  0,  0, 16,
-			0,  0,  0,  0, 17,  0,  0,  0,     0, 15,  0,  0,  0,  0,  0, 16,
-			0,  0,  0,  0,  0, 17,  0,  0 ,   15,  0,  0,  0,  0,  0,  0, 16,
-			0,  0,  0,  0,  0,  0, 17, 15 ,    0,  0,  0,  0,  0,  0,  0,  0
+            0,  0,  0,  0,  0,  0,  0,  0,   -15,-17,  0,  0,  0,  0,  0,  0,
+            -16,  0,  0,  0,  0,  0,  0,-15,     0,  0,-17,  0,  0,  0,  0,  0,
+            -16,  0,  0,  0,  0,  0,-15,  0,     0,  0,  0,-17,  0,  0,  0,  0,
+            -16,  0,  0,  0,  0,-15,  0,  0,     0,  0,  0,  0,-17,  0,  0,  0,
+            -16,  0,  0,  0,-15,  0,  0,  0,     0,  0,  0,  0,  0,-17,  0,  0,
+            -16,  0,  0,-15,  0,  0,  0,  0,     0,  0,  0,  0,  0,  0,-17,100,
+            -16,100,-15,  0,  0,  0,  0,  0 ,    0,  0,  0,  0,  0,  0,100,-17,
+            -16,-15,100,  0,  0,  0,  0,  0 ,    0, -1, -1, -1, -1, -1, -1, -1,
+            0,
+            1,  1,  1,  1,  1,  1,  1,  0,     0,  0,  0,  0,  0,100, 15, 16,
+            17,100,  0,  0,  0,  0,  0,  0,     0,  0,  0,  0,  0, 15,100, 16,
+            100, 17,  0,  0,  0,  0,  0,  0,     0,  0,  0,  0, 15,  0,  0, 16,
+            0,  0, 17,  0,  0,  0,  0,  0,     0,  0,  0, 15,  0,  0,  0, 16,
+            0,  0,  0, 17,  0,  0,  0,  0,     0,  0, 15,  0,  0,  0,  0, 16,
+            0,  0,  0,  0, 17,  0,  0,  0,     0, 15,  0,  0,  0,  0,  0, 16,
+            0,  0,  0,  0,  0, 17,  0,  0 ,   15,  0,  0,  0,  0,  0,  0, 16,
+            0,  0,  0,  0,  0,  0, 17, 15 ,    0,  0,  0,  0,  0,  0,  0,  0
         };
-
-
         #endregion
 
         #region Constructors and Destructors
@@ -374,36 +371,36 @@ namespace SharpChess
             piece = Board.GetPiece(m_intOrdinal - player.PawnAttackRightOffset); if (piece != null && piece.Name == Piece.enmName.Pawn && piece.Player.Colour == player.Colour) moves.Add(0, 0, Move.enmName.Standard, Board.GetPiece(m_intOrdinal - player.PawnAttackRightOffset), Board.GetSquare(m_intOrdinal - player.PawnAttackRightOffset), this, this.Piece, 0, 0);
 
             // Knight
-            piece = Board.GetPiece(m_intOrdinal + 33); if (piece != null && piece.Name == Piece.enmName.Knight && piece.Player.Colour == player.Colour) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0); ;
-            piece = Board.GetPiece(m_intOrdinal + 18); if (piece != null && piece.Name == Piece.enmName.Knight && piece.Player.Colour == player.Colour) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0); ;
-            piece = Board.GetPiece(m_intOrdinal - 14); if (piece != null && piece.Name == Piece.enmName.Knight && piece.Player.Colour == player.Colour) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0); ;
-            piece = Board.GetPiece(m_intOrdinal - 31); if (piece != null && piece.Name == Piece.enmName.Knight && piece.Player.Colour == player.Colour) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0); ;
-            piece = Board.GetPiece(m_intOrdinal - 33); if (piece != null && piece.Name == Piece.enmName.Knight && piece.Player.Colour == player.Colour) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0); ;
-            piece = Board.GetPiece(m_intOrdinal - 18); if (piece != null && piece.Name == Piece.enmName.Knight && piece.Player.Colour == player.Colour) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0); ;
-            piece = Board.GetPiece(m_intOrdinal + 14); if (piece != null && piece.Name == Piece.enmName.Knight && piece.Player.Colour == player.Colour) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0); ;
-            piece = Board.GetPiece(m_intOrdinal + 31); if (piece != null && piece.Name == Piece.enmName.Knight && piece.Player.Colour == player.Colour) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0); ;
+            piece = Board.GetPiece(m_intOrdinal + 33); if (piece != null && piece.Name == Piece.enmName.Knight && piece.Player.Colour == player.Colour) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0);
+            piece = Board.GetPiece(m_intOrdinal + 18); if (piece != null && piece.Name == Piece.enmName.Knight && piece.Player.Colour == player.Colour) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0);
+            piece = Board.GetPiece(m_intOrdinal - 14); if (piece != null && piece.Name == Piece.enmName.Knight && piece.Player.Colour == player.Colour) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0);
+            piece = Board.GetPiece(m_intOrdinal - 31); if (piece != null && piece.Name == Piece.enmName.Knight && piece.Player.Colour == player.Colour) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0);
+            piece = Board.GetPiece(m_intOrdinal - 33); if (piece != null && piece.Name == Piece.enmName.Knight && piece.Player.Colour == player.Colour) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0);
+            piece = Board.GetPiece(m_intOrdinal - 18); if (piece != null && piece.Name == Piece.enmName.Knight && piece.Player.Colour == player.Colour) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0);
+            piece = Board.GetPiece(m_intOrdinal + 14); if (piece != null && piece.Name == Piece.enmName.Knight && piece.Player.Colour == player.Colour) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0);
+            piece = Board.GetPiece(m_intOrdinal + 31); if (piece != null && piece.Name == Piece.enmName.Knight && piece.Player.Colour == player.Colour) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0);
 
             // Bishop & Queen
-            if ((piece = Board.LinesFirstPiece(player.Colour, Piece.enmName.Bishop, this, 15)) != null) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0); ;
-            if ((piece = Board.LinesFirstPiece(player.Colour, Piece.enmName.Bishop, this, 17)) != null) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0); ;
-            if ((piece = Board.LinesFirstPiece(player.Colour, Piece.enmName.Bishop, this, -15)) != null) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0); ;
-            if ((piece = Board.LinesFirstPiece(player.Colour, Piece.enmName.Bishop, this, -17)) != null) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0); ;
+            if ((piece = Board.LinesFirstPiece(player.Colour, Piece.enmName.Bishop, this, 15)) != null) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0);
+            if ((piece = Board.LinesFirstPiece(player.Colour, Piece.enmName.Bishop, this, 17)) != null) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0);
+            if ((piece = Board.LinesFirstPiece(player.Colour, Piece.enmName.Bishop, this, -15)) != null) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0);
+            if ((piece = Board.LinesFirstPiece(player.Colour, Piece.enmName.Bishop, this, -17)) != null) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0);
 
             // Rook & Queen
-            if ((piece = Board.LinesFirstPiece(player.Colour, Piece.enmName.Rook, this, 1)) != null) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0); ;
-            if ((piece = Board.LinesFirstPiece(player.Colour, Piece.enmName.Rook, this, -1)) != null) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0); ;
-            if ((piece = Board.LinesFirstPiece(player.Colour, Piece.enmName.Rook, this, 16)) != null) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0); ;
-            if ((piece = Board.LinesFirstPiece(player.Colour, Piece.enmName.Rook, this, -16)) != null) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0); ;
+            if ((piece = Board.LinesFirstPiece(player.Colour, Piece.enmName.Rook, this, 1)) != null) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0);
+            if ((piece = Board.LinesFirstPiece(player.Colour, Piece.enmName.Rook, this, -1)) != null) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0);
+            if ((piece = Board.LinesFirstPiece(player.Colour, Piece.enmName.Rook, this, 16)) != null) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0);
+            if ((piece = Board.LinesFirstPiece(player.Colour, Piece.enmName.Rook, this, -16)) != null) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0);
 
             // King!
-            piece = Board.GetPiece(m_intOrdinal + 16); if (piece != null && piece.Name == Piece.enmName.King && piece.Player.Colour == player.Colour) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0); ;
-            piece = Board.GetPiece(m_intOrdinal + 17); if (piece != null && piece.Name == Piece.enmName.King && piece.Player.Colour == player.Colour) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0); ;
-            piece = Board.GetPiece(m_intOrdinal + 1); if (piece != null && piece.Name == Piece.enmName.King && piece.Player.Colour == player.Colour) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0); ;
-            piece = Board.GetPiece(m_intOrdinal - 15); if (piece != null && piece.Name == Piece.enmName.King && piece.Player.Colour == player.Colour) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0); ;
-            piece = Board.GetPiece(m_intOrdinal - 16); if (piece != null && piece.Name == Piece.enmName.King && piece.Player.Colour == player.Colour) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0); ;
-            piece = Board.GetPiece(m_intOrdinal - 17); if (piece != null && piece.Name == Piece.enmName.King && piece.Player.Colour == player.Colour) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0); ;
-            piece = Board.GetPiece(m_intOrdinal - 1); if (piece != null && piece.Name == Piece.enmName.King && piece.Player.Colour == player.Colour) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0); ;
-            piece = Board.GetPiece(m_intOrdinal + 15); if (piece != null && piece.Name == Piece.enmName.King && piece.Player.Colour == player.Colour) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0); ;
+            piece = Board.GetPiece(m_intOrdinal + 16); if (piece != null && piece.Name == Piece.enmName.King && piece.Player.Colour == player.Colour) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0);
+            piece = Board.GetPiece(m_intOrdinal + 17); if (piece != null && piece.Name == Piece.enmName.King && piece.Player.Colour == player.Colour) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0);
+            piece = Board.GetPiece(m_intOrdinal + 1); if (piece != null && piece.Name == Piece.enmName.King && piece.Player.Colour == player.Colour) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0);
+            piece = Board.GetPiece(m_intOrdinal - 15); if (piece != null && piece.Name == Piece.enmName.King && piece.Player.Colour == player.Colour) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0);
+            piece = Board.GetPiece(m_intOrdinal - 16); if (piece != null && piece.Name == Piece.enmName.King && piece.Player.Colour == player.Colour) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0);
+            piece = Board.GetPiece(m_intOrdinal - 17); if (piece != null && piece.Name == Piece.enmName.King && piece.Player.Colour == player.Colour) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0);
+            piece = Board.GetPiece(m_intOrdinal - 1); if (piece != null && piece.Name == Piece.enmName.King && piece.Player.Colour == player.Colour) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0);
+            piece = Board.GetPiece(m_intOrdinal + 15); if (piece != null && piece.Name == Piece.enmName.King && piece.Player.Colour == player.Colour) moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, this, this.Piece, 0, 0);
         }
 
         /// <summary>
@@ -523,6 +520,7 @@ namespace SharpChess
         /// The can slide to here from.
         /// </returns>
         /// <exception cref="ApplicationException">
+        /// An exception indicting that the alogrithm has hit the edge of the board.
         /// </exception>
         public bool CanSlideToHereFrom(Square squareStart, int Offset)
         {

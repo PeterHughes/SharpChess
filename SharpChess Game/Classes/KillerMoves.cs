@@ -26,7 +26,7 @@
 namespace SharpChess
 {
     /// <summary>
-    /// Summary description for KillerMoves.
+    /// Killer Moves.
     /// </summary>
     public class KillerMoves
     {

@@ -1,54 +1,152 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Diagnostics;
-using System.Threading;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="TestRig.cs" company="SharpChess">
+//   Peter Hughes
+// </copyright>
+// <summary>
+//   A Performance Test Rig for SharpChess
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+#region License
+
+// SharpChess
+// Copyright (C) 2011 Peter Hughes
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#endregion
 
 namespace SharpChess_Performance_Tester
 {
+    #region Using
+
+    using System;
+    using System.Diagnostics;
+    using System.Threading;
+
+    #endregion
+
     /// <summary>
     /// A Performance Test Rig for SharpChess
     /// </summary>
-    public class PerformanceTestRig
+    public class TestRig
     {
-        /// <summary>
-        /// References the SharpChess exe process
-        /// </summary>
-        Process sharpChessProcess;
-        private Thread sharpChessListenerThread = null;
+        #region Constants and Fields
 
         /// <summary>
-        /// Raises an event describing activity within the test rig.
+        /// The sharp chess listener thread.
         /// </summary>
-        public event EventHandler<MessageEventArgs> RaiseMessageEvent;
+        private Thread sharpChessListenerThread;
 
         /// <summary>
-        /// Gets or sets the search depth.
+        ///   References the SharpChess exe process
         /// </summary>
-        public uint SearchDepth { get; set; }
+        private Process sharpChessProcess;
+
+        #endregion
+
+        #region Constructors and Destructors
 
         /// <summary>
-        /// Gets or sets the full path to the SharpChess executable.
-        /// </summary>
-        public string SharpChessExePath { get; set; }
-
-        /// <summary>
+        /// Initializes a new instance of the <see cref="TestRig"/> class. 
         /// Creates an instance of a TestRig
         /// </summary>
-        /// <param name="sharpChessExePath"></param>
-        public PerformanceTestRig(string sharpChessExePath)
+        /// <param name="sharpChessExePath">
+        /// Path to SharChess executable
+        /// </param>
+        public TestRig(string sharpChessExePath)
         {
             this.SharpChessExePath = sharpChessExePath;
         }
 
+        #endregion
+
+        #region Public Events
+
         /// <summary>
-        /// Reports cosmetic startup messages. 
+        ///   Raises an event describing activity within the test rig.
+        /// </summary>
+        public event EventHandler<MessageEventArgs> RaiseMessageEvent;
+
+        #endregion
+
+        #region Public Properties
+
+        /// <summary>
+        ///   Gets or sets the search depth.
+        /// </summary>
+        public uint SearchDepth { get; set; }
+
+        /// <summary>
+        ///   Gets or sets the full path to the SharpChess executable.
+        /// </summary>
+        public string SharpChessExePath { get; set; }
+
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// The on raise message event.
+        /// </summary>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        public virtual void OnRaiseMessageEvent(MessageEventArgs e)
+        {
+            // Make a temporary copy of the event to avoid possibility of
+            // a race condition if the last subscriber unsubscribes
+            // immediately after the null check and before the event is raised.
+            EventHandler<MessageEventArgs> handler = this.RaiseMessageEvent;
+
+            // Event will be null if there are no subscribers
+            if (handler != null)
+            {
+                // Format the string to send inside the CustomEventArgs parameter
+                e.Message = DateTime.Now.ToString("hh:mm:ss") + ": " + e.Message;
+
+                // Use the () operator to raise the event.
+                handler(this, e);
+            }
+        }
+
+        /// <summary>
+        /// The report message.
+        /// </summary>
+        /// <param name="Message">
+        /// The message.
+        /// </param>
+        public void ReportMessage(string Message)
+        {
+            this.OnRaiseMessageEvent(new MessageEventArgs(Message));
+        }
+
+        /// <summary>
+        /// Reports cosmetic startup messages.
         /// </summary>
         public void ReportStartupMessages()
         {
             this.ReportMessage("SharpChess Test Rig Initialised.");
             this.ReportMessage("SharpChess path: " + this.SharpChessExePath);
+        }
+
+        /// <summary>
+        /// Start the listening that listens for SharpChess messages
+        /// </summary>
+        public void StartListener()
+        {
+            this.ReportMessage("Starting SharpChess listener...");
+            this.sharpChessListenerThread = new Thread(this.Listen);
+            this.sharpChessListenerThread.Priority = ThreadPriority.Normal;
+            this.sharpChessListenerThread.Start();
+            this.ReportMessage("SharpChess listener started.");
         }
 
         /// <summary>
@@ -59,19 +157,19 @@ namespace SharpChess_Performance_Tester
             this.ReportMessage("Test starting...");
 
             ProcessStartInfo info = new ProcessStartInfo();
-            info.FileName = SharpChessExePath;
-            //info.Arguments = "";
+            info.FileName = this.SharpChessExePath;
+
+            // info.Arguments = "";
             info.RedirectStandardInput = true;
             info.RedirectStandardOutput = true;
             info.UseShellExecute = false;
 
-            this.ReportMessage("Loading SharpChess: " + SharpChessExePath);
+            this.ReportMessage("Loading SharpChess: " + this.SharpChessExePath);
 
             this.sharpChessProcess = Process.Start(info);
 
             if (!this.sharpChessProcess.HasExited)
             {
-
                 this.ReportMessage("SharpChess Loaded.");
 
                 Console.SetIn(this.sharpChessProcess.StandardOutput);
@@ -80,18 +178,31 @@ namespace SharpChess_Performance_Tester
                 this.StartListener();
 
                 // Set SharpChess into tournament mode
-//                this.SendCommand("xboard showgui"); // Use this command to show the SharpChess GUI, when debugging, or just for fun!
+                // this.SendCommand("xboard showgui"); // Use this command to show the SharpChess GUI, when debugging, or just for fun!
                 this.SendCommand("xboard");
 
                 // Load test position (a SharpChess save game)
                 this.SendCommand(@"load ..\..\..\SharpChess Performance Tester\TestPosition.sharpchess");
 
                 // Set the maximum search depth (plies)
-                this.SendCommand("depth " + this.SearchDepth.ToString() );
+                this.SendCommand("depth " + this.SearchDepth.ToString());
 
                 // Set the maximum search depth (plies)
                 this.SendCommand("go");
             }
+        }
+
+        /// <summary>
+        /// Stop the listening that listens for SharpChess messages
+        /// </summary>
+        public void StopListener()
+        {
+            this.ReportMessage("Stopping SharpChess listener...");
+            this.sharpChessListenerThread.Abort();
+
+            // this.sharpChessListenerThread.Join();
+            this.sharpChessListenerThread = null;
+            this.ReportMessage("SharpChess listener stopped.");
         }
 
         /// <summary>
@@ -106,36 +217,16 @@ namespace SharpChess_Performance_Tester
             this.ReportMessage("Test stopped.");
         }
 
-        /// <summary>
-        /// Start the listening that listens for SharpChess messages
-        /// </summary>
-        public void StartListener()
-        {
-            this.ReportMessage("Starting SharpChess listener...");
-            this.sharpChessListenerThread = new Thread(new ThreadStart(Listen));
-            this.sharpChessListenerThread.Priority = System.Threading.ThreadPriority.Normal;
-            this.sharpChessListenerThread.Start();
-            this.ReportMessage("SharpChess listener started.");
-        }
+        #endregion
 
-        /// <summary>
-        /// Stop the listening that listens for SharpChess messages
-        /// </summary>
-        public void StopListener()
-        {
-            this.ReportMessage("Stopping SharpChess listener...");
-            this.sharpChessListenerThread.Abort();
-            //this.sharpChessListenerThread.Join();
-            this.sharpChessListenerThread = null;
-            this.ReportMessage("SharpChess listener stopped.");
-        }
+        #region Methods
 
         /// <summary>
         /// Listen and process SharpChess messages
         /// </summary>
         private void Listen()
         {
-            string messageReceived = "";
+            string messageReceived = string.Empty;
             while (true)
             {
                 messageReceived = Console.ReadLine();
@@ -151,70 +242,60 @@ namespace SharpChess_Performance_Tester
         }
 
         /// <summary>
+        /// Handle reponse message sent from SharpChess
+        /// </summary>
+        /// <param name="messageReceived">
+        /// Message received
+        /// </param>
+        private void ProcessResponse(string messageReceived)
+        {
+            this.ReportMessage("Received: " + messageReceived);
+        }
+
+        /// <summary>
         /// Send a command to SharpChess.
         /// </summary>
-        /// <param name="command"></param>
+        /// <param name="command">
+        /// Commmand sent
+        /// </param>
         private void SendCommand(string command)
         {
             this.ReportMessage("Sending: " + command);
             Console.WriteLine(command);
         }
 
-        /// <summary>
-        /// Handle reponse message sent from SharpChess
-        /// </summary>
-        /// <param name="messageReceived"></param>
-        private void ProcessResponse(string messageReceived)
-        {
-            this.ReportMessage("Received: " + messageReceived);
-        }
+        #endregion
 
-        #region MessageEventStuff
         // Copied from internet... Stuff for raising an event. 
-
-        public void ReportMessage(string Message)
-        {
-            OnRaiseMessageEvent(new MessageEventArgs(Message));
-        }
-
-        // Wrap event invocations inside a protected virtual method
-        // to allow derived classes to override the event invocation behavior
-        public virtual void OnRaiseMessageEvent(MessageEventArgs e)
-        {
-            // Make a temporary copy of the event to avoid possibility of
-            // a race condition if the last subscriber unsubscribes
-            // immediately after the null check and before the event is raised.
-            EventHandler<MessageEventArgs> handler = RaiseMessageEvent;
-
-            // Event will be null if there are no subscribers
-            if (handler != null)
-            {
-                // Format the string to send inside the CustomEventArgs parameter
-                e.Message = DateTime.Now.ToString("hh:mm:ss") + ": " + e.Message;
-
-                // Use the () operator to raise the event.
-                handler(this, e);
-            }
-        }
-
 
         /// <summary>
         /// Custom event class containing message from or from SharpChess
         /// </summary>
         public class MessageEventArgs : EventArgs
         {
+            #region Constructors and Destructors
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="MessageEventArgs"/> class.
+            /// </summary>
+            /// <param name="s">
+            /// The s.
+            /// </param>
             public MessageEventArgs(string s)
             {
-                message = s;
+                this.Message = s;
             }
-            private string message;
 
-            public string Message
-            {
-                get { return message; }
-                set { message = value; }
-            }
+            #endregion
+
+            #region Public Properties
+
+            /// <summary>
+            /// Gets or sets Message.
+            /// </summary>
+            public string Message { get; set; }
+
+            #endregion
         }
-        #endregion
     }
 }
