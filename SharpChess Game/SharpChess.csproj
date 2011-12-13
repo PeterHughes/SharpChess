@@ -119,6 +119,7 @@
     <Compile Include="Classes\FEN.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Classes\PlayerDebug.cs" />
     <Compile Include="Forms\frmAbout.cs">
       <SubType>Form</SubType>
     </Compile>

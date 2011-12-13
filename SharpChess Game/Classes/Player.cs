@@ -29,7 +29,6 @@ namespace SharpChess
 
     using System;
     using System.Diagnostics;
-    using System.Text;
     using System.Threading;
 
     using ThreadState = System.Threading.ThreadState;
@@ -119,11 +118,6 @@ namespace SharpChess
         private const int m_intMinimumSearchDepth = 1;
 
         /// <summary>
-        ///   Internal buffer to convert the PV to a string
-        /// </summary>
-        private readonly StringBuilder m_strbPV = new StringBuilder(50);
-
-        /// <summary>
         ///   The m_aint attack bonus.
         /// </summary>
         private static int[] m_aintAttackBonus = { 0, 3, 25, 53, 79, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99 };
@@ -159,16 +153,6 @@ namespace SharpChess
         private bool m_blnIsPondering;
 
         /// <summary>
-        ///   Number of iteration of AlphaBeta at the top level
-        /// </summary>
-        private int m_iDbgIteration;
-
-        /// <summary>
-        ///   Level of depth of the variation
-        /// </summary>
-        private int m_iDbgLevel;
-
-        /// <summary>
         ///   The m_int max extensions reached.
         /// </summary>
         private int m_intMaxExtensionsReached;
@@ -202,11 +186,6 @@ namespace SharpChess
         ///   The m_moves pv best.
         /// </summary>
         private Moves m_movesPVBest;
-
-        /// <summary>
-        ///   Unambiguous descriptive variation after conversion of the PGN variation
-        /// </summary>
-        private string m_strDbgLine = string.Empty;
 
         /// <summary>
         ///   The m_thread thought.
@@ -1153,7 +1132,7 @@ namespace SharpChess
                     Thread.Sleep(50);
                 }
 
-                // m_threadThought.Join();
+                // 				m_threadThought.Join();
             }
         }
 
@@ -1188,14 +1167,15 @@ namespace SharpChess
                     for (intIndex = moves.Count - 1; intIndex >= 0; intIndex--)
                     {
                         move = moves[intIndex];
-                        if (
-                            !(move.To.Ordinal == squareAttacking.Ordinal || move.Name == Move.enmName.PawnPromotionQueen
-                              ||
-                              (move.Name == Move.enmName.Standard
-                               && move.From.Piece.BasicValue < move.To.Piece.BasicValue)
-                              ||
-                              (move.Name == Move.enmName.Standard
-                               && !move.To.CanBeMovedToBy(move.Piece.Player.OtherPlayer))))
+                        if (!( // 								move.To.Ordinal==squareAttacking.Ordinal 
+                             // 								||
+                             move.Name == Move.enmName.PawnPromotionQueen
+                             ||
+                             (move.Name == Move.enmName.Standard
+                              && move.From.Piece.BasicValue < move.To.Piece.BasicValue)
+                             ||
+                             (move.Name == Move.enmName.Standard
+                              && !move.To.CanBeMovedToBy(move.Piece.Player.OtherPlayer))))
                         {
                             moves.Remove(move);
                         }
@@ -1369,7 +1349,7 @@ namespace SharpChess
                         if ( (square = Board.GetSquare(to.Ordinal-18 ))!=null && square.Piece!=null && square.Piece.Name==Piece.enmName.Knight && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece; else
                         if ( (square = Board.GetSquare(to.Ordinal+14 ))!=null && square.Piece!=null && square.Piece.Name==Piece.enmName.Knight && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece; else
                         if ( (square = Board.GetSquare(to.Ordinal+31 ))!=null && square.Piece!=null && square.Piece.Name==Piece.enmName.Knight && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece;
-                    from = piece.Square;
+                    from = piece.Square;					
                     break;
 
                 case "B":
@@ -1378,7 +1358,7 @@ namespace SharpChess
                         if ((piece=Board.LinesFirstPiece(this.Colour, Piece.enmName.Bishop, to, 17))!=null && piece.Name==Piece.enmName.Bishop && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
                         if ((piece=Board.LinesFirstPiece(this.Colour, Piece.enmName.Bishop, to, -15))!=null && piece.Name==Piece.enmName.Bishop && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
                         if ((piece=Board.LinesFirstPiece(this.Colour, Piece.enmName.Bishop, to, -17))!=null && piece.Name==Piece.enmName.Bishop && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else piece=null;
-                    from = piece.Square;
+                    from = piece.Square;					
                     break;
 
                 case "R":
@@ -1386,7 +1366,7 @@ namespace SharpChess
                         if ((piece=Board.LinesFirstPiece(this.Colour, Piece.enmName.Rook, to, -1))!=null && piece.Name==Piece.enmName.Rook && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
                         if ((piece=Board.LinesFirstPiece(this.Colour, Piece.enmName.Rook, to, 16))!=null && piece.Name==Piece.enmName.Rook && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
                         if ((piece=Board.LinesFirstPiece(this.Colour, Piece.enmName.Rook, to, -16))!=null && piece.Name==Piece.enmName.Rook && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else piece=null;
-                    from = piece.Square;
+                    from = piece.Square;					
                     break;
 
                 case "Q":
@@ -1398,7 +1378,7 @@ namespace SharpChess
                         if ((piece=Board.LinesFirstPiece(this.Colour, Piece.enmName.Queen, to, -1))!=null && piece.Name==Piece.enmName.Queen && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
                         if ((piece=Board.LinesFirstPiece(this.Colour, Piece.enmName.Queen, to, 16))!=null && piece.Name==Piece.enmName.Queen && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
                         if ((piece=Board.LinesFirstPiece(this.Colour, Piece.enmName.Queen, to, -16))!=null && piece.Name==Piece.enmName.Queen && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else piece=null;
-                    from = piece.Square;
+                    from = piece.Square;					
                     break;
 
                 case "K":
@@ -1410,7 +1390,7 @@ namespace SharpChess
                         if ( (square = Board.GetSquare(to.Ordinal- 1 ))!=null && square.Piece!=null && square.Piece.Name==Piece.enmName.King && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece; else
                         if ( (square = Board.GetSquare(to.Ordinal+16 ))!=null && square.Piece!=null && square.Piece.Name==Piece.enmName.King && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece; else
                         if ( (square = Board.GetSquare(to.Ordinal-16 ))!=null && square.Piece!=null && square.Piece.Name==Piece.enmName.King && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece;
-                    from = piece.Square;
+                    from = piece.Square;					
                     break;
             }
 
@@ -1504,7 +1484,7 @@ namespace SharpChess
             this.ThinkingBeginning();
             if (this.IsPondering)
             {
-                // m_threadThought.Priority = System.Threading.ThreadPriority.BelowNormal;
+                // 				m_threadThought.Priority = System.Threading.ThreadPriority.BelowNormal;
                 this.m_threadThought.Priority = ThreadPriority.Normal;
             }
             else
@@ -1528,10 +1508,11 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// Compute the best move.
+        /// The think.
         /// </summary>
         /// <exception cref="ForceImmediateMoveException">
-        /// Raised when the user forces an immediate move to be made.
+        /// </exception>
+        /// <exception cref="ForceImmediateMoveException">
         /// </exception>
         public void Think()
         {
@@ -1549,7 +1530,8 @@ namespace SharpChess
 
             this.m_blnDisplayMoveAnalysisTree = Game.CaptureMoveAnalysisData;
                 
-            // Set whether to build a post-analysis tree of positions searched
+                // Set whether to build a post-analysis tree of positions searched
+
             try
             {
                 if (!this.m_blnIsPondering && !Game.IsInAnalyseMode)
@@ -1566,14 +1548,14 @@ namespace SharpChess
                         }
                     }
 
-                    /* Query Best Opening Book
+                    /*				// Query Best Opening Book
                         if ((m_moveBest = OpeningBook.SearchForGoodMove(Board.HashCodeA, Board.HashCodeB, this.Colour) )!=null) 
                         {
                             m_moveCurrent = m_moveBest;
                             this.MoveConsidered();
                             throw new ForceImmediateMoveException();
                         }
-                    */
+        */
                 }
 
                 // Time allowed for this player to think
@@ -1646,7 +1628,8 @@ namespace SharpChess
                 this.m_intPositionsSearched = 0; // Total number of positions considered so far
                 this.m_intEvaluations = 0;
                     
-                // Total number of times the evaluation function has been called (May be less than PositonsSearched if hashtable works well)
+                    // Total number of times the evaluation function has been called (May be less than PositonsSearched if hashtable works well)
+
                 if (Game.IsInAnalyseMode)
                 {
                     HashTable.Clear();
@@ -1710,7 +1693,10 @@ namespace SharpChess
                     if (!Game.IsInAnalyseMode && Game.ClockFixedTimePerMove.TotalSeconds == 0 && !this.m_blnIsPondering
                         && (DateTime.Now - this.m_PlayerClock.TurnStartTime) > this.m_tsnThinkingTimeCutoff)
                     {
+                        // #if !DEBUG // Note the exclamation mark
                         throw new ForceImmediateMoveException();
+
+                        // #endif 					
                     }
 
                     if (intScore > 99999 || intScore < -99999)
@@ -1790,7 +1776,8 @@ namespace SharpChess
         /// The alpha beta.
         /// </returns>
         /// <exception cref="ForceImmediateMoveException">
-        /// Raised when the user forces an immediate move to be made.
+        /// </exception>
+        /// <exception cref="ForceImmediateMoveException">
         /// </exception>
         private int AlphaBeta(
             Player player, 
@@ -2010,10 +1997,10 @@ namespace SharpChess
                 // Reductions
                 if (depth > 2 && !blnIsInCheck && moveThis.pieceCaptured == null && !moveThis.IsEnemyInCheck)
                 {
-                    int[] m_aintMargin = 
-                    {
-                        0, 0, 0, 5000, 5000, 7000, 7000, 9000, 9000, 15000, 15000, 15000, 15000, 15000, 15000, 15000, 15000, 15000
-                    };
+                    int[] m_aintMargin = {
+                                             0, 0, 0, 5000, 5000, 7000, 7000, 9000, 9000, 15000, 15000, 15000, 15000, 
+                                             15000, 15000, 15000, 15000, 15000
+                                         };
 
                     // int intLazyEval = this.TotalPieceValue - this.OtherPlayer.TotalPieceValue;
                     int intLazyEval = player.Score;
@@ -2074,15 +2061,13 @@ namespace SharpChess
                     }
                 }
 
-                /*
+                /*		
                 if (intExtension>0 && intTotalExtensions>=m_intSearchDepth)
                 {
                     intExtension = 0;
                 }
-                */
-
-                // #if DEBUG   
-                // Avoid to break in a zero window research so alpha + 1 < beta
+*/
+                // #if DEBUG  // Avoid to break in a zero window research so alpha + 1 < beta
                 // if ((alpha + 1 < beta) && DebugMatchVariation(m_intSearchDepth - ply, moveThis)) Debugger.Break();
                 // #endif
                 if (blnPVNode)
@@ -2097,9 +2082,8 @@ namespace SharpChess
                             moveThis, 
                             movesPV, 
                             intTotalExtensions + intExtension);
-                    if ((val > alpha) && (val < beta))
+                    if ((val > alpha) && (val < beta)) /* fail */
                     {
-                        // fail
                         val =
                             -this.AlphaBeta(
                                 player.OtherPlayer, 
@@ -2178,7 +2162,7 @@ namespace SharpChess
                     }
 
                     // #if DEBUG
-                    // Debug.WriteLineIf((ply == m_intSearchDepth) && (ply > 1), string.Format("{0} {1} {2}", ply, PvLine(movesPV_Parent), alpha));
+                    // 	Debug.WriteLineIf((ply == m_intSearchDepth) && (ply > 1), string.Format("{0} {1} {2}", ply, PvLine(movesPV_Parent), alpha));
                     // #endif
                 }
 
@@ -2188,7 +2172,10 @@ namespace SharpChess
                 if (!Game.IsInAnalyseMode && !this.m_blnIsPondering && this.m_intSearchDepth > m_intMinimumSearchDepth
                     && (DateTime.Now - this.m_PlayerClock.TurnStartTime) > this.m_tsnThinkingTimeMaxAllowed)
                 {
+                    // #if !DEBUG // Note the exclamation mark
                     throw new ForceImmediateMoveException();
+
+                    // #endif 				
                 }
             }
 
@@ -2196,7 +2183,7 @@ namespace SharpChess
             if (intLegalMovesAttempted == 0)
             {
                 // depth>0 && !player.OtherPlayer.IsInCheck
-                // alpha = this.Score;
+                // 	alpha = this.Score;
                 alpha = -player.OtherPlayer.Score;
             }
 
@@ -2422,100 +2409,6 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// Does the current position match the specified variation?
-        /// </summary>
-        /// <param name="strVariation">
-        /// the iteration and the variation. Ex: "5 Rb4b5 Pf4f5 Pe5f6"
-        /// </param>
-        /// <param name="iPly">
-        /// number positive or 0 of halfmove. Do not confuse with iDepth
-        /// </param>
-        /// <param name="moveThis">
-        /// the current move at the beginning of the research
-        /// </param>
-        /// <returns>
-        /// true if the variation is recognized otherwise false
-        /// </returns>
-        /// <remarks>
-        /// Must be called after moveThis.DoMove() in AlphaBeta
-        /// </remarks>
-        private bool DebugMatchLine(string strVariation, int iPly, Move moveThis)
-        {
-            const int iSAN_LENGTH = 5; // Length of Abbreviation of the piece + From square + To square
-            if (this.m_iDbgLevel == iPly)
-            {
-                // Is the level of depth of the variation reached?
-                if (this.m_strDbgLine.Length == 0)
-                {
-                    // Interpret dynamically the variation
-                    // In this version, strVariation contains unambiguous descriptive moves
-                    int indPos = 0; // Evaluate the number of iteration and parse the variation
-                    while (char.IsNumber(strVariation[indPos]))
-                    {
-                        indPos++;
-                    }
-
-                    this.m_iDbgIteration = Convert.ToInt32(strVariation.Substring(0, indPos));
-                    this.m_strDbgLine = strVariation.Substring(indPos); // Parse the variation
-                    this.m_strDbgLine = this.m_strDbgLine.Replace(" ", string.Empty); // removing all whitespaces
-                    this.m_strDbgLine = this.m_strDbgLine.Replace("x", string.Empty); // removing all "x"
-                }
-
-                if (this.m_intSearchDepth == this.m_iDbgIteration)
-                {
-                    // Number of iteration of AlphaBeta at the top level
-                    int indPiece = iPly * iSAN_LENGTH; // Index where begins the notation of the move
-                    int iLenVar = this.m_strDbgLine.Length;
-                    string strMoveDescr = moveThis.Piece.Abbreviation + moveThis.From.Name + moveThis.To.Name;
-                    if ((indPiece <= iLenVar - iSAN_LENGTH)
-                        && (strMoveDescr == this.m_strDbgLine.Substring(indPiece, iSAN_LENGTH)))
-                    {
-                        if (++this.m_iDbgLevel == iLenVar / iSAN_LENGTH)
-                        {
-                            // Number of moves in the variation
-                            this.m_iDbgLevel = this.m_intMaxSearchDepth + 1; // Do not recall this utility
-                            Board.DebugDisplay(); // Display the current position in the "Output Window"
-                            Debug.WriteLine("\nPosition after: " + strVariation);
-                            return true; // The current position matches the wished variation
-                        }
-                    }
-                }
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Break on the variation at the given iteration
-        /// </summary>
-        /// <param name="iPly">
-        /// the positive or null ply of halfmove. Don't confuse with iDepth
-        /// </param>
-        /// <param name="moveThis">
-        /// the current move
-        /// </param>
-        /// <returns>
-        /// true if the position is reached otherwise false
-        /// </returns>
-        private bool DebugMatchVariation(int iPly, Move moveThis)
-        {
-            // Syntax of the string strVariation: <iteration> Move1 Move2 ...
-#if !SKIP_MATCH_LINE
-
-            // Add or remove the exclamation mark before SKIP_MATCH_LINE
-            return this.DebugMatchLine("5 Bb3a4 Bc8d7 Ba4xc6 Bd7xc6 Rf1e1 Bf8e7 Bc1d2", iPly, moveThis);
-                
-                // The variation/line you want to debug!
-#else
-            return false;
-
-            // Do not break on the variation
-#endif
-
-            // SKIP_MATCH_LINE
-        }
-
-        /// <summary>
         /// The perft_ ply.
         /// </summary>
         /// <param name="player">
@@ -2545,41 +2438,6 @@ namespace SharpChess
 
                 Move.Undo(moveUndo);
             }
-        }
-
-        /// <summary>
-        /// Convert the Principal Variation to a string
-        /// </summary>
-        /// <param name="moveList">
-        /// the list of moves of the variation
-        /// </param>
-        /// <returns>
-        /// the string of the Principal Variation. Ex: 5 Bb3a4 Bc8d7 Ba4xc6
-        /// </returns>
-        private string PvLine(Moves moveList)
-        {
-            if (moveList != null)
-            {
-                this.m_strbPV.Remove(0, this.m_strbPV.Length);
-                for (int intIndex = 0; intIndex < moveList.Count; intIndex++)
-                {
-                    Move move = moveList[intIndex];
-                    if (move != null)
-                    {
-                        this.m_strbPV.Append(move.Piece.Abbreviation);
-                        this.m_strbPV.Append(move.From.Name);
-                        if (move.pieceCaptured != null)
-                        {
-                            this.m_strbPV.Append("x");
-                        }
-
-                        this.m_strbPV.Append(move.To.Name);
-                        this.m_strbPV.Append(" ");
-                    }
-                }
-            }
-
-            return this.m_strbPV.ToString();
         }
 
         /// <summary>
@@ -2699,7 +2557,5 @@ namespace SharpChess
         }
 
         #endregion
-
-        // end PvLine
     }
 }
