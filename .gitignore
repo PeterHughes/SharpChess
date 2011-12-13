@@ -25,6 +25,7 @@ ClientBin/
 *.ccscc
 *.cache
 *.ignore
+*.vsmdi
 
 # Packages #
 ############
