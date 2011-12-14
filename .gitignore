@@ -8,6 +8,7 @@
 *.exe
 *.o
 *.so
+*.msi
 bin/
 obj/
 Obj/

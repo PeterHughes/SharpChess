@@ -17,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
 	EndProjectSection
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SharpChess Setup", "SharpChess Setup\SharpChess Setup.vdproj", "{972AC84C-F7E2-4239-80CA-17032B8EA991}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = SharpChess Solution.vsmdi
@@ -60,6 +62,12 @@ Global
 		{4D01805A-A5DE-4CD2-B343-C4775B71066A}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{4D01805A-A5DE-4CD2-B343-C4775B71066A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{4D01805A-A5DE-4CD2-B343-C4775B71066A}.Release|x86.ActiveCfg = Release|Any CPU
+		{972AC84C-F7E2-4239-80CA-17032B8EA991}.Debug|Any CPU.ActiveCfg = Debug
+		{972AC84C-F7E2-4239-80CA-17032B8EA991}.Debug|Mixed Platforms.ActiveCfg = Debug
+		{972AC84C-F7E2-4239-80CA-17032B8EA991}.Debug|x86.ActiveCfg = Debug
+		{972AC84C-F7E2-4239-80CA-17032B8EA991}.Release|Any CPU.ActiveCfg = Release
+		{972AC84C-F7E2-4239-80CA-17032B8EA991}.Release|Mixed Platforms.ActiveCfg = Release
+		{972AC84C-F7E2-4239-80CA-17032B8EA991}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
