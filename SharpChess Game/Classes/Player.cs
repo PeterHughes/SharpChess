@@ -1789,7 +1789,6 @@ namespace SharpChess
             Moves movesPV_Parent, 
             int intTotalExtensions)
         {
-            // TODO Add option of STANDING PAT in Quiescence Search.
             int val = int.MinValue;
             HashTable.enmHashType hashType = HashTable.enmHashType.Alpha;
             Move moveHash = null;

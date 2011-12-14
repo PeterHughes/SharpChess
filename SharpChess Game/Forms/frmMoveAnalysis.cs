@@ -62,8 +62,6 @@ namespace SharpChess
         {
             // Required for Windows Form Designer support
             this.InitializeComponent();
-
-            // TODO: Add any constructor code after InitializeComponent call
         }
 
         #endregion

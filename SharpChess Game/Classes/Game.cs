@@ -1243,18 +1243,18 @@ namespace SharpChess
         {
             if (strFEN == string.Empty)
             {
-                strFEN = FEN.GameStartPosition;
+                strFEN = Fen.GameStartPosition;
             }
 
             random = new Random(DateTime.Now.Millisecond);
-            FEN.Validate(strFEN);
+            Fen.Validate(strFEN);
             HashTable.Clear();
             HashTablePawnKing.Clear();
             HashTableCheck.Clear();
             UndoAllMoves_Internal();
             m_movesRedoList.Clear();
             m_strFileName = string.Empty;
-            FEN.SetBoardPosition(strFEN);
+            Fen.SetBoardPosition(strFEN);
             m_playerWhite.Clock.Reset();
             m_playerBlack.Clock.Reset();
         }
@@ -1323,7 +1323,7 @@ namespace SharpChess
 
             xmldoc.AppendChild(xmlnodeGame);
 
-            xmlnodeGame.SetAttribute("FEN", FENStartPosition == FEN.GameStartPosition ? string.Empty : FENStartPosition);
+            xmlnodeGame.SetAttribute("FEN", FENStartPosition == Fen.GameStartPosition ? string.Empty : FENStartPosition);
             xmlnodeGame.SetAttribute("TurnNo", TurnNo.ToString());
             xmlnodeGame.SetAttribute("WhitePlayer", PlayerWhite.Intellegence == Player.enmIntellegence.Human ? "Human" : "Computer");
             xmlnodeGame.SetAttribute("BlackPlayer", PlayerBlack.Intellegence == Player.enmIntellegence.Human ? "Human" : "Computer");

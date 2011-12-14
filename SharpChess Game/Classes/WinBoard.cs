@@ -520,9 +520,9 @@ namespace SharpChess
                     {
                         Game.New(strMessage.Substring(9).Trim());
                     }
-                    catch (FEN.ValidationException x)
+                    catch (Fen.ValidationException x)
                     {
-                        SendOutputMessage("tellusererror Illegal position: " + x.FENMessage);
+                        SendOutputMessage("tellusererror Illegal position: " + x.FenMessage);
                     }
                 }
                 else if (strMessage == "edit")
@@ -1054,7 +1054,7 @@ namespace SharpChess
             /// <summary>
             /// The m_str message.
             /// </summary>
-            private readonly string m_strMessage = string.Empty;
+            private readonly string message = string.Empty;
 
             #endregion
 
@@ -1068,7 +1068,7 @@ namespace SharpChess
             /// </param>
             public WinBoardInputException(string strMessage)
             {
-                this.m_strMessage = strMessage;
+                this.message = strMessage;
             }
 
             #endregion
@@ -1082,7 +1082,7 @@ namespace SharpChess
             {
                 get
                 {
-                    return this.m_strMessage;
+                    return this.message;
                 }
             }
 

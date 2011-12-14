@@ -3,7 +3,7 @@
 //   Peter Hughes
 // </copyright>
 // <summary>
-//   Summary description for FENParser.
+//   Converts a Forsyth–Edwards Notation (FEN) string into a SharpChess board position.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -33,14 +33,14 @@ namespace SharpChess
     #endregion
 
     /// <summary>
-    /// Converts a FEN string into a SharpChess board position.
+    /// Converts a Forsyth–Edwards Notation (FEN) string into a SharpChess board position.
     /// </summary>
-    public class FEN
+    public static class Fen
     {
         #region Public Properties
 
         /// <summary>
-        /// Gets GameStartPosition.
+        ///   Gets GameStartPosition.
         /// </summary>
         public static string GameStartPosition
         {
@@ -62,53 +62,53 @@ namespace SharpChess
         ///   <list type="number">
         /// <item>
         /// Piece placement data: <see cref="FenGet1Pieces"/>(strbFen, strbCouldCastlingW, strbCouldCastlingB)
-        /// </item>
+        ///     </item>
         /// <item>
         /// Active color: " w " or " b "
-        /// </item>
+        ///     </item>
         /// <item>
-        /// Castling availability: "KQkq" or "-" see <see cref="FenGet3CastlingFuture"/>(...)
-        /// </item>
+        /// Castling availability: "KQkq" or "-" see <see cref="FenGet3CastlingIsPossible"/>(...)
+        ///     </item>
         /// <item>
         /// En passant target square coordonates: <see cref="FenGet4EnPassant"/>()
-        /// </item>
+        ///     </item>
         /// <item>
         /// Number of ply since the last pawn advance or capturing move: <see cref="FenGet5Counter50MoveDraw"/>()
-        /// </item>
+        ///     </item>
         /// <item>
         /// Full move number = Game.TurnNo \ 2 + 1
-        /// </item>
+        ///     </item>
         /// </list>
         /// </returns>
         /// <example>
         /// <list type="bullet">
         /// <item>
         /// "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" initial position
-        /// </item>
+        ///     </item>
         /// <item>
         /// "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1" after 1. e4
-        /// </item>
+        ///     </item>
         /// <item>
         /// "rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e6 0 2" after 1. e4 e5
-        /// </item>
+        ///     </item>
         /// <item>
         /// "rnbqkbnr/pppp1ppp/8/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2" after 2. Nf3
-        /// </item>
+        ///     </item>
         /// <item>
         /// "r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3" after 2. Nf3 Nc6
-        /// </item>
+        ///     </item>
         /// <item>
         /// "r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3" after 3. Bb5
-        /// </item>
+        ///     </item>
         /// <item>
         /// "r1bqkbnr/1ppp1ppp/p1n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 4" after 3. Bb5 a6
-        /// </item>
+        ///     </item>
         /// </list>
         /// </example>
         public static string GetBoardPosition()
         {
             Game.SuspendPondering();
-            StringBuilder strbFen = new StringBuilder();
+            var strbFen = new StringBuilder();
 
             // Field 1: Piece placement data
             FenGet1Pieces(strbFen);
@@ -117,9 +117,9 @@ namespace SharpChess
             strbFen.Append((Game.PlayerToPlay.Colour == Player.enmColour.White) ? " w " : " b ");
 
             // Field 3: Castling availability
-            bool bIsCastleW = FenGet3CastlingFuture(Game.PlayerWhite.King, strbFen);
-            bool bIsCastleB = FenGet3CastlingFuture(Game.PlayerBlack.King, strbFen);
-            if (!bIsCastleW && !bIsCastleB)
+            bool whiteCanCastle = FenGet3CastlingIsPossible(Game.PlayerWhite.King, strbFen);
+            bool blackCanCastle = FenGet3CastlingIsPossible(Game.PlayerBlack.King, strbFen);
+            if (!whiteCanCastle && !blackCanCastle)
             {
                 strbFen.Append("-"); // No castling availability for either side
             }
@@ -140,10 +140,10 @@ namespace SharpChess
         /// <summary>
         /// The set board position.
         /// </summary>
-        /// <param name="strFEN">
+        /// <param name="fenString">
         /// The str fen.
         /// </param>
-        public static void SetBoardPosition(string strFEN)
+        public static void SetBoardPosition(string fenString)
         {
             string strActiveColour = "w";
             string strCastlingRights = string.Empty;
@@ -151,59 +151,57 @@ namespace SharpChess
             string strHalfMoveClock = "0";
             string strFullMoveNumber = "1";
 
-            int intPos;
-
-            Game.FENStartPosition = strFEN;
+            Game.FENStartPosition = fenString;
 
             Game.CaptureAllPieces();
             Game.DemoteAllPieces();
 
             // Break up the string into its various parts
             // rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
-            strFEN += " ";
+            fenString += " ";
 
             // Piece Placement
-            intPos = strFEN.IndexOf(" ");
-            char[] acharPiecePlacement = strFEN.ToCharArray(0, intPos);
-            strFEN = strFEN.Substring(intPos + 1);
+            int pos = fenString.IndexOf(" ");
+            char[] acharPiecePlacement = fenString.ToCharArray(0, pos);
+            fenString = fenString.Substring(pos + 1);
 
             // Active Colour
-            intPos = strFEN.IndexOf(" ");
-            if (intPos > -1)
+            pos = fenString.IndexOf(" ");
+            if (pos > -1)
             {
-                strActiveColour = strFEN.Substring(0, intPos);
-                strFEN = strFEN.Substring(intPos + 1);
+                strActiveColour = fenString.Substring(0, pos);
+                fenString = fenString.Substring(pos + 1);
             }
 
             // Castling Rights
-            intPos = strFEN.IndexOf(" ");
-            if (intPos > -1)
+            pos = fenString.IndexOf(" ");
+            if (pos > -1)
             {
-                strCastlingRights = strFEN.Substring(0, intPos);
-                strFEN = strFEN.Substring(intPos + 1);
+                strCastlingRights = fenString.Substring(0, pos);
+                fenString = fenString.Substring(pos + 1);
             }
 
             // En passant
-            intPos = strFEN.IndexOf(" ");
-            if (intPos > -1)
+            pos = fenString.IndexOf(" ");
+            if (pos > -1)
             {
-                strEnPassant = strFEN.Substring(0, intPos);
-                strFEN = strFEN.Substring(intPos + 1);
+                strEnPassant = fenString.Substring(0, pos);
+                fenString = fenString.Substring(pos + 1);
             }
 
             // Half move clock
-            intPos = strFEN.IndexOf(" ");
-            if (intPos > -1)
+            pos = fenString.IndexOf(" ");
+            if (pos > -1)
             {
-                strHalfMoveClock = strFEN.Substring(0, intPos);
-                strFEN = strFEN.Substring(intPos + 1);
+                strHalfMoveClock = fenString.Substring(0, pos);
+                fenString = fenString.Substring(pos + 1);
             }
 
             // Full move number
-            intPos = strFEN.IndexOf(" ");
-            if (intPos > -1)
+            pos = fenString.IndexOf(" ");
+            if (pos > -1)
             {
-                strFullMoveNumber = strFEN.Substring(0, intPos);
+                strFullMoveNumber = fenString.Substring(0, pos);
             }
 
             // Match FEN pieces against actual pieces, and move them onto the board
@@ -224,25 +222,29 @@ namespace SharpChess
             Piece pieceRook;
 
             // White King's Rook
-            if ((pieceRook = Board.GetPiece(7, 0)) != null && pieceRook.Name == Piece.enmName.Rook && pieceRook.Player.Colour == Player.enmColour.White)
+            if ((pieceRook = Board.GetPiece(7, 0)) != null && pieceRook.Name == Piece.enmName.Rook
+                && pieceRook.Player.Colour == Player.enmColour.White)
             {
                 pieceRook.NoOfMoves = strCastlingRights.LastIndexOf("K") >= 0 ? 0 : 1;
             }
 
             // Black King's Rook
-            if ((pieceRook = Board.GetPiece(7, 7)) != null && pieceRook.Name == Piece.enmName.Rook && pieceRook.Player.Colour == Player.enmColour.Black)
+            if ((pieceRook = Board.GetPiece(7, 7)) != null && pieceRook.Name == Piece.enmName.Rook
+                && pieceRook.Player.Colour == Player.enmColour.Black)
             {
                 pieceRook.NoOfMoves = strCastlingRights.LastIndexOf("k") >= 0 ? 0 : 1;
             }
 
             // White Queen's Rook
-            if ((pieceRook = Board.GetPiece(0, 0)) != null && pieceRook.Name == Piece.enmName.Rook && pieceRook.Player.Colour == Player.enmColour.White)
+            if ((pieceRook = Board.GetPiece(0, 0)) != null && pieceRook.Name == Piece.enmName.Rook
+                && pieceRook.Player.Colour == Player.enmColour.White)
             {
                 pieceRook.NoOfMoves = strCastlingRights.LastIndexOf("Q") >= 0 ? 0 : 1;
             }
 
             // Black Queen's Rook
-            if ((pieceRook = Board.GetPiece(0, 7)) != null && pieceRook.Name == Piece.enmName.Rook && pieceRook.Player.Colour == Player.enmColour.Black)
+            if ((pieceRook = Board.GetPiece(0, 7)) != null && pieceRook.Name == Piece.enmName.Rook
+                && pieceRook.Player.Colour == Player.enmColour.Black)
             {
                 pieceRook.NoOfMoves = strCastlingRights.LastIndexOf("q") >= 0 ? 0 : 1;
             }
@@ -264,11 +266,11 @@ namespace SharpChess
                 int indRank = int.Parse(Convert.ToString(strEnPassant[1]));
                 if (indRank == 6)
                 {
-                    // if strFen = "e6"
+                    // if fenString = "e6"
                     indRank = 4; // last move was e7-e5 so indRank = 6 - 2 = 4
                 }
 
-                // else if indRank = 3, strFen = "e3" last move was e2-e4 so indRank = 3
+                // else if indRank = 3, fenString = "e3" last move was e2-e4 so indRank = 3
                 Piece piecePassed = Board.GetPiece(indFile, indRank);
                 piecePassed.NoOfMoves = 1;
                 piecePassed.LastMoveTurnNo = Game.TurnNo;
@@ -283,63 +285,64 @@ namespace SharpChess
         /// <summary>
         /// Check if the array of strings represents a valid FEN position
         /// </summary>
-        /// <param name="strFEN">
+        /// <param name="fenString">
         /// FEN chess board position string
         /// </param>
         /// <remarks>
         /// <list type="number">
         /// <item>
         /// Field 1: <see cref="FenCheck1PiecePlace"/>(arrStrFen[0]) Piece placement data
-        /// </item>
+        ///     </item>
         /// <item>
         /// Field 2: <see cref="FenCheck2Color"/>(arrStrFen[1]) Active color
-        /// </item>
+        ///     </item>
         /// <item>
         /// Field 3: <see cref="FenCheck3Castle"/>(arrStrFen[2]) Castling availability
-        /// </item>
+        ///     </item>
         /// <item>
         /// Field 4: <see cref="FenCheck4EnPassant"/>(arrStrFen[3]) En passant target square coordonates
-        /// </item>
+        ///     </item>
         /// <item>
         /// Field 5: <see cref="FenCheck5Counter50MoveDraw"/>(arrStrFen[4]) number of ply since the last capture or pawn move
-        /// </item>
+        ///     </item>
         /// <item>
         /// Field 6: <see cref="FenCheck6NbrMove"/>(arrStrFen[5]) Full move number
-        /// </item>
+        ///     </item>
         /// </list>
         /// </remarks>
-        public static void Validate(string strFEN)
+        public static void Validate(string fenString)
         {
             char[] arrDelimiter = " ".ToCharArray();
-            string[] arrStrFen = strFEN.Split(arrDelimiter);
-            int intFields = arrStrFen.Length;
+            string[] arrStrFen = fenString.Split(arrDelimiter);
+            int fieldCount = arrStrFen.Length;
 
-            if (intFields < 1 || intFields > 6)
+            if (fieldCount < 1 || fieldCount > 6)
             {
-                throw new ValidationException("1000: A FEN string must 1 to 6 fields separated by spaces\n e.g. rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+                throw new ValidationException(
+                    "1000: A FEN string must 1 to 6 fields separated by spaces\n e.g. rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
             }
 
-            if (intFields >= 2)
+            if (fieldCount >= 2)
             {
                 FenCheck2Color(arrStrFen[1]);
             }
 
-            if (intFields >= 3)
+            if (fieldCount >= 3)
             {
                 FenCheck3Castle(arrStrFen[2]);
             }
 
-            if (intFields >= 4)
+            if (fieldCount >= 4)
             {
                 FenCheck4EnPassant(arrStrFen[3]);
             }
 
-            if (intFields >= 5)
+            if (fieldCount >= 5)
             {
                 FenCheck5Counter50MoveDraw(arrStrFen[4]);
             }
 
-            if (intFields >= 6)
+            if (fieldCount >= 6)
             {
                 FenCheck6NbrMove(arrStrFen[5]);
             }
@@ -355,119 +358,121 @@ namespace SharpChess
         /// <summary>
         /// Check the squares in the FEN position
         /// </summary>
-        /// <param name="strFen">
+        /// <param name="fenString">
         /// field 1 of the FEN string: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
         /// </param>
         /// <returns>
         /// true if all squares OK otherwise false
         /// </returns>
-        private static bool FenCheck1PiecePlace(string strFen)
+        private static bool FenCheck1PiecePlace(string fenString)
         {
-            int iNbrK = 0, iNbrQ = 0, iNbrR = 0, iNbrB = 0, iNbrN = 0, iNbrP = 0; // White
-            int iNbrk = 0, iNbrq = 0, iNbrr = 0, iNbrb = 0, iNbrn = 0, iNbrp = 0; // Black
-            int iNbrSquare = 0, iNbrSlash = 0;
-            for (int indChar = 0; indChar < strFen.Length; indChar++)
+            // TODO Investigate why whiteRook and blackRook are assigned values but never used.
+            int whiteKing = 0, whiteQueen = 0, whiteRook = 0, whiteBishop = 0, whiteKnight = 0, whitePawn = 0; // White
+            int blackKing = 0, blackQueen = 0, blackRook = 0, blackBishop = 0, blackKnight = 0, blackPawn = 0; // Black
+            int squareNumber = 0, slashNumber = 0;
+            for (int indChar = 0; indChar < fenString.Length; indChar++)
             {
-                switch (strFen[indChar])
+                switch (fenString[indChar])
                 {
                     case 'K':
-                        iNbrK++;
-                        iNbrSquare++;
+                        whiteKing++;
+                        squareNumber++;
                         break;
                     case 'k':
-                        iNbrk++;
-                        iNbrSquare++;
+                        blackKing++;
+                        squareNumber++;
                         break;
                     case 'Q':
-                        iNbrQ++;
-                        iNbrSquare++;
+                        whiteQueen++;
+                        squareNumber++;
                         break;
                     case 'q':
-                        iNbrq++;
-                        iNbrSquare++;
+                        blackQueen++;
+                        squareNumber++;
                         break;
                     case 'R':
-                        iNbrR++;
-                        iNbrSquare++;
+                        whiteRook++;
+                        squareNumber++;
                         break;
                     case 'r':
-                        iNbrr++;
-                        iNbrSquare++;
+                        blackRook++;
+                        squareNumber++;
                         break;
                     case 'B':
-                        iNbrB++;
-                        iNbrSquare++;
+                        whiteBishop++;
+                        squareNumber++;
                         break;
                     case 'b':
-                        iNbrb++;
-                        iNbrSquare++;
+                        blackBishop++;
+                        squareNumber++;
                         break;
                     case 'N':
-                        iNbrN++;
-                        iNbrSquare++;
+                        whiteKnight++;
+                        squareNumber++;
                         break;
                     case 'n':
-                        iNbrn++;
-                        iNbrSquare++;
+                        blackKnight++;
+                        squareNumber++;
                         break;
                     case 'P':
-                        iNbrP++;
-                        iNbrSquare++;
+                        whitePawn++;
+                        squareNumber++;
                         break;
                     case 'p':
-                        iNbrp++;
-                        iNbrSquare++;
+                        blackPawn++;
+                        squareNumber++;
                         break;
                     case '/':
-                        iNbrSlash++;
-                        if (iNbrSquare != 8)
+                        slashNumber++;
+                        if (squareNumber != 8)
                         {
-                            throw new ValidationException("1010: " + FenHlpMsg(1) + string.Format("The rank {0} does not contain 8 squares", iNbrSlash));
+                            throw new ValidationException(
+                                "1010: " + FenHlpMsg(1)
+                                + string.Format("The rank {0} does not contain 8 squares", slashNumber));
                         }
 
-                        iNbrSquare = 0;
+                        squareNumber = 0;
                         break;
 
                     default:
-                        if ((strFen[indChar] < '1') || (strFen[indChar] > '8'))
+                        if ((fenString[indChar] < '1') || (fenString[indChar] > '8'))
                         {
-                            throw new ValidationException("1020: " + FenHlpMsg(1) + "Expected character 'KQRBNP/kqrbnp' '1'..'8'");
+                            throw new ValidationException(
+                                "1020: " + FenHlpMsg(1) + "Expected character 'KQRBNP/kqrbnp' '1'..'8'");
                         }
-                        else
-                        {
-                            iNbrSquare += Convert.ToInt32(strFen[indChar].ToString());
-                        }
+
+                        squareNumber += Convert.ToInt32(fenString[indChar].ToString());
 
                         break;
                 }
             }
 
-            if (iNbrSlash != 7)
+            if (slashNumber != 7)
             {
                 throw new ValidationException("1030: " + FenHlpMsg(1) + "The string must have 7 slash separators");
             }
 
-            if (iNbrSquare != 8)
+            if (squareNumber != 8)
             {
                 throw new ValidationException("1040: " + FenHlpMsg(1) + "The last rank does not contain 8 squares");
             }
 
-            if (iNbrK != 1)
+            if (whiteKing != 1)
             {
                 throw new ValidationException("1050: " + FenHlpMsg(1) + "No White King");
             }
 
-            if (iNbrk != 1)
+            if (blackKing != 1)
             {
                 throw new ValidationException("1060: " + FenHlpMsg(1) + "No Black King");
             }
 
-            if ((iNbrQ > 9) || (iNbrB > 9) || (iNbrN > 9) || (iNbrP > 8))
+            if ((whiteQueen > 9) || (whiteBishop > 9) || (whiteKnight > 9) || (whitePawn > 8))
             {
                 throw new ValidationException("1070: " + FenHlpMsg(1) + "Too many White Q or B or N or P");
             }
 
-            if ((iNbrq > 9) || (iNbrb > 9) || (iNbrn > 9) || (iNbrp > 8))
+            if ((blackQueen > 9) || (blackBishop > 9) || (blackKnight > 9) || (blackPawn > 8))
             {
                 throw new ValidationException("1080: " + FenHlpMsg(1) + "Too many Black q or b or n or p");
             }
@@ -480,20 +485,22 @@ namespace SharpChess
         /// <summary>
         /// Check the active color in the FEN string
         /// </summary>
-        /// <param name="strFen">
+        /// <param name="fenString">
         /// field 2 of the FEN string: "w" or "b"
         /// </param>
-        /// <returns>
-        /// true if 'w' or 'b' otherwise false
-        /// </returns>
-        private static bool FenCheck2Color(string strFen)
+        private static void FenCheck2Color(string fenString)
         {
-            if ((strFen != "w") && (strFen != "b"))
+            if (fenString == null)
+            {
+                throw new ArgumentNullException("fenString");
+            }
+
+            if ((fenString != "w") && (fenString != "b"))
             {
                 throw new ValidationException("1200: " + FenHlpMsg(2) + "The active color must be 'w' or 'b'");
             }
 
-            return true;
+            return;
         }
 
         // end FenCheck2Color
@@ -501,53 +508,50 @@ namespace SharpChess
         /// <summary>
         /// Check the castling availability in the FEN string
         /// </summary>
-        /// <param name="strFen">
+        /// <param name="fenString">
         /// field 3 of the FEN string: "KQkq", ..., "-"
         /// </param>
-        /// <returns>
-        /// true if [KQkq] or '-' otherwise false
-        /// </returns>
         /// <remarks>
-        /// If White/Black King could O-O or O-O-O then strFen = "KQkq"
+        /// If White/Black King could O-O or O-O-O then fenString = "KQkq"
         /// </remarks>
-        private static bool FenCheck3Castle(string strFen)
+        private static void FenCheck3Castle(string fenString)
         {
-            int iNbrDash = 0, iNbrK = 0, iNbrQ = 0, iNbrk = 0, iNbrq = 0;
-            for (int indChar = 0; indChar < strFen.Length; indChar++)
+            int dash = 0, whiteKing = 0, whiteQueen = 0, blackKing = 0, blackQueen = 0;
+            foreach (char t in fenString)
             {
-                switch (strFen[indChar])
+                switch (t)
                 {
                     case 'K':
-                        iNbrK++;
+                        whiteKing++;
                         break;
                     case 'k':
-                        iNbrk++;
+                        blackKing++;
                         break;
                     case 'Q':
-                        iNbrQ++;
+                        whiteQueen++;
                         break;
                     case 'q':
-                        iNbrq++;
+                        blackQueen++;
                         break;
                     case '-':
-                        iNbrDash++;
+                        dash++;
                         break;
                     default:
                         throw new ValidationException("1300: " + FenHlpMsg(3) + "Expected character 'KQkq-'");
                 }
             }
 
-            if ((iNbrK > 1) || (iNbrQ > 1) || (iNbrk > 1) || (iNbrq > 1) || (iNbrDash > 1))
+            if ((whiteKing > 1) || (whiteQueen > 1) || (blackKing > 1) || (blackQueen > 1) || (dash > 1))
             {
                 throw new ValidationException("1310: " + FenHlpMsg(3) + "At least one occurrence of 'KQkq-'");
             }
 
-            if ((iNbrDash == 1) && ((iNbrK == 1) || (iNbrQ == 1) || (iNbrk == 1) || (iNbrq == 1)))
+            if ((dash == 1) && ((whiteKing == 1) || (whiteQueen == 1) || (blackKing == 1) || (blackQueen == 1)))
             {
                 throw new ValidationException("1320: " + FenHlpMsg(3) + "'KQkq' or exclusive '-'");
             }
 
-            return true;
+            return;
         }
 
         // end FenCheck3Castle
@@ -555,35 +559,36 @@ namespace SharpChess
         /// <summary>
         /// Check the capture square En Passant in the FEN string
         /// </summary>
-        /// <param name="strFen">
+        /// <param name="fenString">
         /// field 4 of the FEN string: "e3", "e6", ..., "-"
         /// </param>
         /// <remarks>
-        /// If the last move was e2-e4, then strFen = "e3"
+        /// If the last move was e2-e4, then fenString = "e3"
         /// </remarks>
-        /// <returns>
-        /// true if [abcdefgh](3|6) or '-' otherwise false
-        /// </returns>
-        private static bool FenCheck4EnPassant(string strFen)
+        private static void FenCheck4EnPassant(string fenString)
         {
-            if (((strFen[0] < 'a') || (strFen[0] > 'h')) && (strFen[0] != '-'))
+            if (((fenString[0] < 'a') || (fenString[0] > 'h')) && (fenString[0] != '-'))
             {
                 throw new ValidationException("1400: " + FenHlpMsg(4) + "Expected character 'abcdefgh-'");
             }
 
-            if (strFen[0] == '-')
+            if (fenString[0] == '-')
             {
-                if (strFen.Length > 1)
+                if (fenString.Length > 1)
                 {
                     throw new ValidationException("1410: " + FenHlpMsg(4) + "No expected character after '-'");
                 }
             }
-            else if (((strFen[0] >= 'a') && (strFen[0] <= 'h')) && (((strFen.Length == 2) && (strFen[1] != '3') && (strFen[1] != '6')) || (strFen.Length > 2)))
+            else if (((fenString[0] >= 'a') && (fenString[0] <= 'h'))
+                     &&
+                     (((fenString.Length == 2) && (fenString[1] != '3') && (fenString[1] != '6'))
+                      || (fenString.Length > 2)))
             {
-                throw new ValidationException("1420: " + FenHlpMsg(4) + "After the pawn file, expect the rank '3' or '6'");
+                throw new ValidationException(
+                    "1420: " + FenHlpMsg(4) + "After the pawn file, expect the rank '3' or '6'");
             }
 
-            return true;
+            return;
         }
 
         // end FenCheck4EnPassant
@@ -591,38 +596,37 @@ namespace SharpChess
         /// <summary>
         /// Check the half move number in the FEN string
         /// </summary>
-        /// <param name="strFen">
+        /// <param name="fenString">
         /// field 5 of the FEN string: 0..100
         /// </param>
         /// <remarks>
         /// Represent the number of ply after a capture or a pawn move
         /// </remarks>
-        /// <returns>
-        /// true if half move number 0..100 otherwise false
-        /// </returns>
-        private static bool FenCheck5Counter50MoveDraw(string strFen)
+        private static void FenCheck5Counter50MoveDraw(string fenString)
         {
-            if (strFen.Length > 2)
+            if (fenString.Length > 2)
             {
-                throw new ValidationException("1500: " + FenHlpMsg(5) + "1 or 2 digits for the nbr of ply for rule of 50 moves");
+                throw new ValidationException(
+                    "1500: " + FenHlpMsg(5) + "1 or 2 digits for the nbr of ply for rule of 50 moves");
             }
 
-            int iNbrHalfMove;
+            int halfMove;
             try
             {
-                iNbrHalfMove = int.Parse(strFen);
+                halfMove = int.Parse(fenString);
             }
             catch
             {
-                throw new ValidationException("1510: " + FenHlpMsg(5) + "Expect a half move number for the rule of 50 moves");
+                throw new ValidationException(
+                    "1510: " + FenHlpMsg(5) + "Expect a half move number for the rule of 50 moves");
             }
 
-            if ((iNbrHalfMove < 0) || (iNbrHalfMove > 100))
+            if ((halfMove < 0) || (halfMove > 100))
             {
                 throw new ValidationException("1520: " + FenHlpMsg(5) + "Expect a non negative half move number <= 100");
             }
 
-            return true;
+            return;
         }
 
         // end FenCheck5Counter50MoveDraw
@@ -630,30 +634,27 @@ namespace SharpChess
         /// <summary>
         /// Check the full move number in the FEN string
         /// </summary>
-        /// <param name="strFen">
+        /// <param name="fenString">
         /// field 6 of the FEN string: 1..200
         /// </param>
-        /// <returns>
-        /// true if full move number 1..200 otherwise false
-        /// </returns>
-        private static bool FenCheck6NbrMove(string strFen)
+        private static void FenCheck6NbrMove(string fenString)
         {
-            int iNbrFullMove;
+            int fullMove;
             try
             {
-                iNbrFullMove = int.Parse(strFen);
+                fullMove = int.Parse(fenString);
             }
             catch
             {
                 throw new ValidationException("1600: " + FenHlpMsg(6) + "Expect a full move number");
             }
 
-            if ((iNbrFullMove < 1) || (iNbrFullMove > 200))
+            if ((fullMove < 1) || (fullMove > 200))
             {
                 throw new ValidationException("1610: " + FenHlpMsg(6) + "Expect a positive full move number <= 200");
             }
 
-            return true;
+            return;
         }
 
         // end FenCheck6NbrMove
@@ -670,24 +671,24 @@ namespace SharpChess
         /// <list type="bullet">
         /// <item>
         /// strbFen = "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR" for the intial position
-        /// </item>
+        ///     </item>
         /// <item>
         /// "r" = Black rook, "n" = Black knight,... "p" = Black pawn
-        /// </item>
+        ///     </item>
         /// <item>
         /// "R" = White rook, "N" = White knight,... "P" = White pawn
-        /// </item>
+        ///     </item>
         /// <item>
         /// "4P3" means 4 empty squares before the White pawn, then 3 empty squares
-        /// </item>
+        ///     </item>
         /// <item>
         /// "8" means empty rank
-        /// </item>
+        ///     </item>
         /// </list>
         /// </remarks>
         private static void FenGet1Pieces(StringBuilder strbFen)
         {
-            for (int iNbrEmptySquare = 0, indRank = Board.RankCount - 1; indRank >= 0; indRank--)
+            for (int emptySquare = 0, indRank = Board.RankCount - 1; indRank >= 0; indRank--)
             {
                 if (indRank != Board.RankCount - 1)
                 {
@@ -701,33 +702,34 @@ namespace SharpChess
                     Piece pieceThis = squareThis.Piece;
                     if (pieceThis == null)
                     {
-                        iNbrEmptySquare++;
+                        emptySquare++;
                     }
                     else
                     {
-                        if (iNbrEmptySquare > 0)
+                        if (emptySquare > 0)
                         {
                             // Nbr of empty squares before the piece
-                            strbFen.Append(iNbrEmptySquare.ToString());
-                            iNbrEmptySquare = 0;
+                            strbFen.Append(emptySquare.ToString());
+                            emptySquare = 0;
                         }
 
-                        if (pieceThis.Player.Colour == Player.enmColour.Black)
+                        switch (pieceThis.Player.Colour)
                         {
-                            strbFen.Append(pieceThis.Abbreviation.ToLower()); // Blacks in lowercase
-                        }
-                        else
-                        {
-                            strbFen.Append(pieceThis.Abbreviation);
+                            case Player.enmColour.Black:
+                                strbFen.Append(pieceThis.Abbreviation.ToLower()); // Blacks in lowercase
+                                break;
+                            default:
+                                strbFen.Append(pieceThis.Abbreviation);
+                                break;
                         }
                     }
                 }
 
-                if (iNbrEmptySquare > 0)
+                if (emptySquare > 0)
                 {
                     // Nbr of empty squares after the last piece
-                    strbFen.Append(iNbrEmptySquare.ToString());
-                    iNbrEmptySquare = 0;
+                    strbFen.Append(emptySquare.ToString());
+                    emptySquare = 0;
                 }
             }
         }
@@ -737,52 +739,52 @@ namespace SharpChess
         /// <summary>
         /// FEN notation of castling availability of the King in the future
         /// </summary>
-        /// <param name="pieceK">
+        /// <param name="pieceKing">
         /// the White or Black King
         /// </param>
-        /// <param name="strbFen">
+        /// <param name="fenString">
         /// <list type="bullet">
         /// <item>
-        /// append "K" if White castling availability <see cref="PieceKing.CouldCastleKingSide">Rook-side</see>
-        /// </item>
+        /// append "K" if White castling availability
+        ///     </item>
         /// <item>
-        /// append "Q" if White castling availability both <see cref="PieceKing.CouldCastleQueenSide">Queen-side</see>
-        /// </item>
+        /// append "Q" if White castling availability both
+        ///     </item>
         /// <item>
         /// append "k" if Black castling availability both Rook-side
-        /// </item>
+        ///     </item>
         /// <item>
         /// append "q" if Black castling availability both Queen-side
-        /// </item>
+        ///     </item>
         /// <item>
         /// append "KQkq" if O-O and O-O-O for White first then Black
-        /// </item>
+        ///     </item>
         /// </list>
         /// </param>
         /// <returns>
         /// The fen get 3 castling future.
         /// </returns>
-        private static bool FenGet3CastlingFuture(Piece pieceK, StringBuilder strbFen)
+        private static bool FenGet3CastlingIsPossible(Piece pieceKing, StringBuilder fenString)
         {
-            bool bIsFutureCastling = false;
-            if (((PieceKing)pieceK.Top).CanCastleKingSide)
+            bool canCastle = false;
+            if (((PieceKing)pieceKing.Top).CanCastleKingSide)
             {
                 // King could castle Rook-side in the future
-                strbFen.Append((pieceK.Player.Colour == Player.enmColour.White) ? "K" : "k");
-                bIsFutureCastling = true;
+                fenString.Append((pieceKing.Player.Colour == Player.enmColour.White) ? "K" : "k");
+                canCastle = true;
             }
 
-            if (((PieceKing)pieceK.Top).CanCastleQueenSide)
+            if (((PieceKing)pieceKing.Top).CanCastleQueenSide)
             {
                 // King could castle Queen-side in the future
-                strbFen.Append((pieceK.Player.Colour == Player.enmColour.White) ? "Q" : "q");
-                bIsFutureCastling = true;
+                fenString.Append((pieceKing.Player.Colour == Player.enmColour.White) ? "Q" : "q");
+                canCastle = true;
             }
 
-            return bIsFutureCastling;
+            return canCastle;
         }
 
-        // end FenGet3CastlingFuture
+        // end FenGet3CastlingIsPossible
 
         /// <summary>
         /// FEN string indicating the potential square target for a capture en passant
@@ -791,25 +793,33 @@ namespace SharpChess
         /// <list type="bullet">
         /// <item>
         /// "e3" if the last move was e2-e4
-        /// </item>
+        ///     </item>
         /// <item>
         /// "e6" if the last move was e7-e5
-        /// </item>
+        ///     </item>
         /// <item>
         /// " - " if the last move was not a pawn move of 2 squares
-        /// </item>
+        ///     </item>
         /// </list>
         /// </returns>
         private static string FenGet4EnPassant()
         {
-            if ((Game.MoveHistory.Count > 0) && (Game.MoveHistory.Last.Piece.Name == Piece.enmName.Pawn) && (Game.MoveHistory.Last.From.File == Game.MoveHistory.Last.To.File) && (((Game.MoveHistory.Last.From.Rank == Game.MoveHistory.Last.To.Rank + 2) && (Game.MoveHistory.Last.Piece.Player.Colour == Player.enmColour.Black)) || ((Game.MoveHistory.Last.From.Rank == Game.MoveHistory.Last.To.Rank - 2) && (Game.MoveHistory.Last.Piece.Player.Colour == Player.enmColour.White))))
+            if ((Game.MoveHistory.Count > 0) && (Game.MoveHistory.Last.Piece.Name == Piece.enmName.Pawn)
+                && (Game.MoveHistory.Last.From.File == Game.MoveHistory.Last.To.File)
+                &&
+                (((Game.MoveHistory.Last.From.Rank == Game.MoveHistory.Last.To.Rank + 2)
+                  && (Game.MoveHistory.Last.Piece.Player.Colour == Player.enmColour.Black))
+                 ||
+                 ((Game.MoveHistory.Last.From.Rank == Game.MoveHistory.Last.To.Rank - 2)
+                  && (Game.MoveHistory.Last.Piece.Player.Colour == Player.enmColour.White))))
             {
-                return " " + Game.MoveHistory.Last.From.FileName + ((Game.MoveHistory.Last.Piece.Player.Colour == Player.enmColour.White) ? "3 " : "6 "); // The case between From and To
+                return " " + Game.MoveHistory.Last.From.FileName
+                       + ((Game.MoveHistory.Last.Piece.Player.Colour == Player.enmColour.White) ? "3 " : "6 ");
+                    
+                    // The case between From and To
             }
-            else
-            {
-                return " - "; // There is not en passant target square
-            }
+
+            return " - "; // There is not en passant target square
         }
 
         // end FenGet4EnPassant
@@ -818,17 +828,18 @@ namespace SharpChess
         /// FEN string of the number of ply since the last pawn advance or capturing move
         /// </summary>
         /// <returns>
-        /// <see cref="Game.FiftyMoveDrawCounter"/> + " "
+        /// Return 50 move draw
         /// </returns>
         private static string FenGet5Counter50MoveDraw()
         {
-            return string.Format("{0} ", Game.MoveHistory.Count > 0 ? Game.MoveHistory.Last.FiftyMoveDrawCounter : Game.FiftyMoveDrawBase);
+            return string.Format(
+                "{0} ", Game.MoveHistory.Count > 0 ? Game.MoveHistory.Last.FiftyMoveDrawCounter : Game.FiftyMoveDrawBase);
         }
 
         /// <summary>
         /// FEN helper naming each field
         /// </summary>
-        /// <param name="iField">
+        /// <param name="fieldNumber">
         /// A value between 1 and 6
         /// </param>
         /// <returns>
@@ -837,9 +848,9 @@ namespace SharpChess
         /// <remarks>
         /// Used in a Warning message
         /// </remarks>
-        private static string FenHlpMsg(int iField)
+        private static string FenHlpMsg(int fieldNumber)
         {
-            switch (iField)
+            switch (fieldNumber)
             {
                 case 1:
                     return "FEN field 1: Piece placement data.\n";
@@ -876,7 +887,8 @@ namespace SharpChess
         /// <param name="blnAllowPromotion">
         /// The bln allow promotion.
         /// </param>
-        private static void MovePieceToFENPosition(ref char charToken, int intFile, int intRank, bool blnAnyLocation, bool blnAllowPromotion)
+        private static void MovePieceToFenPosition(
+            ref char charToken, int intFile, int intRank, bool blnAnyLocation, bool blnAllowPromotion)
         {
             Piece.enmName piecename = Piece.enmName.King;
             Player player = charToken.ToString() == charToken.ToString().ToUpper() ? Game.PlayerWhite : Game.PlayerBlack;
@@ -908,7 +920,8 @@ namespace SharpChess
             Piece pieceToUse = null;
             foreach (Piece pieceCaptured in player.OtherPlayer.CapturedEnemyPieces)
             {
-                if ((pieceCaptured.Name == piecename || blnAllowPromotion && pieceCaptured.Name == Piece.enmName.Pawn) && (pieceCaptured.StartLocation == Board.GetSquare(intFile, intRank) || blnAnyLocation))
+                if ((pieceCaptured.Name == piecename || (blnAllowPromotion && pieceCaptured.Name == Piece.enmName.Pawn))
+                    && (pieceCaptured.StartLocation == Board.GetSquare(intFile, intRank) || blnAnyLocation))
                 {
                     pieceToUse = pieceCaptured;
                     break;
@@ -947,7 +960,8 @@ namespace SharpChess
         /// <exception cref="ValidationException">
         /// Unknow character in FEN string.
         /// </exception>
-        private static void SetPiecePlacement(ref char[] acharPiecePlacement, bool blnAnyLocation, bool blnAllowPromotion)
+        private static void SetPiecePlacement(
+            ref char[] acharPiecePlacement, bool blnAnyLocation, bool blnAllowPromotion)
         {
             // Setup piece placement
             int intRank = 7;
@@ -979,7 +993,8 @@ namespace SharpChess
                     case 'b':
                     case 'n':
                     case 'p':
-                        MovePieceToFENPosition(ref acharPiecePlacement[intIndex], intFile, intRank, blnAnyLocation, blnAllowPromotion);
+                        MovePieceToFenPosition(
+                            ref acharPiecePlacement[intIndex], intFile, intRank, blnAnyLocation, blnAllowPromotion);
                         intFile++;
                         break;
 
@@ -990,7 +1005,8 @@ namespace SharpChess
                         }
                         else
                         {
-                            throw new ValidationException("Unknow character in FEN string:" + acharPiecePlacement[intIndex]);
+                            throw new ValidationException(
+                                "Unknow character in FEN string:" + acharPiecePlacement[intIndex]);
                         }
 
                         break;
@@ -1012,9 +1028,9 @@ namespace SharpChess
             // Check to see if there were any pieces left that we couldnt place.
             string strPieceName = string.Empty;
 
-            for (int intIndex = 0; intIndex < acharPiecePlacement.Length; intIndex++)
+            foreach (char t in acharPiecePlacement)
             {
-                switch (acharPiecePlacement[intIndex])
+                switch (t)
                 {
                     case 'K':
                         strPieceName += " White King";
@@ -1071,9 +1087,9 @@ namespace SharpChess
             #region Constants and Fields
 
             /// <summary>
-            /// The m_str message.
+            ///   Message text.
             /// </summary>
-            private readonly string m_strMessage = string.Empty;
+            private readonly string message = string.Empty;
 
             #endregion
 
@@ -1087,7 +1103,7 @@ namespace SharpChess
             /// </param>
             public ValidationException(string strMessage)
             {
-                this.m_strMessage = strMessage;
+                this.message = strMessage;
             }
 
             #endregion
@@ -1095,19 +1111,17 @@ namespace SharpChess
             #region Public Properties
 
             /// <summary>
-            /// Gets FENMessage.
+            ///   Gets FENMessage.
             /// </summary>
-            public string FENMessage
+            public string FenMessage
             {
                 get
                 {
-                    return this.m_strMessage;
+                    return this.message;
                 }
             }
 
             #endregion
         }
-
-        // end FenGet5Counter50MoveDraw
     }
 }

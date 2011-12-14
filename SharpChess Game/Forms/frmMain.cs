@@ -2864,7 +2864,7 @@ namespace SharpChess
         private void mnuCopyFEN_Click(object sender, EventArgs e)
         {
             // Put FEN position string into the clipboard
-            Clipboard.SetDataObject(FEN.GetBoardPosition());
+            Clipboard.SetDataObject(Fen.GetBoardPosition());
         }
 
         /// <summary>
@@ -3034,9 +3034,9 @@ namespace SharpChess
                     string strFen = ((String)itfDataObj.GetData(DataFormats.Text)).Trim();
                     Game.New(strFen);
                 }
-                catch (FEN.ValidationException x)
+                catch (Fen.ValidationException x)
                 {
-                    MessageBox.Show(x.FENMessage);
+                    MessageBox.Show(x.FenMessage);
                 }
                 catch (Exception x)
                 {
