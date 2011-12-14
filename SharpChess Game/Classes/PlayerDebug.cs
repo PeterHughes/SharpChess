@@ -117,7 +117,7 @@ namespace SharpChess
                         {
                             // Number of moves in the variation
                             PlayerDebug.m_iDbgLevel = intMaxSearchDepth + 1; // Do not recall PlayerDebug utility
-                            Board.DebugDisplay(); // Display the current position in the "Output Window"
+                            BoardDebug.DebugDisplay(); // Display the current position in the "Output Window"
                             Debug.WriteLine("\nPosition after: " + strVariation);
                             return true; // The current position matches the wished variation
                         }

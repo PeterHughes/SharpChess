@@ -1075,7 +1075,7 @@ namespace SharpChess
 
             if (xmlnodeGame.GetAttribute("BoardOrientation") != string.Empty)
             {
-                Board.Orientation = xmlnodeGame.GetAttribute("BoardOrientation") == "White" ? Board.enmOrientation.White : Board.enmOrientation.Black;
+                Board.Orientation = xmlnodeGame.GetAttribute("BoardOrientation") == "White" ? Board.OrientationNames.White : Board.OrientationNames.Black;
             }
 
             if (xmlnodeGame.GetAttribute("DifficultyLevel") != string.Empty)
@@ -1327,7 +1327,7 @@ namespace SharpChess
             xmlnodeGame.SetAttribute("TurnNo", TurnNo.ToString());
             xmlnodeGame.SetAttribute("WhitePlayer", PlayerWhite.Intellegence == Player.enmIntellegence.Human ? "Human" : "Computer");
             xmlnodeGame.SetAttribute("BlackPlayer", PlayerBlack.Intellegence == Player.enmIntellegence.Human ? "Human" : "Computer");
-            xmlnodeGame.SetAttribute("BoardOrientation", Board.Orientation == Board.enmOrientation.White ? "White" : "Black");
+            xmlnodeGame.SetAttribute("BoardOrientation", Board.Orientation == Board.OrientationNames.White ? "White" : "Black");
             xmlnodeGame.SetAttribute("Version", Application.ProductVersion);
             xmlnodeGame.SetAttribute("DifficultyLevel", DifficultyLevel.ToString());
             xmlnodeGame.SetAttribute("ClockMoves", ClockMoves.ToString());

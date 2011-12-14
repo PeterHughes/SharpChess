@@ -679,39 +679,39 @@ namespace SharpChess
             Square square = squareKing;
 
             int intOpenness = 0;
-            intOpenness += Board.LineIsOpen(this.m_Base.Player.Colour, square, 16);
+            intOpenness += Board.OpenLinePenalty(this.m_Base.Player.Colour, square, 16);
             if (intOpenness > 900)
             {
                 goto exitpoint;
             }
 
-            intOpenness += Board.LineIsOpen(this.m_Base.Player.Colour, square, 17);
+            intOpenness += Board.OpenLinePenalty(this.m_Base.Player.Colour, square, 17);
             if (intOpenness > 900)
             {
                 goto exitpoint;
             }
 
             // intOpenness += Board.LineIsOpen(this.m_Base.Player.Colour, square,  1); if (intOpenness>900) goto exitpoint;
-            intOpenness += Board.LineIsOpen(this.m_Base.Player.Colour, square, -15);
+            intOpenness += Board.OpenLinePenalty(this.m_Base.Player.Colour, square, -15);
             if (intOpenness > 900)
             {
                 goto exitpoint;
             }
 
-            intOpenness += Board.LineIsOpen(this.m_Base.Player.Colour, square, -16);
+            intOpenness += Board.OpenLinePenalty(this.m_Base.Player.Colour, square, -16);
             if (intOpenness > 900)
             {
                 goto exitpoint;
             }
 
-            intOpenness += Board.LineIsOpen(this.m_Base.Player.Colour, square, -17);
+            intOpenness += Board.OpenLinePenalty(this.m_Base.Player.Colour, square, -17);
             if (intOpenness > 900)
             {
                 goto exitpoint;
             }
 
             // intOpenness += Board.LineIsOpen(this.m_Base.Player.Colour, square, -1); if (intOpenness>900) goto exitpoint;
-            intOpenness += Board.LineIsOpen(this.m_Base.Player.Colour, square, 15);
+            intOpenness += Board.OpenLinePenalty(this.m_Base.Player.Colour, square, 15);
             if (intOpenness > 900)
             {
                 goto exitpoint;

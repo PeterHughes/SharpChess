@@ -182,8 +182,8 @@ namespace SharpChess
         public Square(int Ordinal)
         {
             this.m_intOrdinal = Ordinal;
-            this.m_intFile = Ordinal % Board.MATRIX_WIDTH;
-            this.m_intRank = Ordinal / Board.MATRIX_WIDTH;
+            this.m_intFile = Ordinal % Board.MatrixWidth;
+            this.m_intRank = Ordinal / Board.MatrixWidth;
 
             if (this.m_intFile == 0 || this.m_intFile == 2 || this.m_intFile == 4 || this.m_intFile == 6)
             {

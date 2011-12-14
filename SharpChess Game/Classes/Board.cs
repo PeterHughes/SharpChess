@@ -3,7 +3,7 @@
 //   Peter Hughes
 // </copyright>
 // <summary>
-//   The board.
+//   Represents the chess board.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -28,67 +28,45 @@ namespace SharpChess
     #region Using
 
     using System;
-    using System.Diagnostics;
-    using System.Text;
 
     #endregion
 
     /// <summary>
-    /// The board.
+    /// Represents the chess board.
     /// </summary>
-    public class Board
+    public static class Board
     {
         #region Constants and Fields
 
         /// <summary>
-        ///   The fil e_ count.
+        ///   Number of files on the chess board.
         /// </summary>
-        public const byte FILE_COUNT = 8;
+        public const byte FileCount = 8;
 
         /// <summary>
-        ///   The matri x_ width.
+        ///   Width of board matrix.
         /// </summary>
-        public const byte MATRIX_WIDTH = 16;
+        public const byte MatrixWidth = 16;
 
         /// <summary>
-        ///   The ran k_ count.
+        ///   Number of ranks on the chess board.
         /// </summary>
-        public const byte RANK_COUNT = 8;
+        public const byte RankCount = 8;
 
         /// <summary>
-        ///   The squar e_ count.
+        ///   Number of square in the board matrix.
         /// </summary>
-        public const byte SQUARE_COUNT = 128;
+        public const byte SquareCount = 128;
 
         /// <summary>
-        ///   The hash code a.
+        ///   List of squares on the board.
         /// </summary>
-        public static ulong HashCodeA;
+        private static readonly Square[] Squares = new Square[RankCount * MatrixWidth];
 
         /// <summary>
-        ///   The hash code b.
+        ///   Orientation of the board. Black or White at the bottom.
         /// </summary>
-        public static ulong HashCodeB;
-
-        /// <summary>
-        ///   The pawn hash code a.
-        /// </summary>
-        public static ulong PawnHashCodeA;
-
-        /// <summary>
-        ///   The pawn hash code b.
-        /// </summary>
-        public static ulong PawnHashCodeB;
-
-        /// <summary>
-        ///   The m_arr square.
-        /// </summary>
-        private static readonly Square[] m_arrSquare = new Square[RANK_COUNT * MATRIX_WIDTH];
-
-        /// <summary>
-        ///   The m_ orientation.
-        /// </summary>
-        private static enmOrientation m_Orientation = enmOrientation.White;
+        private static OrientationNames orientation = OrientationNames.White;
 
         #endregion
 
@@ -99,9 +77,9 @@ namespace SharpChess
         /// </summary>
         static Board()
         {
-            for (int intOrdinal = 0; intOrdinal < SQUARE_COUNT; intOrdinal++)
+            for (int intOrdinal = 0; intOrdinal < SquareCount; intOrdinal++)
             {
-                m_arrSquare[intOrdinal] = new Square(intOrdinal);
+                Squares[intOrdinal] = new Square(intOrdinal);
             }
         }
 
@@ -110,17 +88,17 @@ namespace SharpChess
         #region Enums
 
         /// <summary>
-        /// The enm orientation.
+        /// Valid values for orientation of the board. Black or White at the bottom.
         /// </summary>
-        public enum enmOrientation
+        public enum OrientationNames
         {
             /// <summary>
-            ///   The white.
+            ///   White at the bottom.
             /// </summary>
             White, 
 
             /// <summary>
-            ///   The black.
+            ///   Black at the bottom.
             /// </summary>
             Black
         }
@@ -132,22 +110,23 @@ namespace SharpChess
         /// <summary>
         ///   Gets DebugString.
         /// </summary>
+        // ReSharper disable UnusedMember.Global
         public static string DebugString
         {
+            // ReSharper restore UnusedMember.Global
             get
             {
-                Square square;
-                Piece piece;
                 string strOutput = string.Empty;
-                int intOrdinal = SQUARE_COUNT - 1;
+                int intOrdinal = SquareCount - 1;
 
-                for (int intRank = 0; intRank < RANK_COUNT; intRank++)
+                for (int intRank = 0; intRank < RankCount; intRank++)
                 {
-                    for (int intFile = 0; intFile < FILE_COUNT; intFile++)
+                    for (int intFile = 0; intFile < FileCount; intFile++)
                     {
-                        square = GetSquare(intOrdinal);
+                        Square square = GetSquare(intOrdinal);
                         if (square != null)
                         {
+                            Piece piece;
                             if ((piece = square.Piece) != null)
                             {
                                 strOutput += piece.Abbreviation;
@@ -169,20 +148,40 @@ namespace SharpChess
         }
 
         /// <summary>
+        ///   Gets or sets the hash code a.
+        /// </summary>
+        public static ulong HashCodeA { get; set; }
+
+        /// <summary>
+        ///   Gets or sets the hash code b.
+        /// </summary>
+        public static ulong HashCodeB { get; set; }
+
+        /// <summary>
         ///   Gets or sets Orientation.
         /// </summary>
-        public static enmOrientation Orientation
+        public static OrientationNames Orientation
         {
             get
             {
-                return m_Orientation;
+                return orientation;
             }
 
             set
             {
-                m_Orientation = value;
+                orientation = value;
             }
         }
+
+        /// <summary>
+        ///   Gets or sets the pawn hash code a.
+        /// </summary>
+        public static ulong PawnHashCodeA { get; set; }
+
+        /// <summary>
+        ///   Gets or sets the pawn hash code b.
+        /// </summary>
+        public static ulong PawnHashCodeB { get; set; }
 
         #endregion
 
@@ -200,19 +199,19 @@ namespace SharpChess
         /// <param name="player">
         /// The player.
         /// </param>
-        /// <param name="Offset">
+        /// <param name="offset">
         /// The offset.
         /// </param>
         /// <param name="movesType">
         /// The moves type.
         /// </param>
         public static void AppendPiecePath(
-            Moves moves, Piece piece, Player player, int Offset, Moves.enmMovesType movesType)
+            Moves moves, Piece piece, Player player, int offset, Moves.enmMovesType movesType)
         {
             int intOrdinal = piece.Square.Ordinal;
             Square square;
 
-            intOrdinal += Offset;
+            intOrdinal += offset;
             while ((square = GetSquare(intOrdinal)) != null)
             {
                 if (square.Piece == null)
@@ -232,76 +231,8 @@ namespace SharpChess
                     break;
                 }
 
-                intOrdinal += Offset;
+                intOrdinal += offset;
             }
-        }
-
-        /// <summary>
-        /// Display the chessboard in the Immediate Windows
-        /// </summary>
-        /// <remarks>
-        /// VS.NET menu Debug/Windows/Immediate
-        /// </remarks>
-        /// <example>
-        /// An example is Board.DebugDisplay()
-        /// </example>
-        /// <returns>
-        /// A string representation of the current board position.
-        /// </returns>
-        public static string DebugDisplay()
-        {
-            Debug.Write(DebugGetBoard());
-            Debug.Write(". ");
-            return " ";
-        }
-
-        /// <summary>
-        /// The debug get board.
-        /// </summary>
-        /// <returns>
-        /// The debug get board.
-        /// </returns>
-        public static string DebugGetBoard()
-        {
-            StringBuilder strbBoard = new StringBuilder(160);
-            Square square;
-            strbBoard.Append("  0 1 2 3 4 5 6 7 :PlayerToPlay = ");
-            strbBoard.Append((Game.PlayerToPlay.Colour == Player.enmColour.White) ? "White\n" : "Black\n");
-            for (int indRank = 7; indRank >= 0; indRank--)
-            {
-                strbBoard.Append(indRank + 1);
-                strbBoard.Append(":");
-                for (int indFile = 0; indFile < 8; indFile++)
-                {
-                    square = GetSquare(indFile, indRank);
-                    if (square != null)
-                    {
-                        if (square.Piece == null)
-                        {
-                            strbBoard.Append(". ");
-                        }
-                        else
-                        {
-                            if (square.Piece.Player.Colour == Player.enmColour.White)
-                            {
-                                strbBoard.Append(square.Piece.Abbreviation);
-                            }
-                            else
-                            {
-                                strbBoard.Append(square.Piece.Abbreviation.ToLower());
-                            }
-
-                            strbBoard.Append(" ");
-                        }
-                    }
-                }
-
-                DebugGameInfo(indRank, ref strbBoard);
-            }
-
-            strbBoard.Append("  a b c d e f g h :TurnNo = ");
-            strbBoard.Append(Game.TurnNo);
-            return strbBoard.ToString();
         }
 
         /// <summary>
@@ -309,14 +240,13 @@ namespace SharpChess
         /// </summary>
         public static void EstablishHashKey()
         {
-            Piece piece;
             HashCodeA = 0UL;
             HashCodeB = 0UL;
             PawnHashCodeA = 0UL;
             PawnHashCodeB = 0UL;
-            for (int intOrdinal = 0; intOrdinal < SQUARE_COUNT; intOrdinal++)
+            for (int intOrdinal = 0; intOrdinal < SquareCount; intOrdinal++)
             {
-                piece = GetPiece(intOrdinal);
+                Piece piece = GetPiece(intOrdinal);
                 if (piece != null)
                 {
                     HashCodeA ^= piece.HashCodeAForSquareOrdinal(intOrdinal);
@@ -331,17 +261,17 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// The file from name.
+        /// Board File number from file name.
         /// </summary>
-        /// <param name="FileName">
+        /// <param name="fileName">
         /// The file name.
         /// </param>
         /// <returns>
-        /// The file from name.
+        /// The file number.
         /// </returns>
-        public static int FileFromName(string FileName)
+        public static int FileFromName(string fileName)
         {
-            switch (FileName)
+            switch (fileName)
             {
                 case "a":
                     return 0;
@@ -369,120 +299,84 @@ namespace SharpChess
         /// </summary>
         public static void Flip()
         {
-            m_Orientation = m_Orientation == enmOrientation.White ? enmOrientation.Black : enmOrientation.White;
+            orientation = Orientation == OrientationNames.White ? OrientationNames.Black : OrientationNames.White;
         }
 
         /// <summary>
         /// The get piece.
         /// </summary>
-        /// <param name="Ordinal">
+        /// <param name="ordinal">
         /// The ordinal.
         /// </param>
         /// <returns>
+        /// The piece
         /// </returns>
-        public static Piece GetPiece(int Ordinal)
+        public static Piece GetPiece(int ordinal)
         {
-            return (Ordinal & 0x88) == 0 ? m_arrSquare[Ordinal].Piece : null;
+            return (ordinal & 0x88) == 0 ? Squares[ordinal].Piece : null;
         }
 
         /// <summary>
         /// The get piece.
         /// </summary>
-        /// <param name="File">
+        /// <param name="file">
         /// The file.
         /// </param>
-        /// <param name="Rank">
+        /// <param name="rank">
         /// The rank.
         /// </param>
         /// <returns>
+        /// The piece
         /// </returns>
-        public static Piece GetPiece(int File, int Rank)
+        public static Piece GetPiece(int file, int rank)
         {
-            return (OrdinalFromFileRank(File, Rank) & 0x88) == 0
-                       ? m_arrSquare[OrdinalFromFileRank(File, Rank)].Piece
-                       : null;
+            return (OrdinalFromFileRank(file, rank) & 0x88) == 0 ? Squares[OrdinalFromFileRank(file, rank)].Piece : null;
         }
 
         /// <summary>
         /// The get square.
         /// </summary>
-        /// <param name="Ordinal">
+        /// <param name="ordinal">
         /// The ordinal.
         /// </param>
         /// <returns>
+        /// The square
         /// </returns>
-        public static Square GetSquare(int Ordinal)
+        public static Square GetSquare(int ordinal)
         {
-            return (Ordinal & 0x88) == 0 ? m_arrSquare[Ordinal] : null;
+            return (ordinal & 0x88) == 0 ? Squares[ordinal] : null;
         }
 
         /// <summary>
         /// The get square.
         /// </summary>
-        /// <param name="File">
+        /// <param name="file">
         /// The file.
         /// </param>
-        /// <param name="Rank">
+        /// <param name="rank">
         /// The rank.
         /// </param>
         /// <returns>
+        /// The square
         /// </returns>
-        public static Square GetSquare(int File, int Rank)
+        public static Square GetSquare(int file, int rank)
         {
-            return (OrdinalFromFileRank(File, Rank) & 0x88) == 0 ? m_arrSquare[OrdinalFromFileRank(File, Rank)] : null;
+            return (OrdinalFromFileRank(file, rank) & 0x88) == 0 ? Squares[OrdinalFromFileRank(file, rank)] : null;
         }
 
         /// <summary>
         /// The get square.
         /// </summary>
-        /// <param name="Label">
+        /// <param name="label">
         /// The label.
         /// </param>
         /// <returns>
+        /// Matching Square
         /// </returns>
-        public static Square GetSquare(string Label)
+        public static Square GetSquare(string label)
         {
-            return m_arrSquare[OrdinalFromFileRank(FileFromName(Label.Substring(0, 1)), int.Parse(Label.Substring(1, 1)) - 1)];
-        }
-
-        /// <summary>
-        /// The line is open.
-        /// </summary>
-        /// <param name="colour">
-        /// The colour.
-        /// </param>
-        /// <param name="squareStart">
-        /// The square start.
-        /// </param>
-        /// <param name="Offset">
-        /// The offset.
-        /// </param>
-        /// <returns>
-        /// The line is open.
-        /// </returns>
-        public static int LineIsOpen(Player.enmColour colour, Square squareStart, int Offset)
-        {
-            int intOrdinal = squareStart.Ordinal;
-            int intSquareCount = 0;
-            int intPenalty = 0;
-            Square square;
-
-            intOrdinal += Offset;
-
-            while (intSquareCount <= 2
-                   &&
-                   ((square = GetSquare(intOrdinal)) != null
-                    &&
-                    (square.Piece == null
-                     || (square.Piece.Name != Piece.enmName.Pawn && square.Piece.Name != Piece.enmName.Rook)
-                     || square.Piece.Player.Colour != colour)))
-            {
-                intPenalty += 75;
-                intSquareCount++;
-                intOrdinal += Offset;
-            }
-
-            return intPenalty;
+            return
+                Squares[OrdinalFromFileRank(FileFromName(label.Substring(0, 1)), int.Parse(label.Substring(1, 1)) - 1)];
         }
 
         /// <summary>
@@ -497,15 +391,15 @@ namespace SharpChess
         /// <param name="squareStart">
         /// The square start.
         /// </param>
-        /// <param name="Offset">
+        /// <param name="offset">
         /// The offset.
         /// </param>
-        public static void LineThreatenedBy(Player player, Squares squares, Square squareStart, int Offset)
+        public static void LineThreatenedBy(Player player, Squares squares, Square squareStart, int offset)
         {
             int intOrdinal = squareStart.Ordinal;
             Square square;
 
-            intOrdinal += Offset;
+            intOrdinal += offset;
             while ((square = GetSquare(intOrdinal)) != null)
             {
                 if (square.Piece == null)
@@ -522,7 +416,7 @@ namespace SharpChess
                     break;
                 }
 
-                intOrdinal += Offset;
+                intOrdinal += offset;
             }
         }
 
@@ -532,24 +426,25 @@ namespace SharpChess
         /// <param name="colour">
         /// The colour.
         /// </param>
-        /// <param name="PieceName">
+        /// <param name="pieceName">
         /// The piece name.
         /// </param>
         /// <param name="squareStart">
         /// The square start.
         /// </param>
-        /// <param name="Offset">
+        /// <param name="offset">
         /// The offset.
         /// </param>
         /// <returns>
+        /// The first piece on the line, or null.
         /// </returns>
         public static Piece LinesFirstPiece(
-            Player.enmColour colour, Piece.enmName PieceName, Square squareStart, int Offset)
+            Player.enmColour colour, Piece.enmName pieceName, Square squareStart, int offset)
         {
             int intOrdinal = squareStart.Ordinal;
             Square square;
 
-            intOrdinal += Offset;
+            intOrdinal += offset;
             while ((square = GetSquare(intOrdinal)) != null)
             {
                 if (square.Piece == null)
@@ -559,7 +454,7 @@ namespace SharpChess
                 {
                     return null;
                 }
-                else if (square.Piece.Name == PieceName || square.Piece.Name == Piece.enmName.Queen)
+                else if (square.Piece.Name == pieceName || square.Piece.Name == Piece.enmName.Queen)
                 {
                     return square.Piece;
                 }
@@ -568,10 +463,50 @@ namespace SharpChess
                     return null;
                 }
 
-                intOrdinal += Offset;
+                intOrdinal += offset;
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Calculates a penality value for a piece's open line.
+        /// </summary>
+        /// <param name="colour">
+        /// The colour.
+        /// </param>
+        /// <param name="squareStart">
+        /// The start square.
+        /// </param>
+        /// <param name="offset">
+        /// Offset used to determine direction of open line.
+        /// </param>
+        /// <returns>
+        /// Calculated penalty value.
+        /// </returns>
+        public static int OpenLinePenalty(Player.enmColour colour, Square squareStart, int offset)
+        {
+            int intOrdinal = squareStart.Ordinal;
+            int intSquareCount = 0;
+            int intPenalty = 0;
+            Square square;
+
+            intOrdinal += offset;
+
+            while (intSquareCount <= 2
+                   &&
+                   ((square = GetSquare(intOrdinal)) != null
+                    &&
+                    (square.Piece == null
+                     || (square.Piece.Name != Piece.enmName.Pawn && square.Piece.Name != Piece.enmName.Rook)
+                     || square.Piece.Player.Colour != colour)))
+            {
+                intPenalty += 75;
+                intSquareCount++;
+                intOrdinal += offset;
+            }
+
+            return intPenalty;
         }
 
         #endregion
@@ -579,88 +514,22 @@ namespace SharpChess
         #region Methods
 
         /// <summary>
-        /// Display info on the game at the right of the chessboard
+        /// Get ordinal number of a given square, specified by file and rank.
         /// </summary>
-        /// <param name="indRank">
-        /// the rank in the chessboard
-        /// </param>
-        /// <param name="strbBoard">
-        /// output buffer
-        /// </param>
-        /// <remarks>
-        /// Display the captured pieces and the MoveHistory
-        /// </remarks>
-        private static void DebugGameInfo(int indRank, ref StringBuilder strbBoard)
-        {
-            strbBoard.Append(":");
-            strbBoard.Append(indRank);
-            strbBoard.Append(" ");
-            switch (indRank)
-            {
-                case 0:
-                case 7:
-                    Pieces piecesCaptureList = (indRank == 7)
-                                                   ? Game.PlayerWhite.CapturedEnemyPieces
-                                                   : Game.PlayerBlack.CapturedEnemyPieces;
-                    if (piecesCaptureList.Count > 1)
-                    {
-                        strbBoard.Append("x ");
-                        foreach (Piece pieceCaptured in piecesCaptureList)
-                        {
-                            strbBoard.Append(
-                                (pieceCaptured.Name == Piece.enmName.Pawn)
-                                    ? string.Empty
-                                    : pieceCaptured.Abbreviation + pieceCaptured.Square.Name + " ");
-                        }
-                    }
-
-                    break;
-
-                case 5:
-                    int iTurNoSave = Game.TurnNo; // Backup TurNo
-                    Game.TurnNo -= Game.PlayerToPlay.SearchDepth;
-                    for (int indMov = Math.Max(1, Game.MoveHistory.Count - Game.PlayerToPlay.MaxSearchDepth);
-                         indMov < Game.MoveHistory.Count;
-                         indMov++)
-                    {
-                        Move moveThis = Game.MoveHistory[indMov];
-                        if (moveThis.Piece.Player.Colour == Player.enmColour.White)
-                        {
-                            strbBoard.Append(indMov >> 1);
-                            strbBoard.Append(". ");
-                        }
-
-                        // moveThis.PgnSanFormat(false); // Contextual to Game.TurNo
-                        strbBoard.Append(moveThis.Description + " ");
-                        Game.TurnNo++;
-                    }
-
-                    Game.TurnNo = iTurNoSave; // Restore TurNo
-                    break;
-            }
-
-            strbBoard.Append("\n");
-        }
-
-        /// <summary>
-        /// The ordinal from file rank.
-        /// </summary>
-        /// <param name="File">
+        /// <param name="file">
         /// The file.
         /// </param>
-        /// <param name="Rank">
+        /// <param name="rank">
         /// The rank.
         /// </param>
         /// <returns>
-        /// The ordinal from file rank.
+        /// Ordinal value from file and rank.
         /// </returns>
-        private static int OrdinalFromFileRank(int File, int Rank)
+        private static int OrdinalFromFileRank(int file, int rank)
         {
-            return (Rank << 4) | File;
+            return (rank << 4) | file;
         }
 
         #endregion
-
-        // end DebugGameInfo
     }
 }

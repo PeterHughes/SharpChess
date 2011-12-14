@@ -687,14 +687,14 @@ namespace SharpChess
         /// </remarks>
         private static void FenGet1Pieces(StringBuilder strbFen)
         {
-            for (int iNbrEmptySquare = 0, indRank = Board.RANK_COUNT - 1; indRank >= 0; indRank--)
+            for (int iNbrEmptySquare = 0, indRank = Board.RankCount - 1; indRank >= 0; indRank--)
             {
-                if (indRank != Board.RANK_COUNT - 1)
+                if (indRank != Board.RankCount - 1)
                 {
                     strbFen.Append('/'); // Separator between 2 ranks
                 }
 
-                for (int indFile = 0; indFile < Board.FILE_COUNT; indFile++)
+                for (int indFile = 0; indFile < Board.FileCount; indFile++)
                 {
                     // Browse by column
                     Square squareThis = Board.GetSquare(indFile, indRank);

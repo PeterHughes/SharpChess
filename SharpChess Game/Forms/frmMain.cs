@@ -800,7 +800,7 @@ namespace SharpChess
             Label lblRank;
             Label lblFile;
 
-            for (int intRank = 0; intRank < Board.RANK_COUNT; intRank++)
+            for (int intRank = 0; intRank < Board.RankCount; intRank++)
             {
                 lblRank = new Label();
                 lblRank.BackColor = Color.Transparent;
@@ -811,13 +811,13 @@ namespace SharpChess
                 lblRank.Text = Board.GetSquare(0, intRank).RankName;
                 lblRank.TextAlign = ContentAlignment.MiddleCenter;
                 lblRank.Left = 0;
-                lblRank.Top = (Board.RANK_COUNT - 1) * SQUARE_SIZE - intRank * SQUARE_SIZE + 16;
+                lblRank.Top = (Board.RankCount - 1) * SQUARE_SIZE - intRank * SQUARE_SIZE + 16;
                 this.pnlMain.Controls.Add(lblRank);
             }
 
-            this.m_picSquares = new PictureBox[Board.FILE_COUNT, Board.RANK_COUNT];
+            this.m_picSquares = new PictureBox[Board.FileCount, Board.RankCount];
 
-            for (int intFile = 0; intFile < Board.FILE_COUNT; intFile++)
+            for (int intFile = 0; intFile < Board.FileCount; intFile++)
             {
                 lblFile = new Label();
                 lblFile.BackColor = Color.Transparent;
@@ -828,11 +828,11 @@ namespace SharpChess
                 lblFile.Text = Board.GetSquare(intFile, 0).FileName;
                 lblFile.TextAlign = ContentAlignment.MiddleCenter;
                 lblFile.Left = intFile * SQUARE_SIZE + 30;
-                lblFile.Top = Board.RANK_COUNT * SQUARE_SIZE + 24;
+                lblFile.Top = Board.RankCount * SQUARE_SIZE + 24;
                 this.pnlMain.Controls.Add(lblFile);
             }
 
-            for (int intOrdinal = 0; intOrdinal < Board.SQUARE_COUNT; intOrdinal++)
+            for (int intOrdinal = 0; intOrdinal < Board.SquareCount; intOrdinal++)
             {
                 square = Board.GetSquare(intOrdinal);
 
@@ -2017,7 +2017,7 @@ namespace SharpChess
             PictureBox picSquare;
             Square square;
 
-            for (int intOrdinal = 0; intOrdinal < Board.SQUARE_COUNT; intOrdinal++)
+            for (int intOrdinal = 0; intOrdinal < Board.SquareCount; intOrdinal++)
             {
                 square = Board.GetSquare(intOrdinal);
 
@@ -2026,13 +2026,13 @@ namespace SharpChess
                     picSquare = this.m_picSquares[square.File, square.Rank];
                     switch (Board.Orientation)
                     {
-                        case Board.enmOrientation.White:
+                        case Board.OrientationNames.White:
                             picSquare.Left = square.File * SQUARE_SIZE + 1;
-                            picSquare.Top = (Board.RANK_COUNT - 1) * SQUARE_SIZE - square.Rank * SQUARE_SIZE + 1;
+                            picSquare.Top = (Board.RankCount - 1) * SQUARE_SIZE - square.Rank * SQUARE_SIZE + 1;
                             break;
 
-                        case Board.enmOrientation.Black:
-                            picSquare.Left = (Board.FILE_COUNT - 1) * SQUARE_SIZE - square.File * SQUARE_SIZE + 1;
+                        case Board.OrientationNames.Black:
+                            picSquare.Left = (Board.FileCount - 1) * SQUARE_SIZE - square.File * SQUARE_SIZE + 1;
                             picSquare.Top = square.Rank * SQUARE_SIZE + 1;
                             break;
                     }
@@ -2049,16 +2049,16 @@ namespace SharpChess
                 {
                     // For the hard-coded constants "lblFile" and "+ 30" see CreateBoard()
                     int iFileSize = Convert.ToInt32(strName.Substring(7, strName.Length - 7)) * SQUARE_SIZE;
-                    this.pnlMain.Controls[indCtrl].Left = ((Board.Orientation == Board.enmOrientation.White)
+                    this.pnlMain.Controls[indCtrl].Left = ((Board.Orientation == Board.OrientationNames.White)
                                                                ? iFileSize
-                                                               : (Board.FILE_COUNT - 1) * SQUARE_SIZE - iFileSize) + 30;
+                                                               : (Board.FileCount - 1) * SQUARE_SIZE - iFileSize) + 30;
                 }
                 else if (strName.StartsWith("lblRank"))
                 {
                     // For the hard-coded constants "lblRank" and "+ 16" see CreateBoard()
                     int iRankSize = Convert.ToInt32(strName.Substring(7, strName.Length - 7)) * SQUARE_SIZE;
-                    this.pnlMain.Controls[indCtrl].Top = ((Board.Orientation == Board.enmOrientation.White)
-                                                              ? (Board.RANK_COUNT - 1) * SQUARE_SIZE - iRankSize
+                    this.pnlMain.Controls[indCtrl].Top = ((Board.Orientation == Board.OrientationNames.White)
+                                                              ? (Board.RankCount - 1) * SQUARE_SIZE - iRankSize
                                                               : iRankSize) + 16;
                 }
             }
@@ -2188,7 +2188,7 @@ namespace SharpChess
 
             this.RenderBoardColours();
 
-            for (int intOrdinal = 0; intOrdinal < Board.SQUARE_COUNT; intOrdinal++)
+            for (int intOrdinal = 0; intOrdinal < Board.SquareCount; intOrdinal++)
             {
                 square = Board.GetSquare(intOrdinal);
 
@@ -2324,7 +2324,7 @@ namespace SharpChess
         {
             Square square;
 
-            for (int intOrdinal = 0; intOrdinal < Board.SQUARE_COUNT; intOrdinal++)
+            for (int intOrdinal = 0; intOrdinal < Board.SquareCount; intOrdinal++)
             {
                 square = Board.GetSquare(intOrdinal);
 

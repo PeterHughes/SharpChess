@@ -35,12 +35,12 @@ namespace SharpChess
         /// <summary>
         /// The a history entry black.
         /// </summary>
-        private static readonly int[,] aHistoryEntryBlack = new int[Board.SQUARE_COUNT, Board.SQUARE_COUNT];
+        private static readonly int[,] aHistoryEntryBlack = new int[Board.SquareCount, Board.SquareCount];
 
         /// <summary>
         /// The a history entry white.
         /// </summary>
-        private static readonly int[,] aHistoryEntryWhite = new int[Board.SQUARE_COUNT, Board.SQUARE_COUNT];
+        private static readonly int[,] aHistoryEntryWhite = new int[Board.SquareCount, Board.SquareCount];
 
         #endregion
 
@@ -51,9 +51,9 @@ namespace SharpChess
         /// </summary>
         public static void Clear()
         {
-            for (int i = 0; i < Board.SQUARE_COUNT; i++)
+            for (int i = 0; i < Board.SquareCount; i++)
             {
-                for (int j = 0; j < Board.SQUARE_COUNT; j++)
+                for (int j = 0; j < Board.SquareCount; j++)
                 {
                     aHistoryEntryWhite[i, j] = 0;
                     aHistoryEntryBlack[i, j] = 0;
