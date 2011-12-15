@@ -151,7 +151,7 @@ namespace SharpChess
             string strHalfMoveClock = "0";
             string strFullMoveNumber = "1";
 
-            Game.FENStartPosition = fenString;
+            Game.FenStartPosition = fenString;
 
             Game.CaptureAllPieces();
             Game.DemoteAllPieces();

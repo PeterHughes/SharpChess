@@ -1873,7 +1873,7 @@ namespace SharpChess
             // Adaptive Null-move forward pruning
             int R = depth > 6 ? 3 : 2;
             if (depth > (R + 1) && moveAnalysed != null && moveAnalysed.Name != Move.enmName.NullMove
-                && Game.Stage != Game.enmStage.End && !blnIsInCheck)
+                && Game.Stage != Game.GameStageNames.End && !blnIsInCheck)
             {
                 Move moveNull = new Move(Game.TurnNo, 0, Move.enmName.NullMove, null, null, null, null, 0, 0);
                 val =

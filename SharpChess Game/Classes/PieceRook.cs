@@ -147,12 +147,12 @@ namespace SharpChess
                 int intPoints = 0;
 
                 // After the opening, Rooks are penalized slightly depending on "taxicab" distance to the enemy king.
-                if (Game.Stage != Game.enmStage.Opening)
+                if (Game.Stage != Game.GameStageNames.Opening)
                 {
                     intPoints -= this.m_Base.TaxiCabDistanceToEnemyKingPenalty();
                 }
 
-                if (Game.Stage != Game.enmStage.End)
+                if (Game.Stage != Game.GameStageNames.End)
                 {
                     // Rooks are given a bonus of 10(0) points for occupying a file with no friendly pawns and a bonus of 
                     // 4(0) points if no enemy pawns lie on that file. 

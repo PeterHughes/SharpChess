@@ -43,167 +43,89 @@ namespace SharpChess
         #region Constants and Fields
 
         /// <summary>
-        /// The random.
+        ///   The file name.
         /// </summary>
-        public static Random random = new Random();
-
-        /// <summary>
-        /// The m_str fen start position.
-        /// </summary>
-        protected static string m_strFENStartPosition = string.Empty;
-
-        /// <summary>
-        /// The m_moves history.
-        /// </summary>
-        private static readonly Moves m_movesHistory = new Moves();
-
-        /// <summary>
-        /// The m_moves redo list.
-        /// </summary>
-        private static readonly Moves m_movesRedoList = new Moves();
-
-        /// <summary>
-        /// The m_player black.
-        /// </summary>
-        private static readonly Player m_playerBlack;
-
-        /// <summary>
-        /// The m_player white.
-        /// </summary>
-        private static readonly Player m_playerWhite;
-
-        /// <summary>
-        /// The m_bln edit mode active.
-        /// </summary>
-        private static bool m_blnEditModeActive;
-
-        /// <summary>
-        /// The m_bln show thinking.
-        /// </summary>
-        private static bool m_blnShowThinking;
-
-        /// <summary>
-        /// The m_bln use random opening moves.
-        /// </summary>
-        private static bool m_blnUseRandomOpeningMoves = true;
-
-        /// <summary>
-        /// The m_int clock moves.
-        /// </summary>
-        private static int m_intClockMoves = 40;
-
-        /// <summary>
-        /// The m_int difficulty level.
-        /// </summary>
-        private static int m_intDifficultyLevel = 1;
-
-        /// <summary>
-        /// The m_int maximum search depth.
-        /// </summary>
-        private static int m_intMaximumSearchDepth = 1;
-
-        /// <summary>
-        /// The m_int turn no.
-        /// </summary>
-        private static int m_intTurnNo;
-
-        /// <summary>
-        /// The m_moves analysis.
-        /// </summary>
-        private static Moves m_movesAnalysis = new Moves();
-
-        /// <summary>
-        /// The m_player to play.
-        /// </summary>
-        private static Player m_playerToPlay;
-
-        /// <summary>
-        /// The m_str backup game path.
-        /// </summary>
-        private static string m_strBackupGamePath;
-
-        /// <summary>
-        /// The m_str file name.
-        /// </summary>
-        private static string m_strFileName = string.Empty;
-
-        /// <summary>
-        /// The m_tsn clock fixed time per move.
-        /// </summary>
-        private static TimeSpan m_tsnClockFixedTimePerMove = new TimeSpan(0, 0, 0);
-
-        /// <summary>
-        /// The m_tsn clock increment per move.
-        /// </summary>
-        private static TimeSpan m_tsnClockIncrementPerMove = new TimeSpan(0, 0, 0);
-
-        /// <summary>
-        /// The m_tsn clock time.
-        /// </summary>
-        private static TimeSpan m_tsnClockTime = new TimeSpan(0, 5, 0);
+        private static string saveGameFileName = string.Empty;
 
         #endregion
 
         #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes static members of the <see cref="Game"/> class.
+        ///   Initializes static members of the <see cref = "Game" /> class.
         /// </summary>
         static Game()
         {
+            ClockIncrementPerMove = new TimeSpan(0, 0, 0);
+            ClockFixedTimePerMove = new TimeSpan(0, 0, 0);
+            DifficultyLevel = 1;
+            ClockTime = new TimeSpan(0, 5, 0);
+            ClockMoves = 40;
+            UseRandomOpeningMoves = true;
+            MoveRedoList = new Moves();
+            MaximumSearchDepth = 1;
+            MoveAnalysis = new Moves();
+            MoveHistory = new Moves();
+            FenStartPosition = string.Empty;
             HashTable.Initialise();
             HashTablePawnKing.Initialise();
             HashTableCheck.Initialise();
 
-            m_playerWhite = new PlayerWhite();
-            m_playerBlack = new PlayerBlack();
-            m_playerToPlay = m_playerWhite;
+            PlayerWhite = new PlayerWhite();
+            PlayerBlack = new PlayerBlack();
+            PlayerToPlay = PlayerWhite;
             Board.EstablishHashKey();
             OpeningBookSimple.Initialise();
 
-            PlayerWhite.ReadyToMakeMove += Player_ReadyToMakeMove;
-            PlayerBlack.ReadyToMakeMove += Player_ReadyToMakeMove;
+            PlayerWhite.ReadyToMakeMove += PlayerReadyToMakeMove;
+            PlayerBlack.ReadyToMakeMove += PlayerReadyToMakeMove;
 
             RegistryKey registryKeySoftware = Registry.CurrentUser.OpenSubKey("Software", true);
-            RegistryKey registryKeySharpChess = registryKeySoftware.CreateSubKey(@"PeterHughes.org\SharpChess");
+            if (registryKeySoftware != null)
+            {
+                RegistryKey registryKeySharpChess = registryKeySoftware.CreateSubKey(@"PeterHughes.org\SharpChess");
 
-            if (registryKeySharpChess.GetValue("FileName") == null)
-            {
-                m_strFileName = string.Empty;
-            }
-            else
-            {
-                m_strFileName = registryKeySharpChess.GetValue("FileName").ToString();
-            }
+                if (registryKeySharpChess != null)
+                {
+                    if (registryKeySharpChess.GetValue("FileName") == null)
+                    {
+                        saveGameFileName = string.Empty;
+                    }
+                    else
+                    {
+                        saveGameFileName = registryKeySharpChess.GetValue("FileName").ToString();
+                    }
 
-            if (registryKeySharpChess.GetValue("ShowThinking") == null)
-            {
-                m_blnShowThinking = true;
-            }
-            else
-            {
-                m_blnShowThinking = registryKeySharpChess.GetValue("ShowThinking").ToString() == "1";
-            }
+                    if (registryKeySharpChess.GetValue("ShowThinking") == null)
+                    {
+                        ShowThinking = true;
+                    }
+                    else
+                    {
+                        ShowThinking = registryKeySharpChess.GetValue("ShowThinking").ToString() == "1";
+                    }
 
-            // Delete deprecated values
-            if (registryKeySharpChess.GetValue("EnablePondering") != null)
-            {
-                registryKeySharpChess.DeleteValue("EnablePondering");
-            }
+                    // Delete deprecated values
+                    if (registryKeySharpChess.GetValue("EnablePondering") != null)
+                    {
+                        registryKeySharpChess.DeleteValue("EnablePondering");
+                    }
 
-            if (registryKeySharpChess.GetValue("DisplayMoveAnalysisTree") != null)
-            {
-                registryKeySharpChess.DeleteValue("DisplayMoveAnalysisTree");
-            }
+                    if (registryKeySharpChess.GetValue("DisplayMoveAnalysisTree") != null)
+                    {
+                        registryKeySharpChess.DeleteValue("DisplayMoveAnalysisTree");
+                    }
 
-            if (registryKeySharpChess.GetValue("ClockMoves") != null)
-            {
-                registryKeySharpChess.DeleteValue("ClockMoves");
-            }
+                    if (registryKeySharpChess.GetValue("ClockMoves") != null)
+                    {
+                        registryKeySharpChess.DeleteValue("ClockMoves");
+                    }
 
-            if (registryKeySharpChess.GetValue("ClockMinutes") != null)
-            {
-                registryKeySharpChess.DeleteValue("ClockMinutes");
+                    if (registryKeySharpChess.GetValue("ClockMinutes") != null)
+                    {
+                        registryKeySharpChess.DeleteValue("ClockMinutes");
+                    }
+                }
             }
 
             // OpeningBook.BookConvert(Game.PlayerWhite);
@@ -214,60 +136,60 @@ namespace SharpChess
         #region Delegates
 
         /// <summary>
-        /// The delegatetype game event.
+        /// The game event type, raised to the UI when significant game events occur.
         /// </summary>
-        public delegate void delegatetypeGameEvent();
+        public delegate void GameEvent();
 
         #endregion
 
         #region Public Events
 
         /// <summary>
-        /// The board position changed.
+        ///   Raised when the board position changes.
         /// </summary>
-        public static event delegatetypeGameEvent BoardPositionChanged;
+        public static event GameEvent BoardPositionChanged;
 
         /// <summary>
-        /// The game paused.
+        ///   Raised when the game is paused.
         /// </summary>
-        public static event delegatetypeGameEvent GamePaused;
+        public static event GameEvent GamePaused;
 
         /// <summary>
-        /// The game resumed.
+        ///   Raised when the game is resumed.
         /// </summary>
-        public static event delegatetypeGameEvent GameResumed;
+        public static event GameEvent GameResumed;
 
         /// <summary>
-        /// The game saved.
+        ///   Riased when the game is saved.
         /// </summary>
-        public static event delegatetypeGameEvent GameSaved;
+        public static event GameEvent GameSaved;
 
         /// <summary>
-        /// The settings updated.
+        ///   Raised when settings are updated.
         /// </summary>
-        public static event delegatetypeGameEvent SettingsUpdated;
+        public static event GameEvent SettingsUpdated;
 
         #endregion
 
         #region Enums
 
         /// <summary>
-        /// The enm stage.
+        /// Game stages.
         /// </summary>
-        public enum enmStage
+        public enum GameStageNames
         {
             /// <summary>
-            /// The opening.
+            ///   The opening.
             /// </summary>
             Opening, 
 
             /// <summary>
-            /// The middle.
+            ///   The middle.
             /// </summary>
             Middle, 
 
             /// <summary>
-            /// The end.
+            ///   The end.
             /// </summary>
             End
         }
@@ -277,7 +199,7 @@ namespace SharpChess
         #region Public Properties
 
         /// <summary>
-        /// Gets AvailableMegaBytes.
+        ///   Gets the available MegaBytes of free computer memory.
         /// </summary>
         public static uint AvailableMegaBytes
         {
@@ -297,172 +219,91 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// Gets or sets BackupGamePath.
+        ///   Gets or sets the Backup Game Path.
         /// </summary>
-        public static string BackupGamePath
-        {
-            get
-            {
-                return m_strBackupGamePath;
-            }
-
-            set
-            {
-                m_strBackupGamePath = value;
-            }
-        }
+        public static string BackupGamePath { private get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether CaptureMoveAnalysisData.
+        ///   Gets or sets a value indicating whether CaptureMoveAnalysisData.
         /// </summary>
         public static bool CaptureMoveAnalysisData { get; set; }
 
         /// <summary>
-        /// Gets or sets ClockFixedTimePerMove.
+        ///   Gets or sets the Clock Fixed Time Per Move.
         /// </summary>
-        public static TimeSpan ClockFixedTimePerMove
-        {
-            get
-            {
-                return m_tsnClockFixedTimePerMove;
-            }
-
-            set
-            {
-                m_tsnClockFixedTimePerMove = value;
-            }
-        }
+        public static TimeSpan ClockFixedTimePerMove { get; set; }
 
         /// <summary>
-        /// Gets or sets ClockIncrementPerMove.
+        ///   Gets or sets the Clock Increment Per Move.
         /// </summary>
-        public static TimeSpan ClockIncrementPerMove
-        {
-            get
-            {
-                return m_tsnClockIncrementPerMove;
-            }
-
-            set
-            {
-                m_tsnClockIncrementPerMove = value;
-            }
-        }
+        public static TimeSpan ClockIncrementPerMove { get; set; }
 
         /// <summary>
-        /// Gets or sets ClockMoves.
+        ///   Gets or sets a list of Clock Moves.
         /// </summary>
-        public static int ClockMoves
-        {
-            get
-            {
-                return m_intClockMoves;
-            }
-
-            set
-            {
-                m_intClockMoves = value;
-            }
-        }
+        public static int ClockMoves { get; set; }
 
         /// <summary>
-        /// Gets or sets ClockTime.
+        ///   Gets or sets the Clock Time.
         /// </summary>
-        public static TimeSpan ClockTime
-        {
-            get
-            {
-                return m_tsnClockTime;
-            }
-
-            set
-            {
-                m_tsnClockTime = value;
-            }
-        }
+        public static TimeSpan ClockTime { get; set; }
 
         /// <summary>
-        /// Gets or sets DifficultyLevel.
+        ///   Gets or sets game Difficulty Level.
         /// </summary>
-        public static int DifficultyLevel
-        {
-            get
-            {
-                return m_intDifficultyLevel;
-            }
-
-            set
-            {
-                m_intDifficultyLevel = value;
-            }
-        }
+        public static int DifficultyLevel { get; set; }
 
         /// <summary>
-        /// Gets a value indicating whether EditModeActive.
+        ///   Gets a value indicating whether Edit Mode is Active.
         /// </summary>
-        public static bool EditModeActive
-        {
-            get
-            {
-                return m_blnEditModeActive;
-            }
-        }
+        public static bool EditModeActive { get; private set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether EnablePondering.
+        ///   Gets or sets a value indicating whether Pondering has been enabled.
         /// </summary>
         public static bool EnablePondering { get; set; }
 
         /// <summary>
-        /// Gets or sets FENStartPosition.
+        ///   Gets or sets the FEN string for the chess Start Position.
         /// </summary>
-        public static string FENStartPosition
-        {
-            get
-            {
-                return m_strFENStartPosition;
-            }
-
-            set
-            {
-                m_strFENStartPosition = value;
-            }
-        }
+        public static string FenStartPosition { private get; set; }
 
         /// <summary>
-        /// Gets or sets FiftyMoveDrawBase.
+        ///   Gets or sets FiftyMoveDrawBase. 
+        ///   Appears to be a value set when using a FEN string. Doesn't seem quite right!
+        ///   TODO Invesigate FiftyMoveDrawBase.
         /// </summary>
         public static int FiftyMoveDrawBase { get; set; }
 
         /// <summary>
-        /// Gets FileName.
+        ///   Gets the current game save file name.
         /// </summary>
         public static string FileName
         {
             get
             {
-                return m_strFileName == string.Empty ? "New Game" : m_strFileName;
+                return saveGameFileName == string.Empty ? "New Game" : saveGameFileName;
             }
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether IsInAnalyseMode.
+        ///   Gets or sets a value indicating whether Analyse Mode is active.
         /// </summary>
         public static bool IsInAnalyseMode { get; set; }
 
         /// <summary>
-        /// Gets a value indicating whether IsPaused.
+        ///   Gets a value indicating whether the game is paused.
         /// </summary>
         public static bool IsPaused
         {
             get
             {
-                return !m_playerToPlay.Clock.IsTicking;
+                return !PlayerToPlay.Clock.IsTicking;
             }
         }
 
         /// <summary>
-        /// Gets LowestMaterialCount.
+        ///   Gets the lowest material count for black or white.
         /// </summary>
         public static int LowestMaterialCount
         {
@@ -475,7 +316,7 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// Gets MaxMaterialCount.
+        ///   Gets the largest valid Material Count.
         /// </summary>
         public static int MaxMaterialCount
         {
@@ -486,187 +327,93 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// Gets or sets MaximumSearchDepth.
+        ///   Gets or sets the maximum search depth.
         /// </summary>
-        public static int MaximumSearchDepth
-        {
-            get
-            {
-                return m_intMaximumSearchDepth;
-            }
-
-            set
-            {
-                m_intMaximumSearchDepth = value;
-            }
-        }
+        public static int MaximumSearchDepth { get; set; }
 
         /// <summary>
-        /// Gets or sets MoveAnalysis.
+        ///   Gets or sets the list of move-analysis moves.
         /// </summary>
-        public static Moves MoveAnalysis
-        {
-            get
-            {
-                return m_movesAnalysis;
-            }
-
-            set
-            {
-                m_movesAnalysis = value;
-            }
-        }
+        public static Moves MoveAnalysis { get; set; }
 
         /// <summary>
-        /// Gets MoveHistory.
+        ///   Gets the currebt move history.
         /// </summary>
-        public static Moves MoveHistory
-        {
-            get
-            {
-                return m_movesHistory;
-            }
-        }
+        public static Moves MoveHistory { get; private set; }
 
         /// <summary>
-        /// Gets MoveNo.
+        ///   Gets the current move number.
         /// </summary>
         public static int MoveNo
         {
             get
             {
-                return m_intTurnNo >> 1;
+                return TurnNo >> 1;
             }
         }
 
         /// <summary>
-        /// Gets MoveRedoList.
+        ///   Gets the move redo list.
         /// </summary>
-        public static Moves MoveRedoList
-        {
-            get
-            {
-                return m_movesRedoList;
-            }
-        }
+        public static Moves MoveRedoList { get; private set; }
 
         /// <summary>
-        /// Gets PlayerBlack.
+        ///   Gets black player.
         /// </summary>
-        public static Player PlayerBlack
-        {
-            get
-            {
-                return m_playerBlack;
-            }
-        }
+        public static Player PlayerBlack { get; private set; }
 
         /// <summary>
-        /// Gets or sets PlayerToPlay.
+        ///   Gets or sets the player to play.
         /// </summary>
-        public static Player PlayerToPlay
-        {
-            get
-            {
-                return m_playerToPlay;
-            }
-
-            set
-            {
-                m_playerToPlay = value;
-            }
-        }
+        public static Player PlayerToPlay { get; set; }
 
         /// <summary>
-        /// Gets PlayerWhite.
+        ///   Gets white player.
         /// </summary>
-        public static Player PlayerWhite
-        {
-            get
-            {
-                return m_playerWhite;
-            }
-        }
+        public static Player PlayerWhite { get; private set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether ShowThinking.
+        ///   Gets or sets a value indicating whether to show thinking.
         /// </summary>
-        public static bool ShowThinking
-        {
-            get
-            {
-                return m_blnShowThinking;
-            }
-
-            set
-            {
-                m_blnShowThinking = value;
-            }
-        }
+        public static bool ShowThinking { get; set; }
 
         /// <summary>
-        /// Gets Stage.
+        ///   Gets current game stage.
         /// </summary>
-        public static enmStage Stage
+        public static GameStageNames Stage
         {
             get
             {
                 if (LowestMaterialCount >= MaxMaterialCount)
                 {
-                    return enmStage.Opening;
-                }
-                else if (LowestMaterialCount <= 3)
-                {
-                    return enmStage.End;
+                    return GameStageNames.Opening;
                 }
 
-                return enmStage.Middle;
+                return LowestMaterialCount <= 3 ? GameStageNames.End : GameStageNames.Middle;
             }
         }
 
         /// <summary>
-        /// Gets or sets ThreadCounter.
+        ///   Gets ThreadCounter.
         /// </summary>
-        public static int ThreadCounter { get; set; }
+        public static int ThreadCounter { get; internal set; }
 
         /// <summary>
-        /// Gets or sets TurnNo.
+        ///   Gets the current turn number.
         /// </summary>
-        public static int TurnNo
-        {
-            get
-            {
-                return m_intTurnNo;
-            }
-
-            set
-            {
-                m_intTurnNo = value;
-            }
-        }
+        public static int TurnNo { get; internal set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether UseRandomOpeningMoves.
+        ///   Gets or sets a value indicating whether to use random opening moves.
         /// </summary>
-        public static bool UseRandomOpeningMoves
-        {
-            get
-            {
-                return m_blnUseRandomOpeningMoves;
-            }
-
-            set
-            {
-                m_blnUseRandomOpeningMoves = value;
-            }
-        }
+        public static bool UseRandomOpeningMoves { get; set; }
 
         #endregion
 
         #region Public Methods
 
         /// <summary>
-        /// The capture all pieces.
+        /// Captures all pieces.
         /// </summary>
         public static void CaptureAllPieces()
         {
@@ -675,7 +422,7 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// The demote all pieces.
+        /// Demotes all pieces.
         /// </summary>
         public static void DemoteAllPieces()
         {
@@ -684,22 +431,21 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// The load.
+        /// Load a saved game.
         /// </summary>
-        /// <param name="FileName">
-        /// The file name.
+        /// <param name="fileName">
+        /// File name.
         /// </param>
         /// <returns>
-        /// The load.
+        /// Returns True is game loaded successfully.
         /// </returns>
-        public static bool Load(string FileName)
+        public static bool Load(string fileName)
         {
             SuspendPondering();
 
-            bool blnSuccess = false;
-            New_Internal();
-            m_strFileName = FileName;
-            blnSuccess = LoadGame(FileName);
+            NewInternal();
+            saveGameFileName = fileName;
+            bool blnSuccess = LoadGame(fileName);
             if (blnSuccess)
             {
                 SaveBackup();
@@ -716,39 +462,39 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// The load backup.
+        /// Load backup game.
         /// </summary>
         /// <returns>
-        /// The load backup.
+        /// Returns True is game loaded successfully.
         /// </returns>
         public static bool LoadBackup()
         {
-            return LoadGame(m_strBackupGamePath);
+            return LoadGame(BackupGamePath);
         }
 
         /// <summary>
-        /// The make a move.
+        /// Make a move.
         /// </summary>
-        /// <param name="MoveName">
+        /// <param name="moveName">
         /// The move name.
         /// </param>
         /// <param name="piece">
-        /// The piece.
+        /// The piece to move.
         /// </param>
         /// <param name="square">
-        /// The square.
+        /// The square to move to.
         /// </param>
-        public static void MakeAMove(Move.enmName MoveName, Piece piece, Square square)
+        public static void MakeAMove(Move.enmName moveName, Piece piece, Square square)
         {
             SuspendPondering();
-            MakeAMove_Internal(MoveName, piece, square);
+            MakeAMoveInternal(moveName, piece, square);
             SaveBackup();
             SendBoardPositionChangeEvent();
             CheckIfAutoNextMove();
         }
 
         /// <summary>
-        /// The new.
+        /// Start a new game.
         /// </summary>
         public static void New()
         {
@@ -756,40 +502,40 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// The new.
+        /// Start a new game using a FEN string.
         /// </summary>
-        /// <param name="strFEN">
-        /// The str fen.
+        /// <param name="fenString">
+        /// The FEN string.
         /// </param>
-        public static void New(string strFEN)
+        public static void New(string fenString)
         {
             SuspendPondering();
 
-            New_Internal(strFEN);
+            NewInternal(fenString);
             SaveBackup();
             SendBoardPositionChangeEvent();
             ResumePondering();
         }
 
         /// <summary>
-        /// The pause play.
+        /// Pause the game.
         /// </summary>
         public static void PausePlay()
         {
-            m_playerToPlay.Clock.Stop();
+            PlayerToPlay.Clock.Stop();
             PlayerToPlay.ForceImmediateMove();
             GamePaused();
         }
 
         /// <summary>
-        /// The redo all moves.
+        /// Redo all moves.
         /// </summary>
         public static void RedoAllMoves()
         {
             SuspendPondering();
-            while (m_movesRedoList.Count > 0)
+            while (MoveRedoList.Count > 0)
             {
-                RedoMove_Internal();
+                RedoMoveInternal();
             }
 
             SaveBackup();
@@ -798,23 +544,23 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// The redo move.
+        /// Redo a move.
         /// </summary>
         public static void RedoMove()
         {
             SuspendPondering();
-            RedoMove_Internal();
+            RedoMoveInternal();
             SaveBackup();
             SendBoardPositionChangeEvent();
             ResumePondering();
         }
 
         /// <summary>
-        /// The resume play.
+        /// Resume then game.
         /// </summary>
         public static void ResumePlay()
         {
-            m_playerToPlay.Clock.Start();
+            PlayerToPlay.Clock.Start();
             GameResumed();
             if (PlayerToPlay.Intellegence == Player.enmIntellegence.Computer)
             {
@@ -827,7 +573,7 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// The resume pondering.
+        /// Resume pondering.
         /// </summary>
         public static void ResumePondering()
         {
@@ -841,7 +587,8 @@ namespace SharpChess
                 return;
             }
 
-            if (PlayerWhite.Intellegence == Player.enmIntellegence.Computer && PlayerBlack.Intellegence == Player.enmIntellegence.Computer)
+            if (PlayerWhite.Intellegence == Player.enmIntellegence.Computer
+                && PlayerBlack.Intellegence == Player.enmIntellegence.Computer)
             {
                 return;
             }
@@ -856,18 +603,18 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// The save.
+        /// Save the game as a file name.
         /// </summary>
-        /// <param name="FileName">
+        /// <param name="fileName">
         /// The file name.
         /// </param>
-        public static void Save(string FileName)
+        public static void Save(string fileName)
         {
             SuspendPondering();
 
             SaveBackup();
-            SaveGame(FileName);
-            m_strFileName = FileName;
+            SaveGame(fileName);
+            saveGameFileName = fileName;
 
             GameSaved();
 
@@ -875,7 +622,7 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// The settings update.
+        /// Call when settings have been changed in the UI.
         /// </summary>
         public static void SettingsUpdate()
         {
@@ -890,7 +637,7 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// The start normal game.
+        /// Start normal game.
         /// </summary>
         public static void StartNormalGame()
         {
@@ -899,7 +646,7 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// The suspend pondering.
+        /// Suspend pondering.
         /// </summary>
         public static void SuspendPondering()
         {
@@ -915,7 +662,7 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// The terminate game.
+        /// Terminate the game.
         /// </summary>
         public static void TerminateGame()
         {
@@ -926,17 +673,20 @@ namespace SharpChess
             PlayerBlack.AbortThinking();
 
             RegistryKey registryKeySoftware = Registry.CurrentUser.OpenSubKey("Software", true);
-            RegistryKey registryKeySharpChess = registryKeySoftware.CreateSubKey(@"PeterHughes.org\SharpChess");
-
-            if (registryKeySharpChess != null)
+            if (registryKeySoftware != null)
             {
-                registryKeySharpChess.SetValue("FileName", m_strFileName);
-                registryKeySharpChess.SetValue("ShowThinking", m_blnShowThinking ? "1" : "0");
+                RegistryKey registryKeySharpChess = registryKeySoftware.CreateSubKey(@"PeterHughes.org\SharpChess");
+
+                if (registryKeySharpChess != null)
+                {
+                    registryKeySharpChess.SetValue("FileName", saveGameFileName);
+                    registryKeySharpChess.SetValue("ShowThinking", ShowThinking ? "1" : "0");
+                }
             }
         }
 
         /// <summary>
-        /// The think.
+        /// Instruct the computer to begin thinking, and take its turn.
         /// </summary>
         public static void Think()
         {
@@ -945,43 +695,32 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// The toggle edit mode.
+        /// Toggle edit mode.
         /// </summary>
         public static void ToggleEditMode()
         {
-            m_blnEditModeActive = !EditModeActive;
+            EditModeActive = !EditModeActive;
         }
 
         /// <summary>
-        /// The undo all moves.
+        /// Undo all moves.
         /// </summary>
         public static void UndoAllMoves()
         {
             SuspendPondering();
-            UndoAllMoves_Internal();
+            UndoAllMovesInternal();
             SaveBackup();
             SendBoardPositionChangeEvent();
             ResumePondering();
         }
 
         /// <summary>
-        /// The undo all moves_ internal.
-        /// </summary>
-        public static void UndoAllMoves_Internal()
-        {
-            while (m_movesHistory.Count > 0)
-            {
-                UndoMove_Internal();
-            }
-        }
-
-        /// <summary>
-        /// The undo move.
+        /// Undo the last move.
         /// </summary>
         public static void UndoMove()
         {
             SuspendPondering();
-            UndoMove_Internal();
+            UndoMoveInternal();
             SaveBackup();
             SendBoardPositionChangeEvent();
             ResumePondering();
@@ -992,16 +731,16 @@ namespace SharpChess
         #region Methods
 
         /// <summary>
-        /// The add save game node.
+        /// Add a move node to the save game XML document.
         /// </summary>
         /// <param name="xmldoc">
-        /// The xmldoc.
+        /// Xml document representing the save game file.
         /// </param>
         /// <param name="xmlnodeGame">
-        /// The xmlnode game.
+        /// Parent game xmlnode.
         /// </param>
         /// <param name="move">
-        /// The move.
+        /// Move to append to the save game Xml document.
         /// </param>
         private static void AddSaveGameNode(XmlDocument xmldoc, XmlElement xmlnodeGame, Move move)
         {
@@ -1015,11 +754,12 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// The check if auto next move.
+        /// Start then next move automatically, if its the computers turn.
         /// </summary>
         private static void CheckIfAutoNextMove()
         {
-            if (PlayerWhite.Intellegence == Player.enmIntellegence.Computer && PlayerBlack.Intellegence == Player.enmIntellegence.Computer)
+            if (PlayerWhite.Intellegence == Player.enmIntellegence.Computer
+                && PlayerBlack.Intellegence == Player.enmIntellegence.Computer)
             {
                 // Dont want an infinate loop of Computer moves
                 return;
@@ -1035,17 +775,17 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// The load game.
+        /// Load game from the specified file name.
         /// </summary>
         /// <param name="strFileName">
-        /// The str file name.
+        /// The file name.
         /// </param>
         /// <returns>
-        /// The load game.
+        /// True if load was successful.
         /// </returns>
         private static bool LoadGame(string strFileName)
         {
-            m_movesRedoList.Clear();
+            MoveRedoList.Clear();
             XmlDocument xmldoc = new XmlDocument();
             try
             {
@@ -1058,24 +798,35 @@ namespace SharpChess
 
             XmlElement xmlnodeGame = (XmlElement)xmldoc.SelectSingleNode("/Game");
 
+            if (xmlnodeGame == null)
+            {
+                return false;
+            }
+
             if (xmlnodeGame.GetAttribute("FEN") != string.Empty)
             {
-                New_Internal(xmlnodeGame.GetAttribute("FEN"));
+                NewInternal(xmlnodeGame.GetAttribute("FEN"));
             }
 
             if (xmlnodeGame.GetAttribute("WhitePlayer") != string.Empty)
             {
-                PlayerWhite.Intellegence = xmlnodeGame.GetAttribute("WhitePlayer") == "Human" ? Player.enmIntellegence.Human : Player.enmIntellegence.Computer;
+                PlayerWhite.Intellegence = xmlnodeGame.GetAttribute("WhitePlayer") == "Human"
+                                               ? Player.enmIntellegence.Human
+                                               : Player.enmIntellegence.Computer;
             }
 
             if (xmlnodeGame.GetAttribute("BlackPlayer") != string.Empty)
             {
-                PlayerBlack.Intellegence = xmlnodeGame.GetAttribute("BlackPlayer") == "Human" ? Player.enmIntellegence.Human : Player.enmIntellegence.Computer;
+                PlayerBlack.Intellegence = xmlnodeGame.GetAttribute("BlackPlayer") == "Human"
+                                               ? Player.enmIntellegence.Human
+                                               : Player.enmIntellegence.Computer;
             }
 
             if (xmlnodeGame.GetAttribute("BoardOrientation") != string.Empty)
             {
-                Board.Orientation = xmlnodeGame.GetAttribute("BoardOrientation") == "White" ? Board.OrientationNames.White : Board.OrientationNames.Black;
+                Board.Orientation = xmlnodeGame.GetAttribute("BoardOrientation") == "White"
+                                        ? Board.OrientationNames.White
+                                        : Board.OrientationNames.Black;
             }
 
             if (xmlnodeGame.GetAttribute("DifficultyLevel") != string.Empty)
@@ -1115,107 +866,114 @@ namespace SharpChess
 
             XmlNodeList xmlnodelist = xmldoc.SelectNodes("/Game/Move");
 
-            Square from;
-            Square to;
-
-            TimeSpan tsnTimeStamp;
-            foreach (XmlElement xmlnode in xmlnodelist)
+            if (xmlnodelist != null)
             {
-                if (xmlnode.GetAttribute("FromFile") != string.Empty)
+                foreach (XmlElement xmlnode in xmlnodelist)
                 {
-                    from = Board.GetSquare(Convert.ToInt32(xmlnode.GetAttribute("FromFile")), Convert.ToInt32(xmlnode.GetAttribute("FromRank")));
-                    to = Board.GetSquare(Convert.ToInt32(xmlnode.GetAttribute("ToFile")), Convert.ToInt32(xmlnode.GetAttribute("ToRank")));
-                }
-                else
-                {
-                    from = Board.GetSquare(xmlnode.GetAttribute("From"));
-                    to = Board.GetSquare(xmlnode.GetAttribute("To"));
-                }
-
-                MakeAMove_Internal(Move.MoveNameFromString(xmlnode.GetAttribute("Name")), from.Piece, to);
-                if (xmlnode.GetAttribute("SecondsElapsed") == string.Empty)
-                {
-                    if (m_movesHistory.Count <= 2)
+                    Square from;
+                    Square to;
+                    if (xmlnode.GetAttribute("FromFile") != string.Empty)
                     {
-                        tsnTimeStamp = new TimeSpan(0);
+                        from = Board.GetSquare(
+                            Convert.ToInt32(xmlnode.GetAttribute("FromFile")), 
+                            Convert.ToInt32(xmlnode.GetAttribute("FromRank")));
+                        to = Board.GetSquare(
+                            Convert.ToInt32(xmlnode.GetAttribute("ToFile")), Convert.ToInt32(xmlnode.GetAttribute("ToRank")));
                     }
                     else
                     {
-                        tsnTimeStamp = m_movesHistory.PenultimateForSameSide.TimeStamp + (new TimeSpan(0, 0, 30));
+                        from = Board.GetSquare(xmlnode.GetAttribute("From"));
+                        to = Board.GetSquare(xmlnode.GetAttribute("To"));
                     }
+
+                    MakeAMoveInternal(Move.MoveNameFromString(xmlnode.GetAttribute("Name")), from.Piece, to);
+                    TimeSpan tsnTimeStamp;
+                    if (xmlnode.GetAttribute("SecondsElapsed") == string.Empty)
+                    {
+                        if (MoveHistory.Count <= 2)
+                        {
+                            tsnTimeStamp = new TimeSpan(0);
+                        }
+                        else
+                        {
+                            tsnTimeStamp = MoveHistory.PenultimateForSameSide.TimeStamp + (new TimeSpan(0, 0, 30));
+                        }
+                    }
+                    else
+                    {
+                        tsnTimeStamp = new TimeSpan(0, 0, int.Parse(xmlnode.GetAttribute("SecondsElapsed")));
+                    }
+
+                    MoveHistory.Last.TimeStamp = tsnTimeStamp;
+                    MoveHistory.Last.Piece.Player.Clock.TimeElapsed = tsnTimeStamp;
                 }
-                else
+
+                int intTurnNo = xmlnodeGame.GetAttribute("TurnNo") != string.Empty
+                                    ? int.Parse(xmlnodeGame.GetAttribute("TurnNo"))
+                                    : xmlnodelist.Count;
+
+                for (int intIndex = xmlnodelist.Count; intIndex > intTurnNo; intIndex--)
                 {
-                    tsnTimeStamp = new TimeSpan(0, 0, int.Parse(xmlnode.GetAttribute("SecondsElapsed")));
+                    UndoMoveInternal();
                 }
-
-                m_movesHistory.Last.TimeStamp = tsnTimeStamp;
-                m_movesHistory.Last.Piece.Player.Clock.TimeElapsed = tsnTimeStamp;
-            }
-
-            int intTurnNo = xmlnodeGame.GetAttribute("TurnNo") != string.Empty ? int.Parse(xmlnodeGame.GetAttribute("TurnNo")) : xmlnodelist.Count;
-
-            for (int intIndex = xmlnodelist.Count; intIndex > intTurnNo; intIndex--)
-            {
-                UndoMove_Internal();
             }
 
             return true;
         }
 
         /// <summary>
-        /// The make a move_ internal.
+        /// Make the specified move. For internal use only.
         /// </summary>
-        /// <param name="MoveName">
+        /// <param name="moveName">
         /// The move name.
         /// </param>
         /// <param name="piece">
-        /// The piece.
+        /// The piece to move.
         /// </param>
         /// <param name="square">
-        /// The square.
+        /// The square to move to.
         /// </param>
-        private static void MakeAMove_Internal(Move.enmName MoveName, Piece piece, Square square)
+        private static void MakeAMoveInternal(Move.enmName moveName, Piece piece, Square square)
         {
-            m_movesRedoList.Clear();
-            Move move = piece.Move(MoveName, square);
+            MoveRedoList.Clear();
+            Move move = piece.Move(moveName, square);
             move.EnemyStatus = move.Piece.Player.OtherPlayer.Status;
-            m_playerToPlay.Clock.Stop();
-            m_movesHistory.Last.TimeStamp = m_playerToPlay.Clock.TimeElapsed;
-            if (m_playerToPlay.Intellegence == Player.enmIntellegence.Computer)
+            PlayerToPlay.Clock.Stop();
+            MoveHistory.Last.TimeStamp = PlayerToPlay.Clock.TimeElapsed;
+            if (PlayerToPlay.Intellegence == Player.enmIntellegence.Computer)
             {
                 WinBoard.SendMove(move);
-                if (!m_playerToPlay.OtherPlayer.CanMove)
+                if (!PlayerToPlay.OtherPlayer.CanMove)
                 {
-                    if (m_playerToPlay.OtherPlayer.IsInCheckMate)
+                    if (PlayerToPlay.OtherPlayer.IsInCheckMate)
                     {
                         WinBoard.SendCheckMate();
                     }
-                    else if (!m_playerToPlay.OtherPlayer.IsInCheck)
+                    else if (!PlayerToPlay.OtherPlayer.IsInCheck)
                     {
                         WinBoard.SendCheckStaleMate();
                     }
                 }
-                else if (m_playerToPlay.OtherPlayer.CanClaimThreeMoveRepetitionDraw)
+                else if (PlayerToPlay.OtherPlayer.CanClaimThreeMoveRepetitionDraw)
                 {
                     WinBoard.SendDrawByRepetition();
                 }
-                else if (m_playerToPlay.OtherPlayer.CanClaimFiftyMoveDraw)
+                else if (PlayerToPlay.OtherPlayer.CanClaimFiftyMoveDraw)
                 {
                     WinBoard.SendDrawByFiftyMoveRule();
                 }
-                else if (m_playerToPlay.OtherPlayer.CanClaimInsufficientMaterialDraw)
+                else if (PlayerToPlay.OtherPlayer.CanClaimInsufficientMaterialDraw)
                 {
                     WinBoard.SendDrawByInsufficientMaterial();
                 }
             }
 
-            m_playerToPlay = m_playerToPlay.OtherPlayer;
-            m_playerToPlay.Clock.Start();
+            PlayerToPlay = PlayerToPlay.OtherPlayer;
+            PlayerToPlay.Clock.Start();
         }
 
         /// <summary>
-        /// The make next computer move.
+        /// Instruct the computer to make its next move.
         /// </summary>
         private static void MakeNextComputerMove()
         {
@@ -1226,48 +984,47 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// The new_ internal.
+        /// Start a new game. For internal use only.
         /// </summary>
-        private static void New_Internal()
+        private static void NewInternal()
         {
-            New_Internal(string.Empty);
+            NewInternal(string.Empty);
         }
 
         /// <summary>
-        /// The new_ internal.
+        /// Start a new game from the specified FEN string position. For internal use only.
         /// </summary>
-        /// <param name="strFEN">
+        /// <param name="fenString">
         /// The str fen.
         /// </param>
-        private static void New_Internal(string strFEN)
+        private static void NewInternal(string fenString)
         {
-            if (strFEN == string.Empty)
+            if (fenString == string.Empty)
             {
-                strFEN = Fen.GameStartPosition;
+                fenString = Fen.GameStartPosition;
             }
 
-            random = new Random(DateTime.Now.Millisecond);
-            Fen.Validate(strFEN);
+            Fen.Validate(fenString);
             HashTable.Clear();
             HashTablePawnKing.Clear();
             HashTableCheck.Clear();
-            UndoAllMoves_Internal();
-            m_movesRedoList.Clear();
-            m_strFileName = string.Empty;
-            Fen.SetBoardPosition(strFEN);
-            m_playerWhite.Clock.Reset();
-            m_playerBlack.Clock.Reset();
+            UndoAllMovesInternal();
+            MoveRedoList.Clear();
+            saveGameFileName = string.Empty;
+            Fen.SetBoardPosition(fenString);
+            PlayerWhite.Clock.Reset();
+            PlayerBlack.Clock.Reset();
         }
 
         /// <summary>
-        /// The player_ ready to make move.
+        /// Called when the com[uter has finished thinking, and is ready to make its move.
         /// </summary>
         /// <exception cref="ApplicationException">
-        /// Raised when prinipal variation is empty.
+        /// Raised when principal variation is empty.
         /// </exception>
-        private static void Player_ReadyToMakeMove()
+        private static void PlayerReadyToMakeMove()
         {
-            Move move = null;
+            Move move;
             if (PlayerToPlay.PrincipalVariation.Count > 0)
             {
                 move = PlayerToPlay.PrincipalVariation[0];
@@ -1277,57 +1034,60 @@ namespace SharpChess
                 throw new ApplicationException("Player_ReadToMakeMove: Principal Variation is empty.");
             }
 
-            MakeAMove_Internal(move.Name, move.Piece, move.To);
+            MakeAMoveInternal(move.Name, move.Piece, move.To);
             SaveBackup();
             SendBoardPositionChangeEvent();
             ResumePondering();
         }
 
         /// <summary>
-        /// The redo move_ internal.
+        /// Redo move. For internal use only.
         /// </summary>
-        private static void RedoMove_Internal()
+        private static void RedoMoveInternal()
         {
-            if (m_movesRedoList.Count > 0)
+            if (MoveRedoList.Count > 0)
             {
-                Move moveRedo = m_movesRedoList[m_movesRedoList.Count - 1];
-                m_playerToPlay.Clock.Revert();
+                Move moveRedo = MoveRedoList[MoveRedoList.Count - 1];
+                PlayerToPlay.Clock.Revert();
                 moveRedo.Piece.Move(moveRedo.Name, moveRedo.To);
-                m_playerToPlay.Clock.TimeElapsed = moveRedo.TimeStamp;
-                m_movesHistory.Last.TimeStamp = moveRedo.TimeStamp;
-                m_movesHistory.Last.EnemyStatus = moveRedo.Piece.Player.OtherPlayer.Status; // 14Mar05 Nimzo
-                m_playerToPlay = m_playerToPlay.OtherPlayer;
-                m_movesRedoList.RemoveLast();
-                m_playerToPlay.Clock.Start();
+                PlayerToPlay.Clock.TimeElapsed = moveRedo.TimeStamp;
+                MoveHistory.Last.TimeStamp = moveRedo.TimeStamp;
+                MoveHistory.Last.EnemyStatus = moveRedo.Piece.Player.OtherPlayer.Status; // 14Mar05 Nimzo
+                PlayerToPlay = PlayerToPlay.OtherPlayer;
+                MoveRedoList.RemoveLast();
+                PlayerToPlay.Clock.Start();
             }
         }
 
         /// <summary>
-        /// The save backup.
+        /// Save a backup of the current game.
         /// </summary>
         private static void SaveBackup()
         {
-            SaveGame(m_strBackupGamePath);
+            SaveGame(BackupGamePath);
         }
 
         /// <summary>
-        /// The save game.
+        /// Save game using the specified file name.
         /// </summary>
-        /// <param name="FileName">
+        /// <param name="fileName">
         /// The file name.
         /// </param>
-        private static void SaveGame(string FileName)
+        private static void SaveGame(string fileName)
         {
             XmlDocument xmldoc = new XmlDocument();
             XmlElement xmlnodeGame = xmldoc.CreateElement("Game");
 
             xmldoc.AppendChild(xmlnodeGame);
 
-            xmlnodeGame.SetAttribute("FEN", FENStartPosition == Fen.GameStartPosition ? string.Empty : FENStartPosition);
+            xmlnodeGame.SetAttribute("FEN", FenStartPosition == Fen.GameStartPosition ? string.Empty : FenStartPosition);
             xmlnodeGame.SetAttribute("TurnNo", TurnNo.ToString());
-            xmlnodeGame.SetAttribute("WhitePlayer", PlayerWhite.Intellegence == Player.enmIntellegence.Human ? "Human" : "Computer");
-            xmlnodeGame.SetAttribute("BlackPlayer", PlayerBlack.Intellegence == Player.enmIntellegence.Human ? "Human" : "Computer");
-            xmlnodeGame.SetAttribute("BoardOrientation", Board.Orientation == Board.OrientationNames.White ? "White" : "Black");
+            xmlnodeGame.SetAttribute(
+                "WhitePlayer", PlayerWhite.Intellegence == Player.enmIntellegence.Human ? "Human" : "Computer");
+            xmlnodeGame.SetAttribute(
+                "BlackPlayer", PlayerBlack.Intellegence == Player.enmIntellegence.Human ? "Human" : "Computer");
+            xmlnodeGame.SetAttribute(
+                "BoardOrientation", Board.Orientation == Board.OrientationNames.White ? "White" : "Black");
             xmlnodeGame.SetAttribute("Version", Application.ProductVersion);
             xmlnodeGame.SetAttribute("DifficultyLevel", DifficultyLevel.ToString());
             xmlnodeGame.SetAttribute("ClockMoves", ClockMoves.ToString());
@@ -1336,18 +1096,18 @@ namespace SharpChess
             xmlnodeGame.SetAttribute("Pondering", EnablePondering ? "1" : "0");
             xmlnodeGame.SetAttribute("UseRandomOpeningMoves", UseRandomOpeningMoves ? "1" : "0");
 
-            foreach (Move move in m_movesHistory)
+            foreach (Move move in MoveHistory)
             {
                 AddSaveGameNode(xmldoc, xmlnodeGame, move);
             }
 
             // Redo moves
-            for (int intIndex = m_movesRedoList.Count - 1; intIndex >= 0; intIndex--)
+            for (int intIndex = MoveRedoList.Count - 1; intIndex >= 0; intIndex--)
             {
-                AddSaveGameNode(xmldoc, xmlnodeGame, m_movesRedoList[intIndex]);
+                AddSaveGameNode(xmldoc, xmlnodeGame, MoveRedoList[intIndex]);
             }
 
-            xmldoc.Save(FileName);
+            xmldoc.Save(fileName);
         }
 
         /// <summary>
@@ -1359,28 +1119,39 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// The undo move_ internal.
+        /// Undo all moves. For internal use pnly.
         /// </summary>
-        private static void UndoMove_Internal()
+        private static void UndoAllMovesInternal()
         {
-            if (m_movesHistory.Count > 0)
+            while (MoveHistory.Count > 0)
             {
-                Move moveUndo = m_movesHistory.Last;
-                m_playerToPlay.Clock.Revert();
-                m_movesRedoList.Add(moveUndo);
+                UndoMoveInternal();
+            }
+        }
+
+        /// <summary>
+        /// Undo move. For internal use only.
+        /// </summary>
+        private static void UndoMoveInternal()
+        {
+            if (MoveHistory.Count > 0)
+            {
+                Move moveUndo = MoveHistory.Last;
+                PlayerToPlay.Clock.Revert();
+                MoveRedoList.Add(moveUndo);
                 Move.Undo(moveUndo);
-                m_playerToPlay = m_playerToPlay.OtherPlayer;
-                if (m_movesHistory.Count > 1)
+                PlayerToPlay = PlayerToPlay.OtherPlayer;
+                if (MoveHistory.Count > 1)
                 {
-                    Move movePenultimate = m_movesHistory[m_movesHistory.Count - 2];
-                    m_playerToPlay.Clock.TimeElapsed = movePenultimate.TimeStamp;
+                    Move movePenultimate = MoveHistory[MoveHistory.Count - 2];
+                    PlayerToPlay.Clock.TimeElapsed = movePenultimate.TimeStamp;
                 }
                 else
                 {
-                    m_playerToPlay.Clock.TimeElapsed = new TimeSpan(0);
+                    PlayerToPlay.Clock.TimeElapsed = new TimeSpan(0);
                 }
 
-                m_playerToPlay.Clock.Start();
+                PlayerToPlay.Clock.Start();
             }
         }
 

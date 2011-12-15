@@ -297,7 +297,7 @@ namespace SharpChess
                     intPoints -= 30;
                 }
 
-                if (Game.Stage != Game.enmStage.End)
+                if (Game.Stage != Game.GameStageNames.End)
                 {
                     // Pawns on D or E files
                     if (this.m_Base.Square.File == 3 || this.m_Base.Square.File == 4)
@@ -310,7 +310,7 @@ namespace SharpChess
                     }
                 }
 
-                if (Game.Stage == Game.enmStage.Opening)
+                if (Game.Stage == Game.GameStageNames.Opening)
                 {
                     // Pawns on D or E files
                     if (this.m_Base.Square.File == 3 || this.m_Base.Square.File == 4)

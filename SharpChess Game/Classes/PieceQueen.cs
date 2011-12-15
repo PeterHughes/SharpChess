@@ -133,7 +133,7 @@ namespace SharpChess
 
                 // The queen is that after the opening it is penalized slightly for 
                 // "taxicab" distance to the enemy king.
-                if (Game.Stage == Game.enmStage.Opening)
+                if (Game.Stage == Game.GameStageNames.Opening)
                 {
                     if (this.m_Base.Player.Colour == Player.enmColour.White)
                     {

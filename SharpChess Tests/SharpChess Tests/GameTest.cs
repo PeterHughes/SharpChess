@@ -83,8 +83,8 @@ namespace SharpChess_Tests
         [DeploymentItem("SharpChess2.exe")]
         public void MoveOrdering()
         {
-            string strFEN = "r2qk2r/ppp2ppp/2b5/4N3/1b1Pp3/8/PPP1QPPP/R1B2RK1 b k - 1 11";
-            Game_Accessor.New_Internal(strFEN);
+            const string Fen = "r2qk2r/ppp2ppp/2b5/4N3/1b1Pp3/8/PPP1QPPP/R1B2RK1 b k - 1 11";
+            Game_Accessor.NewInternal(Fen);
             Game_Accessor.MaximumSearchDepth = 5;
             Game_Accessor.ClockFixedTimePerMove = new TimeSpan(0, 10, 0); // 10 minute max
             Game_Accessor.PlayerToPlay.Think();

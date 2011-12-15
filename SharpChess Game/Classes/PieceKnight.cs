@@ -146,7 +146,7 @@ namespace SharpChess
             {
                 int intPoints = 0;
 
-                if (Game.Stage == Game.enmStage.End)
+                if (Game.Stage == Game.GameStageNames.End)
                 {
                     intPoints -= this.m_Base.TaxiCabDistanceToEnemyKingPenalty() << 4;
                 }

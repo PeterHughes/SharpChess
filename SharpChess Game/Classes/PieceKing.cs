@@ -286,7 +286,7 @@ namespace SharpChess
             {
                 int intPoints = 0;
 
-                if (Game.Stage != Game.enmStage.Opening && this.Base.Player.OtherPlayer.HasPieceName(Piece.enmName.Queen))
+                if (Game.Stage != Game.GameStageNames.Opening && this.Base.Player.OtherPlayer.HasPieceName(Piece.enmName.Queen))
                 {
                     Piece piece;
 
@@ -386,7 +386,7 @@ namespace SharpChess
 
                 switch (Game.Stage)
                 {
-                    case Game.enmStage.End:
+                    case Game.GameStageNames.End:
 
                         // Bonus for number of moves available
                         Moves moves = new Moves();

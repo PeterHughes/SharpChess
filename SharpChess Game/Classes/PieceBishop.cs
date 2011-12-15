@@ -148,7 +148,7 @@ namespace SharpChess
 
                 intPoints += m_aintSquareValues[this.m_Base.Square.Ordinal] << 1;
 
-                if (Game.Stage != Game.enmStage.End)
+                if (Game.Stage != Game.GameStageNames.End)
                 {
                     if (this.m_Base.CanBeDrivenAwayByPawn())
                     {
