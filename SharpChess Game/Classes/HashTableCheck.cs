@@ -1,5 +1,5 @@
 // --------------------------------------------------------------------------------------------------------------------
-// <copyright file="HashTableCheck.cs" company="SharpChess">
+// <copyright file="HashTableCheck.cs" company="SharpChess.com">
 //   Peter Hughes
 // </copyright>
 // <summary>

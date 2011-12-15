@@ -1,9 +1,10 @@
 // --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Board.cs" company="SharpChess">
+// <copyright file="Board.cs" company="SharpChess.com">
 //   Peter Hughes
 // </copyright>
 // <summary>
-//   Represents the chess board.
+//   Represents the chess board using a 0x88 represenation.
+//   http://chessprogramming.wikispaces.com/0x88
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -32,7 +33,8 @@ namespace SharpChess
     #endregion
 
     /// <summary>
-    /// Represents the chess board.
+    /// Represents the chess board using a 0x88 represenation.
+    /// http://chessprogramming.wikispaces.com/0x88
     /// </summary>
     public static class Board
     {

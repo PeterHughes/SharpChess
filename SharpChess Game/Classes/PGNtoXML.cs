@@ -1,5 +1,5 @@
 // --------------------------------------------------------------------------------------------------------------------
-// <copyright file="PGNtoXML.cs" company="SharpChess">
+// <copyright file="PGNtoXML.cs" company="SharpChess.com">
 //   Peter Hughes
 // </copyright>
 // <summary>

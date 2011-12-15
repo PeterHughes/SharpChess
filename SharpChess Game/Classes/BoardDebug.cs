@@ -1,9 +1,9 @@
 // --------------------------------------------------------------------------------------------------------------------
-// <copyright file="BoardDebug.cs" company="SharpChess">
+// <copyright file="BoardDebug.cs" company="SharpChess.com">
 //   Peter Hughes
 // </copyright>
 // <summary>
-//   The board.
+//   Helper methods for debuging board positions.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -34,14 +34,14 @@ namespace SharpChess
     #endregion
 
     /// <summary>
-    /// The board.
+    /// Helper methods for debuging board positions.
     /// </summary>
     public static class BoardDebug
     {
         #region Public Properties
 
         /// <summary>
-        ///   Gets DebugString.
+        ///   Gets a Debug String representing the currnet board position.
         /// </summary>
         public static string DebugString
         {

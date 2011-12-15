@@ -1,9 +1,10 @@
 // --------------------------------------------------------------------------------------------------------------------
-// <copyright file="FEN.cs" company="SharpChess">
+// <copyright file="FEN.cs" company="SharpChess.com">
 //   Peter Hughes
 // </copyright>
 // <summary>
 //   Converts a Forsyth–Edwards Notation (FEN) string into a SharpChess board position.
+//   http://chessprogramming.wikispaces.com/Forsyth-Edwards+Notation
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -34,6 +35,7 @@ namespace SharpChess
 
     /// <summary>
     /// Converts a Forsyth–Edwards Notation (FEN) string into a SharpChess board position.
+    /// http://chessprogramming.wikispaces.com/Forsyth-Edwards+Notation
     /// </summary>
     public static class Fen
     {

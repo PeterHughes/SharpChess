@@ -1,9 +1,10 @@
 // --------------------------------------------------------------------------------------------------------------------
-// <copyright file="HashTable.cs" company="SharpChess">
+// <copyright file="HashTable.cs" company="SharpChess.com">
 //   Peter Hughes
 // </copyright>
 // <summary>
 //   The hash table, also know as Transposition table. Stores information about positions previously considered. Stores scores and "best moves".
+//   http://chessprogramming.wikispaces.com/Transposition+Table
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -27,6 +28,7 @@ namespace SharpChess
 {
     /// <summary>
     /// The hash table, also know as Transposition table. Stores information about positions previously considered. Stores scores and "best moves".
+    /// http://chessprogramming.wikispaces.com/Transposition+Table
     /// </summary>
     public static class HashTable
     {

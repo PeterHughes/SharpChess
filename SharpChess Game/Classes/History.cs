@@ -1,9 +1,10 @@
 // --------------------------------------------------------------------------------------------------------------------
-// <copyright file="History.cs" company="SharpChess">
+// <copyright file="History.cs" company="SharpChess.com">
 //   Peter Hughes
 // </copyright>
 // <summary>
-//   The history.
+// Represents the History Heuristic used to improve moved ordering.
+// http://chessprogramming.wikispaces.com/History+Heuristic
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -26,28 +27,29 @@
 namespace SharpChess
 {
     /// <summary>
-    /// The history.
+    /// Represents the History Heuristic used to improve moved ordering.
+    /// http://chessprogramming.wikispaces.com/History+Heuristic
     /// </summary>
-    public class History
+    public static class History
     {
         #region Constants and Fields
 
         /// <summary>
-        /// The a history entry black.
+        /// History table entries for black.
         /// </summary>
-        private static readonly int[,] aHistoryEntryBlack = new int[Board.SquareCount, Board.SquareCount];
+        private static readonly int[,] HistoryTableEntriesforBlack = new int[Board.SquareCount, Board.SquareCount];
 
         /// <summary>
-        /// The a history entry white.
+        /// History table entries for white.
         /// </summary>
-        private static readonly int[,] aHistoryEntryWhite = new int[Board.SquareCount, Board.SquareCount];
+        private static readonly int[,] HistoryTableEntriesforWhite = new int[Board.SquareCount, Board.SquareCount];
 
         #endregion
 
         #region Public Methods
 
         /// <summary>
-        /// The clear.
+        /// Clear all history heuristic values.
         /// </summary>
         public static void Clear()
         {
@@ -55,57 +57,57 @@ namespace SharpChess
             {
                 for (int j = 0; j < Board.SquareCount; j++)
                 {
-                    aHistoryEntryWhite[i, j] = 0;
-                    aHistoryEntryBlack[i, j] = 0;
+                    HistoryTableEntriesforWhite[i, j] = 0;
+                    HistoryTableEntriesforBlack[i, j] = 0;
                 }
             }
         }
 
         /// <summary>
-        /// The record.
+        /// Record a new history entry.
         /// </summary>
         /// <param name="colour">
-        /// The colour.
+        /// The player colour.
         /// </param>
-        /// <param name="OrdinalFrom">
-        /// The ordinal from.
+        /// <param name="ordinalFrom">
+        /// The From square ordinal.
         /// </param>
-        /// <param name="OrdinalTo">
-        /// The ordinal to.
+        /// <param name="ordinalTo">
+        /// The To square ordinal.
         /// </param>
-        /// <param name="Value">
-        /// The value.
+        /// <param name="value">
+        /// The history heuristic weighting value.
         /// </param>
-        public static void Record(Player.enmColour colour, int OrdinalFrom, int OrdinalTo, int Value)
+        public static void Record(Player.enmColour colour, int ordinalFrom, int ordinalTo, int value)
         {
             if (colour == Player.enmColour.White)
             {
-                aHistoryEntryWhite[OrdinalFrom, OrdinalTo] += Value;
+                HistoryTableEntriesforWhite[ordinalFrom, ordinalTo] += value;
             }
             else
             {
-                aHistoryEntryBlack[OrdinalFrom, OrdinalTo] += Value;
+                HistoryTableEntriesforBlack[ordinalFrom, ordinalTo] += value;
             }
         }
 
         /// <summary>
-        /// The retrieve.
+        /// Retrieve a value from the History Heuristic table.
         /// </summary>
         /// <param name="colour">
-        /// The colour.
+        /// The player colour.
         /// </param>
-        /// <param name="OrdinalFrom">
-        /// The ordinal from.
+        /// <param name="ordinalFrom">
+        /// The From square ordinal.
         /// </param>
-        /// <param name="OrdinalTo">
-        /// The ordinal to.
+        /// <param name="ordinalTo">
+        /// The To square ordinal.
         /// </param>
         /// <returns>
-        /// The retrieve.
+        /// The history heuristic weighting value.
         /// </returns>
-        public static int Retrieve(Player.enmColour colour, int OrdinalFrom, int OrdinalTo)
+        public static int Retrieve(Player.enmColour colour, int ordinalFrom, int ordinalTo)
         {
-            return colour == Player.enmColour.White ? aHistoryEntryWhite[OrdinalFrom, OrdinalTo] : aHistoryEntryBlack[OrdinalFrom, OrdinalTo];
+            return colour == Player.enmColour.White ? HistoryTableEntriesforWhite[ordinalFrom, ordinalTo] : HistoryTableEntriesforBlack[ordinalFrom, ordinalTo];
         }
 
         #endregion

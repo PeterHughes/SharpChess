@@ -1,9 +1,9 @@
 // --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Game.cs" company="SharpChess">
+// <copyright file="Game.cs" company="SharpChess.com">
 //   Peter Hughes
 // </copyright>
 // <summary>
-//   The game.
+//   Represents the game of chess over its lfetime. Holds the board, players, turn number and everything related to the chess game in progress.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -36,9 +36,9 @@ namespace SharpChess
     #endregion
 
     /// <summary>
-    /// The game.
+    /// Represents the game of chess over its lfetime. Holds the board, players, turn number and everything related to the chess game in progress.
     /// </summary>
-    public class Game
+    public static class Game
     {
         #region Constants and Fields
 

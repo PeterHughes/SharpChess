@@ -1,5 +1,5 @@
 // --------------------------------------------------------------------------------------------------------------------
-// <copyright file="PlayerClock.cs" company="SharpChess">
+// <copyright file="PlayerClock.cs" company="SharpChess.com">
 //   Peter Hughes
 // </copyright>
 // <summary>

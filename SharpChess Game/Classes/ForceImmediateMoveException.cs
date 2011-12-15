@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ForceImmediateMoveException.cs" company="SharpChess">
+// <copyright file="ForceImmediateMoveException.cs" company="SharpChess.com">
 //   Peter Hughes
 // </copyright>
 // <summary>

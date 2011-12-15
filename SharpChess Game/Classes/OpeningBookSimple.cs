@@ -1,5 +1,5 @@
 // --------------------------------------------------------------------------------------------------------------------
-// <copyright file="OpeningBookSimple.cs" company="SharpChess">
+// <copyright file="OpeningBookSimple.cs" company="SharpChess.com">
 //   Peter Hughes
 // </copyright>
 // <summary>

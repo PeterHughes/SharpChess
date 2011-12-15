@@ -1,9 +1,10 @@
 // --------------------------------------------------------------------------------------------------------------------
-// <copyright file="KillerMoves.cs" company="SharpChess">
+// <copyright file="KillerMoves.cs" company="SharpChess.com">
 //   Peter Hughes
 // </copyright>
 // <summary>
-//   Summary description for KillerMoves.
+//   Represents the Killer Heuristic used to improve move ordering.
+//   http://chessprogramming.wikispaces.com/Killer+Heuristic
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -26,28 +27,29 @@
 namespace SharpChess
 {
     /// <summary>
-    /// Killer Moves.
+    /// Represents the Killer Heuristic used to improve move ordering.
+    ///   http://chessprogramming.wikispaces.com/Killer+Heuristic
     /// </summary>
-    public class KillerMoves
+    public static class KillerMoves
     {
         #region Constants and Fields
 
         /// <summary>
-        /// The m_arrmove a.
+        ///   List of primary (A) Killer Moves indexed by search depth.
         /// </summary>
-        private static readonly Move[] m_arrmoveA = new Move[64];
+        private static readonly Move[] PrimaryKillerMovesA = new Move[64];
 
         /// <summary>
-        /// The m_arrmove b.
+        ///   List of secondary (B) Killer Moves indexed by search depth.
         /// </summary>
-        private static readonly Move[] m_arrmoveB = new Move[64];
+        private static readonly Move[] SecondaryKillerMovesB = new Move[64];
 
         #endregion
 
         #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes static members of the <see cref="KillerMoves"/> class.
+        ///   Initializes static members of the <see cref = "KillerMoves" /> class.
         /// </summary>
         static KillerMoves()
         {
@@ -59,47 +61,19 @@ namespace SharpChess
         #region Public Methods
 
         /// <summary>
-        /// The assign a.
-        /// </summary>
-        /// <param name="depth">
-        /// The depth.
-        /// </param>
-        /// <param name="move">
-        /// The move.
-        /// </param>
-        public static void AssignA(int depth, Move move)
-        {
-            m_arrmoveA[depth + 32] = move;
-        }
-
-        /// <summary>
-        /// The assign b.
-        /// </summary>
-        /// <param name="depth">
-        /// The depth.
-        /// </param>
-        /// <param name="move">
-        /// The move.
-        /// </param>
-        public static void AssignB(int depth, Move move)
-        {
-            m_arrmoveB[depth + 32] = move;
-        }
-
-        /// <summary>
         /// The clear.
         /// </summary>
         public static void Clear()
         {
             for (int intIndex = 0; intIndex < 64; intIndex++)
             {
-                m_arrmoveA[intIndex] = null;
-                m_arrmoveB[intIndex] = null;
+                PrimaryKillerMovesA[intIndex] = null;
+                SecondaryKillerMovesB[intIndex] = null;
             }
         }
 
         /// <summary>
-        /// Adds the move made to the appropriate killer move slot, if it's better than the currnet killer moves
+        /// Adds the move made to the appropriate killer move slot, if it's better than the current killer moves
         /// </summary>
         /// <param name="ply">
         /// Search depth
@@ -109,11 +83,9 @@ namespace SharpChess
         /// </param>
         public static void RecordPossibleKillerMove(int ply, Move moveMade)
         {
-            Move moveKillerA;
-            Move moveKillerB;
             bool blnAssignedA = false; // Have we assign Slot A?
 
-            moveKillerA = RetrieveA(ply); // Get slot A move
+            Move moveKillerA = RetrieveA(ply);
             if (moveKillerA == null)
             {
                 // Slot A is blank, so put anything in it.
@@ -134,7 +106,7 @@ namespace SharpChess
             // If the move wasn't assigned to Slot A, then see if it is good enough to go in Slot B
             if (!blnAssignedA)
             {
-                moveKillerB = RetrieveB(ply);
+                Move moveKillerB = RetrieveB(ply);
 
                 // Slot B is empty, so put anything in!
                 if (moveKillerB == null)
@@ -151,29 +123,63 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// The retrieve a.
+        /// Retrieve primary (A) killer move for specified search depth.
         /// </summary>
         /// <param name="depth">
-        /// The depth.
+        /// Search depth (ply).
         /// </param>
         /// <returns>
+        /// Move for specified depth
         /// </returns>
         public static Move RetrieveA(int depth)
         {
-            return m_arrmoveA[depth + 32];
+            return PrimaryKillerMovesA[depth + 32];
         }
 
         /// <summary>
-        /// The retrieve b.
+        /// Retrieve secondary (B) killer move for specified search depth.
         /// </summary>
         /// <param name="depth">
-        /// The depth.
+        /// Search depth (ply).
         /// </param>
         /// <returns>
+        /// Move for specified depth
         /// </returns>
         public static Move RetrieveB(int depth)
         {
-            return m_arrmoveB[depth + 32];
+            return SecondaryKillerMovesB[depth + 32];
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Assign killer move A (primary)
+        /// </summary>
+        /// <param name="depth">
+        /// The search depth (ply).
+        /// </param>
+        /// <param name="move">
+        /// The move to assign.
+        /// </param>
+        private static void AssignA(int depth, Move move)
+        {
+            PrimaryKillerMovesA[depth + 32] = move;
+        }
+
+        /// <summary>
+        /// Assign killer move B (secondary)
+        /// </summary>
+        /// <param name="depth">
+        /// The search depth (ply).
+        /// </param>
+        /// <param name="move">
+        /// The move to assign.
+        /// </param>
+        private static void AssignB(int depth, Move move)
+        {
+            SecondaryKillerMovesB[depth + 32] = move;
         }
 
         #endregion

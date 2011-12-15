@@ -1,5 +1,5 @@
 // --------------------------------------------------------------------------------------------------------------------
-// <copyright file="PieceBishop.cs" company="SharpChess">
+// <copyright file="PieceBishop.cs" company="SharpChess.com">
 //   Peter Hughes
 // </copyright>
 // <summary>

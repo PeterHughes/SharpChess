@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="AssemblyInfo.cs" company="SharpChess">
+// <copyright file="AssemblyInfo.cs" company="SharpChess.com">
 //   Peter Hughes
 // </copyright>
 // <summary>

@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="TestRig.cs" company="SharpChess">
+// <copyright file="TestRig.cs" company="SharpChess.com">
 //   Peter Hughes
 // </copyright>
 // <summary>

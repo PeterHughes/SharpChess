@@ -1,5 +1,5 @@
 // --------------------------------------------------------------------------------------------------------------------
-// <copyright file="frmMain.cs" company="SharpChess">
+// <copyright file="frmMain.cs" company="SharpChess.com">
 //   Peter Hughes
 // </copyright>
 // <summary>

@@ -1,9 +1,10 @@
 // --------------------------------------------------------------------------------------------------------------------
-// <copyright file="HashTablePawnKing.cs" company="SharpChess">
+// <copyright file="HashTablePawnKing.cs" company="SharpChess.com">
 //   Peter Hughes
 // </copyright>
 // <summary>
-//   The hash table pawn king.
+// The hash table purely for pawn king position. Used to optimised evalulation of score for pawn and kind positions.
+// http://chessprogramming.wikispaces.com/Pawn+Hash+Table
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -26,7 +27,8 @@
 namespace SharpChess
 {
     /// <summary>
-    /// The hash table pawn king.
+    /// The hash table purely for pawn king position. Used to optimised evalulation of score for pawn and kind positions.
+    /// http://chessprogramming.wikispaces.com/Pawn+Hash+Table
     /// </summary>
     public static class HashTablePawnKing
     {

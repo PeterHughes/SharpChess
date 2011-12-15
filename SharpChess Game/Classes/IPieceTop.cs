@@ -1,9 +1,10 @@
 // --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IPieceTop.cs" company="SharpChess">
+// <copyright file="IPieceTop.cs" company="SharpChess.com">
 //   Peter Hughes
 // </copyright>
 // <summary>
-//   The i piece top.
+//   IPieceTop interface. The Piece class represents the base of a chess piece, on which different "tops" can be placed. 
+//   The Top of a piece will change when a piece is promoted. e.g. a Pawn is promoted to a Queen, or a Knight.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -26,49 +27,50 @@
 namespace SharpChess
 {
     /// <summary>
-    /// The i piece top.
+    /// IPieceTop interface. The <see cref="Piece"/>  class represents the base of a chess piece, on which different "tops" can be placed. 
+    /// The Top of a piece will change when a piece is promoted. e.g. a Pawn is promoted to a Queen, or a Knight.
     /// </summary>
     public interface IPieceTop
     {
         #region Public Properties
 
         /// <summary>
-        /// Gets Abbreviation.
+        /// Gets the Abbreviated name for the piece.
         /// </summary>
         string Abbreviation { get; }
 
         /// <summary>
-        /// Gets Base.
+        /// Gets the base <see cref="Piece"/>.
         /// </summary>
         Piece Base { get; }
 
         /// <summary>
-        /// Gets BasicValue.
+        /// Gets the BasicValue for this piece. e.g. 9 for Queen, 1 for a Pawn.
         /// </summary>
         int BasicValue { get; }
 
         /// <summary>
-        /// Gets ImageIndex.
+        /// Gets ImageIndex for the piece.
         /// </summary>
         int ImageIndex { get; }
 
         /// <summary>
-        /// Gets a value indicating whether IsCapturable.
+        /// Gets a value indicating whether the piece can be captured.
         /// </summary>
         bool IsCapturable { get; }
 
         /// <summary>
-        /// Gets Name.
+        /// Gets the name of the piece.
         /// </summary>
         Piece.enmName Name { get; }
 
         /// <summary>
-        /// Gets PositionalPoints.
+        /// Gets the positional score points of the piece.
         /// </summary>
         int PositionalPoints { get; }
 
         /// <summary>
-        /// Gets Value.
+        /// Gets the base score value for the piece e.g. 9000 for Queen, 1000 for a Pawn.
         /// </summary>
         int Value { get; }
 
