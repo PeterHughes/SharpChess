@@ -3,7 +3,7 @@
 //   Peter Hughes
 // </copyright>
 // <summary>
-//   The hash table.
+//   The hash table, also know as Transposition table. Stores information about positions previously considered. Stores scores and "best moves".
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -26,29 +26,29 @@
 namespace SharpChess
 {
     /// <summary>
-    /// The hash table.
+    /// The hash table, also know as Transposition table. Stores information about positions previously considered. Stores scores and "best moves".
     /// </summary>
     public static class HashTable
     {
         #region Constants and Fields
 
         /// <summary>
-        ///   The unknown.
+        ///   Indicates that a position was not found in the Hash Table.
         /// </summary>
         public const int NotFoundInHashTable = int.MinValue;
 
         /// <summary>
-        ///   The has h_ tabl e_ slo t_ depth.
+        ///   The number of chess positions that may be stored against the same hashtable entry key.
         /// </summary>
         private const int HashTableSlotDepth = 3;
 
         /// <summary>
-        ///   The m_arr hash entry.
+        ///   Pointer to the HashTable
         /// </summary>
         private static HashEntry[] hashTableEntries;
 
         /// <summary>
-        ///   The m_ hash table size.
+        ///   Size of the HashTable.
         /// </summary>
         private static uint hashTableSize;
 
@@ -57,22 +57,22 @@ namespace SharpChess
         #region Enums
 
         /// <summary>
-        /// The enm hash type.
+        /// Type of HashTable entry.
         /// </summary>
         public enum HashTypeNames
         {
             /// <summary>
-            ///   The exact.
+            ///   Exact value.
             /// </summary>
             Exact, 
 
             /// <summary>
-            ///   The alpha.
+            ///   Alpha value.
             /// </summary>
             Alpha, 
 
             /// <summary>
-            ///   The beta.
+            ///   Beta value.
             /// </summary>
             Beta
         }
@@ -82,27 +82,27 @@ namespace SharpChess
         #region Public Properties
 
         /// <summary>
-        ///   Gets Collisions.
+        ///   Gets the number of hash table Collisions that have occured.
         /// </summary>
         public static int Collisions { get; private set; }
 
         /// <summary>
-        ///   Gets Hits.
+        ///   Gets the number of hash table Hits that have occured.
         /// </summary>
         public static int Hits { get; private set; }
 
         /// <summary>
-        ///   Gets Overwrites.
+        ///   Gets the number of hash table Overwrites that have occured.
         /// </summary>
         public static int Overwrites { get; private set; }
 
         /// <summary>
-        ///   Gets Probes.
+        ///   Gets the number of hash table Probes that have occured.
         /// </summary>
         public static int Probes { get; private set; }
 
         /// <summary>
-        ///   Gets SlotsUsed.
+        ///   Gets the number of hash table slots used.
         /// </summary>
         public static int SlotsUsed
         {
@@ -123,7 +123,7 @@ namespace SharpChess
         }
 
         /// <summary>
-        ///   Gets Writes.
+        ///   Gets the number of hash table Writes that have occured.
         /// </summary>
         public static int Writes { get; private set; }
 
@@ -132,7 +132,7 @@ namespace SharpChess
         #region Public Methods
 
         /// <summary>
-        /// The clear.
+        /// Clears all entries in the hash table.
         /// </summary>
         public static void Clear()
         {
@@ -148,7 +148,7 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// The initialise.
+        /// Initialises the HashTable.
         /// </summary>
         public static void Initialise()
         {
@@ -158,21 +158,24 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// The probe for best move.
+        /// Search for best move in hash table.
         /// </summary>
+        /// <param name="hashCodeA">
+        /// Hash Code for Board position A
+        /// </param>
+        /// <param name="hashCodeB">
+        /// Hash Code for Board position B
+        /// </param>
         /// <param name="colour">
-        /// The colour.
+        /// The player colour.
         /// </param>
         /// <returns>
         /// Best move, or null.
         /// </returns>
-        public static unsafe Move ProbeForBestMove(Player.enmColour colour)
+        public static unsafe Move ProbeForBestMove(ulong hashCodeA, ulong hashCodeB, Player.enmColour colour)
         {
             fixed (HashEntry* phashBase = &hashTableEntries[0])
             {
-                ulong hashCodeA = Board.HashCodeA;
-                ulong hashCodeB = Board.HashCodeB;
-
                 HashEntry* phashEntry = phashBase;
                 phashEntry += (uint)(hashCodeA % hashTableSize);
 
@@ -237,25 +240,25 @@ namespace SharpChess
         /// Search Hash table for a previously stored score.
         /// </summary>
         /// <param name="hashCodeA">
-        /// The hash code a.
+        /// Hash Code for Board position A
         /// </param>
         /// <param name="hashCodeB">
-        /// The hash code b.
+        /// Hash Code for Board position B
         /// </param>
         /// <param name="depth">
-        /// The depth.
+        /// The search depth.
         /// </param>
         /// <param name="alpha">
-        /// The alpha.
+        /// Apha value.
         /// </param>
         /// <param name="beta">
-        /// The beta.
+        /// Beta value.
         /// </param>
         /// <param name="colour">
-        /// The colour.
+        /// The player colour.
         /// </param>
         /// <returns>
-        /// The score
+        /// The positional score.
         /// </returns>
         public static unsafe int ProbeHash(
             ulong hashCodeA, ulong hashCodeB, int depth, int alpha, int beta, Player.enmColour colour)
@@ -316,34 +319,34 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// The record hash.
+        /// Record a hash new hash entry in the hash table.
         /// </summary>
         /// <param name="hashCodeA">
-        /// The hash code a.
+        /// Hash Code for Board position A
         /// </param>
         /// <param name="hashCodeB">
-        /// The hash code b.
+        /// Hash Code for Board position B
         /// </param>
         /// <param name="depth">
-        /// The depth.
+        /// The search depth.
         /// </param>
         /// <param name="val">
-        /// The val.
+        /// The score of the position to record.
         /// </param>
         /// <param name="type">
-        /// The type.
+        /// The position type: alpha, beta or exact value.
         /// </param>
         /// <param name="from">
-        /// The from.
+        /// From square ordinal.
         /// </param>
         /// <param name="to">
-        /// The to.
+        /// To square ordinal.
         /// </param>
         /// <param name="moveName">
         /// The move name.
         /// </param>
         /// <param name="colour">
-        /// The colour.
+        /// The player colour.
         /// </param>
         public static unsafe void RecordHash(
             ulong hashCodeA, 
@@ -415,7 +418,7 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// The reset stats.
+        /// Reset hash table stats.
         /// </summary>
         public static void ResetStats()
         {
@@ -429,34 +432,34 @@ namespace SharpChess
         #endregion
 
         /// <summary>
-        /// The hash entry.
+        /// The hash table entry.
         /// </summary>
         private struct HashEntry
         {
             #region Constants and Fields
 
             /// <summary>
-            ///   The black from.
+            ///   Black from square ordinal.
             /// </summary>
             public sbyte BlackFrom;
 
             /// <summary>
-            ///   The black move name.
+            ///   Black move name.
             /// </summary>
             public Move.enmName BlackMoveName;
 
             /// <summary>
-            ///   The black to.
+            ///   Black to square ordinal.
             /// </summary>
             public sbyte BlackTo;
 
             /// <summary>
-            ///   The colour.
+            ///   Player colour.
             /// </summary>
             public Player.enmColour Colour;
 
             /// <summary>
-            ///   The depth.
+            ///   Search depth.
             /// </summary>
             public sbyte Depth;
 
@@ -471,27 +474,27 @@ namespace SharpChess
             public ulong HashCodeB;
 
             /// <summary>
-            ///   The result.
+            ///   The result (positional score).
             /// </summary>
             public int Result;
 
             /// <summary>
-            ///   The type.
+            ///   The hash table entry type.
             /// </summary>
             public HashTypeNames Type;
 
             /// <summary>
-            ///   The white from.
+            ///   White from square ordinal.
             /// </summary>
             public sbyte WhiteFrom;
 
             /// <summary>
-            ///   The white move name.
+            ///   White move name.
             /// </summary>
             public Move.enmName WhiteMoveName;
 
             /// <summary>
-            ///   The white to.
+            ///   White to square ordinal.
             /// </summary>
             public sbyte WhiteTo;
 

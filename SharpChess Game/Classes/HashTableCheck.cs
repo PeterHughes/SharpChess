@@ -3,7 +3,7 @@
 //   Peter Hughes
 // </copyright>
 // <summary>
-//   The hash table check.
+//   The hash table (also know as Transposition table) specifically for check positions.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -26,9 +26,9 @@
 namespace SharpChess
 {
     /// <summary>
-    /// The hash table check.
+    /// The hash table (also know as Transposition table) specifically for check positions.
     /// </summary>
-    public class HashTableCheck
+    public static class HashTableCheck
     {
         #region Constants and Fields
 
@@ -47,27 +47,27 @@ namespace SharpChess
         #region Public Properties
 
         /// <summary>
-        /// Gets Collisions.
+        ///   Gets the number of hash table Collisions that have occured.
         /// </summary>
         public static int Collisions { get; private set; }
 
         /// <summary>
-        /// Gets Hits.
+        ///   Gets the number of hash table Hits that have occured.
         /// </summary>
         public static int Hits { get; private set; }
 
         /// <summary>
-        /// Gets Overwrites.
+        ///   Gets the number of hash table Overwrites that have occured.
         /// </summary>
         public static int Overwrites { get; private set; }
 
         /// <summary>
-        /// Gets Probes.
+        ///   Gets the number of hash table Probes that have occured.
         /// </summary>
         public static int Probes { get; private set; }
 
         /// <summary>
-        /// Gets Writes.
+        ///   Gets the number of hash table Writes that have occured.
         /// </summary>
         public static int Writes { get; private set; }
 
@@ -76,7 +76,7 @@ namespace SharpChess
         #region Public Methods
 
         /// <summary>
-        /// The clear.
+        /// Clears all entries in the hash table.
         /// </summary>
         public static void Clear()
         {
@@ -90,7 +90,7 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// The initialise.
+        /// Initialises the HashTable.
         /// </summary>
         public static void Initialise()
         {
@@ -100,21 +100,24 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// Is player in check.
+        /// Checks is the player is in check for the specified position, and caches the result.
         /// </summary>
+        /// <param name="hashCodeA">
+        /// Hash Code for Board position A
+        /// </param>
+        /// <param name="hashCodeB">
+        /// Hash Code for Board position B
+        /// </param>
         /// <param name="player">
         /// The player.
         /// </param>
         /// <returns>
         /// Returns whether the player in check.
         /// </returns>
-        public static unsafe bool IsPlayerInCheck(Player player)
+        public static unsafe bool QueryandCachePlayerInCheckStatusForPosition(ulong hashCodeA, ulong hashCodeB, Player player)
         {
             fixed (HashEntry* phashBase = &hashTableEntries[0])
             {
-                ulong hashCodeA = Board.HashCodeA;
-                ulong hashCodeB = Board.HashCodeB;
-
                 if (player.Colour == Player.enmColour.Black)
                 {
                     hashCodeA |= 0x1;
@@ -155,7 +158,7 @@ namespace SharpChess
         #endregion
 
         /// <summary>
-        /// The hash entry.
+        /// Reset hash table stats.
         /// </summary>
         private struct HashEntry
         {

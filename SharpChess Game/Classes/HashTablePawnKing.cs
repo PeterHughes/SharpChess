@@ -28,51 +28,51 @@ namespace SharpChess
     /// <summary>
     /// The hash table pawn king.
     /// </summary>
-    public class HashTablePawnKing
+    public static class HashTablePawnKing
     {
         #region Constants and Fields
 
         /// <summary>
-        /// The unknown.
+        ///   Indicates that a position was not found in the Hash Table.
         /// </summary>
         public const int NotFoundInHashTable = int.MinValue;
 
         /// <summary>
-        /// The m_ hash table size.
-        /// </summary>
-        private static uint hashTableSize;
-
-        /// <summary>
-        /// The m_arr hash entry.
+        ///   Pointer to the HashTable
         /// </summary>
         private static HashEntry[] hashTableEntries;
+
+        /// <summary>
+        ///   Size of the HashTable.
+        /// </summary>
+        private static uint hashTableSize;
 
         #endregion
 
         #region Public Properties
 
         /// <summary>
-        /// Gets Collisions.
+        ///   Gets the number of hash table Collisions that have occured.
         /// </summary>
         public static int Collisions { get; private set; }
 
         /// <summary>
-        /// Gets Hits.
+        ///   Gets the number of hash table Hits that have occured.
         /// </summary>
         public static int Hits { get; private set; }
 
         /// <summary>
-        /// Gets Overwrites.
+        ///   Gets the number of hash table Overwrites that have occured.
         /// </summary>
         public static int Overwrites { get; private set; }
 
         /// <summary>
-        /// Gets Probes.
+        ///   Gets the number of hash table Probes that have occured.
         /// </summary>
         public static int Probes { get; private set; }
 
         /// <summary>
-        /// Gets SlotsUsed.
+        ///   Gets the number of hash table slots used.
         /// </summary>
         public static int SlotsUsed
         {
@@ -93,7 +93,7 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// Gets Writes.
+        ///   Gets the number of hash table Writes that have occured.
         /// </summary>
         public static int Writes { get; private set; }
 
@@ -102,7 +102,7 @@ namespace SharpChess
         #region Public Methods
 
         /// <summary>
-        /// The clear.
+        /// Clears all entries in the hash table.
         /// </summary>
         public static void Clear()
         {
@@ -116,7 +116,7 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// The initialise.
+        /// Initialises the HashTable.
         /// </summary>
         public static void Initialise()
         {
@@ -126,19 +126,22 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// The probe hash.
+        /// Search pawn and king hash table for a pawn and king specific score for the specific position hash.
         /// </summary>
+        /// <param name="hashCodeA">
+        /// Hash Code for Board position A
+        /// </param>
+        /// <param name="hashCodeB">
+        /// Hash Code for Board position B
+        /// </param>
         /// <param name="colour">
-        /// The colour.
+        /// The player colour.
         /// </param>
         /// <returns>
-        /// The probe hash.
+        /// Pawn and king specific score for the specified position.
         /// </returns>
-        public static unsafe int ProbeHash(Player.enmColour colour)
+        public static unsafe int ProbeHash(ulong hashCodeA, ulong hashCodeB, Player.enmColour colour)
         {
-            ulong hashCodeA = Board.HashCodeA;
-            ulong hashCodeB = Board.HashCodeB;
-
             if (colour == Player.enmColour.Black)
             {
                 hashCodeA |= 0x1;
@@ -168,19 +171,22 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// The record hash.
+        /// Record the pawn and kind specific positional score in the pawn king hash table.
         /// </summary>
+        /// <param name="hashCodeA">
+        /// Hash Code for Board position A
+        /// </param>
+        /// <param name="hashCodeB">
+        /// Hash Code for Board position B
+        /// </param>
         /// <param name="val">
-        /// The val.
+        /// Pawn king specific score.
         /// </param>
         /// <param name="colour">
-        /// The colour.
+        /// Player colour.
         /// </param>
-        public static unsafe void RecordHash(int val, Player.enmColour colour)
+        public static unsafe void RecordHash(ulong hashCodeA, ulong hashCodeB, int val, Player.enmColour colour)
         {
-            ulong hashCodeA = Board.HashCodeA;
-            ulong hashCodeB = Board.HashCodeB;
-
             if (colour == Player.enmColour.Black)
             {
                 hashCodeA |= 0x1;
@@ -205,7 +211,7 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// The reset stats.
+        /// Reset all hash table stats.
         /// </summary>
         public static void ResetStats()
         {
@@ -219,24 +225,24 @@ namespace SharpChess
         #endregion
 
         /// <summary>
-        /// The hash entry.
+        /// Hash Table entry data structure.
         /// </summary>
         private struct HashEntry
         {
             #region Constants and Fields
 
             /// <summary>
-            /// The hash code a.
+            ///   Pawn king Position Hash code A.
             /// </summary>
             public ulong HashCodeA;
 
             /// <summary>
-            /// The hash code b.
+            ///   Pawn king Position Hash code A.
             /// </summary>
             public ulong HashCodeB;
 
             /// <summary>
-            /// The points.
+            ///   Pawn King positional score.
             /// </summary>
             public int Points;
 

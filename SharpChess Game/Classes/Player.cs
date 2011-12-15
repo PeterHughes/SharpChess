@@ -493,7 +493,7 @@ namespace SharpChess
         {
             get
             {
-                return HashTableCheck.IsPlayerInCheck(this);
+                return HashTableCheck.QueryandCachePlayerInCheckStatusForPosition(Board.HashCodeA, Board.HashCodeB, this);
             }
         }
 
@@ -633,7 +633,7 @@ namespace SharpChess
                 int intPoints;
                 int intIndex;
 
-                if ((intPoints = HashTablePawnKing.ProbeHash(this.Colour)) == HashTablePawnKing.NotFoundInHashTable)
+                if ((intPoints = HashTablePawnKing.ProbeHash(Board.HashCodeA, Board.HashCodeB, this.Colour)) == HashTablePawnKing.NotFoundInHashTable)
                 {
                     Piece piece;
                     intPoints = 0;
@@ -649,7 +649,7 @@ namespace SharpChess
                         }
                     }
 
-                    HashTablePawnKing.RecordHash(intPoints, this.Colour);
+                    HashTablePawnKing.RecordHash(Board.HashCodeA, Board.HashCodeB, intPoints, this.Colour);
                 }
 
                 return intPoints;
@@ -1826,9 +1826,9 @@ namespace SharpChess
                 }
 
                 movesPV_Parent.Clear();
-                if (HashTable.ProbeForBestMove(player.Colour) != null)
+                if (HashTable.ProbeForBestMove(Board.HashCodeA, Board.HashCodeB, player.Colour) != null)
                 {
-                    movesPV_Parent.Add(HashTable.ProbeForBestMove(player.Colour));
+                    movesPV_Parent.Add(HashTable.ProbeForBestMove(Board.HashCodeA, Board.HashCodeB, player.Colour));
                 }
 
                 return val;
@@ -1893,7 +1893,7 @@ namespace SharpChess
             }
 
             // Get last iteration's best move from the Transition Table
-            moveHash = HashTable.ProbeForBestMove(player.Colour);
+            moveHash = HashTable.ProbeForBestMove(Board.HashCodeA, Board.HashCodeB, player.Colour);
 
             // Get Killers
             Move moveKillerA = KillerMoves.RetrieveA(ply);
