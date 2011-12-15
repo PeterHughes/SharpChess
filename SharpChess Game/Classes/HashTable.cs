@@ -28,54 +28,29 @@ namespace SharpChess
     /// <summary>
     /// The hash table.
     /// </summary>
-    public class HashTable
+    public static class HashTable
     {
         #region Constants and Fields
 
         /// <summary>
-        /// The has h_ tabl e_ slo t_ depth.
+        ///   The unknown.
         /// </summary>
-        public const int HASH_TABLE_SLOT_DEPTH = 3;
+        public const int NotFoundInHashTable = int.MinValue;
 
         /// <summary>
-        /// The unknown.
+        ///   The has h_ tabl e_ slo t_ depth.
         /// </summary>
-        public const int UNKNOWN = int.MinValue;
+        private const int HashTableSlotDepth = 3;
 
         /// <summary>
-        /// The m_ hash table size.
+        ///   The m_arr hash entry.
         /// </summary>
-        public static uint m_HashTableSize;
+        private static HashEntry[] hashTableEntries;
 
         /// <summary>
-        /// The m_arr hash entry.
+        ///   The m_ hash table size.
         /// </summary>
-        private static HashEntry[] m_arrHashEntry;
-
-        /// <summary>
-        /// The m_int collisions.
-        /// </summary>
-        private static int m_intCollisions;
-
-        /// <summary>
-        /// The m_int hits.
-        /// </summary>
-        private static int m_intHits;
-
-        /// <summary>
-        /// The m_int overwrites.
-        /// </summary>
-        private static int m_intOverwrites;
-
-        /// <summary>
-        /// The m_int probes.
-        /// </summary>
-        private static int m_intProbes;
-
-        /// <summary>
-        /// The m_int writes.
-        /// </summary>
-        private static int m_intWrites;
+        private static uint hashTableSize;
 
         #endregion
 
@@ -84,20 +59,20 @@ namespace SharpChess
         /// <summary>
         /// The enm hash type.
         /// </summary>
-        public enum enmHashType
+        public enum HashTypeNames
         {
             /// <summary>
-            /// The exact.
+            ///   The exact.
             /// </summary>
             Exact, 
 
             /// <summary>
-            /// The alpha.
+            ///   The alpha.
             /// </summary>
             Alpha, 
 
             /// <summary>
-            /// The beta.
+            ///   The beta.
             /// </summary>
             Beta
         }
@@ -107,51 +82,27 @@ namespace SharpChess
         #region Public Properties
 
         /// <summary>
-        /// Gets Collisions.
+        ///   Gets Collisions.
         /// </summary>
-        public static int Collisions
-        {
-            get
-            {
-                return m_intCollisions;
-            }
-        }
+        public static int Collisions { get; private set; }
 
         /// <summary>
-        /// Gets Hits.
+        ///   Gets Hits.
         /// </summary>
-        public static int Hits
-        {
-            get
-            {
-                return m_intHits;
-            }
-        }
+        public static int Hits { get; private set; }
 
         /// <summary>
-        /// Gets Overwrites.
+        ///   Gets Overwrites.
         /// </summary>
-        public static int Overwrites
-        {
-            get
-            {
-                return m_intOverwrites;
-            }
-        }
+        public static int Overwrites { get; private set; }
 
         /// <summary>
-        /// Gets Probes.
+        ///   Gets Probes.
         /// </summary>
-        public static int Probes
-        {
-            get
-            {
-                return m_intProbes;
-            }
-        }
+        public static int Probes { get; private set; }
 
         /// <summary>
-        /// Gets SlotsUsed.
+        ///   Gets SlotsUsed.
         /// </summary>
         public static int SlotsUsed
         {
@@ -159,9 +110,9 @@ namespace SharpChess
             {
                 int intCounter = 0;
 
-                for (uint intIndex = 0; intIndex < m_HashTableSize; intIndex++)
+                for (uint intIndex = 0; intIndex < hashTableSize; intIndex++)
                 {
-                    if (m_arrHashEntry[intIndex].HashCodeA != 0)
+                    if (hashTableEntries[intIndex].HashCodeA != 0)
                     {
                         intCounter++;
                     }
@@ -172,15 +123,9 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// Gets Writes.
+        ///   Gets Writes.
         /// </summary>
-        public static int Writes
-        {
-            get
-            {
-                return m_intWrites;
-            }
-        }
+        public static int Writes { get; private set; }
 
         #endregion
 
@@ -192,13 +137,13 @@ namespace SharpChess
         public static void Clear()
         {
             ResetStats();
-            for (uint intIndex = 0; intIndex < m_HashTableSize; intIndex++)
+            for (uint intIndex = 0; intIndex < hashTableSize; intIndex++)
             {
-                m_arrHashEntry[intIndex].HashCodeA = 0;
-                m_arrHashEntry[intIndex].HashCodeB = 0;
-                m_arrHashEntry[intIndex].Depth = sbyte.MinValue;
-                m_arrHashEntry[intIndex].WhiteFrom = -1;
-                m_arrHashEntry[intIndex].BlackFrom = -1;
+                hashTableEntries[intIndex].HashCodeA = 0;
+                hashTableEntries[intIndex].HashCodeB = 0;
+                hashTableEntries[intIndex].Depth = sbyte.MinValue;
+                hashTableEntries[intIndex].WhiteFrom = -1;
+                hashTableEntries[intIndex].BlackFrom = -1;
             }
         }
 
@@ -207,8 +152,8 @@ namespace SharpChess
         /// </summary>
         public static void Initialise()
         {
-            m_HashTableSize = Game.AvailableMegaBytes * 8000;
-            m_arrHashEntry = new HashEntry[m_HashTableSize];
+            hashTableSize = Game.AvailableMegaBytes * 8000;
+            hashTableEntries = new HashEntry[hashTableSize];
             Clear();
         }
 
@@ -219,23 +164,25 @@ namespace SharpChess
         /// The colour.
         /// </param>
         /// <returns>
+        /// Best move, or null.
         /// </returns>
         public static unsafe Move ProbeForBestMove(Player.enmColour colour)
         {
-            fixed (HashEntry* phashBase = &m_arrHashEntry[0])
+            fixed (HashEntry* phashBase = &hashTableEntries[0])
             {
-                ulong HashCodeA = Board.HashCodeA;
-                ulong HashCodeB = Board.HashCodeB;
+                ulong hashCodeA = Board.HashCodeA;
+                ulong hashCodeB = Board.HashCodeB;
 
                 HashEntry* phashEntry = phashBase;
-                phashEntry += (uint)(HashCodeA % m_HashTableSize);
+                phashEntry += (uint)(hashCodeA % hashTableSize);
 
                 int intAttempt = 0;
-                while (phashEntry >= phashBase && (phashEntry->HashCodeA != HashCodeA || phashEntry->HashCodeB != HashCodeB))
+                while (phashEntry >= phashBase
+                       && (phashEntry->HashCodeA != hashCodeA || phashEntry->HashCodeB != hashCodeB))
                 {
                     phashEntry--;
                     intAttempt++;
-                    if (intAttempt == HASH_TABLE_SLOT_DEPTH)
+                    if (intAttempt == HashTableSlotDepth)
                     {
                         break;
                     }
@@ -246,20 +193,38 @@ namespace SharpChess
                     phashEntry = phashBase;
                 }
 
-                if (phashEntry->HashCodeA == HashCodeA && phashEntry->HashCodeB == HashCodeB)
+                if (phashEntry->HashCodeA == hashCodeA && phashEntry->HashCodeB == hashCodeB)
                 {
                     if (colour == Player.enmColour.White)
                     {
                         if (phashEntry->WhiteFrom >= 0)
                         {
-                            return new Move(0, 0, phashEntry->WhiteMoveName, Board.GetPiece(phashEntry->WhiteFrom), Board.GetSquare(phashEntry->WhiteFrom), Board.GetSquare(phashEntry->WhiteTo), Board.GetSquare(phashEntry->WhiteTo).Piece, 0, phashEntry->Result);
+                            return new Move(
+                                0, 
+                                0, 
+                                phashEntry->WhiteMoveName, 
+                                Board.GetPiece(phashEntry->WhiteFrom), 
+                                Board.GetSquare(phashEntry->WhiteFrom), 
+                                Board.GetSquare(phashEntry->WhiteTo), 
+                                Board.GetSquare(phashEntry->WhiteTo).Piece, 
+                                0, 
+                                phashEntry->Result);
                         }
                     }
                     else
                     {
                         if (phashEntry->BlackFrom >= 0)
                         {
-                            return new Move(0, 0, phashEntry->BlackMoveName, Board.GetPiece(phashEntry->BlackFrom), Board.GetSquare(phashEntry->BlackFrom), Board.GetSquare(phashEntry->BlackTo), Board.GetSquare(phashEntry->BlackTo).Piece, 0, phashEntry->Result);
+                            return new Move(
+                                0, 
+                                0, 
+                                phashEntry->BlackMoveName, 
+                                Board.GetPiece(phashEntry->BlackFrom), 
+                                Board.GetSquare(phashEntry->BlackFrom), 
+                                Board.GetSquare(phashEntry->BlackTo), 
+                                Board.GetSquare(phashEntry->BlackTo).Piece, 
+                                0, 
+                                phashEntry->Result);
                         }
                     }
                 }
@@ -269,12 +234,12 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// The probe hash.
+        /// Search Hash table for a previously stored score.
         /// </summary>
-        /// <param name="HashCodeA">
+        /// <param name="hashCodeA">
         /// The hash code a.
         /// </param>
-        /// <param name="HashCodeB">
+        /// <param name="hashCodeB">
         /// The hash code b.
         /// </param>
         /// <param name="depth">
@@ -290,23 +255,27 @@ namespace SharpChess
         /// The colour.
         /// </param>
         /// <returns>
-        /// The probe hash.
+        /// The score
         /// </returns>
-        public static unsafe int ProbeHash(ulong HashCodeA, ulong HashCodeB, int depth, int alpha, int beta, Player.enmColour colour)
+        public static unsafe int ProbeHash(
+            ulong hashCodeA, ulong hashCodeB, int depth, int alpha, int beta, Player.enmColour colour)
         {
-            m_intProbes++;
+            Probes++;
 
-            fixed (HashEntry* phashBase = &m_arrHashEntry[0])
+            fixed (HashEntry* phashBase = &hashTableEntries[0])
             {
                 HashEntry* phashEntry = phashBase;
-                phashEntry += (uint)(HashCodeA % m_HashTableSize);
+                phashEntry += (uint)(hashCodeA % hashTableSize);
 
                 int intAttempt = 0;
-                while (phashEntry >= phashBase && (phashEntry->HashCodeA != HashCodeA || phashEntry->HashCodeB != HashCodeB || phashEntry->Depth < depth))
+                while (phashEntry >= phashBase
+                       &&
+                       (phashEntry->HashCodeA != hashCodeA || phashEntry->HashCodeB != hashCodeB
+                        || phashEntry->Depth < depth))
                 {
                     phashEntry--;
                     intAttempt++;
-                    if (intAttempt == HASH_TABLE_SLOT_DEPTH)
+                    if (intAttempt == HashTableSlotDepth)
                     {
                         break;
                     }
@@ -317,41 +286,42 @@ namespace SharpChess
                     phashEntry = phashBase;
                 }
 
-                if (phashEntry->HashCodeA == HashCodeA && phashEntry->HashCodeB == HashCodeB && phashEntry->Depth >= depth)
+                if (phashEntry->HashCodeA == hashCodeA && phashEntry->HashCodeB == hashCodeB
+                    && phashEntry->Depth >= depth)
                 {
                     if (phashEntry->Colour == colour)
                     {
-                        if (phashEntry->Type == enmHashType.Exact)
+                        if (phashEntry->Type == HashTypeNames.Exact)
                         {
-                            m_intHits++;
+                            Hits++;
                             return phashEntry->Result;
                         }
 
-                        if ((phashEntry->Type == enmHashType.Alpha) && (phashEntry->Result <= alpha))
+                        if ((phashEntry->Type == HashTypeNames.Alpha) && (phashEntry->Result <= alpha))
                         {
-                            m_intHits++;
+                            Hits++;
                             return alpha;
                         }
 
-                        if ((phashEntry->Type == enmHashType.Beta) && (phashEntry->Result >= beta))
+                        if ((phashEntry->Type == HashTypeNames.Beta) && (phashEntry->Result >= beta))
                         {
-                            m_intHits++;
+                            Hits++;
                             return beta;
                         }
                     }
                 }
             }
 
-            return UNKNOWN;
+            return NotFoundInHashTable;
         }
 
         /// <summary>
         /// The record hash.
         /// </summary>
-        /// <param name="HashCodeA">
+        /// <param name="hashCodeA">
         /// The hash code a.
         /// </param>
-        /// <param name="HashCodeB">
+        /// <param name="hashCodeB">
         /// The hash code b.
         /// </param>
         /// <param name="depth">
@@ -363,34 +333,42 @@ namespace SharpChess
         /// <param name="type">
         /// The type.
         /// </param>
-        /// <param name="From">
+        /// <param name="from">
         /// The from.
         /// </param>
-        /// <param name="To">
+        /// <param name="to">
         /// The to.
         /// </param>
-        /// <param name="MoveName">
+        /// <param name="moveName">
         /// The move name.
         /// </param>
         /// <param name="colour">
         /// The colour.
         /// </param>
-        public static unsafe void RecordHash(ulong HashCodeA, ulong HashCodeB, int depth, int val, enmHashType type, int From, int To, Move.enmName MoveName, Player.enmColour colour)
+        public static unsafe void RecordHash(
+            ulong hashCodeA, 
+            ulong hashCodeB, 
+            int depth, 
+            int val, 
+            HashTypeNames type, 
+            int from, 
+            int to, 
+            Move.enmName moveName, 
+            Player.enmColour colour)
         {
-            m_intWrites++;
-            fixed (HashEntry* phashBase = &m_arrHashEntry[0])
+            Writes++;
+            fixed (HashEntry* phashBase = &hashTableEntries[0])
             {
-                int intAttempt;
                 HashEntry* phashEntry = phashBase;
-                phashEntry += (uint)(HashCodeA % m_HashTableSize);
+                phashEntry += (uint)(hashCodeA % hashTableSize);
                 HashEntry* phashFirst = phashEntry;
 
-                intAttempt = 0;
+                int intAttempt = 0;
                 while (phashEntry >= phashBase && phashEntry->HashCodeA != 0 && phashEntry->Depth > depth)
                 {
                     phashEntry--;
                     intAttempt++;
-                    if (intAttempt == HASH_TABLE_SLOT_DEPTH)
+                    if (intAttempt == HashTableSlotDepth)
                     {
                         break;
                     }
@@ -403,34 +381,34 @@ namespace SharpChess
 
                 if (phashEntry->HashCodeA != 0)
                 {
-                    m_intCollisions++;
-                    if (phashEntry->HashCodeA != HashCodeA || phashEntry->HashCodeB != HashCodeB)
+                    Collisions++;
+                    if (phashEntry->HashCodeA != hashCodeA || phashEntry->HashCodeB != hashCodeB)
                     {
-                        m_intOverwrites++;
+                        Overwrites++;
                         phashEntry->WhiteFrom = -1;
                         phashEntry->BlackFrom = -1;
                     }
                 }
 
-                phashEntry->HashCodeA = HashCodeA;
-                phashEntry->HashCodeB = HashCodeB;
+                phashEntry->HashCodeA = hashCodeA;
+                phashEntry->HashCodeB = hashCodeB;
                 phashEntry->Result = val;
                 phashEntry->Type = type;
                 phashEntry->Depth = (sbyte)depth;
                 phashEntry->Colour = colour;
-                if (From > -1)
+                if (from > -1)
                 {
                     if (colour == Player.enmColour.White)
                     {
-                        phashEntry->WhiteMoveName = MoveName;
-                        phashEntry->WhiteFrom = (sbyte)From;
-                        phashEntry->WhiteTo = (sbyte)To;
+                        phashEntry->WhiteMoveName = moveName;
+                        phashEntry->WhiteFrom = (sbyte)from;
+                        phashEntry->WhiteTo = (sbyte)to;
                     }
                     else
                     {
-                        phashEntry->BlackMoveName = MoveName;
-                        phashEntry->BlackFrom = (sbyte)From;
-                        phashEntry->BlackTo = (sbyte)To;
+                        phashEntry->BlackMoveName = moveName;
+                        phashEntry->BlackFrom = (sbyte)from;
+                        phashEntry->BlackTo = (sbyte)to;
                     }
                 }
             }
@@ -441,11 +419,11 @@ namespace SharpChess
         /// </summary>
         public static void ResetStats()
         {
-            m_intProbes = 0;
-            m_intHits = 0;
-            m_intWrites = 0;
-            m_intCollisions = 0;
-            m_intOverwrites = 0;
+            Probes = 0;
+            Hits = 0;
+            Writes = 0;
+            Collisions = 0;
+            Overwrites = 0;
         }
 
         #endregion
@@ -458,62 +436,62 @@ namespace SharpChess
             #region Constants and Fields
 
             /// <summary>
-            /// The black from.
+            ///   The black from.
             /// </summary>
             public sbyte BlackFrom;
 
             /// <summary>
-            /// The black move name.
+            ///   The black move name.
             /// </summary>
             public Move.enmName BlackMoveName;
 
             /// <summary>
-            /// The black to.
+            ///   The black to.
             /// </summary>
             public sbyte BlackTo;
 
             /// <summary>
-            /// The colour.
+            ///   The colour.
             /// </summary>
             public Player.enmColour Colour;
 
             /// <summary>
-            /// The depth.
+            ///   The depth.
             /// </summary>
             public sbyte Depth;
 
             /// <summary>
-            /// The hash code a.
+            ///   The hash code a.
             /// </summary>
             public ulong HashCodeA;
 
             /// <summary>
-            /// The hash code b.
+            ///   The hash code b.
             /// </summary>
             public ulong HashCodeB;
 
             /// <summary>
-            /// The result.
+            ///   The result.
             /// </summary>
             public int Result;
 
             /// <summary>
-            /// The type.
+            ///   The type.
             /// </summary>
-            public enmHashType Type;
+            public HashTypeNames Type;
 
             /// <summary>
-            /// The white from.
+            ///   The white from.
             /// </summary>
             public sbyte WhiteFrom;
 
             /// <summary>
-            /// The white move name.
+            ///   The white move name.
             /// </summary>
             public Move.enmName WhiteMoveName;
 
             /// <summary>
-            /// The white to.
+            ///   The white to.
             /// </summary>
             public sbyte WhiteTo;
 

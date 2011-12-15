@@ -1790,7 +1790,7 @@ namespace SharpChess
             int intTotalExtensions)
         {
             int val = int.MinValue;
-            HashTable.enmHashType hashType = HashTable.enmHashType.Alpha;
+            HashTable.HashTypeNames hashType = HashTable.HashTypeNames.Alpha;
             Move moveHash = null;
             Move moveBest = null;
             bool blnPVNode = false;
@@ -1814,7 +1814,7 @@ namespace SharpChess
             }
 
             if ((val = HashTable.ProbeHash(Board.HashCodeA, Board.HashCodeB, ply, alpha, beta, player.Colour))
-                != HashTable.UNKNOWN)
+                != HashTable.NotFoundInHashTable)
             {
                 // High values of "val" indicate that a checkmate has been found
                 if (val > 1000000 || val < -1000000)
@@ -2125,7 +2125,7 @@ namespace SharpChess
                 {
                     alpha = beta;
                     moveThis.Beta = beta;
-                    hashType = HashTable.enmHashType.Beta;
+                    hashType = HashTable.HashTypeNames.Beta;
                     moveBest = moveThis;
 
                     // if (move.Score < 15000)
@@ -2149,7 +2149,7 @@ namespace SharpChess
                 {
                     blnPVNode = true; /* This is a PV node */
                     alpha = val;
-                    hashType = HashTable.enmHashType.Exact;
+                    hashType = HashTable.HashTypeNames.Exact;
                     moveBest = moveThis;
 
                     // Collect the Prinicial Variation
