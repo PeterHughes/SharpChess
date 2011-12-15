@@ -35,37 +35,12 @@ namespace SharpChess
         /// <summary>
         /// The m_ hash table size.
         /// </summary>
-        public static uint m_HashTableSize;
+        private static uint hashTableSize;
 
         /// <summary>
         /// The m_arr hash entry.
         /// </summary>
-        private static HashEntry[] m_arrHashEntry;
-
-        /// <summary>
-        /// The m_int collisions.
-        /// </summary>
-        private static int m_intCollisions;
-
-        /// <summary>
-        /// The m_int hits.
-        /// </summary>
-        private static int m_intHits;
-
-        /// <summary>
-        /// The m_int overwrites.
-        /// </summary>
-        private static int m_intOverwrites;
-
-        /// <summary>
-        /// The m_int probes.
-        /// </summary>
-        private static int m_intProbes;
-
-        /// <summary>
-        /// The m_int writes.
-        /// </summary>
-        private static int m_intWrites;
+        private static HashEntry[] hashTableEntries;
 
         #endregion
 
@@ -74,57 +49,27 @@ namespace SharpChess
         /// <summary>
         /// Gets Collisions.
         /// </summary>
-        public static int Collisions
-        {
-            get
-            {
-                return m_intCollisions;
-            }
-        }
+        public static int Collisions { get; private set; }
 
         /// <summary>
         /// Gets Hits.
         /// </summary>
-        public static int Hits
-        {
-            get
-            {
-                return m_intHits;
-            }
-        }
+        public static int Hits { get; private set; }
 
         /// <summary>
         /// Gets Overwrites.
         /// </summary>
-        public static int Overwrites
-        {
-            get
-            {
-                return m_intOverwrites;
-            }
-        }
+        public static int Overwrites { get; private set; }
 
         /// <summary>
         /// Gets Probes.
         /// </summary>
-        public static int Probes
-        {
-            get
-            {
-                return m_intProbes;
-            }
-        }
+        public static int Probes { get; private set; }
 
         /// <summary>
         /// Gets Writes.
         /// </summary>
-        public static int Writes
-        {
-            get
-            {
-                return m_intWrites;
-            }
-        }
+        public static int Writes { get; private set; }
 
         #endregion
 
@@ -136,11 +81,11 @@ namespace SharpChess
         public static void Clear()
         {
             ResetStats();
-            for (uint intIndex = 0; intIndex < m_HashTableSize; intIndex++)
+            for (uint intIndex = 0; intIndex < hashTableSize; intIndex++)
             {
-                m_arrHashEntry[intIndex].HashCodeA = 0;
-                m_arrHashEntry[intIndex].HashCodeB = 0;
-                m_arrHashEntry[intIndex].IsInCheck = false;
+                hashTableEntries[intIndex].HashCodeA = 0;
+                hashTableEntries[intIndex].HashCodeB = 0;
+                hashTableEntries[intIndex].IsInCheck = false;
             }
         }
 
@@ -149,45 +94,45 @@ namespace SharpChess
         /// </summary>
         public static void Initialise()
         {
-            m_HashTableSize = Game.AvailableMegaBytes * 4000;
-            m_arrHashEntry = new HashEntry[m_HashTableSize];
+            hashTableSize = Game.AvailableMegaBytes * 4000;
+            hashTableEntries = new HashEntry[hashTableSize];
             Clear();
         }
 
         /// <summary>
-        /// The is player in check.
+        /// Is player in check.
         /// </summary>
         /// <param name="player">
         /// The player.
         /// </param>
         /// <returns>
-        /// The is player in check.
+        /// Returns whether the player in check.
         /// </returns>
         public static unsafe bool IsPlayerInCheck(Player player)
         {
-            fixed (HashEntry* phashBase = &m_arrHashEntry[0])
+            fixed (HashEntry* phashBase = &hashTableEntries[0])
             {
-                ulong HashCodeA = Board.HashCodeA;
-                ulong HashCodeB = Board.HashCodeB;
+                ulong hashCodeA = Board.HashCodeA;
+                ulong hashCodeB = Board.HashCodeB;
 
                 if (player.Colour == Player.enmColour.Black)
                 {
-                    HashCodeA |= 0x1;
-                    HashCodeB |= 0x1;
+                    hashCodeA |= 0x1;
+                    hashCodeB |= 0x1;
                 }
                 else
                 {
-                    HashCodeA &= 0xFFFFFFFFFFFFFFFE;
-                    HashCodeB &= 0xFFFFFFFFFFFFFFFE;
+                    hashCodeA &= 0xFFFFFFFFFFFFFFFE;
+                    hashCodeB &= 0xFFFFFFFFFFFFFFFE;
                 }
 
                 HashEntry* phashEntry = phashBase;
-                phashEntry += (uint)(HashCodeA % m_HashTableSize);
+                phashEntry += (uint)(hashCodeA % hashTableSize);
 
-                if (phashEntry->HashCodeA != HashCodeA || phashEntry->HashCodeB != HashCodeB)
+                if (phashEntry->HashCodeA != hashCodeA || phashEntry->HashCodeB != hashCodeB)
                 {
-                    phashEntry->HashCodeA = HashCodeA;
-                    phashEntry->HashCodeB = HashCodeB;
+                    phashEntry->HashCodeA = hashCodeA;
+                    phashEntry->HashCodeB = hashCodeB;
                     phashEntry->IsInCheck = player.DetermineCheckStatus();
                 }
 
@@ -200,11 +145,11 @@ namespace SharpChess
         /// </summary>
         public static void ResetStats()
         {
-            m_intProbes = 0;
-            m_intHits = 0;
-            m_intWrites = 0;
-            m_intCollisions = 0;
-            m_intOverwrites = 0;
+            Probes = 0;
+            Hits = 0;
+            Writes = 0;
+            Collisions = 0;
+            Overwrites = 0;
         }
 
         #endregion

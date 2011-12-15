@@ -633,7 +633,7 @@ namespace SharpChess
                 int intPoints;
                 int intIndex;
 
-                if ((intPoints = HashTablePawnKing.ProbeHash(this.Colour)) == HashTablePawnKing.UNKNOWN)
+                if ((intPoints = HashTablePawnKing.ProbeHash(this.Colour)) == HashTablePawnKing.NotFoundInHashTable)
                 {
                     Piece piece;
                     intPoints = 0;
