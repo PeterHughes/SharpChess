@@ -3,7 +3,7 @@
 //   Peter Hughes
 // </copyright>
 // <summary>
-//   The opening book.
+//   Competition standard opening book when the best possible move is always selected for the current board position.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -33,7 +33,7 @@ namespace SharpChess
     #endregion
 
     /// <summary>
-    /// The opening book.
+    /// Competition standard opening book when the best possible move is always selected for the current board position.
     /// </summary>
     public class OpeningBook
     {
@@ -42,37 +42,17 @@ namespace SharpChess
         /// <summary>
         /// The has h_ tabl e_ size.
         /// </summary>
-        public const int HASH_TABLE_SIZE = 1000777;
+        public const int HashTableSize = 1000777;
 
         /// <summary>
         /// The unknown.
         /// </summary>
-        public const Move UNKNOWN = null;
+        public const Move NotFoundInHashTable = null;
 
         /// <summary>
-        /// The m_arr hash entry.
+        ///   Pointer to the HashTable
         /// </summary>
-        private static readonly HashEntry[] m_arrHashEntry = new HashEntry[HASH_TABLE_SIZE];
-
-        /// <summary>
-        /// The collisions.
-        /// </summary>
-        private static int Collisions;
-
-        /// <summary>
-        /// The entries.
-        /// </summary>
-        private static int Entries;
-
-        /// <summary>
-        /// The hits.
-        /// </summary>
-        private static int Hits;
-
-        /// <summary>
-        /// The probes.
-        /// </summary>
-        private static int Probes;
+        private static readonly HashEntry[] HashTableEntries = new HashEntry[HashTableSize];
 
         #endregion
 
@@ -91,12 +71,12 @@ namespace SharpChess
         #region Public Methods
 
         /// <summary>
-        /// The book convert.
+        /// Load an opening book into memory.
         /// </summary>
         /// <param name="player">
-        /// The player.
+        /// The player to play.
         /// </param>
-        public static void BookConvert(Player player)
+        public static void LoadOpeningBook(Player player)
         {
             XmlDocument xmldoc = new XmlDocument();
 
@@ -112,49 +92,38 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// The clear.
+        /// Clear opening book (hash table)
         /// </summary>
         public static void Clear()
         {
-            ResetStats();
-            for (uint intIndex = 0; intIndex < HASH_TABLE_SIZE; intIndex++)
+            for (uint intIndex = 0; intIndex < HashTableSize; intIndex++)
             {
-                m_arrHashEntry[intIndex].HashCodeA = 0;
-                m_arrHashEntry[intIndex].HashCodeB = 0;
-                m_arrHashEntry[intIndex].From = 0xff;
-                m_arrHashEntry[intIndex].To = 0xff;
-                m_arrHashEntry[intIndex].MoveName = Move.MoveNames.NullMove;
+                HashTableEntries[intIndex].HashCodeA = 0;
+                HashTableEntries[intIndex].HashCodeB = 0;
+                HashTableEntries[intIndex].From = 0xff;
+                HashTableEntries[intIndex].To = 0xff;
+                HashTableEntries[intIndex].MoveName = Move.MoveNames.NullMove;
             }
         }
 
         /// <summary>
-        /// The reset stats.
+        /// The search for best move in opening book.
         /// </summary>
-        public static void ResetStats()
-        {
-            Entries = 0;
-            Collisions = 0;
-            Probes = 0;
-            Hits = 0;
-        }
-
-        /// <summary>
-        /// The search for good move.
-        /// </summary>
-        /// <param name="BoardHashCodeA">
+        /// <param name="boardHashCodeA">
         /// The board hash code a.
         /// </param>
-        /// <param name="BoardHashCodeB">
+        /// <param name="boardHashCodeB">
         /// The board hash code b.
         /// </param>
         /// <param name="colour">
         /// The colour.
         /// </param>
         /// <returns>
+        /// The best move from the opening book.
         /// </returns>
-        public static Move SearchForGoodMove(ulong BoardHashCodeA, ulong BoardHashCodeB, Player.enmColour colour)
+        public static Move SearchForGoodMove(ulong boardHashCodeA, ulong boardHashCodeB, Player.enmColour colour)
         {
-            return ProbeForBestMove(BoardHashCodeA, BoardHashCodeB, colour);
+            return ProbeForBestMove(boardHashCodeA, boardHashCodeB, colour);
         }
 
         #endregion
@@ -162,104 +131,96 @@ namespace SharpChess
         #region Methods
 
         /// <summary>
-        /// The probe for best move.
+        /// The probe opening book (hash table) for best move for the specied board position (hash code).
         /// </summary>
-        /// <param name="HashCodeA">
-        /// The hash code a.
+        /// <param name="hashCodeA">
+        /// The hash code for board position A.
         /// </param>
-        /// <param name="HashCodeB">
-        /// The hash code b.
+        /// <param name="hashCodeB">
+        /// The hash code for board position B.
         /// </param>
         /// <param name="colour">
-        /// The colour.
+        /// The player colour.
         /// </param>
         /// <returns>
+        /// The best move in the opening book (hash table) or null if there is no opening book entry for the specified board position.
         /// </returns>
-        private static unsafe Move ProbeForBestMove(ulong HashCodeA, ulong HashCodeB, Player.enmColour colour)
+        private static unsafe Move ProbeForBestMove(ulong hashCodeA, ulong hashCodeB, Player.enmColour colour)
         {
             if (colour == Player.enmColour.Black)
             {
-                HashCodeA |= 0x1;
-                HashCodeB |= 0x1;
+                hashCodeA |= 0x1;
+                hashCodeB |= 0x1;
             }
             else
             {
-                HashCodeA &= 0xFFFFFFFFFFFFFFFE;
-                HashCodeB &= 0xFFFFFFFFFFFFFFFE;
+                hashCodeA &= 0xFFFFFFFFFFFFFFFE;
+                hashCodeB &= 0xFFFFFFFFFFFFFFFE;
             }
 
-            Probes++;
-
-            fixed (HashEntry* phashBase = &m_arrHashEntry[0])
+            fixed (HashEntry* phashBase = &HashTableEntries[0])
             {
                 HashEntry* phashEntry = phashBase;
-                phashEntry += (uint)(HashCodeA % HASH_TABLE_SIZE);
+                phashEntry += (uint)(hashCodeA % HashTableSize);
 
-                if (phashEntry->HashCodeA == HashCodeA && phashEntry->HashCodeB == HashCodeB)
+                if (phashEntry->HashCodeA == hashCodeA && phashEntry->HashCodeB == hashCodeB)
                 {
-                    Hits++;
                     return new Move(0, 0, phashEntry->MoveName, Board.GetPiece(phashEntry->From), Board.GetSquare(phashEntry->From), Board.GetSquare(phashEntry->To), null, 0, 0);
                 }
             }
 
-            return UNKNOWN;
+            return NotFoundInHashTable;
         }
 
         /// <summary>
-        /// The record hash.
+        /// Record a hash new hash entry in the hash table.
         /// </summary>
-        /// <param name="HashCodeA">
-        /// The hash code a.
+        /// <param name="hashCodeA">
+        /// Hash Code for Board position A
         /// </param>
-        /// <param name="HashCodeB">
-        /// The hash code b.
+        /// <param name="hashCodeB">
+        /// Hash Code for Board position B
         /// </param>
-        /// <param name="From">
-        /// The from.
+        /// <param name="from">
+        /// From square ordinal.
         /// </param>
-        /// <param name="To">
-        /// The to.
+        /// <param name="to">
+        /// To square ordinal.
         /// </param>
-        /// <param name="MoveName">
+        /// <param name="moveName">
         /// The move name.
         /// </param>
         /// <param name="colour">
-        /// The colour.
+        /// The player colour.
         /// </param>
-        private static unsafe void RecordHash(ulong HashCodeA, ulong HashCodeB, byte From, byte To, Move.MoveNames MoveName, Player.enmColour colour)
+        private static unsafe void RecordHash(ulong hashCodeA, ulong hashCodeB, byte from, byte to, Move.MoveNames moveName, Player.enmColour colour)
         {
             if (colour == Player.enmColour.Black)
             {
-                HashCodeA |= 0x1;
-                HashCodeB |= 0x1;
+                hashCodeA |= 0x1;
+                hashCodeB |= 0x1;
             }
             else
             {
-                HashCodeA &= 0xFFFFFFFFFFFFFFFE;
-                HashCodeB &= 0xFFFFFFFFFFFFFFFE;
+                hashCodeA &= 0xFFFFFFFFFFFFFFFE;
+                hashCodeB &= 0xFFFFFFFFFFFFFFFE;
             }
 
-            Entries++;
-
-            fixed (HashEntry* phashBase = &m_arrHashEntry[0])
+            fixed (HashEntry* phashBase = &HashTableEntries[0])
             {
                 HashEntry* phashEntry = phashBase;
-                phashEntry += (uint)(HashCodeA % HASH_TABLE_SIZE);
-                if (phashEntry->HashCodeA != 0 && phashEntry->HashCodeA != HashCodeA && phashEntry->HashCodeB != HashCodeB)
-                {
-                    Collisions++;
-                }
+                phashEntry += (uint)(hashCodeA % HashTableSize);
 
-                phashEntry->HashCodeA = HashCodeA;
-                phashEntry->HashCodeB = HashCodeB;
-                phashEntry->From = From;
-                phashEntry->To = To;
-                phashEntry->MoveName = MoveName;
+                phashEntry->HashCodeA = hashCodeA;
+                phashEntry->HashCodeB = hashCodeB;
+                phashEntry->From = from;
+                phashEntry->To = to;
+                phashEntry->MoveName = moveName;
             }
         }
 
         /// <summary>
-        /// The scan ply.
+        /// Load opening book (hash table )
         /// </summary>
         /// <param name="player">
         /// The player.
@@ -268,15 +229,12 @@ namespace SharpChess
         /// The xmlnode parent.
         /// </param>
         /// <returns>
-        /// The scan ply.
+        /// The move score.
         /// </returns>
         private static int ScanPly(Player player, XmlElement xmlnodeParent)
         {
-            Move moveUndo;
             int intReturnScore = 0;
             int intReturnMove = 0;
-            int intScanMove;
-            int intScore;
 
             foreach (XmlElement xmlnodeMove in xmlnodeParent.ChildNodes)
             {
@@ -285,16 +243,16 @@ namespace SharpChess
                 Square to = Board.GetSquare(xmlnodeMove.GetAttribute("T"));
                 Piece piece = from.Piece;
 
-                intScore = Convert.ToInt32(xmlnodeMove.GetAttribute(player.Colour == Player.enmColour.White ? "W" : "B"));
+                int intScore = Convert.ToInt32(xmlnodeMove.GetAttribute(player.Colour == Player.enmColour.White ? "W" : "B"));
                 if (intScore > intReturnScore)
                 {
                     intReturnScore = intScore;
                     intReturnMove = from.Ordinal << 8 | to.Ordinal;
                 }
 
-                moveUndo = piece.Move(movename, to);
+                Move moveUndo = piece.Move(movename, to);
 
-                intScanMove = ScanPly(player.OtherPlayer, xmlnodeMove);
+                int intScanMove = ScanPly(player.OtherPlayer, xmlnodeMove);
                 if (intScanMove != 0)
                 {
                     RecordHash(Board.HashCodeA, Board.HashCodeB, (byte)(intScanMove >> 8 & 0xff), (byte)(intScanMove & 0xff), movename, player.OtherPlayer.Colour);
@@ -316,17 +274,17 @@ namespace SharpChess
             #region Constants and Fields
 
             /// <summary>
-            /// The from.
+            /// The from square ordinal.
             /// </summary>
             public byte From;
 
             /// <summary>
-            /// The hash code a.
+            /// The board position hash code a.
             /// </summary>
             public ulong HashCodeA;
 
             /// <summary>
-            /// The hash code b.
+            /// The board position hash code b.
             /// </summary>
             public ulong HashCodeB;
 
@@ -336,7 +294,7 @@ namespace SharpChess
             public Move.MoveNames MoveName;
 
             /// <summary>
-            /// The to.
+            /// The to square ordinal.
             /// </summary>
             public byte To;
 
