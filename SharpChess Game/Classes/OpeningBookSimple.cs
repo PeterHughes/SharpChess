@@ -3,7 +3,7 @@
 //   Peter Hughes
 // </copyright>
 // <summary>
-//   Summary description for OpeningBookSimple.
+//   A small, in-memory, book of opening moves used simply to vary SharpChess's games against human. Not competition standard by any means!
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -29,36 +29,37 @@ namespace SharpChess
 
     using System;
     using System.Collections;
+    using System.Linq;
     using System.Xml;
 
     #endregion
 
     /// <summary>
-    /// Simple Opening Book.
+    /// A small, in-memory, book of opening moves, used simply to vary SharpChess's games against human players. Not competition standard by any means!
     /// </summary>
-    public class OpeningBookSimple
+    public static class OpeningBookSimple
     {
         #region Constants and Fields
 
         /// <summary>
         /// The m_ hashtable black.
         /// </summary>
-        private static readonly Hashtable m_HashtableBlack = new Hashtable();
+        private static readonly Hashtable HashtableBlack = new Hashtable();
 
         /// <summary>
         /// The m_ hashtable white.
         /// </summary>
-        private static readonly Hashtable m_HashtableWhite = new Hashtable();
+        private static readonly Hashtable HashtableWhite = new Hashtable();
 
         #endregion
 
         #region Public Methods
 
         /// <summary>
-        /// The import.
+        /// Import opening book XML for file.
         /// </summary>
         /// <returns>
-        /// The import.
+        /// Imported XML.
         /// </returns>
         public static string Import()
         {
@@ -115,22 +116,23 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// The suggest random move.
+        /// Suggest random move from the simple opening book.
         /// </summary>
         /// <param name="player">
-        /// The player.
+        /// The player to play.
         /// </param>
         /// <returns>
+        /// Suggested move.
         /// </returns>
         public static Move SuggestRandomMove(Player player)
         {
-            Hashtable hashtable = player.Colour == Player.enmColour.White ? m_HashtableWhite : m_HashtableBlack;
+            Hashtable hashtable = player.Colour == Player.enmColour.White ? HashtableWhite : HashtableBlack;
             if (hashtable.ContainsKey(Board.HashCodeA))
             {
                 Moves moves = (Moves)hashtable[Board.HashCodeA];
                 if (moves.Count > 0)
                 {
-                    int intChildCount = ChildCount(moves);
+                    int intChildCount = CalculateChildNoteTotalScore(moves);
                     int intChildIndexer = 0;
                     Random random = new Random();
                     int intRandomMoveNo = random.Next(intChildCount);
@@ -146,15 +148,11 @@ namespace SharpChess
 
                     return null;
                 }
-                else
-                {
-                    return null;
-                }
-            }
-            else
-            {
+
                 return null;
             }
+
+            return null;
         }
 
         #endregion
@@ -172,8 +170,8 @@ namespace SharpChess
         /// </param>
         private static void BuildHashtable(XmlElement xmlnodeParent, Player player)
         {
-            Moves moves = null;
-            Hashtable hashtable = player.Colour == Player.enmColour.White ? m_HashtableWhite : m_HashtableBlack;
+            Moves moves;
+            Hashtable hashtable = player.Colour == Player.enmColour.White ? HashtableWhite : HashtableBlack;
 
             if (!hashtable.ContainsKey(Board.HashCodeA))
             {
@@ -187,7 +185,7 @@ namespace SharpChess
 
             foreach (XmlElement xmlnodeMove in xmlnodeParent.ChildNodes)
             {
-                Move moveThis = Board.GetSquare(xmlnodeMove.GetAttribute("f")).Piece.Move(xmlnodeMove.GetAttribute("n") == null ? Move.MoveNames.Standard : Move.MoveNameFromString(xmlnodeMove.GetAttribute("n")), Board.GetSquare(xmlnodeMove.GetAttribute("t")));
+                Move moveThis = Board.GetSquare(xmlnodeMove.GetAttribute("f")).Piece.Move(Move.MoveNameFromString(xmlnodeMove.GetAttribute("n")), Board.GetSquare(xmlnodeMove.GetAttribute("t")));
                 moveThis.Score = xmlnodeMove.ChildNodes.Count;
                 moves.Add(moveThis);
                 BuildHashtable(xmlnodeMove, player.OtherPlayer);
@@ -196,30 +194,24 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// The child count.
+        /// Calculates the total score for all child nodes.
         /// </summary>
         /// <param name="moves">
-        /// The moves.
+        /// List of moves.
         /// </param>
         /// <returns>
-        /// The child count.
+        /// The total score.
         /// </returns>
-        private static int ChildCount(Moves moves)
+        private static int CalculateChildNoteTotalScore(Moves moves)
         {
-            int intTotal = 0;
-            foreach (Move move in moves)
-            {
-                intTotal += move.Score;
-            }
-
-            return intTotal;
+            return moves.Cast<Move>().Sum(move => move.Score);
         }
 
         /// <summary>
-        /// The convert.
+        /// Converts the source opening bok into an XML format that SharpChess can processes.
         /// </summary>
         /// <returns>
-        /// The convert.
+        /// Converted XML document.
         /// </returns>
         private static string Convert()
         {
@@ -231,24 +223,27 @@ namespace SharpChess
             xmldocSource.Load(@"D:\Chess\My Opening Stuff\OpeningBook.xml");
 
             XmlNodeList xmlnodelistLine = xmldocSource.SelectNodes("//Line");
-            foreach (XmlElement xmlnodeLine in xmlnodelistLine)
+            if (xmlnodelistLine != null)
             {
-                XmlElement xmlnodeBookPos = xmlnodeBookRoot;
-                foreach (XmlElement xmlnodeMove in xmlnodeLine.ChildNodes)
+                foreach (XmlElement xmlnodeLine in xmlnodelistLine)
                 {
-                    XmlElement xmlnodeBookChild = (XmlElement)xmlnodeBookPos.SelectSingleNode("m[@f=\"" + xmlnodeMove.GetAttribute("From") + "\" and @t=\"" + xmlnodeMove.GetAttribute("To") + "\"]");
-                    if (xmlnodeBookChild == null)
+                    XmlElement xmlnodeBookPos = xmlnodeBookRoot;
+                    foreach (XmlElement xmlnodeMove in xmlnodeLine.ChildNodes)
                     {
-                        xmlnodeBookChild = (XmlElement)xmlnodeBookPos.AppendChild(xmldocTarget.CreateElement("m"));
-                        xmlnodeBookChild.SetAttribute("f", xmlnodeMove.GetAttribute("From"));
-                        xmlnodeBookChild.SetAttribute("t", xmlnodeMove.GetAttribute("To"));
-                        if (xmlnodeMove.GetAttribute("Name") != "Standard")
+                        XmlElement xmlnodeBookChild = (XmlElement)xmlnodeBookPos.SelectSingleNode("m[@f=\"" + xmlnodeMove.GetAttribute("From") + "\" and @t=\"" + xmlnodeMove.GetAttribute("To") + "\"]");
+                        if (xmlnodeBookChild == null)
                         {
-                            xmlnodeBookChild.SetAttribute("n", xmlnodeMove.GetAttribute("Name"));
+                            xmlnodeBookChild = (XmlElement)xmlnodeBookPos.AppendChild(xmldocTarget.CreateElement("m"));
+                            xmlnodeBookChild.SetAttribute("f", xmlnodeMove.GetAttribute("From"));
+                            xmlnodeBookChild.SetAttribute("t", xmlnodeMove.GetAttribute("To"));
+                            if (xmlnodeMove.GetAttribute("Name") != "Standard")
+                            {
+                                xmlnodeBookChild.SetAttribute("n", xmlnodeMove.GetAttribute("Name"));
+                            }
                         }
-                    }
 
-                    xmlnodeBookPos = xmlnodeBookChild;
+                        xmlnodeBookPos = xmlnodeBookChild;
+                    }
                 }
             }
 
@@ -258,7 +253,7 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// The prune.
+        /// Prunes the opening book entries down to to a managable number that can be held im memory, by deleting the leaf nodes that have the fewest children.
         /// </summary>
         /// <param name="xmlnodeParent">
         /// The xmlnode parent.
@@ -272,7 +267,7 @@ namespace SharpChess
             {
                 XmlElement xmlnode = (XmlElement)xmlnodeParent.ChildNodes[intIndex];
 
-                if (xmlnode.ChildNodes.Count == 0 && xmlnode.ParentNode.ChildNodes.Count > 5)
+                if (xmlnode.ParentNode != null && (xmlnode.ChildNodes.Count == 0 && xmlnode.ParentNode.ChildNodes.Count > 5))
                 {
                     xmlnode.ParentNode.RemoveChild(xmlnode);
                 }

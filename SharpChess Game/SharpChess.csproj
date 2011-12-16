@@ -243,7 +243,6 @@
     </Content>
     <Content Include="Backup\xHashTable.txt" />
     <Content Include="Backup\xImport.txt" />
-    <Content Include="Backup\xOpeningBook.txt" />
     <Content Include="Backup\xQuiesce.txt" />
     <Content Include="Backup\xVerifiedNullMove.txt">
       <SubType>Code</SubType>
