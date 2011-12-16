@@ -55,7 +55,7 @@ namespace SharpChess
         /// <summary>
         /// The m_ move name selected.
         /// </summary>
-        private Move.enmName m_MoveNameSelected = SharpChess.Move.enmName.NullMove;
+        private Move.MoveNames m_MoveNameSelected = SharpChess.Move.MoveNames.NullMove;
 
         /// <summary>
         /// The pic black bishop.
@@ -128,7 +128,7 @@ namespace SharpChess
         /// <summary>
         /// Gets MoveNameSelected.
         /// </summary>
-        public Move.enmName MoveNameSelected
+        public Move.MoveNames MoveNameSelected
         {
             get
             {
@@ -389,19 +389,19 @@ namespace SharpChess
             switch ((string)((PictureBox)sender).Tag)
             {
                 case "Queen":
-                    this.m_MoveNameSelected = SharpChess.Move.enmName.PawnPromotionQueen;
+                    this.m_MoveNameSelected = SharpChess.Move.MoveNames.PawnPromotionQueen;
                     break;
 
                 case "Rook":
-                    this.m_MoveNameSelected = SharpChess.Move.enmName.PawnPromotionRook;
+                    this.m_MoveNameSelected = SharpChess.Move.MoveNames.PawnPromotionRook;
                     break;
 
                 case "Bishop":
-                    this.m_MoveNameSelected = SharpChess.Move.enmName.PawnPromotionBishop;
+                    this.m_MoveNameSelected = SharpChess.Move.MoveNames.PawnPromotionBishop;
                     break;
 
                 case "Knight":
-                    this.m_MoveNameSelected = SharpChess.Move.enmName.PawnPromotionKnight;
+                    this.m_MoveNameSelected = SharpChess.Move.MoveNames.PawnPromotionKnight;
                     break;
             }
 

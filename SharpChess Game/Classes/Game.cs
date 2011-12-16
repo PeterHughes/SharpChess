@@ -484,7 +484,7 @@ namespace SharpChess
         /// <param name="square">
         /// The square to move to.
         /// </param>
-        public static void MakeAMove(Move.enmName moveName, Piece piece, Square square)
+        public static void MakeAMove(Move.MoveNames moveName, Piece piece, Square square)
         {
             SuspendPondering();
             MakeAMoveInternal(moveName, piece, square);
@@ -933,7 +933,7 @@ namespace SharpChess
         /// <param name="square">
         /// The square to move to.
         /// </param>
-        private static void MakeAMoveInternal(Move.enmName moveName, Piece piece, Square square)
+        private static void MakeAMoveInternal(Move.MoveNames moveName, Piece piece, Square square)
         {
             MoveRedoList.Clear();
             Move move = piece.Move(moveName, square);

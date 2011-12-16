@@ -399,7 +399,7 @@ namespace SharpChess
         /// </param>
         public void GenerateLazyMoves(Moves moves, Moves.enmMovesType movesType)
         {
-            Move.enmName[] PromotionTypes = { Move.enmName.PawnPromotionQueen, Move.enmName.PawnPromotionRook, Move.enmName.PawnPromotionKnight, Move.enmName.PawnPromotionBishop };
+            Move.MoveNames[] PromotionTypes = { Move.MoveNames.PawnPromotionQueen, Move.MoveNames.PawnPromotionRook, Move.MoveNames.PawnPromotionKnight, Move.MoveNames.PawnPromotionBishop };
             Square square;
             bool blnIsPromotion = this.m_Base.Player.Colour == Player.enmColour.White && this.m_Base.Square.Rank == 6 || this.m_Base.Player.Colour == Player.enmColour.Black && this.m_Base.Square.Rank == 1;
             int intMovesToGenerate = blnIsPromotion ? PromotionTypes.Length : 1;
@@ -411,7 +411,7 @@ namespace SharpChess
                 {
                     if (square.Piece != null && square.Piece.Player.Colour != this.m_Base.Player.Colour && square.Piece.IsCapturable)
                     {
-                        moves.Add(0, 0, blnIsPromotion ? PromotionTypes[intIndex] : Move.enmName.Standard, this.m_Base, this.m_Base.Square, square, square.Piece, 0, 0);
+                        moves.Add(0, 0, blnIsPromotion ? PromotionTypes[intIndex] : Move.MoveNames.Standard, this.m_Base, this.m_Base.Square, square, square.Piece, 0, 0);
                     }
                 }
 
@@ -420,7 +420,7 @@ namespace SharpChess
                 {
                     if (square.Piece != null && square.Piece.Player.Colour != this.m_Base.Player.Colour && square.Piece.IsCapturable)
                     {
-                        moves.Add(0, 0, blnIsPromotion ? PromotionTypes[intIndex] : Move.enmName.Standard, this.m_Base, this.m_Base.Square, square, square.Piece, 0, 0);
+                        moves.Add(0, 0, blnIsPromotion ? PromotionTypes[intIndex] : Move.MoveNames.Standard, this.m_Base, this.m_Base.Square, square, square.Piece, 0, 0);
                     }
                 }
 
@@ -429,7 +429,7 @@ namespace SharpChess
                 {
                     if ((square = Board.GetSquare(this.m_Base.Square.Ordinal + this.m_Base.Player.PawnForwardOffset)) != null && square.Piece == null)
                     {
-                        moves.Add(0, 0, blnIsPromotion ? PromotionTypes[intIndex] : Move.enmName.Standard, this.m_Base, this.m_Base.Square, square, square.Piece, 0, 0);
+                        moves.Add(0, 0, blnIsPromotion ? PromotionTypes[intIndex] : Move.MoveNames.Standard, this.m_Base, this.m_Base.Square, square, square.Piece, 0, 0);
                     }
                 }
             }
@@ -444,7 +444,7 @@ namespace SharpChess
                     {
                         if ((square = Board.GetSquare(this.m_Base.Square.Ordinal + this.m_Base.Player.PawnForwardOffset + this.m_Base.Player.PawnForwardOffset)) != null && square.Piece == null)
                         {
-                            moves.Add(0, 0, Move.enmName.Standard, this.m_Base, this.m_Base.Square, square, square.Piece, 0, 0);
+                            moves.Add(0, 0, Move.MoveNames.Standard, this.m_Base, this.m_Base.Square, square, square.Piece, 0, 0);
                         }
                     }
                 }
@@ -459,14 +459,14 @@ namespace SharpChess
                 if ((piecePassed = Board.GetPiece(this.m_Base.Square.Ordinal - 1)) != null && piecePassed.NoOfMoves == 1 && piecePassed.LastMoveTurnNo == Game.TurnNo && piecePassed.Name == Piece.enmName.Pawn && piecePassed.Player.Colour != this.m_Base.Player.Colour)
                 {
                     square = Board.GetSquare(this.m_Base.Square.Ordinal + this.m_Base.Player.PawnAttackLeftOffset);
-                    moves.Add(0, 0, Move.enmName.EnPassent, this.m_Base, this.m_Base.Square, square, piecePassed, 0, 0);
+                    moves.Add(0, 0, Move.MoveNames.EnPassent, this.m_Base, this.m_Base.Square, square, piecePassed, 0, 0);
                 }
 
                 // Right
                 if ((piecePassed = Board.GetPiece(this.m_Base.Square.Ordinal + 1)) != null && piecePassed.NoOfMoves == 1 && piecePassed.LastMoveTurnNo == Game.TurnNo && piecePassed.Name == Piece.enmName.Pawn && piecePassed.Player.Colour != this.m_Base.Player.Colour)
                 {
                     square = Board.GetSquare(this.m_Base.Square.Ordinal + this.m_Base.Player.PawnAttackRightOffset);
-                    moves.Add(0, 0, Move.enmName.EnPassent, this.m_Base, this.m_Base.Square, square, piecePassed, 0, 0);
+                    moves.Add(0, 0, Move.MoveNames.EnPassent, this.m_Base, this.m_Base.Square, square, piecePassed, 0, 0);
                 }
             }
         }

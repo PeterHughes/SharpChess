@@ -358,7 +358,7 @@ namespace SharpChess
             HashTypeNames type, 
             int from, 
             int to, 
-            Move.enmName moveName, 
+            Move.MoveNames moveName, 
             Player.enmColour colour)
         {
             Writes++;
@@ -448,7 +448,7 @@ namespace SharpChess
             /// <summary>
             ///   Black move name.
             /// </summary>
-            public Move.enmName BlackMoveName;
+            public Move.MoveNames BlackMoveName;
 
             /// <summary>
             ///   Black to square ordinal.
@@ -493,7 +493,7 @@ namespace SharpChess
             /// <summary>
             ///   White move name.
             /// </summary>
-            public Move.enmName WhiteMoveName;
+            public Move.MoveNames WhiteMoveName;
 
             /// <summary>
             ///   White to square ordinal.

@@ -211,7 +211,7 @@ namespace SharpChess
         /// <param name="Score">
         /// The score.
         /// </param>
-        public void Add(int TurnNo, int LastMoveTurnNo, Move.enmName Name, Piece Piece, Square From, Square To, Piece pieceCaptured, int pieceCapturedOrdinal, int Score)
+        public void Add(int TurnNo, int LastMoveTurnNo, Move.MoveNames Name, Piece Piece, Square From, Square To, Piece pieceCaptured, int pieceCapturedOrdinal, int Score)
         {
             this.m_colMoves.Add(new Move(TurnNo, LastMoveTurnNo, Name, Piece, From, To, pieceCaptured, pieceCapturedOrdinal, Score));
         }

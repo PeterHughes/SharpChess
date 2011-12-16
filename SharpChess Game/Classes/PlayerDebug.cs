@@ -179,7 +179,7 @@ namespace SharpChess
                     {
                         PlayerDebug.m_strbPV.Append(move.Piece.Abbreviation);
                         PlayerDebug.m_strbPV.Append(move.From.Name);
-                        if (move.pieceCaptured != null)
+                        if (move.PieceCaptured != null)
                         {
                             PlayerDebug.m_strbPV.Append("x");
                         }

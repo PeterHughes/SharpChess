@@ -220,12 +220,12 @@ namespace SharpChess
                 {
                     if (movesType == Moves.enmMovesType.All)
                     {
-                        moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, square, null, 0, 0);
+                        moves.Add(0, 0, Move.MoveNames.Standard, piece, piece.Square, square, null, 0, 0);
                     }
                 }
                 else if (square.Piece.Player.Colour != player.Colour && square.Piece.IsCapturable)
                 {
-                    moves.Add(0, 0, Move.enmName.Standard, piece, piece.Square, square, square.Piece, 0, 0);
+                    moves.Add(0, 0, Move.MoveNames.Standard, piece, piece.Square, square, square.Piece, 0, 0);
                     break;
                 }
                 else

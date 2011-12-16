@@ -923,26 +923,26 @@ namespace SharpChess
                 */
             Game.SuspendPondering();
 
-            Move.enmName movename = Move.enmName.NullMove;
+            Move.MoveNames movename = Move.MoveNames.NullMove;
 
             if (strMove.Length == 5)
             {
                 switch (strMove.Substring(4, 1))
                 {
                     case "q":
-                        movename = Move.enmName.PawnPromotionQueen;
+                        movename = Move.MoveNames.PawnPromotionQueen;
                         break;
 
                     case "r":
-                        movename = Move.enmName.PawnPromotionRook;
+                        movename = Move.MoveNames.PawnPromotionRook;
                         break;
 
                     case "b":
-                        movename = Move.enmName.PawnPromotionBishop;
+                        movename = Move.MoveNames.PawnPromotionBishop;
                         break;
 
                     case "n":
-                        movename = Move.enmName.PawnPromotionKnight;
+                        movename = Move.MoveNames.PawnPromotionKnight;
                         break;
                 }
             }
@@ -952,7 +952,7 @@ namespace SharpChess
 
             foreach (Move move in moves)
             {
-                if (move.From.Name == strMove.Substring(0, 2) && move.To.Name == strMove.Substring(2, 2) && (movename == Move.enmName.NullMove || move.Name == movename))
+                if (move.From.Name == strMove.Substring(0, 2) && move.To.Name == strMove.Substring(2, 2) && (movename == Move.MoveNames.NullMove || move.Name == movename))
                 {
                     Game.MakeAMove(move.Name, move.Piece, move.To);
                     return;

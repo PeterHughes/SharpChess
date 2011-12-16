@@ -759,7 +759,7 @@ namespace SharpChess
                     + move.TimeStamp.Minutes.ToString().PadLeft(2, '0') + ":"
                     + move.TimeStamp.Seconds.ToString().PadLeft(2, '0'), 
                     move.Description
-                    + (move.pieceCaptured != null ? (" (" + move.pieceCaptured.Name.ToString() + ")") : string.Empty)
+                    + (move.PieceCaptured != null ? (" (" + move.PieceCaptured.Name.ToString() + ")") : string.Empty)
                 };
 
             this.lvwMoveHistory.Items.Add(new ListViewItem(lvi));
@@ -3292,7 +3292,7 @@ namespace SharpChess
                     {
                         // Check to see it the move is valid, by comparing against all possible valid moves
                         bool blnIsPromotion = false;
-                        Move.enmName movenamePromotion = SharpChess.Move.enmName.NullMove;
+                        Move.MoveNames movenamePromotion = SharpChess.Move.MoveNames.NullMove;
                         foreach (Move move in this.m_movesPossible)
                         {
                             if (move.To == this.m_squareTo)
@@ -3301,10 +3301,10 @@ namespace SharpChess
                                 {
                                     switch (move.Name)
                                     {
-                                        case SharpChess.Move.enmName.PawnPromotionQueen:
-                                        case SharpChess.Move.enmName.PawnPromotionRook:
-                                        case SharpChess.Move.enmName.PawnPromotionBishop:
-                                        case SharpChess.Move.enmName.PawnPromotionKnight:
+                                        case SharpChess.Move.MoveNames.PawnPromotionQueen:
+                                        case SharpChess.Move.MoveNames.PawnPromotionRook:
+                                        case SharpChess.Move.MoveNames.PawnPromotionBishop:
+                                        case SharpChess.Move.MoveNames.PawnPromotionKnight:
                                             blnIsPromotion = true;
                                             frmPieceSelector formPieceSelector = new frmPieceSelector();
                                             formPieceSelector.Colour = move.Piece.Player.Colour;

@@ -82,22 +82,22 @@ namespace SharpChess_Tests
         {
             int ply = 10;
 
-            Move move1 = new Move(0, 0, Move.enmName.Standard, null, null, null, null, 0, 20);
+            Move move1 = new Move(0, 0, Move.MoveNames.Standard, null, null, null, null, 0, 20);
             KillerMoves.RecordPossibleKillerMove(ply, move1);
             Assert.IsTrue(KillerMoves.RetrieveA(ply) == move1);
             Assert.IsNull(KillerMoves.RetrieveB(ply));
 
-            Move move2 = new Move(0, 0, Move.enmName.Standard, null, null, null, null, 0, 10);
+            Move move2 = new Move(0, 0, Move.MoveNames.Standard, null, null, null, null, 0, 10);
             KillerMoves.RecordPossibleKillerMove(ply, move2);
             Assert.IsTrue(KillerMoves.RetrieveA(ply) == move1);
             Assert.IsTrue(KillerMoves.RetrieveB(ply) == move2);
 
-            Move move3 = new Move(0, 0, Move.enmName.Standard, null, null, null, null, 0, 15);
+            Move move3 = new Move(0, 0, Move.MoveNames.Standard, null, null, null, null, 0, 15);
             KillerMoves.RecordPossibleKillerMove(ply, move3);
             Assert.IsTrue(KillerMoves.RetrieveA(ply) == move1);
             Assert.IsTrue(KillerMoves.RetrieveB(ply) == move3);
 
-            Move move4 = new Move(0, 0, Move.enmName.Standard, null, null, null, null, 0, 30);
+            Move move4 = new Move(0, 0, Move.MoveNames.Standard, null, null, null, null, 0, 30);
             KillerMoves.RecordPossibleKillerMove(ply, move4);
             Assert.IsTrue(KillerMoves.RetrieveA(ply) == move4);
             Assert.IsTrue(KillerMoves.RetrieveB(ply) == move1);
@@ -105,12 +105,12 @@ namespace SharpChess_Tests
             // Start again
             KillerMoves.Clear();
 
-            Move move5 = new Move(0, 0, Move.enmName.Standard, null, null, null, null, 0, 200);
+            Move move5 = new Move(0, 0, Move.MoveNames.Standard, null, null, null, null, 0, 200);
             KillerMoves.RecordPossibleKillerMove(ply, move5);
             Assert.IsTrue(KillerMoves.RetrieveA(ply) == move5);
             Assert.IsNull(KillerMoves.RetrieveB(ply));
 
-            Move move6 = new Move(0, 0, Move.enmName.Standard, null, null, null, null, 0, 300);
+            Move move6 = new Move(0, 0, Move.MoveNames.Standard, null, null, null, null, 0, 300);
             KillerMoves.RecordPossibleKillerMove(ply, move6);
             Assert.IsTrue(KillerMoves.RetrieveA(ply) == move6);
             Assert.IsTrue(KillerMoves.RetrieveB(ply) == move5);

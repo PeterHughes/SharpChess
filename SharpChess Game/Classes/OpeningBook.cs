@@ -107,7 +107,7 @@ namespace SharpChess
             int intScanMove = ScanPly(player, (XmlElement)xmldoc.SelectSingleNode("OpeningBook"));
             if (intScanMove != 0)
             {
-                RecordHash(Board.HashCodeA, Board.HashCodeB, (byte)(intScanMove >> 8 & 0xff), (byte)(intScanMove & 0xff), Move.enmName.Standard, player.Colour);
+                RecordHash(Board.HashCodeA, Board.HashCodeB, (byte)(intScanMove >> 8 & 0xff), (byte)(intScanMove & 0xff), Move.MoveNames.Standard, player.Colour);
             }
         }
 
@@ -123,7 +123,7 @@ namespace SharpChess
                 m_arrHashEntry[intIndex].HashCodeB = 0;
                 m_arrHashEntry[intIndex].From = 0xff;
                 m_arrHashEntry[intIndex].To = 0xff;
-                m_arrHashEntry[intIndex].MoveName = Move.enmName.NullMove;
+                m_arrHashEntry[intIndex].MoveName = Move.MoveNames.NullMove;
             }
         }
 
@@ -226,7 +226,7 @@ namespace SharpChess
         /// <param name="colour">
         /// The colour.
         /// </param>
-        private static unsafe void RecordHash(ulong HashCodeA, ulong HashCodeB, byte From, byte To, Move.enmName MoveName, Player.enmColour colour)
+        private static unsafe void RecordHash(ulong HashCodeA, ulong HashCodeB, byte From, byte To, Move.MoveNames MoveName, Player.enmColour colour)
         {
             if (colour == Player.enmColour.Black)
             {
@@ -280,7 +280,7 @@ namespace SharpChess
 
             foreach (XmlElement xmlnodeMove in xmlnodeParent.ChildNodes)
             {
-                Move.enmName movename = xmlnodeMove.GetAttribute("N") == null ? Move.enmName.Standard : Move.MoveNameFromString(xmlnodeMove.GetAttribute("N"));
+                Move.MoveNames movename = xmlnodeMove.GetAttribute("N") == null ? Move.MoveNames.Standard : Move.MoveNameFromString(xmlnodeMove.GetAttribute("N"));
                 Square from = Board.GetSquare(xmlnodeMove.GetAttribute("F"));
                 Square to = Board.GetSquare(xmlnodeMove.GetAttribute("T"));
                 Piece piece = from.Piece;
@@ -333,7 +333,7 @@ namespace SharpChess
             /// <summary>
             /// The move name.
             /// </summary>
-            public Move.enmName MoveName;
+            public Move.MoveNames MoveName;
 
             /// <summary>
             /// The to.

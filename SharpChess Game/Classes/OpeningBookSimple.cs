@@ -187,7 +187,7 @@ namespace SharpChess
 
             foreach (XmlElement xmlnodeMove in xmlnodeParent.ChildNodes)
             {
-                Move moveThis = Board.GetSquare(xmlnodeMove.GetAttribute("f")).Piece.Move(xmlnodeMove.GetAttribute("n") == null ? Move.enmName.Standard : Move.MoveNameFromString(xmlnodeMove.GetAttribute("n")), Board.GetSquare(xmlnodeMove.GetAttribute("t")));
+                Move moveThis = Board.GetSquare(xmlnodeMove.GetAttribute("f")).Piece.Move(xmlnodeMove.GetAttribute("n") == null ? Move.MoveNames.Standard : Move.MoveNameFromString(xmlnodeMove.GetAttribute("n")), Board.GetSquare(xmlnodeMove.GetAttribute("t")));
                 moveThis.Score = xmlnodeMove.ChildNodes.Count;
                 moves.Add(moveThis);
                 BuildHashtable(xmlnodeMove, player.OtherPlayer);

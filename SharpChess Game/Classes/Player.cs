@@ -873,7 +873,7 @@ namespace SharpChess
                                 strText += (move.Piece.Name == Piece.enmName.Pawn
                                                 ? string.Empty
                                                 : move.Piece.Abbreviation) + move.From.Name
-                                           + (move.pieceCaptured != null ? "x" : string.Empty) + move.To.Name + " ";
+                                           + (move.PieceCaptured != null ? "x" : string.Empty) + move.To.Name + " ";
                             }
                         }
                     }
@@ -1056,7 +1056,7 @@ namespace SharpChess
                     intRepetitionCount++;
                 }
 
-                if (move.Piece.Name == Piece.enmName.Pawn || move.pieceCaptured != null)
+                if (move.Piece.Name == Piece.enmName.Pawn || move.PieceCaptured != null)
                 {
                     return false;
                 }
@@ -1169,12 +1169,12 @@ namespace SharpChess
                         move = moves[intIndex];
                         if (!( // 								move.To.Ordinal==squareAttacking.Ordinal 
                              // 								||
-                             move.Name == Move.enmName.PawnPromotionQueen
+                             move.Name == Move.MoveNames.PawnPromotionQueen
                              ||
-                             (move.Name == Move.enmName.Standard
+                             (move.Name == Move.MoveNames.Standard
                               && move.From.Piece.BasicValue < move.To.Piece.BasicValue)
                              ||
-                             (move.Name == Move.enmName.Standard
+                             (move.Name == Move.MoveNames.Standard
                               && !move.To.CanBeMovedToBy(move.Piece.Player.OtherPlayer))))
                         {
                             moves.Remove(move);
@@ -1857,7 +1857,7 @@ namespace SharpChess
 
                 // Allow a deeper ply of search if a piece was captured or if a pawn was promoted, 
                 if (!( // blnIsInCheck ||
-                     moveAnalysed.pieceCaptured != null || moveAnalysed.Name == Move.enmName.PawnPromotionQueen))
+                     moveAnalysed.PieceCaptured != null || moveAnalysed.Name == Move.MoveNames.PawnPromotionQueen))
                 {
                     return val;
                 }
@@ -1872,10 +1872,10 @@ namespace SharpChess
 
             // Adaptive Null-move forward pruning
             int R = depth > 6 ? 3 : 2;
-            if (depth > (R + 1) && moveAnalysed != null && moveAnalysed.Name != Move.enmName.NullMove
+            if (depth > (R + 1) && moveAnalysed != null && moveAnalysed.Name != Move.MoveNames.NullMove
                 && Game.Stage != Game.GameStageNames.End && !blnIsInCheck)
             {
-                Move moveNull = new Move(Game.TurnNo, 0, Move.enmName.NullMove, null, null, null, null, 0, 0);
+                Move moveNull = new Move(Game.TurnNo, 0, Move.MoveNames.NullMove, null, null, null, null, 0, 0);
                 val =
                     -this.AlphaBeta(
                         player.OtherPlayer, 
@@ -1977,8 +1977,8 @@ namespace SharpChess
                     // Check evasion
                     intExtension = 1;
                 }
-                else if (moveAnalysed != null && moveAnalysed.pieceCaptured != null && moveThis.pieceCaptured != null
-                         && moveAnalysed.pieceCaptured.BasicValue == moveThis.pieceCaptured.BasicValue
+                else if (moveAnalysed != null && moveAnalysed.PieceCaptured != null && moveThis.PieceCaptured != null
+                         && moveAnalysed.PieceCaptured.BasicValue == moveThis.PieceCaptured.BasicValue
                          && moveAnalysed.To == moveThis.To)
                 {
                     // Recapture piece of same basic value (on the same square)
@@ -1994,7 +1994,7 @@ namespace SharpChess
                 }
 
                 // Reductions
-                if (depth > 2 && !blnIsInCheck && moveThis.pieceCaptured == null && !moveThis.IsEnemyInCheck)
+                if (depth > 2 && !blnIsInCheck && moveThis.PieceCaptured == null && !moveThis.IsEnemyInCheck)
                 {
                     int[] m_aintMargin = {
                                              0, 0, 0, 5000, 5000, 7000, 7000, 9000, 9000, 15000, 15000, 15000, 15000, 
@@ -2018,7 +2018,7 @@ namespace SharpChess
                         case 3:
 
                             // case 4:
-                            if (moveThis.pieceCaptured == null && !move.IsEnemyInCheck)
+                            if (moveThis.PieceCaptured == null && !move.IsEnemyInCheck)
                             {
                                 int intLazyEval = player.Score;
 
@@ -2133,8 +2133,8 @@ namespace SharpChess
                     History.Record(player.Colour, moveThis.From.Ordinal, moveThis.To.Ordinal, depth * depth);
 
                     // 15Mar06 Nimzo Don't include captures as killer moves
-                    if ((moveThis.pieceCaptured == null)
-                        && ((moveAnalysed == null) || (moveAnalysed.Name != Move.enmName.NullMove)))
+                    if ((moveThis.PieceCaptured == null)
+                        && ((moveAnalysed == null) || (moveAnalysed.Name != Move.MoveNames.NullMove)))
                     {
                         KillerMoves.RecordPossibleKillerMove(ply, moveBest);
                     }
@@ -2205,7 +2205,7 @@ namespace SharpChess
             else
             {
                 HashTable.RecordHash(
-                    Board.HashCodeA, Board.HashCodeB, ply, alpha, hashType, -1, -1, Move.enmName.NullMove, player.Colour);
+                    Board.HashCodeA, Board.HashCodeB, ply, alpha, hashType, -1, -1, Move.MoveNames.NullMove, player.Colour);
             }
 
             return alpha;
@@ -2311,21 +2311,21 @@ namespace SharpChess
 
             switch (move.Name)
             {
-                case Move.enmName.PawnPromotionQueen:
+                case Move.MoveNames.PawnPromotionQueen:
                     move.Score += 900000;
                     break;
-                case Move.enmName.PawnPromotionRook:
+                case Move.MoveNames.PawnPromotionRook:
                     move.Score += 500000;
                     break;
-                case Move.enmName.PawnPromotionBishop:
+                case Move.MoveNames.PawnPromotionBishop:
                     move.Score += 300000;
                     break;
-                case Move.enmName.PawnPromotionKnight:
+                case Move.MoveNames.PawnPromotionKnight:
                     move.Score += 300000;
                     break;
             }
 
-            if (move.pieceCaptured != null)
+            if (move.PieceCaptured != null)
             {
                 // Resulty of Static exchange evaluation
                 move.Score += this.SEE(move) * 100000;
@@ -2488,7 +2488,7 @@ namespace SharpChess
                 movesEnemy.SortByScore();
             }
 
-            int intTotalFriendlyGain = moveMade.pieceCaptured.BasicValue;
+            int intTotalFriendlyGain = moveMade.PieceCaptured.BasicValue;
             int intLastMovedPieceValue = moveMade.Piece.BasicValue;
 
             // Now make a virtual move from each players move list, in order, until one of the players has no remaining moves.
