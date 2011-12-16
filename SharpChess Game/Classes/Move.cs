@@ -3,7 +3,7 @@
 //   Peter Hughes
 // </copyright>
 // <summary>
-//   The move.
+//   Represents a chess move.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -33,7 +33,7 @@ namespace SharpChess
     #endregion
 
     /// <summary>
-    /// The move.
+    /// Represents a chess move.
     /// </summary>
     public class Move : IComparable
     {
@@ -48,7 +48,7 @@ namespace SharpChess
         /// <param name="lastMoveTurnNo">
         /// The last move turn no.
         /// </param>
-        /// <param name="name">
+        /// <param name="moveName">
         /// The move name.
         /// </param>
         /// <param name="piece">
@@ -69,19 +69,19 @@ namespace SharpChess
         /// <param name="score">
         /// The positional score.
         /// </param>
-        public Move(int turnNo, int lastMoveTurnNo, MoveNames name, Piece piece, Square from, Square to, Piece pieceCaptured, int pieceCapturedOrdinal, int score)
+        public Move(int turnNo, int lastMoveTurnNo, MoveNames moveName, Piece piece, Square from, Square to, Piece pieceCaptured, int pieceCapturedOrdinal, int score)
         {
             this.EnemyStatus = Player.enmStatus.Normal;
             this.TurnNo = turnNo;
             this.LastMoveTurnNo = lastMoveTurnNo;
-            this.Name = name;
+            this.Name = moveName;
             this.Piece = piece;
             this.From = from;
             this.To = to;
             this.PieceCaptured = pieceCaptured;
             this.PieceCapturedOrdinal = pieceCapturedOrdinal;
             this.Score = score;
-            if (name != MoveNames.NullMove && pieceCaptured == null && piece != null && piece.Name != Piece.enmName.Pawn)
+            if (moveName != MoveNames.NullMove && pieceCaptured == null && piece != null && piece.Name != Piece.enmName.Pawn)
             {
                 this.FiftyMoveDrawCounter = Game.MoveHistory.Count > 0 ? Game.MoveHistory.Last.FiftyMoveDrawCounter + 1 : (Game.FiftyMoveDrawBase / 2) + 1;
             }
@@ -381,7 +381,7 @@ namespace SharpChess
             }
 
             Moves movesPossible = new Moves();
-            moveProposed.Piece.GenerateLazyMoves(movesPossible, Moves.enmMovesType.All);
+            moveProposed.Piece.GenerateLazyMoves(movesPossible, Moves.MoveListNames.All);
             foreach (Move move in movesPossible)
             {
                 if (moveProposed.Name == move.Name && moveProposed.To.Ordinal == move.To.Ordinal)

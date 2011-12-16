@@ -208,7 +208,7 @@ namespace SharpChess
         /// The moves type.
         /// </param>
         public static void AppendPiecePath(
-            Moves moves, Piece piece, Player player, int offset, Moves.enmMovesType movesType)
+            Moves moves, Piece piece, Player player, int offset, Moves.MoveListNames movesType)
         {
             int intOrdinal = piece.Square.Ordinal;
             Square square;
@@ -218,7 +218,7 @@ namespace SharpChess
             {
                 if (square.Piece == null)
                 {
-                    if (movesType == Moves.enmMovesType.All)
+                    if (movesType == Moves.MoveListNames.All)
                     {
                         moves.Add(0, 0, Move.MoveNames.Standard, piece, piece.Square, square, null, 0, 0);
                     }

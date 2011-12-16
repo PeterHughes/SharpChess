@@ -397,7 +397,7 @@ namespace SharpChess
         /// <param name="movesType">
         /// The moves type.
         /// </param>
-        public void GenerateLazyMoves(Moves moves, Moves.enmMovesType movesType)
+        public void GenerateLazyMoves(Moves moves, Moves.MoveListNames movesType)
         {
             Move.MoveNames[] PromotionTypes = { Move.MoveNames.PawnPromotionQueen, Move.MoveNames.PawnPromotionRook, Move.MoveNames.PawnPromotionKnight, Move.MoveNames.PawnPromotionBishop };
             Square square;
@@ -425,7 +425,7 @@ namespace SharpChess
                 }
 
                 // Forward one
-                if (movesType == Moves.enmMovesType.All || blnIsPromotion)
+                if (movesType == Moves.MoveListNames.All || blnIsPromotion)
                 {
                     if ((square = Board.GetSquare(this.m_Base.Square.Ordinal + this.m_Base.Player.PawnForwardOffset)) != null && square.Piece == null)
                     {
@@ -435,7 +435,7 @@ namespace SharpChess
             }
 
             // Forward two
-            if (movesType == Moves.enmMovesType.All)
+            if (movesType == Moves.MoveListNames.All)
             {
                 if (!this.m_Base.HasMoved)
                 {

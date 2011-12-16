@@ -1332,7 +1332,7 @@ namespace SharpChess
         /// <param name="movesType">
         /// The moves type.
         /// </param>
-        public void GenerateLazyMoves(Moves moves, Moves.enmMovesType movesType)
+        public void GenerateLazyMoves(Moves moves, Moves.MoveListNames movesType)
         {
             this.m_Top.GenerateLazyMoves(moves, movesType);
         }
@@ -1345,7 +1345,7 @@ namespace SharpChess
         /// </param>
         public void GenerateLegalMoves(Moves moves)
         {
-            this.GenerateLazyMoves(moves, Moves.enmMovesType.All);
+            this.GenerateLazyMoves(moves, Moves.MoveListNames.All);
             Move move;
             for (int intIndex = moves.Count - 1; intIndex >= 0; intIndex--)
             {

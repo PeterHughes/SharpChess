@@ -390,7 +390,7 @@ namespace SharpChess
 
                         // Bonus for number of moves available
                         Moves moves = new Moves();
-                        this.GenerateLazyMoves(moves, Moves.enmMovesType.All);
+                        this.GenerateLazyMoves(moves, Moves.MoveListNames.All);
                         intPoints += moves.Count * 10;
 
                         // Bonus for being in centre of board
@@ -444,12 +444,12 @@ namespace SharpChess
         /// <param name="movesType">
         /// The moves type.
         /// </param>
-        public void GenerateLazyMoves(Moves moves, Moves.enmMovesType movesType)
+        public void GenerateLazyMoves(Moves moves, Moves.MoveListNames movesType)
         {
             Square square;
             switch (movesType)
             {
-                case Moves.enmMovesType.All:
+                case Moves.MoveListNames.All:
                     square = Board.GetSquare(this.m_Base.Square.Ordinal - 1);
                     if (square != null && (square.Piece == null || (square.Piece.Player.Colour != this.m_Base.Player.Colour && square.Piece.IsCapturable)))
                     {
@@ -510,7 +510,7 @@ namespace SharpChess
 
                     break;
 
-                case Moves.enmMovesType.CapturesChecksPromotions:
+                case Moves.MoveListNames.CapturesChecksPromotions:
                     square = Board.GetSquare(this.m_Base.Square.Ordinal - 1);
                     if (square != null && (square.Piece != null && (square.Piece.Player.Colour != this.m_Base.Player.Colour && square.Piece.IsCapturable)))
                     {

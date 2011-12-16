@@ -179,7 +179,7 @@ namespace SharpChess
         /// <param name="movesType">
         /// The moves type.
         /// </param>
-        public void GenerateLazyMoves(Moves moves, Moves.enmMovesType movesType)
+        public void GenerateLazyMoves(Moves moves, Moves.MoveListNames movesType)
         {
             Board.AppendPiecePath(moves, this.m_Base, this.m_Base.Player, 17, movesType);
             Board.AppendPiecePath(moves, this.m_Base, this.m_Base.Player, 15, movesType);

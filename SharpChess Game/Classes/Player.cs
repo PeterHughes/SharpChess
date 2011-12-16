@@ -1151,7 +1151,7 @@ namespace SharpChess
         /// <param name="squareAttacking">
         /// The square attacking.
         /// </param>
-        public void GenerateLazyMoves(int depth, Moves moves, Moves.enmMovesType movesType, Square squareAttacking)
+        public void GenerateLazyMoves(int depth, Moves moves, Moves.MoveListNames movesType, Square squareAttacking)
         {
             // if (squareAttacking==null)
             // {
@@ -1160,7 +1160,7 @@ namespace SharpChess
             {
                 piece.GenerateLazyMoves(moves, movesType);
 
-                if (movesType != Moves.enmMovesType.All)
+                if (movesType != Moves.MoveListNames.All)
                 {
                     Move move;
                     int intIndex;
@@ -1906,13 +1906,13 @@ namespace SharpChess
             blnAllMovesWereGenerated = depth > 0; // || blnIsInCheck); 
             if (blnAllMovesWereGenerated)
             {
-                player.GenerateLazyMoves(depth, movesPossible, Moves.enmMovesType.All, null);
+                player.GenerateLazyMoves(depth, movesPossible, Moves.MoveListNames.All, null);
             }
             else
             {
                 // Captures only
                 player.GenerateLazyMoves(
-                    depth, movesPossible, Moves.enmMovesType.CapturesChecksPromotions, moveAnalysed.To);
+                    depth, movesPossible, Moves.MoveListNames.CapturesChecksPromotions, moveAnalysed.To);
             }
 
             // Sort moves

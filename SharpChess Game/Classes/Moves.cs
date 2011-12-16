@@ -3,7 +3,7 @@
 //   Peter Hughes
 // </copyright>
 // <summary>
-//   The moves.
+//   Holds a list of moves.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -27,12 +27,13 @@ namespace SharpChess
 {
     #region Using
 
+    using System;
     using System.Collections;
 
     #endregion
 
     /// <summary>
-    /// The moves.
+    /// Holds a list of moves.
     /// </summary>
     public class Moves : IEnumerable
     {
@@ -41,12 +42,7 @@ namespace SharpChess
         /// <summary>
         /// The m_col moves.
         /// </summary>
-        private readonly ArrayList m_colMoves = new ArrayList(48);
-
-        /// <summary>
-        /// The m_piece parent.
-        /// </summary>
-        private readonly Piece m_pieceParent;
+        private readonly ArrayList moves = new ArrayList(48);
 
         #endregion
 
@@ -67,7 +63,7 @@ namespace SharpChess
         /// </param>
         public Moves(Piece pieceParent)
         {
-            this.m_pieceParent = pieceParent;
+            this.Parent = pieceParent;
         }
 
         #endregion
@@ -75,22 +71,22 @@ namespace SharpChess
         #region Enums
 
         /// <summary>
-        /// The enm moves type.
+        /// Indicates how the move list was generated.
         /// </summary>
-        public enum enmMovesType
+        public enum MoveListNames
         {
             /// <summary>
-            /// The all.
+            /// All moves.
             /// </summary>
             All, 
 
             /// <summary>
-            /// The recaptures.
+            /// Recaptures only.
             /// </summary>
             Recaptures, 
 
             /// <summary>
-            /// The captures checks promotions.
+            /// Captures checks and promotions.
             /// </summary>
             CapturesChecksPromotions
         }
@@ -100,57 +96,51 @@ namespace SharpChess
         #region Public Properties
 
         /// <summary>
-        /// Gets Count.
+        /// Gets the number of moves contained in the move list.
         /// </summary>
         public int Count
         {
             get
             {
-                return this.m_colMoves.Count;
+                return this.moves.Count;
             }
         }
 
         /// <summary>
-        /// Gets Last.
+        /// Gets the Last move.
         /// </summary>
         public Move Last
         {
             get
             {
-                return this.m_colMoves.Count > 0 ? (Move)this.m_colMoves[this.m_colMoves.Count - 1] : null;
+                return this.moves.Count > 0 ? (Move)this.moves[this.moves.Count - 1] : null;
             }
         }
 
         /// <summary>
-        /// Gets Parent.
+        /// Gets Parent object that is holding this move list.
         /// </summary>
-        public Piece Parent
-        {
-            get
-            {
-                return this.m_pieceParent;
-            }
-        }
+        public Piece Parent { get; private set; }
 
         /// <summary>
-        /// Gets Penultimate.
+        /// Gets Penultimate move in this list.
         /// </summary>
         public Move Penultimate
         {
             get
             {
-                return this.m_colMoves.Count > 1 ? (Move)this.m_colMoves[this.m_colMoves.Count - 2] : null;
+                return this.moves.Count > 1 ? (Move)this.moves[this.moves.Count - 2] : null;
             }
         }
 
         /// <summary>
-        /// Gets PenultimateForSameSide.
+        /// Gets penultimate move in this list For the same side.
         /// </summary>
         public Move PenultimateForSameSide
         {
             get
             {
-                return this.m_colMoves.Count > 2 ? (Move)this.m_colMoves[this.m_colMoves.Count - 3] : null;
+                return this.moves.Count > 2 ? (Move)this.moves[this.moves.Count - 3] : null;
             }
         }
 
@@ -159,21 +149,29 @@ namespace SharpChess
         #region Public Indexers
 
         /// <summary>
-        /// The this.
+        /// Returns the move specified by the index.
         /// </summary>
         /// <param name="intIndex">
-        /// The int index.
+        /// The index value.
         /// </param>
+        /// <returns>
+        /// The move at the specified index position.
+        /// </returns>
         public Move this[int intIndex]
         {
             get
             {
-                return (Move)this.m_colMoves[intIndex];
+                return (Move)this.moves[intIndex];
             }
 
             set
             {
-                this.m_colMoves[intIndex] = value;
+                if (value == null)
+                {
+                    throw new ArgumentNullException("value");
+                }
+
+                this.moves[intIndex] = value;
             }
         }
 
@@ -184,132 +182,133 @@ namespace SharpChess
         /// <summary>
         /// The add.
         /// </summary>
-        /// <param name="TurnNo">
+        /// <param name="turnNo">
         /// The turn no.
         /// </param>
-        /// <param name="LastMoveTurnNo">
+        /// <param name="lastMoveTurnNo">
         /// The last move turn no.
         /// </param>
-        /// <param name="Name">
-        /// The name.
+        /// <param name="moveName">
+        /// The move name.
         /// </param>
-        /// <param name="Piece">
-        /// The piece.
+        /// <param name="piece">
+        /// The piece moving.
         /// </param>
-        /// <param name="From">
-        /// The from.
+        /// <param name="from">
+        /// The square the peice is moving from.
         /// </param>
-        /// <param name="To">
-        /// The to.
+        /// <param name="to">
+        /// The square the peice is moving to.
         /// </param>
         /// <param name="pieceCaptured">
-        /// The piece captured.
+        /// The piece being captured.
         /// </param>
         /// <param name="pieceCapturedOrdinal">
-        /// The piece captured ordinal.
+        /// Ordinal position of the piece being captured.
         /// </param>
-        /// <param name="Score">
-        /// The score.
+        /// <param name="score">
+        /// The positional score.
         /// </param>
-        public void Add(int TurnNo, int LastMoveTurnNo, Move.MoveNames Name, Piece Piece, Square From, Square To, Piece pieceCaptured, int pieceCapturedOrdinal, int Score)
+        public void Add(int turnNo, int lastMoveTurnNo, Move.MoveNames moveName, Piece piece, Square from, Square to, Piece pieceCaptured, int pieceCapturedOrdinal, int score)
         {
-            this.m_colMoves.Add(new Move(TurnNo, LastMoveTurnNo, Name, Piece, From, To, pieceCaptured, pieceCapturedOrdinal, Score));
+            this.moves.Add(new Move(turnNo, lastMoveTurnNo, moveName, piece, from, to, pieceCaptured, pieceCapturedOrdinal, score));
         }
 
         /// <summary>
-        /// The add.
+        /// Add a new move to this list.
         /// </summary>
         /// <param name="move">
         /// The move.
         /// </param>
         public void Add(Move move)
         {
-            this.m_colMoves.Add(move);
+            this.moves.Add(move);
         }
 
         /// <summary>
-        /// The clear.
+        /// Clear all moves in the list.
         /// </summary>
         public void Clear()
         {
-            this.m_colMoves.Clear();
+            this.moves.Clear();
         }
 
         /// <summary>
-        /// The get enumerator.
+        /// Gest the enumerator for this list.
         /// </summary>
         /// <returns>
+        /// The enumerator for this list.
         /// </returns>
         public IEnumerator GetEnumerator()
         {
-            return this.m_colMoves.GetEnumerator();
+            return this.moves.GetEnumerator();
         }
 
         /// <summary>
-        /// The insert.
+        /// Insert a move into this list at the specified index position.
         /// </summary>
         /// <param name="intIndex">
-        /// The int index.
+        /// The index position.
         /// </param>
         /// <param name="move">
-        /// The move.
+        /// The move to insert.
         /// </param>
         public void Insert(int intIndex, Move move)
         {
-            this.m_colMoves.Insert(intIndex, move);
+            this.moves.Insert(intIndex, move);
         }
 
         /// <summary>
-        /// The remove.
+        /// Remove a move from this list.
         /// </summary>
         /// <param name="move">
-        /// The move.
+        /// The move to remove.
         /// </param>
         public void Remove(Move move)
         {
-            this.m_colMoves.Remove(move);
+            this.moves.Remove(move);
         }
 
         /// <summary>
-        /// The remove at.
+        /// Remove the move at the specified index from this list position.
         /// </summary>
-        /// <param name="Index">
-        /// The index.
+        /// <param name="index">
+        /// The index position.
         /// </param>
-        public void RemoveAt(int Index)
+        public void RemoveAt(int index)
         {
-            this.m_colMoves.RemoveAt(Index);
+            this.moves.RemoveAt(index);
         }
 
         /// <summary>
-        /// The remove last.
+        /// The remove last move from this list.
         /// </summary>
         public void RemoveLast()
         {
-            this.m_colMoves.RemoveAt(this.m_colMoves.Count - 1);
+            this.moves.RemoveAt(this.moves.Count - 1);
         }
 
         /// <summary>
-        /// The replace.
+        /// Replace the move at ths specified index position with the supplied move.
         /// </summary>
         /// <param name="intIndex">
-        /// The int index.
+        /// The index position to replace.
         /// </param>
         /// <param name="moveNew">
-        /// The move new.
+        /// The new move.
         /// </param>
         public void Replace(int intIndex, Move moveNew)
         {
-            this.m_colMoves[intIndex] = moveNew;
+            this.moves[intIndex] = moveNew;
         }
 
         /// <summary>
-        /// The sort by score.
+        /// Sort this list by score.
         /// </summary>
         public void SortByScore()
         {
             // m_colMoves.Sort();
-            QuickSort(this.m_colMoves, 0, this.m_colMoves.Count - 1);
+            QuickSort(this.moves, 0, this.moves.Count - 1);
         }
 
         #endregion
@@ -320,81 +319,81 @@ namespace SharpChess
         #region Methods
 
         /// <summary>
-        /// The partition.
+        /// Partition method of QuickSort function.
         /// </summary>
         /// <param name="moveArray">
         /// The move array.
         /// </param>
-        /// <param name="nLower">
+        /// <param name="lower">
         /// The n lower.
         /// </param>
-        /// <param name="nUpper">
+        /// <param name="upper">
         /// The n upper.
         /// </param>
         /// <returns>
         /// The partition.
         /// </returns>
-        private static int Partition(ArrayList moveArray, int nLower, int nUpper)
+        private static int Partition(ArrayList moveArray, int lower, int upper)
         {
             // Pivot with first element
-            int nLeft = nLower + 1;
-            int intPivot = ((Move)moveArray[nLower]).Score;
-            int nRight = nUpper;
+            int left = lower + 1;
+            int pivot = ((Move)moveArray[lower]).Score;
+            int right = upper;
 
             // Partition array elements
             Move moveSwap;
-            while (nLeft <= nRight)
+            while (left <= right)
             {
                 // Find item out of place
-                while (nLeft <= nRight && ((Move)moveArray[nLeft]).Score >= intPivot)
+                while (left <= right && ((Move)moveArray[left]).Score >= pivot)
                 {
-                    nLeft = nLeft + 1;
+                    left = left + 1;
                 }
 
-                while (nLeft <= nRight && ((Move)moveArray[nRight]).Score < intPivot)
+                while (left <= right && ((Move)moveArray[right]).Score < pivot)
                 {
-                    nRight = nRight - 1;
+                    right = right - 1;
                 }
 
                 // Swap values if necessary
-                if (nLeft < nRight)
+                if (left < right)
                 {
-                    moveSwap = (Move)moveArray[nLeft];
-                    moveArray[nLeft] = moveArray[nRight];
-                    moveArray[nRight] = moveSwap;
-                    nLeft = nLeft + 1;
-                    nRight = nRight - 1;
+                    moveSwap = (Move)moveArray[left];
+                    moveArray[left] = moveArray[right];
+                    moveArray[right] = moveSwap;
+                    left = left + 1;
+                    right = right - 1;
                 }
             }
 
             // Move pivot element
-            moveSwap = (Move)moveArray[nLower];
-            moveArray[nLower] = moveArray[nRight];
-            moveArray[nRight] = moveSwap;
-            return nRight;
+            moveSwap = (Move)moveArray[lower];
+            moveArray[lower] = moveArray[right];
+            moveArray[right] = moveSwap;
+            return right;
         }
 
         /// <summary>
-        /// The quick sort.
+        /// Quicksort an array .
         /// </summary>
         /// <param name="moveArray">
-        /// The move array.
+        /// Array of moves.
         /// </param>
-        /// <param name="nLower">
-        /// The n lower.
+        /// <param name="lower">
+        /// Lower bound.
         /// </param>
-        /// <param name="nUpper">
-        /// The n upper.
+        /// <param name="upper">
+        /// Upper bound
         /// </param>
-        private static void QuickSort(ArrayList moveArray, int nLower, int nUpper)
+        private static void QuickSort(ArrayList moveArray, int lower, int upper)
         {
             // Check for non-base case
-            if (nLower < nUpper)
+            if (lower < upper)
             {
                 // Split and sort partitions
-                int nSplit = Partition(moveArray, nLower, nUpper);
-                QuickSort(moveArray, nLower, nSplit - 1);
-                QuickSort(moveArray, nSplit + 1, nUpper);
+                int split = Partition(moveArray, lower, upper);
+                QuickSort(moveArray, lower, split - 1);
+                QuickSort(moveArray, split + 1, upper);
             }
         }
 

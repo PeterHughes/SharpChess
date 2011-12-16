@@ -87,7 +87,7 @@ namespace SharpChess
         /// <param name="movesType">
         /// The moves type.
         /// </param>
-        void GenerateLazyMoves(Moves moves, Moves.enmMovesType movesType);
+        void GenerateLazyMoves(Moves moves, Moves.MoveListNames movesType);
 
         #endregion
     }
