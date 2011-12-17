@@ -3,7 +3,7 @@
 //   Peter Hughes
 // </copyright>
 // <summary>
-//   Summary description for PGNtoXML.
+//   Converts PGN opening book files, into SharpChess XML files, which may then be used with <see cref = "OpeningBook" /> and <see cref = "OpeningBookSimple" /> classes.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -26,7 +26,7 @@
 namespace SharpChess
 {
     /// <summary>
-    /// Utility to convert PGN to XML.
+    /// Converts PGN opening book files, into SharpChess XML files, which may then be used with <see cref = "OpeningBook" /> and <see cref = "OpeningBookSimple" /> classes.
     /// </summary>
     public class PGNtoXML
     {
@@ -35,7 +35,7 @@ namespace SharpChess
         /// <summary>
         /// The enm state.
         /// </summary>
-        private enum enmState
+        private enum StateNames
         {
             /// <summary>
             ///   The move no.
@@ -71,7 +71,7 @@ namespace SharpChess
             FileStream filestream = new FileStream(strSourceFileName, System.IO.FileMode.Open);
             int intByte = 0;
             char charNext;
-            enmState state = enmState.MoveNo;
+            StateNames state = StateNames.MoveNo;
             Move move = null;
             int intWhiteScore = 0;
             int intBlackScore = 0;
@@ -112,7 +112,7 @@ namespace SharpChess
                     }
 
                     xmlnodeParent = xmlnodeRoot;
-                    state=enmState.MoveNo;
+                    state=StateNames.MoveNo;
                     string strNotation = "";
                     int intPly = 1;
                     while ((intByte=filestream.ReadByte())!=-1)
@@ -126,14 +126,14 @@ namespace SharpChess
                         {
                             switch (state)
                             {
-                                case enmState.MoveNo:
+                                case StateNames.MoveNo:
                                     if (char.IsLetter(charNext))
                                     {
-                                        state=enmState.MoveNotation; filestream.Seek(-1, SeekOrigin.Current);
+                                        state=StateNames.MoveNotation; filestream.Seek(-1, SeekOrigin.Current);
                                     }
                                     break;
 
-                                case enmState.MoveNotation:
+                                case StateNames.MoveNotation:
                                     if (char.IsWhiteSpace(charNext)) 
                                     {
                                         move = PlayerToPlay.MoveFromNotation( strNotation );
@@ -167,7 +167,7 @@ namespace SharpChess
                                         xmlnodeParent.AppendChild(xmlnodeMove);
                                         xmlnodeParent = xmlnodeMove;
 
-                                        state=enmState.MoveNo; 
+                                        state=StateNames.MoveNo; 
                                         strNotation=""; 
                                         intPly++;
                                     }

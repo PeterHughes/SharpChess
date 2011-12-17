@@ -3,7 +3,8 @@
 //   Peter Hughes
 // </copyright>
 // <summary>
-//   Competition standard opening book when the best possible move is always selected for the current board position.
+//   Tournament standard opening book where the best possible move is always selected for the current board position.
+//   XML opening book files are created from PGN files using the <see cref = "PGNtoXML" /> class.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -33,7 +34,8 @@ namespace SharpChess
     #endregion
 
     /// <summary>
-    /// Competition standard opening book when the best possible move is always selected for the current board position.
+    /// Tournament standard opening book when the best possible move is always selected for the current board position.
+    ///  XML opening book files are created from PGN files using the <see cref = "PGNtoXML" /> class.
     /// </summary>
     public class OpeningBook
     {
