@@ -126,7 +126,7 @@ namespace SharpChess
 
                 // Rook is still there i.e. hasnt been taken
                 pieceRook = this.m_Base.Player.Colour == Player.enmColour.White ? Board.GetPiece(7, 0) : Board.GetPiece(7, 7);
-                if (pieceRook == null || pieceRook.Name != Piece.enmName.Rook || pieceRook.Player.Colour != this.m_Base.Player.Colour)
+                if (pieceRook == null || pieceRook.Name != Piece.PieceNames.Rook || pieceRook.Player.Colour != this.m_Base.Player.Colour)
                 {
                     return false;
                 }
@@ -191,7 +191,7 @@ namespace SharpChess
 
                 // Rook is still there i.e. hasnt been taken
                 pieceRook = this.m_Base.Player.Colour == Player.enmColour.White ? Board.GetPiece(0, 0) : Board.GetPiece(0, 7);
-                if (pieceRook == null || pieceRook.Name != Piece.enmName.Rook || pieceRook.Player.Colour != this.m_Base.Player.Colour)
+                if (pieceRook == null || pieceRook.Name != Piece.PieceNames.Rook || pieceRook.Player.Colour != this.m_Base.Player.Colour)
                 {
                     return false;
                 }
@@ -269,11 +269,11 @@ namespace SharpChess
         /// <summary>
         /// Gets Name.
         /// </summary>
-        public Piece.enmName Name
+        public Piece.PieceNames Name
         {
             get
             {
-                return Piece.enmName.King;
+                return Piece.PieceNames.King;
             }
         }
 
@@ -286,17 +286,17 @@ namespace SharpChess
             {
                 int intPoints = 0;
 
-                if (Game.Stage != Game.GameStageNames.Opening && this.Base.Player.OtherPlayer.HasPieceName(Piece.enmName.Queen))
+                if (Game.Stage != Game.GameStageNames.Opening && this.Base.Player.OtherPlayer.HasPieceName(Piece.PieceNames.Queen))
                 {
                     Piece piece;
 
                     // Penalty for not having pawn directly in front
                     piece = Board.GetPiece(this.m_Base.Square.Ordinal + this.m_Base.Player.PawnForwardOffset);
-                    if (piece == null || piece.Name != Piece.enmName.Pawn || piece.Player.Colour != this.m_Base.Player.Colour)
+                    if (piece == null || piece.Name != Piece.PieceNames.Pawn || piece.Player.Colour != this.m_Base.Player.Colour)
                     {
                         intPoints -= 75;
                         piece = Board.GetPiece(this.m_Base.Square.Ordinal + this.m_Base.Player.PawnForwardOffset * 2);
-                        if (piece == null || piece.Name != Piece.enmName.Pawn || piece.Player.Colour != this.m_Base.Player.Colour)
+                        if (piece == null || piece.Name != Piece.PieceNames.Pawn || piece.Player.Colour != this.m_Base.Player.Colour)
                         {
                             intPoints -= 150;
                         }
@@ -331,7 +331,7 @@ namespace SharpChess
                     while (squareThis != null)
                     {
                         piece = squareThis.Piece;
-                        if (piece != null && piece.Name == Piece.enmName.Pawn && piece.Player.Colour == this.m_Base.Player.Colour)
+                        if (piece != null && piece.Name == Piece.PieceNames.Pawn && piece.Player.Colour == this.m_Base.Player.Colour)
                         {
                             blnHasFiendlyPawn = true;
                             break;
@@ -350,7 +350,7 @@ namespace SharpChess
                     while (squareThis != null)
                     {
                         piece = squareThis.Piece;
-                        if (piece != null && piece.Name == Piece.enmName.Pawn && piece.Player.Colour == this.m_Base.Player.Colour)
+                        if (piece != null && piece.Name == Piece.PieceNames.Pawn && piece.Player.Colour == this.m_Base.Player.Colour)
                         {
                             blnHasFiendlyPawn = true;
                             break;
@@ -369,7 +369,7 @@ namespace SharpChess
                     while (squareThis != null)
                     {
                         piece = squareThis.Piece;
-                        if (piece != null && piece.Name == Piece.enmName.Pawn && piece.Player.Colour == this.m_Base.Player.Colour)
+                        if (piece != null && piece.Name == Piece.PieceNames.Pawn && piece.Player.Colour == this.m_Base.Player.Colour)
                         {
                             blnHasFiendlyPawn = true;
                             break;
@@ -652,7 +652,7 @@ namespace SharpChess
                 piece = square.Piece;
                 if (piece != null)
                 {
-                    if (piece.Player.Colour == colour && piece.Name == Piece.enmName.Pawn)
+                    if (piece.Player.Colour == colour && piece.Name == Piece.PieceNames.Pawn)
                     {
                         break;
                     }
@@ -753,49 +753,49 @@ namespace SharpChess
         {
             Piece piece;
             piece = Board.GetPiece(intOrdinal + 15);
-            if (piece != null && piece.Name == Piece.enmName.Pawn && piece.Player.Colour == this.m_Base.Player.Colour)
+            if (piece != null && piece.Name == Piece.PieceNames.Pawn && piece.Player.Colour == this.m_Base.Player.Colour)
             {
                 return true;
             }
 
             piece = Board.GetPiece(intOrdinal + 16);
-            if (piece != null && piece.Name == Piece.enmName.Pawn && piece.Player.Colour == this.m_Base.Player.Colour)
+            if (piece != null && piece.Name == Piece.PieceNames.Pawn && piece.Player.Colour == this.m_Base.Player.Colour)
             {
                 return true;
             }
 
             piece = Board.GetPiece(intOrdinal + 17);
-            if (piece != null && piece.Name == Piece.enmName.Pawn && piece.Player.Colour == this.m_Base.Player.Colour)
+            if (piece != null && piece.Name == Piece.PieceNames.Pawn && piece.Player.Colour == this.m_Base.Player.Colour)
             {
                 return true;
             }
 
             piece = Board.GetPiece(intOrdinal - 15);
-            if (piece != null && piece.Name == Piece.enmName.Pawn && piece.Player.Colour == this.m_Base.Player.Colour)
+            if (piece != null && piece.Name == Piece.PieceNames.Pawn && piece.Player.Colour == this.m_Base.Player.Colour)
             {
                 return true;
             }
 
             piece = Board.GetPiece(intOrdinal - 16);
-            if (piece != null && piece.Name == Piece.enmName.Pawn && piece.Player.Colour == this.m_Base.Player.Colour)
+            if (piece != null && piece.Name == Piece.PieceNames.Pawn && piece.Player.Colour == this.m_Base.Player.Colour)
             {
                 return true;
             }
 
             piece = Board.GetPiece(intOrdinal - 17);
-            if (piece != null && piece.Name == Piece.enmName.Pawn && piece.Player.Colour == this.m_Base.Player.Colour)
+            if (piece != null && piece.Name == Piece.PieceNames.Pawn && piece.Player.Colour == this.m_Base.Player.Colour)
             {
                 return true;
             }
 
             piece = Board.GetPiece(intOrdinal + 1);
-            if (piece != null && piece.Name == Piece.enmName.Pawn && piece.Player.Colour == this.m_Base.Player.Colour)
+            if (piece != null && piece.Name == Piece.PieceNames.Pawn && piece.Player.Colour == this.m_Base.Player.Colour)
             {
                 return true;
             }
 
             piece = Board.GetPiece(intOrdinal - 1);
-            if (piece != null && piece.Name == Piece.enmName.Pawn && piece.Player.Colour == this.m_Base.Player.Colour)
+            if (piece != null && piece.Name == Piece.PieceNames.Pawn && piece.Player.Colour == this.m_Base.Player.Colour)
             {
                 return true;
             }

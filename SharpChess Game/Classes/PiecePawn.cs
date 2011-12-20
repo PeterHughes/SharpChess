@@ -152,11 +152,11 @@ namespace SharpChess
         /// <summary>
         /// Gets Name.
         /// </summary>
-        public Piece.enmName Name
+        public Piece.PieceNames Name
         {
             get
             {
-                return Piece.enmName.Pawn;
+                return Piece.PieceNames.Pawn;
             }
         }
 
@@ -180,7 +180,7 @@ namespace SharpChess
                 for (intIndex = this.m_Base.Player.Pieces.Count - 1; intIndex >= 0; intIndex--)
                 {
                     piece = this.m_Base.Player.Pieces.Item(intIndex);
-                    if (piece.Name == Piece.enmName.Pawn && piece != this.m_Base)
+                    if (piece.Name == Piece.PieceNames.Pawn && piece != this.m_Base)
                     {
                         if (piece.Square.File == this.m_Base.Square.File)
                         {
@@ -272,22 +272,22 @@ namespace SharpChess
 
                 // Backward pawn
                 bool blnIsBackward = true;
-                if (blnIsBackward && (piece = Board.GetPiece(this.m_Base.Square.Ordinal - 1)) != null && piece.Name == Piece.enmName.Pawn && piece.Player.Colour == this.m_Base.Player.Colour)
+                if (blnIsBackward && (piece = Board.GetPiece(this.m_Base.Square.Ordinal - 1)) != null && piece.Name == Piece.PieceNames.Pawn && piece.Player.Colour == this.m_Base.Player.Colour)
                 {
                     blnIsBackward = false;
                 }
 
-                if (blnIsBackward && (piece = Board.GetPiece(this.m_Base.Square.Ordinal + 1)) != null && piece.Name == Piece.enmName.Pawn && piece.Player.Colour == this.m_Base.Player.Colour)
+                if (blnIsBackward && (piece = Board.GetPiece(this.m_Base.Square.Ordinal + 1)) != null && piece.Name == Piece.PieceNames.Pawn && piece.Player.Colour == this.m_Base.Player.Colour)
                 {
                     blnIsBackward = false;
                 }
 
-                if (blnIsBackward && (piece = Board.GetPiece(this.m_Base.Square.Ordinal - this.m_Base.Player.PawnAttackLeftOffset)) != null && piece.Name == Piece.enmName.Pawn && piece.Player.Colour == this.m_Base.Player.Colour)
+                if (blnIsBackward && (piece = Board.GetPiece(this.m_Base.Square.Ordinal - this.m_Base.Player.PawnAttackLeftOffset)) != null && piece.Name == Piece.PieceNames.Pawn && piece.Player.Colour == this.m_Base.Player.Colour)
                 {
                     blnIsBackward = false;
                 }
 
-                if (blnIsBackward && (piece = Board.GetPiece(this.m_Base.Square.Ordinal - this.m_Base.Player.PawnAttackRightOffset)) != null && piece.Name == Piece.enmName.Pawn && piece.Player.Colour == this.m_Base.Player.Colour)
+                if (blnIsBackward && (piece = Board.GetPiece(this.m_Base.Square.Ordinal - this.m_Base.Player.PawnAttackRightOffset)) != null && piece.Name == Piece.PieceNames.Pawn && piece.Player.Colour == this.m_Base.Player.Colour)
                 {
                     blnIsBackward = false;
                 }
@@ -336,7 +336,7 @@ namespace SharpChess
                 for (intIndex = this.m_Base.Player.OtherPlayer.Pieces.Count - 1; intIndex >= 0; intIndex--)
                 {
                     piece = this.m_Base.Player.OtherPlayer.Pieces.Item(intIndex);
-                    if (piece.Name == Piece.enmName.Pawn)
+                    if (piece.Name == Piece.PieceNames.Pawn)
                     {
                         if ((this.m_Base.Player.Colour == Player.enmColour.White && piece.Square.Rank > this.m_Base.Square.Rank || this.m_Base.Player.Colour == Player.enmColour.Black && piece.Square.Rank < this.m_Base.Square.Rank) && (piece.Square.File == this.m_Base.Square.File || piece.Square.File == this.m_Base.Square.File - 1 || piece.Square.File == this.m_Base.Square.File + 1))
                         {
@@ -456,14 +456,14 @@ namespace SharpChess
                 Piece piecePassed;
 
                 // Left
-                if ((piecePassed = Board.GetPiece(this.m_Base.Square.Ordinal - 1)) != null && piecePassed.NoOfMoves == 1 && piecePassed.LastMoveTurnNo == Game.TurnNo && piecePassed.Name == Piece.enmName.Pawn && piecePassed.Player.Colour != this.m_Base.Player.Colour)
+                if ((piecePassed = Board.GetPiece(this.m_Base.Square.Ordinal - 1)) != null && piecePassed.NoOfMoves == 1 && piecePassed.LastMoveTurnNo == Game.TurnNo && piecePassed.Name == Piece.PieceNames.Pawn && piecePassed.Player.Colour != this.m_Base.Player.Colour)
                 {
                     square = Board.GetSquare(this.m_Base.Square.Ordinal + this.m_Base.Player.PawnAttackLeftOffset);
                     moves.Add(0, 0, Move.MoveNames.EnPassent, this.m_Base, this.m_Base.Square, square, piecePassed, 0, 0);
                 }
 
                 // Right
-                if ((piecePassed = Board.GetPiece(this.m_Base.Square.Ordinal + 1)) != null && piecePassed.NoOfMoves == 1 && piecePassed.LastMoveTurnNo == Game.TurnNo && piecePassed.Name == Piece.enmName.Pawn && piecePassed.Player.Colour != this.m_Base.Player.Colour)
+                if ((piecePassed = Board.GetPiece(this.m_Base.Square.Ordinal + 1)) != null && piecePassed.NoOfMoves == 1 && piecePassed.LastMoveTurnNo == Game.TurnNo && piecePassed.Name == Piece.PieceNames.Pawn && piecePassed.Player.Colour != this.m_Base.Player.Colour)
                 {
                     square = Board.GetSquare(this.m_Base.Square.Ordinal + this.m_Base.Player.PawnAttackRightOffset);
                     moves.Add(0, 0, Move.MoveNames.EnPassent, this.m_Base, this.m_Base.Square, square, piecePassed, 0, 0);
@@ -504,7 +504,7 @@ namespace SharpChess
             if ((squareLeft = Board.GetSquare(this.m_Base.Square.Ordinal + this.m_Base.Player.PawnAttackLeftOffset)) != null)
             {
                 pieceLeft = squareLeft.Piece;
-                if (pieceLeft != null && pieceLeft.Player.Colour != this.m_Base.Player.Colour && pieceLeft.IsCapturable && pieceLeft.Name != Piece.enmName.Pawn)
+                if (pieceLeft != null && pieceLeft.Player.Colour != this.m_Base.Player.Colour && pieceLeft.IsCapturable && pieceLeft.Name != Piece.PieceNames.Pawn)
                 {
                     intBonus = intTHREAT_PAWN; // see where CanBeDrivenAwayByPawn is called
                 }
@@ -513,7 +513,7 @@ namespace SharpChess
             if ((squareRight = Board.GetSquare(this.m_Base.Square.Ordinal + this.m_Base.Player.PawnAttackRightOffset)) != null)
             {
                 Piece pieceRight = squareRight.Piece;
-                if (pieceRight != null && pieceRight.Player.Colour != this.m_Base.Player.Colour && pieceRight.IsCapturable && pieceRight.Name != Piece.enmName.Pawn)
+                if (pieceRight != null && pieceRight.Player.Colour != this.m_Base.Player.Colour && pieceRight.IsCapturable && pieceRight.Name != Piece.PieceNames.Pawn)
                 {
                     intBonus = (intBonus == intTHREAT_PAWN) ? Math.Min(pieceLeft.Value, pieceRight.Value) : intTHREAT_PAWN;
                 }

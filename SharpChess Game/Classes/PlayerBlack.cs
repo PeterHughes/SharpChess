@@ -102,27 +102,27 @@ namespace SharpChess
         /// </summary>
         protected override void SetPiecesAtStartingPositions()
         {
-            this.m_colPieces.Add(this.King = new Piece(Piece.enmName.King, this, 4, 7, Piece.enmID.BlackKing));
+            this.m_colPieces.Add(this.King = new Piece(Piece.PieceNames.King, this, 4, 7, Piece.PieceIdentifierCodes.BlackKing));
 
-            this.m_colPieces.Add(new Piece(Piece.enmName.Queen, this, 3, 7, Piece.enmID.BlackQueen));
+            this.m_colPieces.Add(new Piece(Piece.PieceNames.Queen, this, 3, 7, Piece.PieceIdentifierCodes.BlackQueen));
 
-            this.m_colPieces.Add(new Piece(Piece.enmName.Rook, this, 0, 7, Piece.enmID.BlackQueensRook));
-            this.m_colPieces.Add(new Piece(Piece.enmName.Rook, this, 7, 7, Piece.enmID.BlackKingsRook));
+            this.m_colPieces.Add(new Piece(Piece.PieceNames.Rook, this, 0, 7, Piece.PieceIdentifierCodes.BlackQueensRook));
+            this.m_colPieces.Add(new Piece(Piece.PieceNames.Rook, this, 7, 7, Piece.PieceIdentifierCodes.BlackKingsRook));
 
-            this.m_colPieces.Add(new Piece(Piece.enmName.Bishop, this, 2, 7, Piece.enmID.BlackQueensBishop));
-            this.m_colPieces.Add(new Piece(Piece.enmName.Bishop, this, 5, 7, Piece.enmID.BlackKingsBishop));
+            this.m_colPieces.Add(new Piece(Piece.PieceNames.Bishop, this, 2, 7, Piece.PieceIdentifierCodes.BlackQueensBishop));
+            this.m_colPieces.Add(new Piece(Piece.PieceNames.Bishop, this, 5, 7, Piece.PieceIdentifierCodes.BlackKingsBishop));
 
-            this.m_colPieces.Add(new Piece(Piece.enmName.Knight, this, 1, 7, Piece.enmID.BlackQueensKnight));
-            this.m_colPieces.Add(new Piece(Piece.enmName.Knight, this, 6, 7, Piece.enmID.BlackKingsKnight));
+            this.m_colPieces.Add(new Piece(Piece.PieceNames.Knight, this, 1, 7, Piece.PieceIdentifierCodes.BlackQueensKnight));
+            this.m_colPieces.Add(new Piece(Piece.PieceNames.Knight, this, 6, 7, Piece.PieceIdentifierCodes.BlackKingsKnight));
 
-            this.m_colPieces.Add(new Piece(Piece.enmName.Pawn, this, 0, 6, Piece.enmID.BlackPawn1));
-            this.m_colPieces.Add(new Piece(Piece.enmName.Pawn, this, 1, 6, Piece.enmID.BlackPawn2));
-            this.m_colPieces.Add(new Piece(Piece.enmName.Pawn, this, 2, 6, Piece.enmID.BlackPawn3));
-            this.m_colPieces.Add(new Piece(Piece.enmName.Pawn, this, 3, 6, Piece.enmID.BlackPawn4));
-            this.m_colPieces.Add(new Piece(Piece.enmName.Pawn, this, 4, 6, Piece.enmID.BlackPawn5));
-            this.m_colPieces.Add(new Piece(Piece.enmName.Pawn, this, 5, 6, Piece.enmID.BlackPawn6));
-            this.m_colPieces.Add(new Piece(Piece.enmName.Pawn, this, 6, 6, Piece.enmID.BlackPawn7));
-            this.m_colPieces.Add(new Piece(Piece.enmName.Pawn, this, 7, 6, Piece.enmID.BlackPawn8));
+            this.m_colPieces.Add(new Piece(Piece.PieceNames.Pawn, this, 0, 6, Piece.PieceIdentifierCodes.BlackPawn1));
+            this.m_colPieces.Add(new Piece(Piece.PieceNames.Pawn, this, 1, 6, Piece.PieceIdentifierCodes.BlackPawn2));
+            this.m_colPieces.Add(new Piece(Piece.PieceNames.Pawn, this, 2, 6, Piece.PieceIdentifierCodes.BlackPawn3));
+            this.m_colPieces.Add(new Piece(Piece.PieceNames.Pawn, this, 3, 6, Piece.PieceIdentifierCodes.BlackPawn4));
+            this.m_colPieces.Add(new Piece(Piece.PieceNames.Pawn, this, 4, 6, Piece.PieceIdentifierCodes.BlackPawn5));
+            this.m_colPieces.Add(new Piece(Piece.PieceNames.Pawn, this, 5, 6, Piece.PieceIdentifierCodes.BlackPawn6));
+            this.m_colPieces.Add(new Piece(Piece.PieceNames.Pawn, this, 6, 6, Piece.PieceIdentifierCodes.BlackPawn7));
+            this.m_colPieces.Add(new Piece(Piece.PieceNames.Pawn, this, 7, 6, Piece.PieceIdentifierCodes.BlackPawn8));
         }
 
         #endregion

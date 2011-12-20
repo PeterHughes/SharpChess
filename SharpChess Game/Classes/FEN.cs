@@ -224,28 +224,28 @@ namespace SharpChess
             Piece pieceRook;
 
             // White King's Rook
-            if ((pieceRook = Board.GetPiece(7, 0)) != null && pieceRook.Name == Piece.enmName.Rook
+            if ((pieceRook = Board.GetPiece(7, 0)) != null && pieceRook.Name == Piece.PieceNames.Rook
                 && pieceRook.Player.Colour == Player.enmColour.White)
             {
                 pieceRook.NoOfMoves = strCastlingRights.LastIndexOf("K") >= 0 ? 0 : 1;
             }
 
             // Black King's Rook
-            if ((pieceRook = Board.GetPiece(7, 7)) != null && pieceRook.Name == Piece.enmName.Rook
+            if ((pieceRook = Board.GetPiece(7, 7)) != null && pieceRook.Name == Piece.PieceNames.Rook
                 && pieceRook.Player.Colour == Player.enmColour.Black)
             {
                 pieceRook.NoOfMoves = strCastlingRights.LastIndexOf("k") >= 0 ? 0 : 1;
             }
 
             // White Queen's Rook
-            if ((pieceRook = Board.GetPiece(0, 0)) != null && pieceRook.Name == Piece.enmName.Rook
+            if ((pieceRook = Board.GetPiece(0, 0)) != null && pieceRook.Name == Piece.PieceNames.Rook
                 && pieceRook.Player.Colour == Player.enmColour.White)
             {
                 pieceRook.NoOfMoves = strCastlingRights.LastIndexOf("Q") >= 0 ? 0 : 1;
             }
 
             // Black Queen's Rook
-            if ((pieceRook = Board.GetPiece(0, 7)) != null && pieceRook.Name == Piece.enmName.Rook
+            if ((pieceRook = Board.GetPiece(0, 7)) != null && pieceRook.Name == Piece.PieceNames.Rook
                 && pieceRook.Player.Colour == Player.enmColour.Black)
             {
                 pieceRook.NoOfMoves = strCastlingRights.LastIndexOf("q") >= 0 ? 0 : 1;
@@ -806,7 +806,7 @@ namespace SharpChess
         /// </returns>
         private static string FenGet4EnPassant()
         {
-            if ((Game.MoveHistory.Count > 0) && (Game.MoveHistory.Last.Piece.Name == Piece.enmName.Pawn)
+            if ((Game.MoveHistory.Count > 0) && (Game.MoveHistory.Last.Piece.Name == Piece.PieceNames.Pawn)
                 && (Game.MoveHistory.Last.From.File == Game.MoveHistory.Last.To.File)
                 &&
                 (((Game.MoveHistory.Last.From.Rank == Game.MoveHistory.Last.To.Rank + 2)
@@ -892,28 +892,28 @@ namespace SharpChess
         private static void MovePieceToFenPosition(
             ref char charToken, int intFile, int intRank, bool blnAnyLocation, bool blnAllowPromotion)
         {
-            Piece.enmName piecename = Piece.enmName.King;
+            Piece.PieceNames piecename = Piece.PieceNames.King;
             Player player = charToken.ToString() == charToken.ToString().ToUpper() ? Game.PlayerWhite : Game.PlayerBlack;
 
             switch (charToken.ToString().ToUpper())
             {
                 case "K":
-                    piecename = Piece.enmName.King;
+                    piecename = Piece.PieceNames.King;
                     break;
                 case "Q":
-                    piecename = Piece.enmName.Queen;
+                    piecename = Piece.PieceNames.Queen;
                     break;
                 case "R":
-                    piecename = Piece.enmName.Rook;
+                    piecename = Piece.PieceNames.Rook;
                     break;
                 case "B":
-                    piecename = Piece.enmName.Bishop;
+                    piecename = Piece.PieceNames.Bishop;
                     break;
                 case "N":
-                    piecename = Piece.enmName.Knight;
+                    piecename = Piece.PieceNames.Knight;
                     break;
                 case "P":
-                    piecename = Piece.enmName.Pawn;
+                    piecename = Piece.PieceNames.Pawn;
                     break;
             }
 
@@ -922,7 +922,7 @@ namespace SharpChess
             Piece pieceToUse = null;
             foreach (Piece pieceCaptured in player.OtherPlayer.CapturedEnemyPieces)
             {
-                if ((pieceCaptured.Name == piecename || (blnAllowPromotion && pieceCaptured.Name == Piece.enmName.Pawn))
+                if ((pieceCaptured.Name == piecename || (blnAllowPromotion && pieceCaptured.Name == Piece.PieceNames.Pawn))
                     && (pieceCaptured.StartLocation == Board.GetSquare(intFile, intRank) || blnAnyLocation))
                 {
                     pieceToUse = pieceCaptured;

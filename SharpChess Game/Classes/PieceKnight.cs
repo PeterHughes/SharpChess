@@ -129,11 +129,11 @@ namespace SharpChess
         /// <summary>
         /// Gets Name.
         /// </summary>
-        public Piece.enmName Name
+        public Piece.PieceNames Name
         {
             get
             {
-                return Piece.enmName.Knight;
+                return Piece.PieceNames.Knight;
             }
         }
 

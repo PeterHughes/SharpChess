@@ -62,7 +62,7 @@ namespace SharpChess
         /// <summary>
         /// Gets the name of the piece.
         /// </summary>
-        Piece.enmName Name { get; }
+        Piece.PieceNames Name { get; }
 
         /// <summary>
         /// Gets the positional score points of the piece.

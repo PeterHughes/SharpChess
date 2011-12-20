@@ -253,7 +253,7 @@ namespace SharpChess
                 {
                     HashCodeA ^= piece.HashCodeAForSquareOrdinal(intOrdinal);
                     HashCodeB ^= piece.HashCodeBForSquareOrdinal(intOrdinal);
-                    if (piece.Name == Piece.enmName.Pawn)
+                    if (piece.Name == Piece.PieceNames.Pawn)
                     {
                         PawnHashCodeA ^= piece.HashCodeAForSquareOrdinal(intOrdinal);
                         PawnHashCodeB ^= piece.HashCodeBForSquareOrdinal(intOrdinal);
@@ -441,7 +441,7 @@ namespace SharpChess
         /// The first piece on the line, or null.
         /// </returns>
         public static Piece LinesFirstPiece(
-            Player.enmColour colour, Piece.enmName pieceName, Square squareStart, int offset)
+            Player.enmColour colour, Piece.PieceNames pieceName, Square squareStart, int offset)
         {
             int intOrdinal = squareStart.Ordinal;
             Square square;
@@ -456,7 +456,7 @@ namespace SharpChess
                 {
                     return null;
                 }
-                else if (square.Piece.Name == pieceName || square.Piece.Name == Piece.enmName.Queen)
+                else if (square.Piece.Name == pieceName || square.Piece.Name == Piece.PieceNames.Queen)
                 {
                     return square.Piece;
                 }
@@ -500,7 +500,7 @@ namespace SharpChess
                    ((square = GetSquare(intOrdinal)) != null
                     &&
                     (square.Piece == null
-                     || (square.Piece.Name != Piece.enmName.Pawn && square.Piece.Name != Piece.enmName.Rook)
+                     || (square.Piece.Name != Piece.PieceNames.Pawn && square.Piece.Name != Piece.PieceNames.Rook)
                      || square.Piece.Player.Colour != colour)))
             {
                 intPenalty += 75;

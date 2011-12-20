@@ -81,7 +81,7 @@ namespace SharpChess
             this.PieceCaptured = pieceCaptured;
             this.PieceCapturedOrdinal = pieceCapturedOrdinal;
             this.Score = score;
-            if (moveName != MoveNames.NullMove && pieceCaptured == null && piece != null && piece.Name != Piece.enmName.Pawn)
+            if (moveName != MoveNames.NullMove && pieceCaptured == null && piece != null && piece.Name != Piece.PieceNames.Pawn)
             {
                 this.FiftyMoveDrawCounter = Game.MoveHistory.Count > 0 ? Game.MoveHistory.Last.FiftyMoveDrawCounter + 1 : (Game.FiftyMoveDrawBase / 2) + 1;
             }
@@ -195,7 +195,7 @@ namespace SharpChess
                         break;
 
                     default:
-                        if ((this.Piece.Name != Piece.enmName.Pawn) && !this.Piece.HasBeenPromoted)
+                        if ((this.Piece.Name != Piece.PieceNames.Pawn) && !this.Piece.HasBeenPromoted)
                         {
                             strbMove.Append(this.Piece.Abbreviation);
                         }
@@ -204,7 +204,7 @@ namespace SharpChess
                         if (this.PieceCaptured != null)
                         {
                             strbMove.Append("x");
-                            if (this.PieceCaptured.Name != Piece.enmName.Pawn)
+                            if (this.PieceCaptured.Name != Piece.PieceNames.Pawn)
                             {
                                 strbMove.Append(this.PieceCaptured.Abbreviation);
                             }
@@ -487,7 +487,7 @@ namespace SharpChess
         {
             Board.HashCodeA ^= move.To.Piece.HashCodeA; // un_XOR the piece from where it was previously moved to
             Board.HashCodeB ^= move.To.Piece.HashCodeB; // un_XOR the piece from where it was previously moved to
-            if (move.Piece.Name == Piece.enmName.Pawn)
+            if (move.Piece.Name == Piece.PieceNames.Pawn)
             {
                 Board.PawnHashCodeA ^= move.To.Piece.HashCodeA;
                 Board.PawnHashCodeB ^= move.To.Piece.HashCodeB;
@@ -513,7 +513,7 @@ namespace SharpChess
                 move.PieceCaptured.Uncapture(move.PieceCapturedOrdinal);
                 Board.HashCodeA ^= move.PieceCaptured.HashCodeA; // XOR back into play the piece that was taken
                 Board.HashCodeB ^= move.PieceCaptured.HashCodeB; // XOR back into play the piece that was taken
-                if (move.PieceCaptured.Name == Piece.enmName.Pawn)
+                if (move.PieceCaptured.Name == Piece.PieceNames.Pawn)
                 {
                     Board.PawnHashCodeA ^= move.PieceCaptured.HashCodeA;
                     Board.PawnHashCodeB ^= move.PieceCaptured.HashCodeB;
@@ -561,7 +561,7 @@ namespace SharpChess
 
             Board.HashCodeA ^= move.From.Piece.HashCodeA; // XOR the piece back into the square it moved back to
             Board.HashCodeB ^= move.From.Piece.HashCodeB; // XOR the piece back into the square it moved back to
-            if (move.From.Piece.Name == Piece.enmName.Pawn)
+            if (move.From.Piece.Name == Piece.PieceNames.Pawn)
             {
                 Board.PawnHashCodeA ^= move.From.Piece.HashCodeA;
                 Board.PawnHashCodeB ^= move.From.Piece.HashCodeB;

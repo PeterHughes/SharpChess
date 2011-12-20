@@ -132,7 +132,7 @@ namespace SharpChess
                         foreach (Piece pieceCaptured in piecesCaptureList)
                         {
                             strbBoard.Append(
-                                (pieceCaptured.Name == Piece.enmName.Pawn)
+                                (pieceCaptured.Name == Piece.PieceNames.Pawn)
                                     ? string.Empty
                                     : pieceCaptured.Abbreviation + pieceCaptured.Square.Name + " ");
                         }

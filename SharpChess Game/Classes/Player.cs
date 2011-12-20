@@ -351,14 +351,14 @@ namespace SharpChess
                 }
 
                 Player playerTwoPieces = Game.PlayerWhite.Pieces.Count == 2 ? Game.PlayerWhite : Game.PlayerBlack;
-                Piece pieceNotKing = playerTwoPieces.Pieces.Item(0).Name == Piece.enmName.King
+                Piece pieceNotKing = playerTwoPieces.Pieces.Item(0).Name == Piece.PieceNames.King
                                          ? playerTwoPieces.Pieces.Item(1)
                                          : playerTwoPieces.Pieces.Item(0);
 
                 switch (pieceNotKing.Name)
                 {
-                    case Piece.enmName.Bishop:
-                    case Piece.enmName.Knight:
+                    case Piece.PieceNames.Bishop:
+                    case Piece.PieceNames.Knight:
                         return true;
                 }
 
@@ -642,8 +642,8 @@ namespace SharpChess
                         piece = this.m_colPieces.Item(intIndex);
                         switch (piece.Name)
                         {
-                            case Piece.enmName.Pawn:
-                            case Piece.enmName.King:
+                            case Piece.PieceNames.Pawn:
+                            case Piece.PieceNames.King:
                                 intPoints += piece.PointsTotal;
                                 break;
                         }
@@ -715,8 +715,8 @@ namespace SharpChess
                     piece = this.m_colPieces.Item(intIndex);
                     switch (piece.Name)
                     {
-                        case Piece.enmName.Pawn:
-                        case Piece.enmName.King:
+                        case Piece.PieceNames.Pawn:
+                        case Piece.PieceNames.King:
                             break;
                         default:
                             intPoints += piece.PointsTotal;
@@ -725,11 +725,11 @@ namespace SharpChess
 
                     switch (piece.Name)
                     {
-                        case Piece.enmName.Bishop:
+                        case Piece.PieceNames.Bishop:
                             intBishopCount++;
                             break;
 
-                        case Piece.enmName.Rook:
+                        case Piece.PieceNames.Rook:
                             intRookCount++;
                             break;
                     }
@@ -773,14 +773,14 @@ namespace SharpChess
                     {
                         Piece pieceRook;
                         pieceRook = this.Colour == enmColour.White ? Board.GetPiece(7, 0) : Board.GetPiece(7, 7);
-                        if (pieceRook == null || pieceRook.Name != Piece.enmName.Rook
+                        if (pieceRook == null || pieceRook.Name != Piece.PieceNames.Rook
                             || pieceRook.Player.Colour != this.Colour || pieceRook.HasMoved)
                         {
                             intPoints -= 107;
                         }
 
                         pieceRook = this.Colour == enmColour.White ? Board.GetPiece(0, 0) : Board.GetPiece(0, 7);
-                        if (pieceRook == null || pieceRook.Name != Piece.enmName.Rook
+                        if (pieceRook == null || pieceRook.Name != Piece.PieceNames.Rook
                             || pieceRook.Player.Colour != this.Colour || pieceRook.HasMoved)
                         {
                             intPoints -= 107;
@@ -870,7 +870,7 @@ namespace SharpChess
                             Move move = this.m_movesPVBest[intIndex];
                             if (move != null)
                             {
-                                strText += (move.Piece.Name == Piece.enmName.Pawn
+                                strText += (move.Piece.Name == Piece.PieceNames.Pawn
                                                 ? string.Empty
                                                 : move.Piece.Abbreviation) + move.From.Name
                                            + (move.PieceCaptured != null ? "x" : string.Empty) + move.To.Name + " ";
@@ -1056,7 +1056,7 @@ namespace SharpChess
                     intRepetitionCount++;
                 }
 
-                if (move.Piece.Name == Piece.enmName.Pawn || move.PieceCaptured != null)
+                if (move.Piece.Name == Piece.PieceNames.Pawn || move.PieceCaptured != null)
                 {
                     return false;
                 }
@@ -1214,9 +1214,9 @@ namespace SharpChess
         /// <returns>
         /// The has piece name.
         /// </returns>
-        public bool HasPieceName(Piece.enmName piecename)
+        public bool HasPieceName(Piece.PieceNames piecename)
         {
-            if (piecename == Piece.enmName.Pawn && this.PawnsInPlay > 0)
+            if (piecename == Piece.PieceNames.Pawn && this.PawnsInPlay > 0)
             {
                 return true;
             }
@@ -1984,7 +1984,7 @@ namespace SharpChess
                     // Recapture piece of same basic value (on the same square)
                     intExtension = 1;
                 }
-                else if (moveThis.Piece.Name == Piece.enmName.Pawn
+                else if (moveThis.Piece.Name == Piece.PieceNames.Pawn
                          &&
                          (moveThis.Piece.Player.Colour == enmColour.White && moveThis.To.Rank == 6
                           || moveThis.Piece.Player.Colour == enmColour.Black && moveThis.To.Rank == 1))

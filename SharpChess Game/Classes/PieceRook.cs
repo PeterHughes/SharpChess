@@ -129,11 +129,11 @@ namespace SharpChess
         /// <summary>
         /// Gets Name.
         /// </summary>
-        public Piece.enmName Name
+        public Piece.PieceNames Name
         {
             get
             {
-                return Piece.enmName.Rook;
+                return Piece.PieceNames.Rook;
             }
         }
 
@@ -163,7 +163,7 @@ namespace SharpChess
                     while (squareThis != null)
                     {
                         piece = squareThis.Piece;
-                        if (piece != null && piece.Name == Piece.enmName.Pawn)
+                        if (piece != null && piece.Name == Piece.PieceNames.Pawn)
                         {
                             if (piece.Player.Colour == this.m_Base.Player.Colour)
                             {
