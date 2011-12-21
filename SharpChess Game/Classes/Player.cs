@@ -29,6 +29,7 @@ namespace SharpChess
 
     using System;
     using System.Diagnostics;
+    using System.Linq;
     using System.Threading;
 
     using ThreadState = System.Threading.ThreadState;
@@ -56,11 +57,6 @@ namespace SharpChess
         ///   The m_ material count.
         /// </summary>
         protected int m_MaterialCount = 7;
-
-        /// <summary>
-        ///   The m_ no of pawns in play.
-        /// </summary>
-        protected int m_NoOfPawnsInPlay = 8;
 
         /// <summary>
         ///   The m_ player clock.
@@ -216,6 +212,7 @@ namespace SharpChess
         /// </summary>
         public Player()
         {
+            PawnCountInPlay = 8;
             this.m_colPieces = new Pieces(this);
             this.m_colCapturedEnemyPieces = new Pieces(this);
         }
@@ -623,6 +620,8 @@ namespace SharpChess
         /// </summary>
         public abstract int PawnForwardOffset { get; }
 
+        /*
+         * PawmKing points removed because not safe to cache pawn scores that take into account non pawn pieces.
         /// <summary>
         ///   Gets PawnKingPoints.
         /// </summary>
@@ -655,17 +654,13 @@ namespace SharpChess
                 return intPoints;
             }
         }
+        
+        */
 
         /// <summary>
-        ///   Gets PawnsInPlay.
+        ///   Gets or sets the number of pawns in play.
         /// </summary>
-        public int PawnsInPlay
-        {
-            get
-            {
-                return this.m_NoOfPawnsInPlay;
-            }
-        }
+        private int PawnCountInPlay { get; set; }
 
         /// <summary>
         ///   Gets PieceBasicValue.
@@ -674,13 +669,7 @@ namespace SharpChess
         {
             get
             {
-                int intBasicValue = 0;
-                foreach (Piece piece in this.Pieces)
-                {
-                    intBasicValue += piece.BasicValue;
-                }
-
-                return intBasicValue;
+                return this.Pieces.Cast<Piece>().Sum(piece => piece.BasicValue);
             }
         }
 
@@ -706,13 +695,14 @@ namespace SharpChess
                 int intIndex;
                 Piece piece;
 
-                intPoints += this.PawnKingPoints;
+                // intPoints += this.PawnKingPoints;
 
                 int intBishopCount = 0;
                 int intRookCount = 0;
                 for (intIndex = this.m_colPieces.Count - 1; intIndex >= 0; intIndex--)
                 {
                     piece = this.m_colPieces.Item(intIndex);
+                    /*
                     switch (piece.Name)
                     {
                         case Piece.PieceNames.Pawn:
@@ -722,6 +712,8 @@ namespace SharpChess
                             intPoints += piece.PointsTotal;
                             break;
                     }
+                    */
+                    intPoints += piece.PointsTotal;
 
                     switch (piece.Name)
                     {
@@ -809,10 +801,9 @@ namespace SharpChess
             {
                 int intTotalValue = 0;
                 int intIndex;
-                Piece piece;
                 for (intIndex = this.m_colPieces.Count - 1; intIndex >= 0; intIndex--)
                 {
-                    piece = this.m_colPieces.Item(intIndex);
+                    Piece piece = this.m_colPieces.Item(intIndex);
                     intTotalValue += piece.PositionalPoints;
                 }
 
@@ -1090,7 +1081,7 @@ namespace SharpChess
         /// </summary>
         public void DecreasePawnCount()
         {
-            this.m_NoOfPawnsInPlay--;
+            this.PawnCountInPlay--;
         }
 
         /// <summary>
@@ -1216,7 +1207,7 @@ namespace SharpChess
         /// </returns>
         public bool HasPieceName(Piece.PieceNames piecename)
         {
-            if (piecename == Piece.PieceNames.Pawn && this.PawnsInPlay > 0)
+            if (piecename == Piece.PieceNames.Pawn && this.PawnCountInPlay > 0)
             {
                 return true;
             }
@@ -1245,7 +1236,7 @@ namespace SharpChess
         /// </summary>
         public void IncreasePawnCount()
         {
-            this.m_NoOfPawnsInPlay++;
+            this.PawnCountInPlay++;
         }
 
         /*

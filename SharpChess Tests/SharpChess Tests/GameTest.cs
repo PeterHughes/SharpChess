@@ -77,7 +77,7 @@ namespace SharpChess_Tests
         #region Public Methods
 
         /// <summary>
-        /// A test for MOve Ordering
+        /// A test for Move Ordering
         /// </summary>
         [TestMethod]
         [DeploymentItem("SharpChess2.exe")]
@@ -92,7 +92,8 @@ namespace SharpChess_Tests
 
             TimeSpan elpased = Game_Accessor.PlayerToPlay.ThinkingTimeElpased;
 
-            Assert.IsTrue(positions <= 52931);
+            // Assert.IsTrue(positions <= 52931); Before finding pawn king hash score b-u-g.
+            Assert.IsTrue(positions <= 131155);
         }
 
         #endregion

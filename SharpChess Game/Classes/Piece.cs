@@ -393,7 +393,7 @@ namespace SharpChess
         }
 
         /// <summary>
-        ///   Gets the board position HashCodeA for this piece.
+        /// Gets the board position HashCodeA for this piece.
         /// </summary>
         public ulong HashCodeA
         {
@@ -404,7 +404,7 @@ namespace SharpChess
         }
 
         /// <summary>
-        ///   Gets the board position HashCodeB for this piece.
+        /// Gets the board position HashCodeB for this piece.
         /// </summary>
         public ulong HashCodeB
         {
@@ -415,7 +415,7 @@ namespace SharpChess
         }
 
         /// <summary>
-        ///   Gets the image index for this piece. Used to determine which graphic image is displayed for thie piece.
+        ///  Gets the image index for this piece. Used to determine which graphic image is displayed for thie piece.
         /// </summary>
         public int ImageIndex
         {
@@ -426,7 +426,7 @@ namespace SharpChess
         }
 
         /// <summary>
-        ///   Gets a value indicating whether the piece is capturable. Kings aren't, everything else is.
+        /// Gets a value indicating whether the piece is capturable. Kings aren't, everything else is.
         /// </summary>
         public bool IsCapturable
         {
@@ -437,7 +437,7 @@ namespace SharpChess
         }
 
         /// <summary>
-        ///   Gets a value indicating whether is still in-play. A piece leaves play when it has been captured.
+        /// Gets a value indicating whether is still in-play. A piece leaves play when it has been captured.
         /// </summary>
         public bool IsInPlay { get; private set; }
 
@@ -447,7 +447,7 @@ namespace SharpChess
         public int LastMoveTurnNo { get; set; }
 
         /// <summary>
-        ///   Gets the piece's name.
+        /// Gets the piece's name.
         /// </summary>
         public PieceNames Name
         {
@@ -463,12 +463,12 @@ namespace SharpChess
         public int NoOfMoves { get; set; }
 
         /// <summary>
-        ///   Gets the player who owns the piece.
+        /// Gets the player who owns the piece.
         /// </summary>
         public Player Player { get; private set; }
 
         /// <summary>
-        ///   Gets the total score calculated for this piece, which takes into account the piece's material value, and its positional score.
+        /// Gets the total score calculated for this piece, which takes into account the piece's material value, and its positional score.
         /// </summary>
         public int PointsTotal
         {
@@ -480,7 +480,7 @@ namespace SharpChess
         }
 
         /// <summary>
-        ///   Gets the positional points assigned to this piece.
+        /// Gets the positional points assigned to this piece.
         /// </summary>
         public int PositionalPoints
         {
@@ -506,7 +506,7 @@ namespace SharpChess
         public IPieceTop Top { get; private set; }
 
         /// <summary>
-        ///   Gets the material value of this piece.
+        /// Gets the material value of this piece.
         /// </summary>
         public int Value
         {
@@ -617,13 +617,13 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// The generate lazy moves.
+        /// Generate "lazy" moves for this piece, which is all usual legal moves, but also includes moves that put the king in check.
         /// </summary>
         /// <param name="moves">
-        /// The moves.
+        /// Moves list that will be populated with lazy moves.
         /// </param>
         /// <param name="movesType">
-        /// The moves type.
+        /// Types of moves to include. e.g. All, or captures-only.
         /// </param>
         public void GenerateLazyMoves(Moves moves, Moves.MoveListNames movesType)
         {

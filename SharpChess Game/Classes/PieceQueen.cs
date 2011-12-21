@@ -30,15 +30,6 @@ namespace SharpChess
     /// </summary>
     public class PieceQueen : IPieceTop
     {
-        #region Constants and Fields
-
-        /// <summary>
-        /// The m_ base.
-        /// </summary>
-        private readonly Piece m_Base;
-
-        #endregion
-
         #region Constructors and Destructors
 
         /// <summary>
@@ -49,7 +40,7 @@ namespace SharpChess
         /// </param>
         public PieceQueen(Piece pieceBase)
         {
-            this.m_Base = pieceBase;
+            this.Base = pieceBase;
         }
 
         #endregion
@@ -68,18 +59,12 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// Gets Base.
+        /// Gets the base part of the piece. i.e. the bit that sits on the chess square.
         /// </summary>
-        public Piece Base
-        {
-            get
-            {
-                return this.m_Base;
-            }
-        }
+        public Piece Base { get; private set; }
 
         /// <summary>
-        /// Gets BasicValue.
+        /// Gets basic value of the piece. e.g. pawn = 1, bishop = 3, queen = 9
         /// </summary>
         public int BasicValue
         {
@@ -90,18 +75,18 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// Gets ImageIndex.
+        /// Gets the image index for this piece. Used to determine which graphic image is displayed for thie piece.
         /// </summary>
         public int ImageIndex
         {
             get
             {
-                return this.m_Base.Player.Colour == Player.enmColour.White ? 11 : 10;
+                return this.Base.Player.Colour == Player.enmColour.White ? 11 : 10;
             }
         }
 
         /// <summary>
-        /// Gets a value indicating whether IsCapturable.
+        /// Gets a value indicating whether the piece is capturable. Kings aren't, everything else is.
         /// </summary>
         public bool IsCapturable
         {
@@ -112,7 +97,7 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// Gets Name.
+        /// Gets the piece's name.
         /// </summary>
         public Piece.PieceNames Name
         {
@@ -123,7 +108,7 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// Gets PositionalPoints.
+        /// Gets the positional points assigned to this piece.
         /// </summary>
         public int PositionalPoints
         {
@@ -135,28 +120,28 @@ namespace SharpChess
                 // "taxicab" distance to the enemy king.
                 if (Game.Stage == Game.GameStageNames.Opening)
                 {
-                    if (this.m_Base.Player.Colour == Player.enmColour.White)
+                    if (this.Base.Player.Colour == Player.enmColour.White)
                     {
-                        intPoints -= this.m_Base.Square.Rank * 7;
+                        intPoints -= this.Base.Square.Rank * 7;
                     }
                     else
                     {
-                        intPoints -= (7 - this.m_Base.Square.Rank) * 7;
+                        intPoints -= (7 - this.Base.Square.Rank) * 7;
                     }
                 }
                 else
                 {
-                    intPoints -= this.m_Base.TaxiCabDistanceToEnemyKingPenalty();
+                    intPoints -= this.Base.TaxiCabDistanceToEnemyKingPenalty();
                 }
 
-                intPoints += this.m_Base.DefensePoints;
+                intPoints += this.Base.DefensePoints;
 
                 return intPoints;
             }
         }
 
         /// <summary>
-        /// Gets Value.
+        /// Gets the material value of this piece.
         /// </summary>
         public int Value
         {
@@ -171,24 +156,24 @@ namespace SharpChess
         #region Public Methods
 
         /// <summary>
-        /// The generate lazy moves.
+        /// Generate "lazy" moves for this piece, which is all usual legal moves, but also includes moves that put the king in check.
         /// </summary>
         /// <param name="moves">
-        /// The moves.
+        /// Moves list that will be populated with lazy moves.
         /// </param>
         /// <param name="movesType">
-        /// The moves type.
+        /// Types of moves to include. e.g. All, or captures-only.
         /// </param>
         public void GenerateLazyMoves(Moves moves, Moves.MoveListNames movesType)
         {
-            Board.AppendPiecePath(moves, this.m_Base, this.m_Base.Player, 17, movesType);
-            Board.AppendPiecePath(moves, this.m_Base, this.m_Base.Player, 15, movesType);
-            Board.AppendPiecePath(moves, this.m_Base, this.m_Base.Player, -15, movesType);
-            Board.AppendPiecePath(moves, this.m_Base, this.m_Base.Player, -17, movesType);
-            Board.AppendPiecePath(moves, this.m_Base, this.m_Base.Player, 16, movesType);
-            Board.AppendPiecePath(moves, this.m_Base, this.m_Base.Player, 1, movesType);
-            Board.AppendPiecePath(moves, this.m_Base, this.m_Base.Player, -1, movesType);
-            Board.AppendPiecePath(moves, this.m_Base, this.m_Base.Player, -16, movesType);
+            Board.AppendPiecePath(moves, this.Base, this.Base.Player, 17, movesType);
+            Board.AppendPiecePath(moves, this.Base, this.Base.Player, 15, movesType);
+            Board.AppendPiecePath(moves, this.Base, this.Base.Player, -15, movesType);
+            Board.AppendPiecePath(moves, this.Base, this.Base.Player, -17, movesType);
+            Board.AppendPiecePath(moves, this.Base, this.Base.Player, 16, movesType);
+            Board.AppendPiecePath(moves, this.Base, this.Base.Player, 1, movesType);
+            Board.AppendPiecePath(moves, this.Base, this.Base.Player, -1, movesType);
+            Board.AppendPiecePath(moves, this.Base, this.Base.Player, -16, movesType);
         }
 
         #endregion

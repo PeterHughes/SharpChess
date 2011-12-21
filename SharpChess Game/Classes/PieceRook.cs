@@ -25,6 +25,8 @@
 
 namespace SharpChess
 {
+    using System.Linq;
+
     /// <summary>
     /// The piece rook.
     /// </summary>
@@ -33,24 +35,19 @@ namespace SharpChess
         #region Constants and Fields
 
         /// <summary>
-        /// The m_aint square values.
+        /// Simple positional piece-square score values.
         /// </summary>
-        private static readonly int[] m_aintSquareValues = 
-        {
-            10,10,10,10,10,10,10,10,    0,0,0,0,0,0,0,0,
-            10,20,20,20,20,20,20,10,    0,0,0,0,0,0,0,0,
-            10,20,30,30,30,30,20,10,    0,0,0,0,0,0,0,0,
-            10,20,30,40,40,30,20,10,    0,0,0,0,0,0,0,0,
-            10,20,30,40,40,30,20,10,    0,0,0,0,0,0,0,0,
-            10,20,30,30,30,30,20,10,    0,0,0,0,0,0,0,0,
-            10,20,20,20,20,20,20,10 ,   0,0,0,0,0,0,0,0,
-            10,10,10,10,10,10,10,10 ,   0,0,0,0,0,0,0,0
+        private static readonly int[] SquareValues = 
+        { 
+            10, 10, 10, 10, 10, 10, 10, 10,    0, 0, 0, 0, 0, 0, 0, 0, 
+            10, 20, 20, 20, 20, 20, 20, 10,    0, 0, 0, 0, 0, 0, 0, 0, 
+            10, 20, 30, 30, 30, 30, 20, 10,    0, 0, 0, 0, 0, 0, 0, 0, 
+            10, 20, 30, 40, 40, 30, 20, 10,    0, 0, 0, 0, 0, 0, 0, 0, 
+            10, 20, 30, 40, 40, 30, 20, 10,    0, 0, 0, 0, 0, 0, 0, 0, 
+            10, 20, 30, 30, 30, 30, 20, 10,    0, 0, 0, 0, 0, 0, 0, 0, 
+            10, 20, 20, 20, 20, 20, 20, 10,    0, 0, 0, 0, 0, 0, 0, 0, 
+            10, 10, 10, 10, 10, 10, 10, 10,    0, 0, 0, 0, 0, 0, 0, 0
         };
-
-        /// <summary>
-        /// The m_ base.
-        /// </summary>
-        private readonly Piece m_Base;
 
         #endregion
 
@@ -64,7 +61,7 @@ namespace SharpChess
         /// </param>
         public PieceRook(Piece pieceBase)
         {
-            this.m_Base = pieceBase;
+            this.Base = pieceBase;
         }
 
         #endregion
@@ -83,18 +80,12 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// Gets Base.
+        /// Gets the base part of the piece. i.e. the bit that sits on the chess square.
         /// </summary>
-        public Piece Base
-        {
-            get
-            {
-                return this.m_Base;
-            }
-        }
+        public Piece Base { get; private set; }
 
         /// <summary>
-        /// Gets BasicValue.
+        /// Gets basic value of the piece. e.g. pawn = 1, bishop = 3, queen = 9
         /// </summary>
         public int BasicValue
         {
@@ -105,18 +96,18 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// Gets ImageIndex.
+        /// Gets the image index for this piece. Used to determine which graphic image is displayed for thie piece.
         /// </summary>
         public int ImageIndex
         {
             get
             {
-                return this.m_Base.Player.Colour == Player.enmColour.White ? 3 : 2;
+                return this.Base.Player.Colour == Player.enmColour.White ? 3 : 2;
             }
         }
 
         /// <summary>
-        /// Gets a value indicating whether IsCapturable.
+        /// Gets a value indicating whether the piece is capturable. Kings aren't, everything else is.
         /// </summary>
         public bool IsCapturable
         {
@@ -127,7 +118,7 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// Gets Name.
+        /// Gets the piece's name.
         /// </summary>
         public Piece.PieceNames Name
         {
@@ -138,7 +129,7 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// Gets PositionalPoints.
+        /// Gets the positional points assigned to this piece.
         /// </summary>
         public int PositionalPoints
         {
@@ -149,7 +140,7 @@ namespace SharpChess
                 // After the opening, Rooks are penalized slightly depending on "taxicab" distance to the enemy king.
                 if (Game.Stage != Game.GameStageNames.Opening)
                 {
-                    intPoints -= this.m_Base.TaxiCabDistanceToEnemyKingPenalty();
+                    intPoints -= this.Base.TaxiCabDistanceToEnemyKingPenalty();
                 }
 
                 if (Game.Stage != Game.GameStageNames.End)
@@ -158,14 +149,13 @@ namespace SharpChess
                     // 4(0) points if no enemy pawns lie on that file. 
                     bool blnHasFiendlyPawn = false;
                     bool blnHasEnemyPawn = false;
-                    Square squareThis = Board.GetSquare(this.m_Base.Square.File, 0);
-                    Piece piece;
+                    Square squareThis = Board.GetSquare(this.Base.Square.File, 0);
                     while (squareThis != null)
                     {
-                        piece = squareThis.Piece;
+                        Piece piece = squareThis.Piece;
                         if (piece != null && piece.Name == Piece.PieceNames.Pawn)
                         {
-                            if (piece.Player.Colour == this.m_Base.Player.Colour)
+                            if (piece.Player.Colour == this.Base.Player.Colour)
                             {
                                 blnHasFiendlyPawn = true;
                             }
@@ -194,8 +184,10 @@ namespace SharpChess
                     }
 
                     // 7th rank
-                    if (this.m_Base.Player.Colour == Player.enmColour.White && this.m_Base.Square.Rank == 6
-                        || this.m_Base.Player.Colour == Player.enmColour.Black && this.m_Base.Square.Rank == 1)
+                    if (
+                        (this.Base.Player.Colour == Player.enmColour.White && this.Base.Square.Rank == 6)
+                        || 
+                        (this.Base.Player.Colour == Player.enmColour.Black && this.Base.Square.Rank == 1))
                     {
                         intPoints += 30;
                     }
@@ -203,27 +195,24 @@ namespace SharpChess
 
                 // Mobility
                 Squares squares = new Squares();
-                squares.Add(this.m_Base.Square);
-                Board.LineThreatenedBy(this.m_Base.Player, squares, this.m_Base.Square, 1);
-                Board.LineThreatenedBy(this.m_Base.Player, squares, this.m_Base.Square, -1);
-                Board.LineThreatenedBy(this.m_Base.Player, squares, this.m_Base.Square, 16);
-                Board.LineThreatenedBy(this.m_Base.Player, squares, this.m_Base.Square, -16);
-                int intSquareValue = 0;
-                foreach (Square square in squares)
-                {
-                    intSquareValue += m_aintSquareValues[square.Ordinal];
-                }
+                squares.Add(this.Base.Square);
+                Board.LineThreatenedBy(this.Base.Player, squares, this.Base.Square, 1);
+                Board.LineThreatenedBy(this.Base.Player, squares, this.Base.Square, -1);
+                Board.LineThreatenedBy(this.Base.Player, squares, this.Base.Square, 16);
+                Board.LineThreatenedBy(this.Base.Player, squares, this.Base.Square, -16);
+
+                int intSquareValue = squares.Cast<Square>().Sum(square => SquareValues[square.Ordinal]);
 
                 intPoints += intSquareValue >> 2;
 
-                intPoints += this.m_Base.DefensePoints;
+                intPoints += this.Base.DefensePoints;
 
                 return intPoints;
             }
         }
 
         /// <summary>
-        /// Gets Value.
+        /// Gets the material value of this piece.
         /// </summary>
         public int Value
         {
@@ -240,20 +229,20 @@ namespace SharpChess
         #region Public Methods
 
         /// <summary>
-        /// The generate lazy moves.
+        /// Generate "lazy" moves for this piece, which is all usual legal moves, but also includes moves that put the king in check.
         /// </summary>
         /// <param name="moves">
-        /// The moves.
+        /// Moves list that will be populated with lazy moves.
         /// </param>
         /// <param name="movesType">
-        /// The moves type.
+        /// Types of moves to include. e.g. All, or captures-only.
         /// </param>
         public void GenerateLazyMoves(Moves moves, Moves.MoveListNames movesType)
         {
-            Board.AppendPiecePath(moves, this.m_Base, this.m_Base.Player, 1, movesType);
-            Board.AppendPiecePath(moves, this.m_Base, this.m_Base.Player, -1, movesType);
-            Board.AppendPiecePath(moves, this.m_Base, this.m_Base.Player, -16, movesType);
-            Board.AppendPiecePath(moves, this.m_Base, this.m_Base.Player, 16, movesType);
+            Board.AppendPiecePath(moves, this.Base, this.Base.Player, 1, movesType);
+            Board.AppendPiecePath(moves, this.Base, this.Base.Player, -1, movesType);
+            Board.AppendPiecePath(moves, this.Base, this.Base.Player, -16, movesType);
+            Board.AppendPiecePath(moves, this.Base, this.Base.Player, 16, movesType);
         }
 
         #endregion

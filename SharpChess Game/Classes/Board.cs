@@ -472,28 +472,28 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// Calculates a penality value for a piece's open line.
+        /// Calculates a positional penalty score for a single open line to a square (usually the king square), in a specified direction.
         /// </summary>
         /// <param name="colour">
-        /// The colour.
+        /// The player's colour.
         /// </param>
         /// <param name="squareStart">
-        /// The start square.
+        /// The square piece (king) is on.
         /// </param>
-        /// <param name="offset">
-        /// Offset used to determine direction of open line.
+        /// <param name="directionOffset">
+        /// The direction offset.
         /// </param>
         /// <returns>
-        /// Calculated penalty value.
+        /// The open line penalty.
         /// </returns>
-        public static int OpenLinePenalty(Player.enmColour colour, Square squareStart, int offset)
+        public static int OpenLinePenalty(Player.enmColour colour, Square squareStart, int directionOffset)
         {
             int intOrdinal = squareStart.Ordinal;
             int intSquareCount = 0;
             int intPenalty = 0;
             Square square;
 
-            intOrdinal += offset;
+            intOrdinal += directionOffset;
 
             while (intSquareCount <= 2
                    &&
@@ -505,7 +505,7 @@ namespace SharpChess
             {
                 intPenalty += 75;
                 intSquareCount++;
-                intOrdinal += offset;
+                intOrdinal += directionOffset;
             }
 
             return intPenalty;

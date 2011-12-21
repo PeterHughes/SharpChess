@@ -25,32 +25,29 @@
 
 namespace SharpChess
 {
+    using System.Linq;
+
     /// <summary>
-    /// The piece bishop.
+    /// A bishop piece top.
     /// </summary>
     public class PieceBishop : IPieceTop
     {
         #region Constants and Fields
 
         /// <summary>
-        /// The m_aint square values.
+        /// Simple positional piece-square score values.
         /// </summary>
-        public static int[] m_aintSquareValues =
+        private static readonly int[] SquareValues =
         {
-            10,10,10,10,10,10,10,10,    0,0,0,0,0,0,0,0,
-            10,25,20,20,20,20,25,10,    0,0,0,0,0,0,0,0,
-            10,49,30,30,30,30,49,10,    0,0,0,0,0,0,0,0,
-            10,20,30,40,40,30,20,10,    0,0,0,0,0,0,0,0,
-            10,20,30,40,40,30,20,10,    0,0,0,0,0,0,0,0,
-            10,49,30,30,30,30,49,10,    0,0,0,0,0,0,0,0,
-            10,25,20,20,20,20,25,10 ,   0,0,0,0,0,0,0,0,
-            10,10,10,10,10,10,10,10 ,   0,0,0,0,0,0,0,0
+            10, 10, 10, 10, 10, 10, 10, 10,    0, 0, 0, 0, 0, 0, 0, 0, 
+            10, 25, 20, 20, 20, 20, 25, 10,    0, 0, 0, 0, 0, 0, 0, 0, 
+            10, 49, 30, 30, 30, 30, 49, 10,    0, 0, 0, 0, 0, 0, 0, 0, 
+            10, 20, 30, 40, 40, 30, 20, 10,    0, 0, 0, 0, 0, 0, 0, 0, 
+            10, 20, 30, 40, 40, 30, 20, 10,    0, 0, 0, 0, 0, 0, 0, 0, 
+            10, 49, 30, 30, 30, 30, 49, 10,    0, 0, 0, 0, 0, 0, 0, 0, 
+            10, 25, 20, 20, 20, 20, 25, 10,    0, 0, 0, 0, 0, 0, 0, 0, 
+            10, 10, 10, 10, 10, 10, 10, 10,    0, 0, 0, 0, 0, 0, 0, 0
         };
-
-        /// <summary>
-        /// The m_ base.
-        /// </summary>
-        private readonly Piece m_Base;
 
         #endregion
 
@@ -60,11 +57,11 @@ namespace SharpChess
         /// Initializes a new instance of the <see cref="PieceBishop"/> class.
         /// </summary>
         /// <param name="pieceBase">
-        /// The piece base.
+        /// Base part of the piece.
         /// </param>
         public PieceBishop(Piece pieceBase)
         {
-            this.m_Base = pieceBase;
+            this.Base = pieceBase;
         }
 
         #endregion
@@ -83,18 +80,12 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// Gets Base.
+        /// Gets the base part of the piece. i.e. the bit that sits on the chess square.
         /// </summary>
-        public Piece Base
-        {
-            get
-            {
-                return this.m_Base;
-            }
-        }
+        public Piece Base { get; private set; }
 
         /// <summary>
-        /// Gets BasicValue.
+        /// Gets basic value of the piece. e.g. pawn = 1, bishop = 3, queen = 9
         /// </summary>
         public int BasicValue
         {
@@ -105,18 +96,18 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// Gets ImageIndex.
+        /// Gets the image index for this piece. Used to determine which graphic image is displayed for thie piece.
         /// </summary>
         public int ImageIndex
         {
             get
             {
-                return this.m_Base.Player.Colour == Player.enmColour.White ? 1 : 0;
+                return this.Base.Player.Colour == Player.enmColour.White ? 1 : 0;
             }
         }
 
         /// <summary>
-        /// Gets a value indicating whether IsCapturable.
+        /// Gets a value indicating whether the piece is capturable. Kings aren't, everything else is.
         /// </summary>
         public bool IsCapturable
         {
@@ -127,7 +118,7 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// Gets Name.
+        /// Gets the piece's name.
         /// </summary>
         public Piece.PieceNames Name
         {
@@ -138,7 +129,7 @@ namespace SharpChess
         }
 
         /// <summary>
-        /// Gets PositionalPoints.
+        /// Gets the positional points assigned to this piece.
         /// </summary>
         public int PositionalPoints
         {
@@ -146,11 +137,11 @@ namespace SharpChess
             {
                 int intPoints = 0;
 
-                intPoints += m_aintSquareValues[this.m_Base.Square.Ordinal] << 1;
+                intPoints += SquareValues[this.Base.Square.Ordinal] << 1;
 
                 if (Game.Stage != Game.GameStageNames.End)
                 {
-                    if (this.m_Base.CanBeDrivenAwayByPawn())
+                    if (this.Base.CanBeDrivenAwayByPawn())
                     {
                         intPoints -= 30;
                     }
@@ -158,27 +149,23 @@ namespace SharpChess
 
                 // Mobility
                 Squares squares = new Squares();
-                squares.Add(this.m_Base.Square);
-                Board.LineThreatenedBy(this.m_Base.Player, squares, this.m_Base.Square, 15);
-                Board.LineThreatenedBy(this.m_Base.Player, squares, this.m_Base.Square, 17);
-                Board.LineThreatenedBy(this.m_Base.Player, squares, this.m_Base.Square, -15);
-                Board.LineThreatenedBy(this.m_Base.Player, squares, this.m_Base.Square, -17);
-                int intSquareValue = 0;
-                foreach (Square square in squares)
-                {
-                    intSquareValue += m_aintSquareValues[square.Ordinal];
-                }
+                squares.Add(this.Base.Square);
+                Board.LineThreatenedBy(this.Base.Player, squares, this.Base.Square, 15);
+                Board.LineThreatenedBy(this.Base.Player, squares, this.Base.Square, 17);
+                Board.LineThreatenedBy(this.Base.Player, squares, this.Base.Square, -15);
+                Board.LineThreatenedBy(this.Base.Player, squares, this.Base.Square, -17);
+                int intSquareValue = squares.Cast<Square>().Sum(square => SquareValues[square.Ordinal]);
 
                 intPoints += intSquareValue >> 2;
 
-                intPoints += this.m_Base.DefensePoints;
+                intPoints += this.Base.DefensePoints;
 
                 return intPoints;
             }
         }
 
         /// <summary>
-        /// Gets Value.
+        /// Gets the material value of this piece.
         /// </summary>
         public int Value
         {
@@ -193,20 +180,20 @@ namespace SharpChess
         #region Public Methods
 
         /// <summary>
-        /// The generate lazy moves.
+        /// Generate "lazy" moves for this piece, which is all usual legal moves, but also includes moves that put the king in check.
         /// </summary>
         /// <param name="moves">
-        /// The moves.
+        /// Moves list that will be populated with lazy moves.
         /// </param>
         /// <param name="movesType">
-        /// The moves type.
+        /// Types of moves to include. e.g. All, or captures-only.
         /// </param>
         public void GenerateLazyMoves(Moves moves, Moves.MoveListNames movesType)
         {
-            Board.AppendPiecePath(moves, this.m_Base, this.m_Base.Player, 17, movesType);
-            Board.AppendPiecePath(moves, this.m_Base, this.m_Base.Player, 15, movesType);
-            Board.AppendPiecePath(moves, this.m_Base, this.m_Base.Player, -15, movesType);
-            Board.AppendPiecePath(moves, this.m_Base, this.m_Base.Player, -17, movesType);
+            Board.AppendPiecePath(moves, this.Base, this.Base.Player, 17, movesType);
+            Board.AppendPiecePath(moves, this.Base, this.Base.Player, 15, movesType);
+            Board.AppendPiecePath(moves, this.Base, this.Base.Player, -15, movesType);
+            Board.AppendPiecePath(moves, this.Base, this.Base.Player, -17, movesType);
         }
 
         #endregion
