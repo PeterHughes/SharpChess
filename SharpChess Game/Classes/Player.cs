@@ -1247,7 +1247,7 @@ namespace SharpChess
             Square square;
             Square to = null;
             Piece pieceTaken = null;
-            Move.enmName MoveName = Move.enmName.Standard;
+            Move.PieceNames MoveName = Move.PieceNames.Standard;
             Player.enmColour colour;
             string strTo = "";
             string strAction="";
@@ -1264,9 +1264,9 @@ namespace SharpChess
             }
 
             // Castle king-side
-            if (Text.ToUpper()=="OO" || Text.ToUpper()=="O-O") { from=this.King.Square; to=Board.GetSquare(this.King.Square.Ordinal+2); piece=this.King; MoveName=Move.enmName.CastleKingSide; goto exithere;}
+            if (Text.ToUpper()=="OO" || Text.ToUpper()=="O-O") { from=this.King.Square; to=Board.GetSquare(this.King.Square.Ordinal+2); piece=this.King; MoveName=Move.PieceNames.CastleKingSide; goto exithere;}
             // Castle queen-side
-            if (Text.ToUpper()=="OOO" || Text.ToUpper()=="O-O-O") { from=this.King.Square; to=Board.GetSquare(this.King.Square.Ordinal-3); piece=this.King; MoveName=Move.enmName.CastleQueenSide; goto exithere;}
+            if (Text.ToUpper()=="OOO" || Text.ToUpper()=="O-O-O") { from=this.King.Square; to=Board.GetSquare(this.King.Square.Ordinal-3); piece=this.King; MoveName=Move.PieceNames.CastleQueenSide; goto exithere;}
 
 
             intPos = Text.Length;
@@ -1311,7 +1311,7 @@ namespace SharpChess
                     {
                         square = Board.GetSquare(to.Ordinal-this.PawnForwardOffset);
                         piece = square.Piece;
-                        while (piece==null || piece.Name!=Piece.enmName.Pawn || piece.Player.Colour!=this.Colour)
+                        while (piece==null || piece.Name!=Piece.PieceNames.Pawn || piece.Player.Colour!=this.Colour)
                         {
                             square = Board.GetSquare(square.Ordinal-this.PawnForwardOffset);
                             piece = square.Piece;
@@ -1322,7 +1322,7 @@ namespace SharpChess
                     else
                     {
                         piece = Board.GetPiece(to.Ordinal+this.OtherPlayer.PawnAttackLeftOffset);
-                        if (piece==null || piece.Name!=Piece.enmName.Pawn || piece.Player.Colour!=this.Colour || strFromFile!="" && piece.Square.FileName!=strFromFile)
+                        if (piece==null || piece.Name!=Piece.PieceNames.Pawn || piece.Player.Colour!=this.Colour || strFromFile!="" && piece.Square.FileName!=strFromFile)
                         {
                             piece = Board.GetPiece(to.Ordinal+this.OtherPlayer.PawnAttackRightOffset);
                         }
@@ -1332,55 +1332,55 @@ namespace SharpChess
                     break;
 
                 case "N":
-                    if ( (square = Board.GetSquare(to.Ordinal+33 ))!=null && square.Piece!=null && square.Piece.Name==Piece.enmName.Knight && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile)) piece=square.Piece; else
-                        if ( (square = Board.GetSquare(to.Ordinal+18 ))!=null && square.Piece!=null && square.Piece.Name==Piece.enmName.Knight && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece; else
-                        if ( (square = Board.GetSquare(to.Ordinal-14 ))!=null && square.Piece!=null && square.Piece.Name==Piece.enmName.Knight && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece; else
-                        if ( (square = Board.GetSquare(to.Ordinal-31 ))!=null && square.Piece!=null && square.Piece.Name==Piece.enmName.Knight && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece; else
-                        if ( (square = Board.GetSquare(to.Ordinal-33 ))!=null && square.Piece!=null && square.Piece.Name==Piece.enmName.Knight && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece; else
-                        if ( (square = Board.GetSquare(to.Ordinal-18 ))!=null && square.Piece!=null && square.Piece.Name==Piece.enmName.Knight && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece; else
-                        if ( (square = Board.GetSquare(to.Ordinal+14 ))!=null && square.Piece!=null && square.Piece.Name==Piece.enmName.Knight && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece; else
-                        if ( (square = Board.GetSquare(to.Ordinal+31 ))!=null && square.Piece!=null && square.Piece.Name==Piece.enmName.Knight && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece;
+                    if ( (square = Board.GetSquare(to.Ordinal+33 ))!=null && square.Piece!=null && square.Piece.Name==Piece.PieceNames.Knight && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile)) piece=square.Piece; else
+                        if ( (square = Board.GetSquare(to.Ordinal+18 ))!=null && square.Piece!=null && square.Piece.Name==Piece.PieceNames.Knight && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece; else
+                        if ( (square = Board.GetSquare(to.Ordinal-14 ))!=null && square.Piece!=null && square.Piece.Name==Piece.PieceNames.Knight && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece; else
+                        if ( (square = Board.GetSquare(to.Ordinal-31 ))!=null && square.Piece!=null && square.Piece.Name==Piece.PieceNames.Knight && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece; else
+                        if ( (square = Board.GetSquare(to.Ordinal-33 ))!=null && square.Piece!=null && square.Piece.Name==Piece.PieceNames.Knight && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece; else
+                        if ( (square = Board.GetSquare(to.Ordinal-18 ))!=null && square.Piece!=null && square.Piece.Name==Piece.PieceNames.Knight && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece; else
+                        if ( (square = Board.GetSquare(to.Ordinal+14 ))!=null && square.Piece!=null && square.Piece.Name==Piece.PieceNames.Knight && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece; else
+                        if ( (square = Board.GetSquare(to.Ordinal+31 ))!=null && square.Piece!=null && square.Piece.Name==Piece.PieceNames.Knight && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece;
                     from = piece.Square;					
                     break;
 
                 case "B":
                     colour = (strAction=="X" ? this.OtherPlayer.Colour : this.Colour);
-                    if ((piece=Board.LinesFirstPiece(this.Colour, Piece.enmName.Bishop, to, 15))!=null && piece.Name==Piece.enmName.Bishop && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
-                        if ((piece=Board.LinesFirstPiece(this.Colour, Piece.enmName.Bishop, to, 17))!=null && piece.Name==Piece.enmName.Bishop && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
-                        if ((piece=Board.LinesFirstPiece(this.Colour, Piece.enmName.Bishop, to, -15))!=null && piece.Name==Piece.enmName.Bishop && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
-                        if ((piece=Board.LinesFirstPiece(this.Colour, Piece.enmName.Bishop, to, -17))!=null && piece.Name==Piece.enmName.Bishop && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else piece=null;
+                    if ((piece=Board.LinesFirstPiece(this.Colour, Piece.PieceNames.Bishop, to, 15))!=null && piece.Name==Piece.PieceNames.Bishop && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
+                        if ((piece=Board.LinesFirstPiece(this.Colour, Piece.PieceNames.Bishop, to, 17))!=null && piece.Name==Piece.PieceNames.Bishop && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
+                        if ((piece=Board.LinesFirstPiece(this.Colour, Piece.PieceNames.Bishop, to, -15))!=null && piece.Name==Piece.PieceNames.Bishop && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
+                        if ((piece=Board.LinesFirstPiece(this.Colour, Piece.PieceNames.Bishop, to, -17))!=null && piece.Name==Piece.PieceNames.Bishop && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else piece=null;
                     from = piece.Square;					
                     break;
 
                 case "R":
-                    if ((piece=Board.LinesFirstPiece(this.Colour, Piece.enmName.Rook, to, 1))!=null && piece.Name==Piece.enmName.Rook && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
-                        if ((piece=Board.LinesFirstPiece(this.Colour, Piece.enmName.Rook, to, -1))!=null && piece.Name==Piece.enmName.Rook && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
-                        if ((piece=Board.LinesFirstPiece(this.Colour, Piece.enmName.Rook, to, 16))!=null && piece.Name==Piece.enmName.Rook && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
-                        if ((piece=Board.LinesFirstPiece(this.Colour, Piece.enmName.Rook, to, -16))!=null && piece.Name==Piece.enmName.Rook && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else piece=null;
+                    if ((piece=Board.LinesFirstPiece(this.Colour, Piece.PieceNames.Rook, to, 1))!=null && piece.Name==Piece.PieceNames.Rook && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
+                        if ((piece=Board.LinesFirstPiece(this.Colour, Piece.PieceNames.Rook, to, -1))!=null && piece.Name==Piece.PieceNames.Rook && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
+                        if ((piece=Board.LinesFirstPiece(this.Colour, Piece.PieceNames.Rook, to, 16))!=null && piece.Name==Piece.PieceNames.Rook && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
+                        if ((piece=Board.LinesFirstPiece(this.Colour, Piece.PieceNames.Rook, to, -16))!=null && piece.Name==Piece.PieceNames.Rook && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else piece=null;
                     from = piece.Square;					
                     break;
 
                 case "Q":
-                    if ((piece=Board.LinesFirstPiece(this.Colour, Piece.enmName.Queen, to, 15))!=null && piece.Name==Piece.enmName.Queen && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
-                        if ((piece=Board.LinesFirstPiece(this.Colour, Piece.enmName.Queen, to, 17))!=null && piece.Name==Piece.enmName.Queen && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
-                        if ((piece=Board.LinesFirstPiece(this.Colour, Piece.enmName.Queen, to, -15))!=null && piece.Name==Piece.enmName.Queen && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
-                        if ((piece=Board.LinesFirstPiece(this.Colour, Piece.enmName.Queen, to, -17))!=null && piece.Name==Piece.enmName.Queen && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
-                        if ((piece=Board.LinesFirstPiece(this.Colour, Piece.enmName.Queen, to, 1))!=null && piece.Name==Piece.enmName.Queen && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
-                        if ((piece=Board.LinesFirstPiece(this.Colour, Piece.enmName.Queen, to, -1))!=null && piece.Name==Piece.enmName.Queen && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
-                        if ((piece=Board.LinesFirstPiece(this.Colour, Piece.enmName.Queen, to, 16))!=null && piece.Name==Piece.enmName.Queen && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
-                        if ((piece=Board.LinesFirstPiece(this.Colour, Piece.enmName.Queen, to, -16))!=null && piece.Name==Piece.enmName.Queen && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else piece=null;
+                    if ((piece=Board.LinesFirstPiece(this.Colour, Piece.PieceNames.Queen, to, 15))!=null && piece.Name==Piece.PieceNames.Queen && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
+                        if ((piece=Board.LinesFirstPiece(this.Colour, Piece.PieceNames.Queen, to, 17))!=null && piece.Name==Piece.PieceNames.Queen && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
+                        if ((piece=Board.LinesFirstPiece(this.Colour, Piece.PieceNames.Queen, to, -15))!=null && piece.Name==Piece.PieceNames.Queen && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
+                        if ((piece=Board.LinesFirstPiece(this.Colour, Piece.PieceNames.Queen, to, -17))!=null && piece.Name==Piece.PieceNames.Queen && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
+                        if ((piece=Board.LinesFirstPiece(this.Colour, Piece.PieceNames.Queen, to, 1))!=null && piece.Name==Piece.PieceNames.Queen && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
+                        if ((piece=Board.LinesFirstPiece(this.Colour, Piece.PieceNames.Queen, to, -1))!=null && piece.Name==Piece.PieceNames.Queen && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
+                        if ((piece=Board.LinesFirstPiece(this.Colour, Piece.PieceNames.Queen, to, 16))!=null && piece.Name==Piece.PieceNames.Queen && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
+                        if ((piece=Board.LinesFirstPiece(this.Colour, Piece.PieceNames.Queen, to, -16))!=null && piece.Name==Piece.PieceNames.Queen && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else piece=null;
                     from = piece.Square;					
                     break;
 
                 case "K":
-                    if ( (square = Board.GetSquare(to.Ordinal+15))!=null && square.Piece!=null && square.Piece.Name==Piece.enmName.King && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile)) piece=square.Piece; else
-                        if ( (square = Board.GetSquare(to.Ordinal+17 ))!=null && square.Piece!=null && square.Piece.Name==Piece.enmName.King && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece; else
-                        if ( (square = Board.GetSquare(to.Ordinal-15 ))!=null && square.Piece!=null && square.Piece.Name==Piece.enmName.King && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece; else
-                        if ( (square = Board.GetSquare(to.Ordinal-17 ))!=null && square.Piece!=null && square.Piece.Name==Piece.enmName.King && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece; else
-                        if ( (square = Board.GetSquare(to.Ordinal+ 1 ))!=null && square.Piece!=null && square.Piece.Name==Piece.enmName.King && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece; else
-                        if ( (square = Board.GetSquare(to.Ordinal- 1 ))!=null && square.Piece!=null && square.Piece.Name==Piece.enmName.King && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece; else
-                        if ( (square = Board.GetSquare(to.Ordinal+16 ))!=null && square.Piece!=null && square.Piece.Name==Piece.enmName.King && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece; else
-                        if ( (square = Board.GetSquare(to.Ordinal-16 ))!=null && square.Piece!=null && square.Piece.Name==Piece.enmName.King && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece;
+                    if ( (square = Board.GetSquare(to.Ordinal+15))!=null && square.Piece!=null && square.Piece.Name==Piece.PieceNames.King && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile)) piece=square.Piece; else
+                        if ( (square = Board.GetSquare(to.Ordinal+17 ))!=null && square.Piece!=null && square.Piece.Name==Piece.PieceNames.King && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece; else
+                        if ( (square = Board.GetSquare(to.Ordinal-15 ))!=null && square.Piece!=null && square.Piece.Name==Piece.PieceNames.King && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece; else
+                        if ( (square = Board.GetSquare(to.Ordinal-17 ))!=null && square.Piece!=null && square.Piece.Name==Piece.PieceNames.King && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece; else
+                        if ( (square = Board.GetSquare(to.Ordinal+ 1 ))!=null && square.Piece!=null && square.Piece.Name==Piece.PieceNames.King && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece; else
+                        if ( (square = Board.GetSquare(to.Ordinal- 1 ))!=null && square.Piece!=null && square.Piece.Name==Piece.PieceNames.King && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece; else
+                        if ( (square = Board.GetSquare(to.Ordinal+16 ))!=null && square.Piece!=null && square.Piece.Name==Piece.PieceNames.King && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece; else
+                        if ( (square = Board.GetSquare(to.Ordinal-16 ))!=null && square.Piece!=null && square.Piece.Name==Piece.PieceNames.King && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece;
                     from = piece.Square;					
                     break;
             }
@@ -2326,39 +2326,37 @@ namespace SharpChess
                     return;
                 }
 
-                /*
                 // "Good" capture
-                if (move.From.Piece.Name == Piece.enmName.Queen && move.To.Piece.Name == Piece.enmName.Queen)
+                if (move.From.Piece.Name == Piece.PieceNames.Queen && move.To.Piece.Name == Piece.PieceNames.Queen)
                 {
                     move.Score += 99999;
                     return;
                 }
-                else if (move.From.Piece.Name == Piece.enmName.Rook && move.To.Piece.Name == Piece.enmName.Rook)
+                else if (move.From.Piece.Name == Piece.PieceNames.Rook && move.To.Piece.Name == Piece.PieceNames.Rook)
                 {
                     move.Score += 99998;
                     return;
                 }
-                else if (move.From.Piece.Name == Piece.enmName.Knight && move.To.Piece.Name == Piece.enmName.Bishop)
+                else if (move.From.Piece.Name == Piece.PieceNames.Knight && move.To.Piece.Name == Piece.PieceNames.Bishop)
                 {
                     move.Score += 99997;
                     return;
                 }
-                else if (move.From.Piece.Name == Piece.enmName.Bishop && move.To.Piece.Name == Piece.enmName.Bishop)
+                else if (move.From.Piece.Name == Piece.PieceNames.Bishop && move.To.Piece.Name == Piece.PieceNames.Bishop)
                 {
                     move.Score += 99996;
                     return;
                 }
-                else if (move.From.Piece.Name == Piece.enmName.Bishop && move.To.Piece.Name == Piece.enmName.Knight)
+                else if (move.From.Piece.Name == Piece.PieceNames.Bishop && move.To.Piece.Name == Piece.PieceNames.Knight)
                 {
                     move.Score += 99995;
                     return;
                 }
-                else if (move.From.Piece.Name == Piece.enmName.Pawn && (move.Name == Move.enmName.EnPassent && Board.GetPiece(move.To.Ordinal - player.PawnForwardOffset).Name == Piece.enmName.Pawn || move.To.Piece.Name == Piece.enmName.Pawn))
+                else if (move.From.Piece.Name == Piece.PieceNames.Pawn && (move.Name == Move.MoveNames.EnPassent && Board.GetPiece(move.To.Ordinal - player.PawnForwardOffset).Name == Piece.PieceNames.Pawn || move.To.Piece.Name == Piece.PieceNames.Pawn))
                 {
                     move.Score += 99994;
                     return;
                 }
-                */
             }
 
             move.Score += History.Retrieve(player.Colour, move.From.Ordinal, move.To.Ordinal);
@@ -2395,7 +2393,7 @@ namespace SharpChess
             */
 
             // Score based upon tactical positional value of board square i.e. how close to centre
-            // move.Score += move.To.Value - move.From.Value;
+            move.Score += move.To.Value - move.From.Value;
         }
 
         /// <summary>

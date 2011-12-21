@@ -92,8 +92,8 @@ namespace SharpChess_Tests
 
             TimeSpan elpased = Game_Accessor.PlayerToPlay.ThinkingTimeElpased;
 
-            // Assert.IsTrue(positions <= 52931); Before finding pawn king hash score b-u-g.
-            Assert.IsTrue(positions <= 131155);
+            // Assert.IsTrue(positions == 52931); Before finding pawn king hash score b-u-g.
+            Assert.IsTrue(positions == 94138);
         }
 
         #endregion
