@@ -213,8 +213,8 @@ namespace SharpChess
         public Player()
         {
             PawnCountInPlay = 8;
-            this.m_colPieces = new Pieces(this);
-            this.m_colCapturedEnemyPieces = new Pieces(this);
+            this.m_colPieces = new Pieces();
+            this.m_colCapturedEnemyPieces = new Pieces();
         }
 
         #endregion

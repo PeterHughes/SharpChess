@@ -414,7 +414,7 @@ namespace SharpChess
         public Pieces AttackersPieceList(Player player)
         {
             Piece piece;
-            Pieces pieces = new Pieces(player);
+            Pieces pieces = new Pieces();
 
             // Pawn
             piece = Board.GetPiece(m_intOrdinal - player.PawnAttackLeftOffset); if (piece != null && piece.Name == Piece.PieceNames.Pawn && piece.Player.Colour == player.Colour) pieces.Add(piece);

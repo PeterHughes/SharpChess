@@ -3,7 +3,7 @@
 //   Peter Hughes
 // </copyright>
 // <summary>
-//   The pieces.
+//   A list of pieces.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -32,36 +32,16 @@ namespace SharpChess
     #endregion
 
     /// <summary>
-    /// The pieces.
+    /// A list of pieces.
     /// </summary>
     public class Pieces : IEnumerable
     {
         #region Constants and Fields
 
         /// <summary>
-        /// The m_col pieces.
+        /// Internal ArrayList of pieces.
         /// </summary>
-        private readonly ArrayList m_colPieces = new ArrayList();
-
-        /// <summary>
-        /// The m_player.
-        /// </summary>
-        private readonly Player m_player;
-
-        #endregion
-
-        #region Constructors and Destructors
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Pieces"/> class.
-        /// </summary>
-        /// <param name="player">
-        /// The player.
-        /// </param>
-        public Pieces(Player player)
-        {
-            this.m_player = player;
-        }
+        private readonly ArrayList pieces = new ArrayList();
 
         #endregion
 
@@ -74,18 +54,7 @@ namespace SharpChess
         {
             get
             {
-                return this.m_colPieces.Count;
-            }
-        }
-
-        /// <summary>
-        /// Gets Player.
-        /// </summary>
-        public Player Player
-        {
-            get
-            {
-                return this.m_player;
+                return this.pieces.Count;
             }
         }
 
@@ -101,88 +70,90 @@ namespace SharpChess
         /// </param>
         public void Add(Piece piece)
         {
-            this.m_colPieces.Add(piece);
+            this.pieces.Add(piece);
         }
 
         /// <summary>
-        /// The clone.
+        /// Return a close of this list.
         /// </summary>
         /// <returns>
         /// The clone.
         /// </returns>
         public object Clone()
         {
-            return this.m_colPieces.Clone();
+            return this.pieces.Clone();
         }
 
         /// <summary>
-        /// The get enumerator.
+        /// Get the enumerator for this list.
         /// </summary>
         /// <returns>
+        /// The enumerator.
         /// </returns>
         public IEnumerator GetEnumerator()
         {
-            return this.m_colPieces.GetEnumerator();
+            return this.pieces.GetEnumerator();
         }
 
         /// <summary>
-        /// The index of.
+        /// Searches for the specified piece and returns its index.
         /// </summary>
         /// <param name="piece">
-        /// The piece.
+        /// The piece to search for.
         /// </param>
         /// <returns>
-        /// The index of.
+        /// Index value of the found piece. or null if not found.
         /// </returns>
         public int IndexOf(Piece piece)
         {
-            return this.m_colPieces.IndexOf(piece);
+            return this.pieces.IndexOf(piece);
         }
 
         /// <summary>
-        /// The insert.
+        /// Insert a piece into the list. at the specified index position.
         /// </summary>
-        /// <param name="Ordinal">
-        /// The ordinal.
+        /// <param name="ordinal">
+        /// The ordinal index position where the piece will be inserted.
         /// </param>
         /// <param name="piece">
         /// The piece.
         /// </param>
-        public void Insert(int Ordinal, Piece piece)
+        public void Insert(int ordinal, Piece piece)
         {
-            this.m_colPieces.Insert(Ordinal, piece);
+            this.pieces.Insert(ordinal, piece);
         }
 
         /// <summary>
-        /// The item.
+        /// Returns the piece at the specified index position in the list.
         /// </summary>
         /// <param name="intIndex">
-        /// The int index.
+        /// Index position.
         /// </param>
         /// <returns>
+        /// The piece at the specified index.
         /// </returns>
         public Piece Item(int intIndex)
         {
-            return (Piece)this.m_colPieces[intIndex];
+            return (Piece)this.pieces[intIndex];
         }
 
         /// <summary>
-        /// The remove.
+        /// Remove the piece from the list.
         /// </summary>
         /// <param name="piece">
-        /// The piece.
+        /// The piece to remove.
         /// </param>
         public void Remove(Piece piece)
         {
-            this.m_colPieces.Remove(piece);
+            this.pieces.Remove(piece);
         }
 
         /// <summary>
-        /// The sort by score.
+        /// The sort the pieces by their score value.
         /// </summary>
         public void SortByScore()
         {
-            this.m_colPieces.Sort();
+            this.pieces.Sort();
         }
 
         #endregion
