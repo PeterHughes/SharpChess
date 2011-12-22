@@ -60,7 +60,7 @@ namespace SharpChess
             ClockFixedTimePerMove = new TimeSpan(0, 0, 0);
             DifficultyLevel = 1;
             ClockTime = new TimeSpan(0, 5, 0);
-            ClockMoves = 40;
+            ClockMaxMoves = 40;
             UseRandomOpeningMoves = true;
             MoveRedoList = new Moves();
             MaximumSearchDepth = 1;
@@ -239,9 +239,9 @@ namespace SharpChess
         public static TimeSpan ClockIncrementPerMove { get; set; }
 
         /// <summary>
-        ///   Gets or sets a list of Clock Moves.
+        ///   Gets or sets the max number of moves on the clock. e.g. 60 moves in 30 minutes
         /// </summary>
-        public static int ClockMoves { get; set; }
+        public static int ClockMaxMoves { get; set; }
 
         /// <summary>
         ///   Gets or sets the Clock Time.
@@ -836,7 +836,7 @@ namespace SharpChess
 
             if (xmlnodeGame.GetAttribute("ClockMoves") != string.Empty)
             {
-                ClockMoves = int.Parse(xmlnodeGame.GetAttribute("ClockMoves"));
+                ClockMaxMoves = int.Parse(xmlnodeGame.GetAttribute("ClockMoves"));
             }
 
             if (xmlnodeGame.GetAttribute("ClockMinutes") != string.Empty)
@@ -1090,7 +1090,7 @@ namespace SharpChess
                 "BoardOrientation", Board.Orientation == Board.OrientationNames.White ? "White" : "Black");
             xmlnodeGame.SetAttribute("Version", Application.ProductVersion);
             xmlnodeGame.SetAttribute("DifficultyLevel", DifficultyLevel.ToString());
-            xmlnodeGame.SetAttribute("ClockMoves", ClockMoves.ToString());
+            xmlnodeGame.SetAttribute("ClockMoves", ClockMaxMoves.ToString());
             xmlnodeGame.SetAttribute("ClockSeconds", ClockTime.TotalSeconds.ToString());
             xmlnodeGame.SetAttribute("MaximumSearchDepth", MaximumSearchDepth.ToString());
             xmlnodeGame.SetAttribute("Pondering", EnablePondering ? "1" : "0");

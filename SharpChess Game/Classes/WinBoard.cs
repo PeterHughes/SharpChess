@@ -236,7 +236,7 @@ namespace SharpChess
                 {
                     Game.SuspendPondering();
                     Game.DifficultyLevel = 0;
-                    Game.ClockMoves = 40;
+                    Game.ClockMaxMoves = 40;
                     Game.ClockTime = new TimeSpan(0, 5, 0);
                     Game.UseRandomOpeningMoves = true;
                     Game.MaximumSearchDepth = 32;
@@ -362,7 +362,7 @@ namespace SharpChess
                 {
                     // Set time Absolute fixed time-per-move. No time is carried forward from one move to the next. 
                     // The commands "level" and "st" are not used together. 
-                    Game.ClockMoves = 1;
+                    Game.ClockMaxMoves = 1;
                     Game.ClockTime = new TimeSpan(0, 0, 0);
                     Game.ClockIncrementPerMove = new TimeSpan(0, 0, 0);
                     Game.ClockFixedTimePerMove = new TimeSpan(0, 0, int.Parse(strMessage.Substring("st ".Length)));
@@ -422,7 +422,7 @@ namespace SharpChess
                     }
                     else if (Game.ClockIncrementPerMove.Ticks > 0)
                     {
-                        Game.PlayerToPlay.Clock.TimeElapsed = (new TimeSpan(Game.ClockTime.Ticks + Game.ClockIncrementPerMove.Ticks * Game.MoveNo)) - (new TimeSpan(long.Parse(strMessage.Substring("time ".Length)) * 100000));
+                        Game.PlayerToPlay.Clock.TimeElapsed = (new TimeSpan(Game.ClockTime.Ticks + (Game.ClockIncrementPerMove.Ticks * Game.MoveNo))) - (new TimeSpan(long.Parse(strMessage.Substring("time ".Length)) * 100000));
                     }
                     else
                     {
@@ -487,7 +487,7 @@ namespace SharpChess
                         draw offer to have been withdrawn by the time you accept it, so don't assume the game is over because 
                         you accept a draw offer. Continue playing until xboard tells you the game is over. See also 
                         "offer draw" below. 
-                        Ignore all draw offer for now.
+                        Ignore all draw offers for now.
                     */
                 }
                 else if (strMessage.StartsWith("result "))
@@ -510,7 +510,7 @@ namespace SharpChess
                         The setboard command is the new way to set up positions, beginning in protocol version 2. 
                         It is not used unless it has been selected with the feature command. 
                         Here FEN is a position in Forsythe-Edwards Notation, as defined in the PGN standard. 
-                        Illegal positions: Note that either setboard or edit can be used to send an illegal position to the engine. 
+                        Illegal positions: N-o-t-e that either setboard or edit can be used to send an illegal position to the engine. 
                         The user can create any position with xboard's Edit Position command (even, say, an empty board, or a 
                         board with 64 white kings and no black ones). If your engine receives a position that it considers 
                         illegal, I suggest that you send the response "tellusererror Illegal position", and then respond to 
@@ -1032,7 +1032,7 @@ namespace SharpChess
                 intSeconds = 0;
             }
 
-            Game.ClockMoves = intMoves;
+            Game.ClockMaxMoves = intMoves;
             Game.ClockTime = new TimeSpan(0, intMinutes, intSeconds);
             Game.ClockIncrementPerMove = new TimeSpan(0, 0, intIncrement);
             Game.ClockFixedTimePerMove = new TimeSpan(0, 0, 0);

@@ -1571,7 +1571,7 @@ namespace SharpChess
                         new TimeSpan(
                             Math.Max(this.m_tsnThinkingTimeAllotted.Ticks, Game.ClockIncrementPerMove.Ticks / 2 + 1));
                 }
-                else if (Game.ClockMoves == 0 && Game.ClockIncrementPerMove.TotalSeconds == 0)
+                else if (Game.ClockMaxMoves == 0 && Game.ClockIncrementPerMove.TotalSeconds == 0)
                 {
                     // Fixed game time
                     this.m_tsnThinkingTimeAllotted = new TimeSpan(this.m_PlayerClock.TimeRemaining.Ticks / 30);

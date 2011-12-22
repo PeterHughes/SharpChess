@@ -704,7 +704,7 @@ namespace SharpChess
         {
             Game.DifficultyLevel = this.radLevel.Checked ? this.trkLevel.Value : 0;
             Game.EnablePondering = this.chkEnablePondering.Checked;
-            Game.ClockMoves = (int)this.numMoves.Value;
+            Game.ClockMaxMoves = (int)this.numMoves.Value;
             Game.ClockTime = new TimeSpan(0, (int)this.numMinutes.Value, 0);
             Game.ClockIncrementPerMove = new TimeSpan(0, 0, 0);
             Game.ClockFixedTimePerMove = new TimeSpan(0, 0, 0);
@@ -751,7 +751,7 @@ namespace SharpChess
             }
 
             this.radCustom.Checked = Game.DifficultyLevel == 0;
-            this.numMoves.Value = Math.Max(Game.ClockMoves, 1);
+            this.numMoves.Value = Math.Max(Game.ClockMaxMoves, 1);
             this.numMinutes.Value = Convert.ToDecimal(Math.Max(Math.Round(Game.ClockTime.TotalMinutes, 0), 1));
             this.chkRestrictSearchDepth.Checked = Game.MaximumSearchDepth > 0;
             this.numMaximumSearchDepth.Value = Math.Max(Game.MaximumSearchDepth, 1);

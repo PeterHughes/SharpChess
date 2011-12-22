@@ -3,7 +3,7 @@
 //   Peter Hughes
 // </copyright>
 // <summary>
-//   The player clock.
+//   Player chess clock.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -32,31 +32,11 @@ namespace SharpChess
     #endregion
 
     /// <summary>
-    /// The player clock.
+    /// Player chess clock.
     /// </summary>
     public class PlayerClock
     {
         #region Constants and Fields
-
-        /// <summary>
-        ///   The m_bln is ticking.
-        /// </summary>
-        private bool m_blnIsTicking;
-
-        /// <summary>
-        ///   The m_dtm turn start.
-        /// </summary>
-        private DateTime m_dtmTurnStart;
-
-        /// <summary>
-        ///   The m_player.
-        /// </summary>
-        private Player m_player;
-
-        /// <summary>
-        ///   The m_tsn time elapsed.
-        /// </summary>
-        private TimeSpan m_tsnTimeElapsed;
 
         #endregion
 
@@ -65,12 +45,8 @@ namespace SharpChess
         /// <summary>
         /// Initializes a new instance of the <see cref="PlayerClock"/> class.
         /// </summary>
-        /// <param name="player">
-        /// The player.
-        /// </param>
-        public PlayerClock(Player player)
+        public PlayerClock()
         {
-            this.m_player = player;
             this.Reset();
         }
 
@@ -79,70 +55,60 @@ namespace SharpChess
         #region Public Properties
 
         /// <summary>
-        ///   Gets ControlPeriod.
+        /// Gets a value that is used to automatically reset the "number of moves remaining" back to "Clock Max Moves", 
+        /// when the number of player moves exceeds "ClockMaxMoves". e.g. The clock is set at 120 moves in 60 minutes. 
+        /// At the beginning of the game we're in Control Period 1. If the player gets to move 121 then we move into Control Period 2.
+        /// So the Control Period increments by 1, every 120 moves, effectively allowing play to continue, and the clock to
+        /// continue functioning.
         /// </summary>
         public int ControlPeriod
         {
             get
             {
-                return Game.ClockMoves == 0 ? 1 : (Game.MoveNo / Game.ClockMoves) + 1;
+                return Game.ClockMaxMoves == 0 ? 1 : (Game.MoveNo / Game.ClockMaxMoves) + 1;
             }
         }
 
         /// <summary>
-        ///   Gets a value indicating whether IsTicking.
+        /// Gets a value indicating whether the player's clock is ticking. 
+        /// A player's clock ticks during their turn, and and is suspended during their opponent's turn.
         /// </summary>
-        public bool IsTicking
-        {
-            get
-            {
-                return this.m_blnIsTicking;
-            }
-        }
+        public bool IsTicking { get; private set; }
 
         /// <summary>
-        ///   Gets MovesRemaining.
+        /// Gets the number of move that the player has remaining, when the clock has a move limit e.g. 120 moves in 60 minutes.
+        /// When the remaining moves run out, then it is automatically re-extended (see ControlPeriod).
         /// </summary>
         public int MovesRemaining
         {
             get
             {
-                int intRepeatingMoves = Game.ClockMoves * this.ControlPeriod;
-                return Math.Max(intRepeatingMoves - Game.MoveNo, 0);
+                // N-o-t-e the remaining moves count is auto-extended by the Control Period.
+                int remainingMoves = Game.ClockMaxMoves * this.ControlPeriod;
+                return Math.Max(remainingMoves - Game.MoveNo, 0);
             }
         }
 
         /// <summary>
-        ///   Gets or sets TimeElapsed.
+        ///   Gets or sets the players elapsed turn time. The clock ticks during the player's turn and is suspended during the opponents turn.
         /// </summary>
-        public TimeSpan TimeElapsed
-        {
-            get
-            {
-                return this.m_tsnTimeElapsed;
-            }
-
-            set
-            {
-                this.m_tsnTimeElapsed = value;
-            }
-        }
+        public TimeSpan TimeElapsed { get; set; }
 
         /// <summary>
-        ///   Gets TimeElapsedDisplay.
+        ///   Gets the clock's elapsed time suitable for textual display.
         /// </summary>
         public TimeSpan TimeElapsedDisplay
         {
             get
             {
-                return this.m_blnIsTicking
-                           ? this.m_tsnTimeElapsed + (DateTime.Now - this.m_dtmTurnStart)
-                           : this.m_tsnTimeElapsed;
+                return this.IsTicking
+                           ? this.TimeElapsed + (DateTime.Now - this.TurnStartTime)
+                           : this.TimeElapsed;
             }
         }
 
         /// <summary>
-        ///   Gets TimeRemaining.
+        ///   Gets player's remaining game time.
         /// </summary>
         public TimeSpan TimeRemaining
         {
@@ -150,65 +116,59 @@ namespace SharpChess
             {
                 TimeSpan tsnRepeatingTimeLimit =
                     new TimeSpan(
-                        (Game.ClockTime.Ticks * this.ControlPeriod) + Game.ClockIncrementPerMove.Ticks * Game.MoveNo);
-                return tsnRepeatingTimeLimit - this.m_tsnTimeElapsed;
+                        (Game.ClockTime.Ticks * this.ControlPeriod) + (Game.ClockIncrementPerMove.Ticks * Game.MoveNo));
+                return tsnRepeatingTimeLimit - this.TimeElapsed;
             }
         }
 
         /// <summary>
-        ///   Gets TurnStartTime.
+        ///   Gets the time when the current turn started.
         /// </summary>
-        public DateTime TurnStartTime
-        {
-            get
-            {
-                return this.m_dtmTurnStart;
-            }
-        }
+        public DateTime TurnStartTime { get; private set; }
 
         #endregion
 
         #region Public Methods
 
         /// <summary>
-        /// The reset.
+        /// The resets the clock back to zero.
         /// </summary>
         public void Reset()
         {
-            this.m_tsnTimeElapsed = new TimeSpan(0, 0, 0);
-            this.m_dtmTurnStart = DateTime.Now;
+            this.TimeElapsed = new TimeSpan(0, 0, 0);
+            this.TurnStartTime = DateTime.Now;
         }
 
         /// <summary>
-        /// The revert.
+        /// Stop the clock and reset the turn start time.
         /// </summary>
         public void Revert()
         {
-            this.m_blnIsTicking = false;
-            this.m_dtmTurnStart = DateTime.Now;
+            this.IsTicking = false;
+            this.TurnStartTime = DateTime.Now;
         }
 
         /// <summary>
-        /// The start.
+        /// Start the clock.
         /// </summary>
         public void Start()
         {
-            if (!this.m_blnIsTicking)
+            if (!this.IsTicking)
             {
-                this.m_blnIsTicking = true;
-                this.m_dtmTurnStart = DateTime.Now;
+                this.IsTicking = true;
+                this.TurnStartTime = DateTime.Now;
             }
         }
 
         /// <summary>
-        /// The stop.
+        /// Stop the clock.
         /// </summary>
         public void Stop()
         {
-            if (this.m_blnIsTicking)
+            if (this.IsTicking)
             {
-                this.m_blnIsTicking = false;
-                this.m_tsnTimeElapsed += DateTime.Now - this.m_dtmTurnStart;
+                this.IsTicking = false;
+                this.TimeElapsed += DateTime.Now - this.TurnStartTime;
             }
         }
 

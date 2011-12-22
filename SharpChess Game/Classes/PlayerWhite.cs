@@ -37,7 +37,7 @@ namespace SharpChess
         /// </summary>
         public PlayerWhite()
         {
-            this.m_PlayerClock = new PlayerClock(this);
+            this.m_PlayerClock = new PlayerClock();
 
             this.Colour = enmColour.White;
             this.Intellegence = enmIntellegence.Human;
@@ -100,7 +100,7 @@ namespace SharpChess
         /// <summary>
         /// The set pieces at starting positions.
         /// </summary>
-        protected override void SetPiecesAtStartingPositions()
+        protected override sealed void SetPiecesAtStartingPositions()
         {
             this.m_colPieces.Add(this.King = new Piece(Piece.PieceNames.King, this, 4, 0, Piece.PieceIdentifierCodes.WhiteKing));
 
