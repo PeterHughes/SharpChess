@@ -840,7 +840,7 @@ namespace SharpChess
                 {
                     picSquare = new PictureBox();
 
-                    if (square.Colour == Square.enmColour.White)
+                    if (square.Colour == Square.ColourNames.White)
                     {
                         picSquare.BackColor = this.BOARD_SQUARE_COLOUR_WHITE;
                     }
@@ -2091,7 +2091,7 @@ namespace SharpChess
             if (this.m_squareLastFrom != null)
             {
                 this.m_picSquares[this.m_squareLastFrom.File, this.m_squareLastFrom.Rank].BackColor =
-                    this.m_squareLastFrom.Colour == Square.enmColour.White
+                    this.m_squareLastFrom.Colour == Square.ColourNames.White
                          ? this.BOARD_SQUARE_COLOUR_WHITE
                          : this.BOARD_SQUARE_COLOUR_BLACK;
             }
@@ -2106,7 +2106,7 @@ namespace SharpChess
                     this.m_picSquares[this.m_squareLastFrom.File, this.m_squareLastFrom.Rank].BackColor =
                         Board.GetSquare(
                             (int)this.m_picSquares[this.m_squareLastFrom.File, this.m_squareLastFrom.Rank].Tag).Colour
-                        == Square.enmColour.White
+                        == Square.ColourNames.White
                             ? this.BOARD_SQUARE_COLOUR_WHITE_BRIGHT
                             : this.BOARD_SQUARE_COLOUR_BLACK_BRIGHT;
                 }
@@ -2115,7 +2115,7 @@ namespace SharpChess
             if (this.m_squareLastTo != null)
             {
                 this.m_picSquares[this.m_squareLastTo.File, this.m_squareLastTo.Rank].BackColor =
-                    this.m_squareLastTo.Colour == Square.enmColour.White
+                    this.m_squareLastTo.Colour == Square.ColourNames.White
                          ? this.BOARD_SQUARE_COLOUR_WHITE
                          : this.BOARD_SQUARE_COLOUR_BLACK;
             }
@@ -2129,7 +2129,7 @@ namespace SharpChess
                     // m_picSquares[m_squareLastTo.File, m_squareLastTo.Rank].BackColor=System.Drawing.Color.Yellow;
                     this.m_picSquares[this.m_squareLastTo.File, this.m_squareLastTo.Rank].BackColor =
                         Board.GetSquare((int)this.m_picSquares[this.m_squareLastTo.File, this.m_squareLastTo.Rank].Tag).
-                            Colour == Square.enmColour.White
+                            Colour == Square.ColourNames.White
                             ? this.BOARD_SQUARE_COLOUR_WHITE_BRIGHT
                             : this.BOARD_SQUARE_COLOUR_BLACK_BRIGHT;
                 }
@@ -2330,7 +2330,7 @@ namespace SharpChess
 
                 if (square != null)
                 {
-                    if (square.Colour == Square.enmColour.White)
+                    if (square.Colour == Square.ColourNames.White)
                     {
                         this.m_picSquares[square.File, square.Rank].BackColor = this.BOARD_SQUARE_COLOUR_WHITE;
                     }
@@ -2348,7 +2348,7 @@ namespace SharpChess
                 {
                     this.m_picSquares[move.To.File, move.To.Rank].BackColor =
                         Board.GetSquare((int)this.m_picSquares[move.To.File, move.To.Rank].Tag).Colour
-                         == Square.enmColour.White
+                         == Square.ColourNames.White
                              ? this.BOARD_SQUARE_COLOUR_WHITE_BRIGHT
                              : this.BOARD_SQUARE_COLOUR_BLACK_BRIGHT;
                 }

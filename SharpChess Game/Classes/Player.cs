@@ -1166,7 +1166,7 @@ namespace SharpChess
                               && move.From.Piece.BasicValue < move.To.Piece.BasicValue)
                              ||
                              (move.Name == Move.MoveNames.Standard
-                              && !move.To.CanBeMovedToBy(move.Piece.Player.OtherPlayer))))
+                              && !move.To.PlayerCanMoveToThisSquare(move.Piece.Player.OtherPlayer))))
                         {
                             moves.Remove(move);
                         }

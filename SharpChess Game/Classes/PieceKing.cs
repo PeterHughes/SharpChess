@@ -142,12 +142,12 @@ namespace SharpChess
                 }
 
                 // The king does not move over a square that is attacked by an enemy piece during the castling move
-                if (Board.GetSquare(this.Base.Square.Ordinal + 1).CanBeMovedToBy(this.Base.Player.OtherPlayer))
+                if (Board.GetSquare(this.Base.Square.Ordinal + 1).PlayerCanMoveToThisSquare(this.Base.Player.OtherPlayer))
                 {
                     return false;
                 }
 
-                if (Board.GetSquare(this.Base.Square.Ordinal + 2).CanBeMovedToBy(this.Base.Player.OtherPlayer))
+                if (Board.GetSquare(this.Base.Square.Ordinal + 2).PlayerCanMoveToThisSquare(this.Base.Player.OtherPlayer))
                 {
                     return false;
                 }
@@ -210,12 +210,12 @@ namespace SharpChess
                 }
 
                 // The king does not move over a square that is attacked by an enemy piece during the castling move
-                if (Board.GetSquare(this.Base.Square.Ordinal - 1).CanBeMovedToBy(this.Base.Player.OtherPlayer))
+                if (Board.GetSquare(this.Base.Square.Ordinal - 1).PlayerCanMoveToThisSquare(this.Base.Player.OtherPlayer))
                 {
                     return false;
                 }
 
-                if (Board.GetSquare(this.Base.Square.Ordinal - 2).CanBeMovedToBy(this.Base.Player.OtherPlayer))
+                if (Board.GetSquare(this.Base.Square.Ordinal - 2).PlayerCanMoveToThisSquare(this.Base.Player.OtherPlayer))
                 {
                     return false;
                 }
@@ -407,7 +407,7 @@ namespace SharpChess
         /// </returns>
         public bool DetermineCheckStatus()
         {
-            return this.Base.Square.CanBeMovedToBy(this.Base.Player.OtherPlayer);
+            return this.Base.Square.PlayerCanMoveToThisSquare(this.Base.Player.OtherPlayer);
         }
 
         /// <summary>

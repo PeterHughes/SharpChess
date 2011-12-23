@@ -349,7 +349,7 @@ namespace SharpChess
         {
             get
             {
-                Piece piece = this.Square.DefendedBy(this.Player);
+                Piece piece = this.Square.CheapestPieceDefendingThisSquare(this.Player);
                 if (piece != null)
                 {
                     switch (piece.Name)

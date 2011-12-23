@@ -135,7 +135,7 @@ namespace SharpChess
                             }
                             else
                             {
-                                strOutput += square.Colour == Square.enmColour.White ? "." : "#";
+                                strOutput += square.Colour == Square.ColourNames.White ? "." : "#";
                             }
                         }
 
