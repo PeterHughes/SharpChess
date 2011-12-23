@@ -41,20 +41,20 @@ namespace SharpChess
         /// <summary>
         /// The m_col squares.
         /// </summary>
-        private readonly ArrayList m_colSquares = new ArrayList(24);
+        private readonly ArrayList squareList = new ArrayList(24);
 
         #endregion
 
         #region Public Properties
 
         /// <summary>
-        /// Gets Count.
+        /// Gets the number of squares in the list.
         /// </summary>
         public int Count
         {
             get
             {
-                return this.m_colSquares.Count;
+                return this.squareList.Count;
             }
         }
 
@@ -63,76 +63,78 @@ namespace SharpChess
         #region Public Methods
 
         /// <summary>
-        /// The add.
+        /// Adds a new square to the list.
         /// </summary>
         /// <param name="square">
-        /// The square.
+        /// The square to add.
         /// </param>
         public void Add(Square square)
         {
-            this.m_colSquares.Add(square);
+            this.squareList.Add(square);
         }
 
         /// <summary>
         /// The get enumerator.
         /// </summary>
         /// <returns>
+        /// The enumerator.
         /// </returns>
         public IEnumerator GetEnumerator()
         {
-            return this.m_colSquares.GetEnumerator();
+            return this.squareList.GetEnumerator();
         }
 
         /// <summary>
-        /// The index of.
+        /// Searches for the specified square and returns its index.
         /// </summary>
         /// <param name="square">
-        /// The square.
+        /// The piece to search for.
         /// </param>
         /// <returns>
-        /// The index of.
+        /// Index value of the found square. or null if not found.
         /// </returns>
         public int IndexOf(Square square)
         {
-            return this.m_colSquares.IndexOf(square);
+            return this.squareList.IndexOf(square);
         }
 
         /// <summary>
-        /// The insert.
+        /// Insert a sqaure into the list. at the specified index position.
         /// </summary>
-        /// <param name="Ordinal">
-        /// The ordinal.
+        /// <param name="ordinal">
+        /// The ordinal index position where the square will be inserted.
         /// </param>
         /// <param name="square">
-        /// The square.
+        /// The piece.
         /// </param>
-        public void Insert(int Ordinal, Square square)
+        public void Insert(int ordinal, Square square)
         {
-            this.m_colSquares.Insert(Ordinal, square);
+            this.squareList.Insert(ordinal, square);
         }
 
         /// <summary>
-        /// The item.
+        /// Returns the square at the specified index position in the list.
         /// </summary>
         /// <param name="intIndex">
-        /// The int index.
+        /// Index position.
         /// </param>
         /// <returns>
+        /// The square at the specified index.
         /// </returns>
         public Square Item(int intIndex)
         {
-            return (Square)this.m_colSquares[intIndex];
+            return (Square)this.squareList[intIndex];
         }
 
         /// <summary>
-        /// The remove.
+        /// Remove the square from the list.
         /// </summary>
         /// <param name="square">
-        /// The square.
+        /// The piece to remove.
         /// </param>
         public void Remove(Square square)
         {
-            this.m_colSquares.Remove(square);
+            this.squareList.Remove(square);
         }
 
         #endregion
