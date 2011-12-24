@@ -2816,10 +2816,10 @@ namespace SharpChess
             this.RenderBoard();
             this.RenderClocks();
 
-            WinBoard.DetermineStatus();
+            WinBoard.QueryAndSetWinboardActiveStatus();
             if (WinBoard.Active)
             {
-                if (!WinBoard.ShowGUI)
+                if (!WinBoard.ShowGui)
                 {
                     this.WindowState = FormWindowState.Minimized;
                 }
