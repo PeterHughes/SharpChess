@@ -49,6 +49,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
         "Release"
         {
@@ -65,6 +73,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
     }
     "Deployable"
@@ -180,20 +196,20 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:SharpChess 2.6"
-        "ProductCode" = "8:{ADC82724-5334-49A6-AE74-E813B5E992BB}"
-        "PackageCode" = "8:{9C72B186-A2E7-4F0F-A074-01D41B0B25E7}"
+        "ProductName" = "8:SharpChess 2.6.1"
+        "ProductCode" = "8:{1ED78A3F-C6A4-4ADF-8734-3CFCF5723F5C}"
+        "PackageCode" = "8:{4F62C878-8EBA-4BA0-91A7-231305812869}"
         "UpgradeCode" = "8:{0D95FE29-AB20-45A4-8A09-FA93F828D577}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:2.6.0"
+        "ProductVersion" = "8:2.6.1"
         "Manufacturer" = "8:SharpChess.com"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://sharpchess.com"
-        "Title" = "8:Setup SharpChess 2.6"
+        "Title" = "8:Setup SharpChess 2.6.1"
         "Subject" = "8:SharpChess is a free computer application that enables you to play chess against the computer."
         "ARPCONTACT" = "8:Peter Hughes"
         "Keywords" = "8:SharpChess"

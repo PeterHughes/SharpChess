@@ -630,7 +630,7 @@ namespace SharpChess
                     if (Game.PlayerToPlay.IsThinking)
                     {
                         SendAnalyzeStatus(
-                            Game.PlayerToPlay.ThinkingTimeElpased, 
+                            Game.PlayerToPlay.ThinkingTimeElpased,
                             Game.PlayerToPlay.PositionsSearched, 
                             Game.PlayerToPlay.SearchDepth, 
                             Game.PlayerToPlay.TotalPositionsToSearch - Game.PlayerToPlay.SearchPositionNo, 
