@@ -44,164 +44,59 @@ namespace SharpChess
         #region Constants and Fields
 
         /// <summary>
-        ///   The intellegence.
-        /// </summary>
-        public enmIntellegence Intellegence;
-
-        /// <summary>
-        ///   The m_ king.
-        /// </summary>
-        protected Piece m_King;
-
-        /// <summary>
-        ///   The m_ material count.
-        /// </summary>
-        protected int m_MaterialCount = 7;
-
-        /// <summary>
-        ///   The m_ player clock.
-        /// </summary>
-        protected PlayerClock m_PlayerClock;
-
-        /// <summary>
-        ///   The m_col captured enemy pieces.
-        /// </summary>
-        protected Pieces m_colCapturedEnemyPieces;
-
-        /// <summary>
-        ///   The m_col pieces.
-        /// </summary>
-        protected Pieces m_colPieces;
-
-        /// <summary>
-        ///   The m_colour.
-        /// </summary>
-        protected enmColour m_colour;
-
-        /// <summary>
-        ///   The m_int evaluations.
-        /// </summary>
-        protected int m_intEvaluations;
-
-        /// <summary>
-        ///   The m_int positions searched.
-        /// </summary>
-        protected int m_intPositionsSearched;
-
-        /// <summary>
-        ///   The m_int search position no.
-        /// </summary>
-        protected int m_intSearchPositionNo;
-
-        /// <summary>
-        ///   The m_int total positions to search.
-        /// </summary>
-        protected int m_intTotalPositionsToSearch;
-
-        /// <summary>
         ///   The ma x_ score.
         /// </summary>
-        private const int MAX_SCORE = int.MaxValue;
+        private const int MaxScore = int.MaxValue;
 
         /// <summary>
         ///   The mi n_ score.
         /// </summary>
-        private const int MIN_SCORE = int.MinValue + 1;
-
-        /// <summary>
-        ///   The m_int minimum search depth.
-        /// </summary>
-        private const int m_intMinimumSearchDepth = 1;
-
-        /// <summary>
-        ///   The m_aint attack bonus.
-        /// </summary>
-        private static int[] m_aintAttackBonus = { 0, 3, 25, 53, 79, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99 };
-
-        /// <summary>
-        ///   The m_dtm pondering start.
-        /// </summary>
-        private static DateTime m_dtmPonderingStart;
-
-        /// <summary>
-        ///   The m_ulong pondering hash code a.
-        /// </summary>
-        private static ulong m_ulongPonderingHashCodeA;
-
-        /// <summary>
-        ///   The m_ulong pondering hash code b.
-        /// </summary>
-        private static ulong m_ulongPonderingHashCodeB;
-
-        /// <summary>
-        ///   The m_bln display move analysis tree.
-        /// </summary>
-        private bool m_blnDisplayMoveAnalysisTree;
-
-        /// <summary>
-        ///   The m_bln force immediate move.
-        /// </summary>
-        private bool m_blnForceImmediateMove;
-
-        /// <summary>
-        ///   The m_bln is pondering.
-        /// </summary>
-        private bool m_blnIsPondering;
-
-        /// <summary>
-        ///   The m_int max extensions reached.
-        /// </summary>
-        private int m_intMaxExtensionsReached;
-
-        /// <summary>
-        ///   The m_int max q depth reached.
-        /// </summary>
-        private int m_intMaxQDepthReached;
-
-        /// <summary>
-        ///   The m_int max search depth.
-        /// </summary>
-        private int m_intMaxSearchDepth = 32;
+        private const int MinScore = int.MinValue + 1;
 
         /// <summary>
         ///   The m_int min search depth.
         /// </summary>
-        private int m_intMinSearchDepth = 1;
+        private const int MinSearchDepth = 1;
 
         /// <summary>
-        ///   The m_int search depth.
+        ///   The m_int minimum search depth.
         /// </summary>
-        private int m_intSearchDepth;
+        private const int MinimumSearchDepth = 1;
 
         /// <summary>
-        ///   The m_move current.
+        ///   The m_ulong pondering hash code a.
         /// </summary>
-        private Move m_moveCurrent;
+        private static ulong ponderingHashCodeA;
 
         /// <summary>
-        ///   The m_moves pv best.
+        ///   The m_ulong pondering hash code b.
         /// </summary>
-        private Moves m_movesPVBest;
+        private static ulong ponderingHashCodeB;
 
         /// <summary>
-        ///   The m_thread thought.
+        ///   The m_bln display move analysis tree.
         /// </summary>
-        private Thread m_threadThought;
+        private bool displayMoveAnalysisTree;
 
         /// <summary>
-        ///   The m_tsn thinking time allotted.
+        ///   The m_bln force immediate move.
         /// </summary>
-        private TimeSpan m_tsnThinkingTimeAllotted;
+        private bool forceAnImmediateMove;
 
         /// <summary>
         ///   The m_tsn thinking time cutoff.
         /// </summary>
-        private TimeSpan m_tsnThinkingTimeCutoff;
+        private TimeSpan thinkingTimeCutoff;
 
         /// <summary>
         ///   The m_tsn thinking time max allowed.
         /// </summary>
-        private TimeSpan m_tsnThinkingTimeMaxAllowed;
+        private TimeSpan thinkingTimeMaxAllowed;
+
+        /// <summary>
+        ///   The m_thread thought.
+        /// </summary>
+        private Thread threadThought;
 
         #endregion
 
@@ -210,11 +105,14 @@ namespace SharpChess
         /// <summary>
         ///   Initializes a new instance of the <see cref = "Player" /> class.
         /// </summary>
-        public Player()
+        protected Player()
         {
-            PawnCountInPlay = 8;
-            this.m_colPieces = new Pieces();
-            this.m_colCapturedEnemyPieces = new Pieces();
+            this.Clock = new PlayerClock();
+            this.MaxSearchDepth = 32;
+            this.MaterialCount = 7;
+            this.PawnCountInPlay = 8;
+            this.Pieces = new Pieces();
+            this.CapturedEnemyPieces = new Pieces();
         }
 
         #endregion
@@ -224,7 +122,7 @@ namespace SharpChess
         /// <summary>
         /// The delegatetype player event.
         /// </summary>
-        public delegate void delegatetypePlayerEvent();
+        public delegate void PlayerEvent();
 
         #endregion
 
@@ -233,17 +131,17 @@ namespace SharpChess
         /// <summary>
         ///   The move considered.
         /// </summary>
-        public event delegatetypePlayerEvent MoveConsidered;
+        public event PlayerEvent MoveConsidered;
 
         /// <summary>
         ///   The ready to make move.
         /// </summary>
-        public event delegatetypePlayerEvent ReadyToMakeMove;
+        public event PlayerEvent ReadyToMakeMove;
 
         /// <summary>
         ///   The thinking beginning.
         /// </summary>
-        public event delegatetypePlayerEvent ThinkingBeginning;
+        public event PlayerEvent ThinkingBeginning;
 
         #endregion
 
@@ -252,7 +150,7 @@ namespace SharpChess
         /// <summary>
         /// The enm colour.
         /// </summary>
-        public enum enmColour
+        public enum ColourNames
         {
             /// <summary>
             ///   The white.
@@ -268,7 +166,7 @@ namespace SharpChess
         /// <summary>
         /// The enm intellegence.
         /// </summary>
-        public enum enmIntellegence
+        public enum IntellegenceNames
         {
             /// <summary>
             ///   The human.
@@ -284,7 +182,7 @@ namespace SharpChess
         /// <summary>
         /// The enm status.
         /// </summary>
-        public enum enmStatus
+        public enum StatusNames
         {
             /// <summary>
             ///   The normal.
@@ -382,7 +280,7 @@ namespace SharpChess
             get
             {
                 Moves moves;
-                foreach (Piece piece in this.m_colPieces)
+                foreach (Piece piece in this.Pieces)
                 {
                     moves = new Moves();
                     piece.GenerateLegalMoves(moves);
@@ -399,13 +297,7 @@ namespace SharpChess
         /// <summary>
         ///   Gets CapturedEnemyPieces.
         /// </summary>
-        public Pieces CapturedEnemyPieces
-        {
-            get
-            {
-                return this.m_colCapturedEnemyPieces;
-            }
-        }
+        public Pieces CapturedEnemyPieces { get; protected set; }
 
         /// <summary>
         ///   Gets CapturedEnemyPiecesTotalBasicValue.
@@ -415,7 +307,7 @@ namespace SharpChess
             get
             {
                 int intValue = 0;
-                foreach (Piece piece in this.m_colCapturedEnemyPieces)
+                foreach (Piece piece in this.CapturedEnemyPieces)
                 {
                     intValue += piece.BasicValue;
                 }
@@ -427,45 +319,22 @@ namespace SharpChess
         /// <summary>
         ///   Gets Clock.
         /// </summary>
-        public abstract PlayerClock Clock { get; }
+        public PlayerClock Clock { get; private set; }
 
         /// <summary>
         ///   Gets or sets Colour.
         /// </summary>
-        public enmColour Colour
-        {
-            get
-            {
-                return this.m_colour;
-            }
-
-            set
-            {
-                this.m_colour = value;
-            }
-        }
+        public ColourNames Colour { get; set; }
 
         /// <summary>
         ///   Gets CurrentMove.
         /// </summary>
-        public Move CurrentMove
-        {
-            get
-            {
-                return this.m_moveCurrent;
-            }
-        }
+        public Move CurrentMove { get; private set; }
 
         /// <summary>
-        ///   Gets Evaluations.
+        ///   Gets or sets Evaluations.
         /// </summary>
-        public int Evaluations
-        {
-            get
-            {
-                return this.m_intEvaluations;
-            }
-        }
+        public int Evaluations { get; protected set; }
 
         /// <summary>
         ///   Gets EvaluationsPerSecond.
@@ -474,7 +343,7 @@ namespace SharpChess
         {
             get
             {
-                return this.m_intEvaluations / this.ThinkingTimeElpased.TotalSeconds;
+                return this.Evaluations / this.ThinkingTimeElpased.TotalSeconds;
             }
         }
 
@@ -484,13 +353,19 @@ namespace SharpChess
         public bool HasCastled { get; set; }
 
         /// <summary>
+        ///   The intellegence.
+        /// </summary>
+        public IntellegenceNames Intellegence { get; set; }
+
+        /// <summary>
         ///   Gets a value indicating whether IsInCheck.
         /// </summary>
         public bool IsInCheck
         {
             get
             {
-                return HashTableCheck.QueryandCachePlayerInCheckStatusForPosition(Board.HashCodeA, Board.HashCodeB, this);
+                return HashTableCheck.QueryandCachePlayerInCheckStatusForPosition(
+                    Board.HashCodeA, Board.HashCodeB, this);
             }
         }
 
@@ -515,13 +390,7 @@ namespace SharpChess
         /// <summary>
         ///   Gets a value indicating whether IsPondering.
         /// </summary>
-        public bool IsPondering
-        {
-            get
-            {
-                return this.m_blnIsPondering;
-            }
-        }
+        public bool IsPondering { get; private set; }
 
         /// <summary>
         ///   Gets a value indicating whether IsThinking.
@@ -530,69 +399,34 @@ namespace SharpChess
         {
             get
             {
-                return this.m_threadThought != null;
+                return this.threadThought != null;
             }
         }
 
         /// <summary>
         ///   Gets or sets King.
         /// </summary>
-        public Piece King
-        {
-            get
-            {
-                return this.m_King;
-            }
-
-            set
-            {
-                this.m_King = value;
-            }
-        }
+        public Piece King { get; protected set; }
 
         /// <summary>
         ///   Gets MaterialCount.
         /// </summary>
-        public int MaterialCount
-        {
-            get
-            {
-                return this.m_MaterialCount;
-            }
-        }
+        public int MaterialCount { get; protected set; }
 
         /// <summary>
         ///   Gets MaxExtensions.
         /// </summary>
-        public int MaxExtensions
-        {
-            get
-            {
-                return this.m_intMaxExtensionsReached;
-            }
-        }
+        public int MaxExtensions { get; private set; }
 
         /// <summary>
         ///   Gets MaxQuiesDepth.
         /// </summary>
-        public int MaxQuiesDepth
-        {
-            get
-            {
-                return this.m_intMaxQDepthReached;
-            }
-        }
+        public int MaxQuiesenceDepthReached { get; private set; }
 
         /// <summary>
         ///   Gets MaxSearchDepth.
         /// </summary>
-        public int MaxSearchDepth
-        {
-            get
-            {
-                return this.m_intMaxSearchDepth;
-            }
-        }
+        public int MaxSearchDepth { get; private set; }
 
         /// <summary>
         ///   Gets OtherPlayer.
@@ -601,7 +435,7 @@ namespace SharpChess
         {
             get
             {
-                return this.m_colour == enmColour.White ? Game.PlayerBlack : Game.PlayerWhite;
+                return this.Colour == ColourNames.White ? Game.PlayerBlack : Game.PlayerWhite;
             }
         }
 
@@ -658,11 +492,6 @@ namespace SharpChess
         */
 
         /// <summary>
-        ///   Gets or sets the number of pawns in play.
-        /// </summary>
-        private int PawnCountInPlay { get; set; }
-
-        /// <summary>
         ///   Gets PieceBasicValue.
         /// </summary>
         public int PieceBasicValue
@@ -676,13 +505,7 @@ namespace SharpChess
         /// <summary>
         ///   Gets Pieces.
         /// </summary>
-        public Pieces Pieces
-        {
-            get
-            {
-                return this.m_colPieces;
-            }
-        }
+        public Pieces Pieces { get; protected set; }
 
         /// <summary>
         ///   Gets Points.
@@ -696,12 +519,12 @@ namespace SharpChess
                 Piece piece;
 
                 // intPoints += this.PawnKingPoints;
-
                 int intBishopCount = 0;
                 int intRookCount = 0;
-                for (intIndex = this.m_colPieces.Count - 1; intIndex >= 0; intIndex--)
+                for (intIndex = this.Pieces.Count - 1; intIndex >= 0; intIndex--)
                 {
-                    piece = this.m_colPieces.Item(intIndex);
+                    piece = this.Pieces.Item(intIndex);
+
                     /*
                     switch (piece.Name)
                     {
@@ -748,7 +571,7 @@ namespace SharpChess
                 // If this player is "human" then a draw if scored high, else a draw is scored low
                 if (Game.MoveHistory.Count > 0 && Game.MoveHistory.Last.IsThreeMoveRepetition)
                 {
-                    intPoints += this.Intellegence == enmIntellegence.Human ? 1000000000 : 0;
+                    intPoints += this.Intellegence == IntellegenceNames.Human ? 1000000000 : 0;
                 }
 
                 if (this.HasCastled)
@@ -764,14 +587,14 @@ namespace SharpChess
                     else
                     {
                         Piece pieceRook;
-                        pieceRook = this.Colour == enmColour.White ? Board.GetPiece(7, 0) : Board.GetPiece(7, 7);
+                        pieceRook = this.Colour == ColourNames.White ? Board.GetPiece(7, 0) : Board.GetPiece(7, 7);
                         if (pieceRook == null || pieceRook.Name != Piece.PieceNames.Rook
                             || pieceRook.Player.Colour != this.Colour || pieceRook.HasMoved)
                         {
                             intPoints -= 107;
                         }
 
-                        pieceRook = this.Colour == enmColour.White ? Board.GetPiece(0, 0) : Board.GetPiece(0, 7);
+                        pieceRook = this.Colour == ColourNames.White ? Board.GetPiece(0, 0) : Board.GetPiece(0, 7);
                         if (pieceRook == null || pieceRook.Name != Piece.PieceNames.Rook
                             || pieceRook.Player.Colour != this.Colour || pieceRook.HasMoved)
                         {
@@ -801,9 +624,9 @@ namespace SharpChess
             {
                 int intTotalValue = 0;
                 int intIndex;
-                for (intIndex = this.m_colPieces.Count - 1; intIndex >= 0; intIndex--)
+                for (intIndex = this.Pieces.Count - 1; intIndex >= 0; intIndex--)
                 {
-                    Piece piece = this.m_colPieces.Item(intIndex);
+                    Piece piece = this.Pieces.Item(intIndex);
                     intTotalValue += piece.PositionalPoints;
                 }
 
@@ -818,31 +641,19 @@ namespace SharpChess
         {
             get
             {
-                return this.m_intPositionsSearched / Math.Max(Convert.ToInt32(this.ThinkingTimeElpased.TotalSeconds), 1);
+                return this.PositionsSearched / Math.Max(Convert.ToInt32(this.ThinkingTimeElpased.TotalSeconds), 1);
             }
         }
 
         /// <summary>
         ///   Gets PositionsSearched.
         /// </summary>
-        public int PositionsSearched
-        {
-            get
-            {
-                return this.m_intPositionsSearched;
-            }
-        }
+        public int PositionsSearched { get; protected set; }
 
         /// <summary>
         ///   Gets PrincipalVariation.
         /// </summary>
-        public Moves PrincipalVariation
-        {
-            get
-            {
-                return this.m_movesPVBest;
-            }
-        }
+        public Moves PrincipalVariation { get; private set; }
 
         /// <summary>
         ///   Gets PrincipalVariationText.
@@ -852,13 +663,13 @@ namespace SharpChess
             get
             {
                 string strText = string.Empty;
-                if (this.m_movesPVBest != null)
+                if (this.PrincipalVariation != null)
                 {
-                    for (int intIndex = 0; intIndex < this.m_movesPVBest.Count; intIndex++)
+                    for (int intIndex = 0; intIndex < this.PrincipalVariation.Count; intIndex++)
                     {
-                        if (intIndex < this.m_movesPVBest.Count)
+                        if (intIndex < this.PrincipalVariation.Count)
                         {
-                            Move move = this.m_movesPVBest[intIndex];
+                            Move move = this.PrincipalVariation[intIndex];
                             if (move != null)
                             {
                                 strText += (move.Piece.Name == Piece.PieceNames.Pawn
@@ -888,61 +699,43 @@ namespace SharpChess
         /// <summary>
         ///   Gets SearchDepth.
         /// </summary>
-        public int SearchDepth
-        {
-            get
-            {
-                return this.m_intSearchDepth;
-            }
-        }
+        public int SearchDepth { get; private set; }
 
         /// <summary>
         ///   Gets SearchPositionNo.
         /// </summary>
-        public int SearchPositionNo
-        {
-            get
-            {
-                return this.m_intSearchPositionNo;
-            }
-        }
+        public int SearchPositionNo { get; protected set; }
 
         /// <summary>
         ///   Gets Status.
         /// </summary>
-        public enmStatus Status
+        public StatusNames Status
         {
             get
             {
                 if (this.IsInCheckMate)
                 {
-                    return enmStatus.InCheckMate;
+                    return StatusNames.InCheckMate;
                 }
 
                 if (!this.CanMove)
                 {
-                    return enmStatus.InStaleMate;
+                    return StatusNames.InStaleMate;
                 }
 
                 if (this.IsInCheck)
                 {
-                    return enmStatus.InCheck;
+                    return StatusNames.InCheck;
                 }
 
-                return enmStatus.Normal;
+                return StatusNames.Normal;
             }
         }
 
         /// <summary>
         ///   Gets ThinkingTimeAllotted.
         /// </summary>
-        public TimeSpan ThinkingTimeAllotted
-        {
-            get
-            {
-                return this.m_tsnThinkingTimeAllotted;
-            }
-        }
+        public TimeSpan ThinkingTimeAllotted { get; private set; }
 
         /// <summary>
         ///   Gets ThinkingTimeElpased.
@@ -951,7 +744,7 @@ namespace SharpChess
         {
             get
             {
-                return DateTime.Now - this.m_PlayerClock.TurnStartTime;
+                return DateTime.Now - this.Clock.TurnStartTime;
             }
         }
 
@@ -962,7 +755,7 @@ namespace SharpChess
         {
             get
             {
-                return this.m_tsnThinkingTimeAllotted - this.ThinkingTimeElpased;
+                return this.ThinkingTimeAllotted - this.ThinkingTimeElpased;
             }
         }
 
@@ -974,7 +767,7 @@ namespace SharpChess
             get
             {
                 int intValue = 0;
-                foreach (Piece piece in this.m_colPieces)
+                foreach (Piece piece in this.Pieces)
                 {
                     intValue += piece.Value;
                 }
@@ -986,13 +779,16 @@ namespace SharpChess
         /// <summary>
         ///   Gets TotalPositionsToSearch.
         /// </summary>
-        public int TotalPositionsToSearch
-        {
-            get
-            {
-                return this.m_intTotalPositionsToSearch;
-            }
-        }
+        public int TotalPositionsToSearch { get; protected set; }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        ///   Gets or sets the number of pawns in play.
+        /// </summary>
+        private int PawnCountInPlay { get; set; }
 
         #endregion
 
@@ -1003,24 +799,24 @@ namespace SharpChess
         /// </summary>
         public void AbortThinking()
         {
-            if (this.m_threadThought != null && this.m_threadThought.ThreadState == ThreadState.Running)
+            if (this.threadThought != null && this.threadThought.ThreadState == ThreadState.Running)
             {
-                this.m_threadThought.Abort();
-                this.m_threadThought.Join();
-                this.m_threadThought = null;
+                this.threadThought.Abort();
+                this.threadThought.Join();
+                this.threadThought = null;
             }
         }
 
         /// <summary>
         /// The can claim move repetition draw.
         /// </summary>
-        /// <param name="NoOfMoves">
+        /// <param name="numberOfMoves">
         /// The no of moves.
         /// </param>
         /// <returns>
-        /// The can claim move repetition draw.
+        /// True if, can claim move repetition draw.
         /// </returns>
-        public bool CanClaimMoveRepetitionDraw(int NoOfMoves)
+        public bool CanClaimMoveRepetitionDraw(int numberOfMoves)
         {
             if (Game.MoveHistory.Count == 0)
             {
@@ -1039,7 +835,7 @@ namespace SharpChess
                 move = Game.MoveHistory[intIndex];
                 if (move.HashCodeA == Board.HashCodeA && move.HashCodeB == Board.HashCodeB)
                 {
-                    if (intRepetitionCount >= NoOfMoves)
+                    if (intRepetitionCount >= numberOfMoves)
                     {
                         return true;
                     }
@@ -1061,9 +857,9 @@ namespace SharpChess
         /// </summary>
         public void CaptureAllPieces()
         {
-            for (int intIndex = this.m_colPieces.Count - 1; intIndex >= 0; intIndex--)
+            for (int intIndex = this.Pieces.Count - 1; intIndex >= 0; intIndex--)
             {
-                Piece piece = this.m_colPieces.Item(intIndex);
+                Piece piece = this.Pieces.Item(intIndex);
                 piece.Capture();
             }
         }
@@ -1073,7 +869,7 @@ namespace SharpChess
         /// </summary>
         public void DecreaseMaterialCount()
         {
-            this.m_MaterialCount--;
+            this.MaterialCount--;
         }
 
         /// <summary>
@@ -1089,9 +885,9 @@ namespace SharpChess
         /// </summary>
         public void DemoteAllPieces()
         {
-            for (int intIndex = this.m_colPieces.Count - 1; intIndex >= 0; intIndex--)
+            for (int intIndex = this.Pieces.Count - 1; intIndex >= 0; intIndex--)
             {
-                Piece piece = this.m_colPieces.Item(intIndex);
+                Piece piece = this.Pieces.Item(intIndex);
                 if (piece.HasBeenPromoted)
                 {
                     piece.Demote();
@@ -1115,15 +911,13 @@ namespace SharpChess
         /// </summary>
         public void ForceImmediateMove()
         {
-            if (this.IsThinking && !this.m_blnForceImmediateMove)
+            if (this.IsThinking && !this.forceAnImmediateMove)
             {
-                this.m_blnForceImmediateMove = true;
-                while (this.m_threadThought != null)
+                this.forceAnImmediateMove = true;
+                while (this.threadThought != null)
                 {
                     Thread.Sleep(50);
                 }
-
-                // 				m_threadThought.Join();
             }
         }
 
@@ -1147,19 +941,17 @@ namespace SharpChess
             // if (squareAttacking==null)
             // {
             // All moves as defined by movesType
-            foreach (Piece piece in this.m_colPieces)
+            foreach (Piece piece in this.Pieces)
             {
                 piece.GenerateLazyMoves(moves, movesType);
 
                 if (movesType != Moves.MoveListNames.All)
                 {
-                    Move move;
                     int intIndex;
                     for (intIndex = moves.Count - 1; intIndex >= 0; intIndex--)
                     {
-                        move = moves[intIndex];
-                        if (!( // 								move.To.Ordinal==squareAttacking.Ordinal 
-                             // 								||
+                        Move move = moves[intIndex];
+                        if (!( // move.To.Ordinal==squareAttacking.Ordinal ||
                              move.Name == Move.MoveNames.PawnPromotionQueen
                              ||
                              (move.Name == Move.MoveNames.Standard
@@ -1190,7 +982,7 @@ namespace SharpChess
         /// </param>
         public void GenerateLegalMoves(Moves moves)
         {
-            foreach (Piece piece in this.m_colPieces)
+            foreach (Piece piece in this.Pieces)
             {
                 piece.GenerateLegalMoves(moves);
             }
@@ -1212,7 +1004,7 @@ namespace SharpChess
                 return true;
             }
 
-            foreach (Piece piece in this.m_colPieces)
+            foreach (Piece piece in this.Pieces)
             {
                 if (piece.Name == piecename)
                 {
@@ -1228,7 +1020,7 @@ namespace SharpChess
         /// </summary>
         public void IncreaseMaterialCount()
         {
-            this.m_MaterialCount++;
+            this.MaterialCount++;
         }
 
         /// <summary>
@@ -1340,7 +1132,7 @@ namespace SharpChess
                         if ( (square = Board.GetSquare(to.Ordinal-18 ))!=null && square.Piece!=null && square.Piece.Name==Piece.PieceNames.Knight && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece; else
                         if ( (square = Board.GetSquare(to.Ordinal+14 ))!=null && square.Piece!=null && square.Piece.Name==Piece.PieceNames.Knight && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece; else
                         if ( (square = Board.GetSquare(to.Ordinal+31 ))!=null && square.Piece!=null && square.Piece.Name==Piece.PieceNames.Knight && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece;
-                    from = piece.Square;					
+                    from = piece.Square;
                     break;
 
                 case "B":
@@ -1349,7 +1141,7 @@ namespace SharpChess
                         if ((piece=Board.LinesFirstPiece(this.Colour, Piece.PieceNames.Bishop, to, 17))!=null && piece.Name==Piece.PieceNames.Bishop && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
                         if ((piece=Board.LinesFirstPiece(this.Colour, Piece.PieceNames.Bishop, to, -15))!=null && piece.Name==Piece.PieceNames.Bishop && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
                         if ((piece=Board.LinesFirstPiece(this.Colour, Piece.PieceNames.Bishop, to, -17))!=null && piece.Name==Piece.PieceNames.Bishop && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else piece=null;
-                    from = piece.Square;					
+                    from = piece.Square;
                     break;
 
                 case "R":
@@ -1357,7 +1149,7 @@ namespace SharpChess
                         if ((piece=Board.LinesFirstPiece(this.Colour, Piece.PieceNames.Rook, to, -1))!=null && piece.Name==Piece.PieceNames.Rook && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
                         if ((piece=Board.LinesFirstPiece(this.Colour, Piece.PieceNames.Rook, to, 16))!=null && piece.Name==Piece.PieceNames.Rook && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
                         if ((piece=Board.LinesFirstPiece(this.Colour, Piece.PieceNames.Rook, to, -16))!=null && piece.Name==Piece.PieceNames.Rook && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else piece=null;
-                    from = piece.Square;					
+                    from = piece.Square;
                     break;
 
                 case "Q":
@@ -1369,7 +1161,7 @@ namespace SharpChess
                         if ((piece=Board.LinesFirstPiece(this.Colour, Piece.PieceNames.Queen, to, -1))!=null && piece.Name==Piece.PieceNames.Queen && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
                         if ((piece=Board.LinesFirstPiece(this.Colour, Piece.PieceNames.Queen, to, 16))!=null && piece.Name==Piece.PieceNames.Queen && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else
                         if ((piece=Board.LinesFirstPiece(this.Colour, Piece.PieceNames.Queen, to, -16))!=null && piece.Name==Piece.PieceNames.Queen && piece.Player.Colour==this.Colour && (strFromFile=="" || piece.Square.FileName==strFromFile)) piece=piece; else piece=null;
-                    from = piece.Square;					
+                    from = piece.Square;
                     break;
 
                 case "K":
@@ -1381,7 +1173,7 @@ namespace SharpChess
                         if ( (square = Board.GetSquare(to.Ordinal- 1 ))!=null && square.Piece!=null && square.Piece.Name==Piece.PieceNames.King && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece; else
                         if ( (square = Board.GetSquare(to.Ordinal+16 ))!=null && square.Piece!=null && square.Piece.Name==Piece.PieceNames.King && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece; else
                         if ( (square = Board.GetSquare(to.Ordinal-16 ))!=null && square.Piece!=null && square.Piece.Name==Piece.PieceNames.King && square.Piece.Player.Colour==this.Colour && (strFromFile=="" || square.FileName==strFromFile) ) piece=square.Piece;
-                    from = piece.Square;					
+                    from = piece.Square;
                     break;
             }
 
@@ -1393,13 +1185,13 @@ namespace SharpChess
         /// <summary>
         /// The perft.
         /// </summary>
-        /// <param name="TargetDepth">
+        /// <param name="targetDepth">
         /// The target depth.
         /// </param>
-        public void Perft(int TargetDepth)
+        public void Perft(int targetDepth)
         {
-            this.m_intPositionsSearched = 0;
-            this.Perft_Ply(this, TargetDepth);
+            this.PositionsSearched = 0;
+            this.Perft_Ply(this, targetDepth);
         }
 
         /// <summary>
@@ -1407,8 +1199,8 @@ namespace SharpChess
         /// </summary>
         public void StartPondering()
         {
-            if (this.Intellegence == enmIntellegence.Computer
-                && this.OtherPlayer.Intellegence == enmIntellegence.Computer)
+            if (this.Intellegence == IntellegenceNames.Computer
+                && this.OtherPlayer.Intellegence == IntellegenceNames.Computer)
             {
                 // Can't both ponder at the same time
                 return;
@@ -1422,17 +1214,16 @@ namespace SharpChess
 
             if (Game.EnablePondering)
             {
-                if (m_ulongPonderingHashCodeA != Board.HashCodeA || m_ulongPonderingHashCodeB != Board.HashCodeB)
+                if (ponderingHashCodeA != Board.HashCodeA || ponderingHashCodeB != Board.HashCodeB)
                 {
-                    m_ulongPonderingHashCodeA = Board.HashCodeA;
-                    m_ulongPonderingHashCodeB = Board.HashCodeB;
-                    m_dtmPonderingStart = DateTime.Now;
+                    ponderingHashCodeA = Board.HashCodeA;
+                    ponderingHashCodeB = Board.HashCodeB;
                 }
 
                 if (!this.IsThinking && !this.OtherPlayer.IsThinking
-                    && this.OtherPlayer.Intellegence == enmIntellegence.Computer && Game.PlayerToPlay == this)
+                    && this.OtherPlayer.Intellegence == IntellegenceNames.Computer && Game.PlayerToPlay == this)
                 {
-                    this.m_blnIsPondering = true;
+                    this.IsPondering = true;
                     this.StartThinking();
                 }
             }
@@ -1450,7 +1241,7 @@ namespace SharpChess
             }
 
             // Send draw result is playing WinBoard
-            if (WinBoard.Active && this.Intellegence == enmIntellegence.Computer)
+            if (WinBoard.Active && this.Intellegence == IntellegenceNames.Computer)
             {
                 if (this.CanClaimThreeMoveRepetitionDraw)
                 {
@@ -1469,21 +1260,21 @@ namespace SharpChess
                 }
             }
 
-            this.m_threadThought = new Thread(this.Think);
-            this.m_threadThought.Name = (++Game.ThreadCounter).ToString();
+            this.threadThought = new Thread(this.Think);
+            this.threadThought.Name = (++Game.ThreadCounter).ToString();
 
             this.ThinkingBeginning();
             if (this.IsPondering)
             {
-                // 				m_threadThought.Priority = System.Threading.ThreadPriority.BelowNormal;
-                this.m_threadThought.Priority = ThreadPriority.Normal;
+                // m_threadThought.Priority = System.Threading.ThreadPriority.BelowNormal;
+                this.threadThought.Priority = ThreadPriority.Normal;
             }
             else
             {
-                this.m_threadThought.Priority = ThreadPriority.Normal;
+                this.threadThought.Priority = ThreadPriority.Normal;
             }
 
-            this.m_threadThought.Start();
+            this.threadThought.Start();
         }
 
         /// <summary>
@@ -1494,7 +1285,7 @@ namespace SharpChess
             if (this.IsPondering)
             {
                 this.AbortThinking();
-                this.m_blnIsPondering = false;
+                this.IsPondering = false;
             }
         }
 
@@ -1513,19 +1304,18 @@ namespace SharpChess
                     "Thread {0} is " + (this.IsPondering ? "pondering" : "thinking"), Thread.CurrentThread.Name));
 
             Player player = this; // Set the player, whose move is to be computed, to "this" player object instance
-            this.m_movesPVBest = new Moves(); // Best moves line (Principal Variation) found so far.
+            this.PrincipalVariation = new Moves(); // Best moves line (Principal Variation) found so far.
             Moves movesPV = new Moves(); // Best moves line (Principal Variation) for the previously completed depth.
 
             // TimeSpan tsnTimePondered = new TimeSpan();
             int intTurnNo = Game.TurnNo;
 
-            this.m_blnDisplayMoveAnalysisTree = Game.CaptureMoveAnalysisData;
-                
-                // Set whether to build a post-analysis tree of positions searched
+            this.displayMoveAnalysisTree = Game.CaptureMoveAnalysisData;
 
+            // Set whether to build a post-analysis tree of positions searched
             try
             {
-                if (!this.m_blnIsPondering && !Game.IsInAnalyseMode)
+                if (!this.IsPondering && !Game.IsInAnalyseMode)
                 {
                     // Query Simple Opening Book
                     if (Game.UseRandomOpeningMoves)
@@ -1533,60 +1323,59 @@ namespace SharpChess
                         Move moveBook;
                         if ((moveBook = OpeningBookSimple.SuggestRandomMove(player)) != null)
                         {
-                            this.m_movesPVBest.Add(moveBook);
+                            this.PrincipalVariation.Add(moveBook);
                             this.MoveConsidered();
                             throw new ForceImmediateMoveException();
                         }
                     }
 
-                    /*				// Query Best Opening Book
+                    /* Query Best Opening Book
                         if ((m_moveBest = OpeningBook.SearchForGoodMove(Board.HashCodeA, Board.HashCodeB, this.Colour) )!=null) 
                         {
                             m_moveCurrent = m_moveBest;
                             this.MoveConsidered();
                             throw new ForceImmediateMoveException();
                         }
-        */
+                    */
                 }
 
                 // Time allowed for this player to think
                 if (Game.ClockFixedTimePerMove.TotalSeconds > 0)
                 {
                     // Absolute fixed time per move. No time is carried over from one move to the next.
-                    this.m_tsnThinkingTimeAllotted = Game.ClockFixedTimePerMove;
+                    this.ThinkingTimeAllotted = Game.ClockFixedTimePerMove;
                 }
                 else if (Game.ClockIncrementPerMove.TotalSeconds > 0)
                 {
                     // Incremental clock
-                    this.m_tsnThinkingTimeAllotted =
+                    this.ThinkingTimeAllotted =
                         new TimeSpan(
                             Game.ClockIncrementPerMove.Ticks
                             +
                             ((Game.ClockIncrementPerMove.Ticks * Game.MoveNo
-                              + Game.ClockTime.Ticks * Math.Min(Game.MoveNo, 40) / 40)
-                             - this.m_PlayerClock.TimeElapsed.Ticks) / 3);
+                              + Game.ClockTime.Ticks * Math.Min(Game.MoveNo, 40) / 40) - this.Clock.TimeElapsed.Ticks)
+                            / 3);
 
                     // Make sure we never think for less than half the "Increment" time
-                    this.m_tsnThinkingTimeAllotted =
+                    this.ThinkingTimeAllotted =
                         new TimeSpan(
-                            Math.Max(this.m_tsnThinkingTimeAllotted.Ticks, Game.ClockIncrementPerMove.Ticks / 2 + 1));
+                            Math.Max(this.ThinkingTimeAllotted.Ticks, Game.ClockIncrementPerMove.Ticks / 2 + 1));
                 }
                 else if (Game.ClockMaxMoves == 0 && Game.ClockIncrementPerMove.TotalSeconds == 0)
                 {
                     // Fixed game time
-                    this.m_tsnThinkingTimeAllotted = new TimeSpan(this.m_PlayerClock.TimeRemaining.Ticks / 30);
+                    this.ThinkingTimeAllotted = new TimeSpan(this.Clock.TimeRemaining.Ticks / 30);
                 }
                 else
                 {
                     // Conventional n moves in x minutes time
-                    this.m_tsnThinkingTimeAllotted =
-                        new TimeSpan(this.m_PlayerClock.TimeRemaining.Ticks / this.m_PlayerClock.MovesRemaining);
+                    this.ThinkingTimeAllotted = new TimeSpan(this.Clock.TimeRemaining.Ticks / this.Clock.MovesRemaining);
                 }
 
                 // Minimum of 1 second thinking time
-                if (this.m_tsnThinkingTimeAllotted.TotalSeconds < 1)
+                if (this.ThinkingTimeAllotted.TotalSeconds < 1)
                 {
-                    this.m_tsnThinkingTimeAllotted = new TimeSpan(0, 0, 1);
+                    this.ThinkingTimeAllotted = new TimeSpan(0, 0, 1);
                 }
 
                 // The computer only stops "thinking" when it has finished a full ply of thought, 
@@ -1594,33 +1383,32 @@ namespace SharpChess
                 if (Game.ClockFixedTimePerMove.TotalSeconds > 0)
                 {
                     // Fixed time per move
-                    this.m_tsnThinkingTimeMaxAllowed = Game.ClockFixedTimePerMove;
+                    this.thinkingTimeMaxAllowed = Game.ClockFixedTimePerMove;
                 }
                 else
                 {
                     // Variable time per move
-                    this.m_tsnThinkingTimeMaxAllowed =
+                    this.thinkingTimeMaxAllowed =
                         new TimeSpan(
                             Math.Min(
-                                this.m_tsnThinkingTimeAllotted.Ticks * 2, 
+                                this.ThinkingTimeAllotted.Ticks * 2, 
                                 this.Clock.TimeRemaining.Ticks - (new TimeSpan(0, 0, 0, 2)).Ticks));
                 }
 
                 // Minimum of 2 seconds thinking time
-                if (this.m_tsnThinkingTimeMaxAllowed.TotalSeconds < 2)
+                if (this.thinkingTimeMaxAllowed.TotalSeconds < 2)
                 {
-                    this.m_tsnThinkingTimeMaxAllowed = new TimeSpan(0, 0, 2);
+                    this.thinkingTimeMaxAllowed = new TimeSpan(0, 0, 2);
                 }
 
                 // A new deeper ply of search will only be started, IF the cutoff time hasnt been reached yet.
-                this.m_tsnThinkingTimeCutoff = new TimeSpan(this.m_tsnThinkingTimeAllotted.Ticks / 3);
+                this.thinkingTimeCutoff = new TimeSpan(this.ThinkingTimeAllotted.Ticks / 3);
 
-                this.m_blnForceImmediateMove = false; // Set to stop thread thinking and return best move
-                this.m_intPositionsSearched = 0; // Total number of positions considered so far
-                this.m_intEvaluations = 0;
-                    
-                    // Total number of times the evaluation function has been called (May be less than PositonsSearched if hashtable works well)
+                this.forceAnImmediateMove = false; // Set to stop thread thinking and return best move
+                this.PositionsSearched = 0; // Total number of positions considered so far
+                this.Evaluations = 0;
 
+                // Total number of times the evaluation function has been called (May be less than PositonsSearched if hashtable works well)
                 if (Game.IsInAnalyseMode)
                 {
                     HashTable.Clear();
@@ -1641,11 +1429,11 @@ namespace SharpChess
                     }
 
                     HashTableCheck.ResetStats();
-                        
-                        // We also have a hash table in which we just store the check status for both players
+
+                    // We also have a hash table in which we just store the check status for both players
                     HashTablePawnKing.ResetStats();
-                        
-                        // And finally a hash table that stores the positional score of just the pawns.
+
+                    // And finally a hash table that stores the positional score of just the pawns.
                     History.Clear(); // Clear down the History Heuristic info, at the start of each move.
                 }
 
@@ -1655,39 +1443,37 @@ namespace SharpChess
                 }
 
                 // Set max search depth, as defined is game difficulty settings
-                this.m_intMaxSearchDepth = Game.MaximumSearchDepth == 0 ? 32 : Game.MaximumSearchDepth;
+                this.MaxSearchDepth = Game.MaximumSearchDepth == 0 ? 32 : Game.MaximumSearchDepth;
 
                 // Here begins the main Iteractive Deepening loop of the entire search algorithm. (Cue dramitic music!)
                 int intScore = player.Score;
 
-                for (this.m_intSearchDepth = this.m_intMinSearchDepth;
-                     this.m_intSearchDepth <= this.m_intMaxSearchDepth;
-                     this.m_intSearchDepth++)
+                for (this.SearchDepth = MinSearchDepth; this.SearchDepth <= this.MaxSearchDepth; this.SearchDepth++)
                 {
-                    if (this.m_blnDisplayMoveAnalysisTree)
+                    if (this.displayMoveAnalysisTree)
                     {
                         Game.MoveAnalysis = new Moves();
                     }
 
-                    intScore = this.Aspirate(player, this.m_intSearchDepth, ref movesPV, intScore);
+                    intScore = this.Aspirate(player, this.SearchDepth, ref movesPV, intScore);
 
                     // intScore = AlphaBeta(player, m_intSearchDepth, m_intSearchDepth, MIN_SCORE, MAX_SCORE, null, movesPV, intScore);
-                    this.m_movesPVBest = movesPV; // The best line is then recorded
+                    this.PrincipalVariation = movesPV; // The best line is then recorded
 
                     WinBoard.SendThinking(
-                        this.m_intSearchDepth, 
+                        this.SearchDepth, 
                         intScore, 
-                        DateTime.Now - this.m_PlayerClock.TurnStartTime, 
-                        this.m_intPositionsSearched, 
+                        DateTime.Now - this.Clock.TurnStartTime, 
+                        this.PositionsSearched, 
                         this.PrincipalVariationText);
 
-                    if (!Game.IsInAnalyseMode && Game.ClockFixedTimePerMove.TotalSeconds == 0 && !this.m_blnIsPondering
-                        && (DateTime.Now - this.m_PlayerClock.TurnStartTime) > this.m_tsnThinkingTimeCutoff)
+                    if (!Game.IsInAnalyseMode && Game.ClockFixedTimePerMove.TotalSeconds == 0 && !this.IsPondering
+                        && (DateTime.Now - this.Clock.TurnStartTime) > this.thinkingTimeCutoff)
                     {
                         // #if !DEBUG // Note the exclamation mark
                         throw new ForceImmediateMoveException();
 
-                        // #endif 					
+                        // #endif
                     }
 
                     if (intScore > 99999 || intScore < -99999)
@@ -1715,16 +1501,16 @@ namespace SharpChess
                 string.Format(
                     "Thread {0} is ending " + (this.IsPondering ? "pondering" : "thinking"), Thread.CurrentThread.Name));
 
-            this.m_threadThought = null;
+            this.threadThought = null;
             if (this.MoveConsidered != null && !this.IsPondering)
             {
                 this.ReadyToMakeMove();
             }
 
-            this.m_blnIsPondering = false;
+            this.IsPondering = false;
 
             // Send total elapsed time to generate this move.
-            WinBoard.SendMoveTime(DateTime.Now - this.m_PlayerClock.TurnStartTime);
+            WinBoard.SendMoveTime(DateTime.Now - this.Clock.TurnStartTime);
         }
 
         #endregion
@@ -1790,14 +1576,14 @@ namespace SharpChess
             int intLegalMovesAttempted = 0;
             bool blnIsInCheck = player.IsInCheck;
 
-            if (this.m_blnForceImmediateMove)
+            if (this.forceAnImmediateMove)
             {
                 throw new ForceImmediateMoveException();
             }
 
             Moves movesPV = new Moves();
 
-            this.m_intPositionsSearched++;
+            this.PositionsSearched++;
 
             if (moveAnalysed != null && moveAnalysed.IsThreeMoveRepetition)
             {
@@ -1810,9 +1596,9 @@ namespace SharpChess
                 // High values of "val" indicate that a checkmate has been found
                 if (val > 1000000 || val < -1000000)
                 {
-                    if (this.m_intMaxSearchDepth - depth > 0)
+                    if (this.MaxSearchDepth - depth > 0)
                     {
-                        val /= this.m_intMaxSearchDepth - depth;
+                        val /= this.MaxSearchDepth - depth;
                     }
                 }
 
@@ -1825,25 +1611,25 @@ namespace SharpChess
                 return val;
             }
 
-            if (intTotalExtensions > this.m_intMaxExtensionsReached)
+            if (intTotalExtensions > this.MaxExtensions)
             {
-                this.m_intMaxExtensionsReached = intTotalExtensions;
+                this.MaxExtensions = intTotalExtensions;
             }
 
             // Depth <=0 means we're into Quiescence searching
             if (depth <= 0)
             {
-                if (depth < this.m_intMaxQDepthReached)
+                if (depth < this.MaxQuiesenceDepthReached)
                 {
-                    this.m_intMaxQDepthReached = depth;
+                    this.MaxQuiesenceDepthReached = depth;
                 }
 
                 intScoreAtEntry = val = -player.OtherPlayer.Score;
-                this.m_intEvaluations++;
+                this.Evaluations++;
 
                 if (val > 1000000 || val < -1000000)
                 {
-                    val /= this.m_intMaxSearchDepth - depth;
+                    val /= this.MaxSearchDepth - depth;
                 }
 
                 // Allow a deeper ply of search if a piece was captured or if a pawn was promoted, 
@@ -1854,16 +1640,14 @@ namespace SharpChess
                 }
             }
 
-            if (this.m_blnDisplayMoveAnalysisTree)
+            if (this.displayMoveAnalysisTree)
             {
                 moveAnalysed.Moves = new Moves();
             }
 
-            Move moveThis = null;
-
             // Adaptive Null-move forward pruning
-            int R = depth > 6 ? 3 : 2;
-            if (depth > (R + 1) && moveAnalysed != null && moveAnalysed.Name != Move.MoveNames.NullMove
+            int r = depth > 6 ? 3 : 2;
+            if (depth > (r + 1) && moveAnalysed != null && moveAnalysed.Name != Move.MoveNames.NullMove
                 && Game.Stage != Game.GameStageNames.End && !blnIsInCheck)
             {
                 Move moveNull = new Move(Game.TurnNo, 0, Move.MoveNames.NullMove, null, null, null, null, 0, 0);
@@ -1871,7 +1655,7 @@ namespace SharpChess
                     -this.AlphaBeta(
                         player.OtherPlayer, 
                         ply - 1, 
-                        depth - R - 1, 
+                        depth - r - 1, 
                         -beta, 
                         -beta + 1, 
                         moveNull, 
@@ -1909,31 +1693,31 @@ namespace SharpChess
             // Sort moves
             this.SortBestMoves(movesPossible, moveHash, moveKillerA, moveKillerA2, moveKillerB, moveKillerB2, player);
 
-            if (ply == this.m_intSearchDepth)
+            if (ply == this.SearchDepth)
             {
-                this.m_intTotalPositionsToSearch = movesPossible.Count;
-                this.m_intSearchPositionNo = 0;
+                this.TotalPositionsToSearch = movesPossible.Count;
+                this.SearchPositionNo = 0;
             }
 
             int intExtension;
             foreach (Move move in movesPossible)
             {
-                moveThis = move.Piece.Move(move.Name, move.To);
-                if (ply == this.m_intSearchDepth)
+                Move moveThis = move.Piece.Move(move.Name, move.To);
+                if (ply == this.SearchDepth)
                 {
-                    this.m_intSearchPositionNo++;
-                    this.m_moveCurrent = moveThis;
+                    this.SearchPositionNo++;
+                    this.CurrentMove = moveThis;
                     if (this.MoveConsidered != null)
                     {
                         this.MoveConsidered();
                     }
 
-                    this.m_intMaxQDepthReached = this.m_intSearchDepth;
-                        
-                        // A little counter to record the deepest Quiescence depth searched on this move.
-                    this.m_intMaxExtensionsReached = 0;
-                        
-                        // A little counter to track the number of extensions on this move.
+                    this.MaxQuiesenceDepthReached = this.SearchDepth;
+
+                    // A little counter to record the deepest Quiescence depth searched on this move.
+                    this.MaxExtensions = 0;
+
+                    // A little counter to track the number of extensions on this move.
                 }
 
                 if (player.IsInCheck)
@@ -1949,7 +1733,7 @@ namespace SharpChess
                     moveBest = moveThis;
                 }
 
-                if (this.m_blnDisplayMoveAnalysisTree)
+                if (this.displayMoveAnalysisTree)
                 {
                     // Add moves to post-move analysis tree, if option set by user
                     moveAnalysed.Moves.Add(moveThis);
@@ -1977,8 +1761,8 @@ namespace SharpChess
                 }
                 else if (moveThis.Piece.Name == Piece.PieceNames.Pawn
                          &&
-                         (moveThis.Piece.Player.Colour == enmColour.White && moveThis.To.Rank == 6
-                          || moveThis.Piece.Player.Colour == enmColour.Black && moveThis.To.Rank == 1))
+                         (moveThis.Piece.Player.Colour == ColourNames.White && moveThis.To.Rank == 6
+                          || moveThis.Piece.Player.Colour == ColourNames.Black && moveThis.To.Rank == 1))
                 {
                     // Pawn push to 7th rank
                     intExtension = 1;
@@ -1987,14 +1771,11 @@ namespace SharpChess
                 // Reductions
                 if (depth > 2 && !blnIsInCheck && moveThis.PieceCaptured == null && !moveThis.IsEnemyInCheck)
                 {
-                    int[] m_aintMargin = {
-                                             0, 0, 0, 5000, 5000, 7000, 7000, 9000, 9000, 15000, 15000, 15000, 15000, 
-                                             15000, 15000, 15000, 15000, 15000
-                                         };
+                    int[] margin = { 0, 0, 0, 5000, 5000, 7000, 7000, 9000, 9000, 15000, 15000, 15000, 15000, 15000, 15000, 15000, 15000, 15000 };
 
                     // int intLazyEval = this.TotalPieceValue - this.OtherPlayer.TotalPieceValue;
                     int intLazyEval = player.Score;
-                    if (alpha > intLazyEval + m_aintMargin[depth])
+                    if (alpha > intLazyEval + margin[depth])
                     {
                         intExtension = -1;
                     }
@@ -2051,15 +1832,15 @@ namespace SharpChess
                     }
                 }
 
-                /*		
+                /*
                 if (intExtension>0 && intTotalExtensions>=m_intSearchDepth)
                 {
                     intExtension = 0;
                 }
 */
-                // #if DEBUG  // Avoid to break in a zero window research so alpha + 1 < beta
-                // if ((alpha + 1 < beta) && DebugMatchVariation(m_intSearchDepth - ply, moveThis)) Debugger.Break();
-                // #endif
+                /* #if DEBUG  // Avoid to break in a zero window research so alpha + 1 < beta
+                   if ((alpha + 1 < beta) && DebugMatchVariation(m_intSearchDepth - ply, moveThis)) Debugger.Break();
+                 #endif */
                 if (blnPVNode)
                 {
                     val =
@@ -2072,8 +1853,9 @@ namespace SharpChess
                             moveThis, 
                             movesPV, 
                             intTotalExtensions + intExtension);
-                    if ((val > alpha) && (val < beta)) /* fail */
+                    if ((val > alpha) && (val < beta))
                     {
+                        // fail
                         val =
                             -this.AlphaBeta(
                                 player.OtherPlayer, 
@@ -2152,20 +1934,20 @@ namespace SharpChess
                     }
 
                     // #if DEBUG
-                    // 	Debug.WriteLineIf((ply == m_intSearchDepth) && (ply > 1), string.Format("{0} {1} {2}", ply, PvLine(movesPV_Parent), alpha));
+                    // Debug.WriteLineIf((ply == m_intSearchDepth) && (ply > 1), string.Format("{0} {1} {2}", ply, PvLine(movesPV_Parent), alpha));
                     // #endif
                 }
 
                 moveThis.Alpha = alpha;
                 moveThis.Beta = beta;
 
-                if (!Game.IsInAnalyseMode && !this.m_blnIsPondering && this.m_intSearchDepth > m_intMinimumSearchDepth
-                    && (DateTime.Now - this.m_PlayerClock.TurnStartTime) > this.m_tsnThinkingTimeMaxAllowed)
+                if (!Game.IsInAnalyseMode && !this.IsPondering && this.SearchDepth > MinimumSearchDepth
+                    && (DateTime.Now - this.Clock.TurnStartTime) > this.thinkingTimeMaxAllowed)
                 {
                     // #if !DEBUG // Note the exclamation mark
                     throw new ForceImmediateMoveException();
 
-                    // #endif 				
+                    // #endif
                 }
             }
 
@@ -2173,7 +1955,7 @@ namespace SharpChess
             if (intLegalMovesAttempted == 0)
             {
                 // depth>0 && !player.OtherPlayer.IsInCheck
-                // 	alpha = this.Score;
+                // alpha = this.Score;
                 alpha = -player.OtherPlayer.Score;
             }
 
@@ -2196,7 +1978,15 @@ namespace SharpChess
             else
             {
                 HashTable.RecordHash(
-                    Board.HashCodeA, Board.HashCodeB, ply, alpha, hashType, -1, -1, Move.MoveNames.NullMove, player.Colour);
+                    Board.HashCodeA, 
+                    Board.HashCodeB, 
+                    ply, 
+                    alpha, 
+                    hashType, 
+                    -1, 
+                    -1, 
+                    Move.MoveNames.NullMove, 
+                    player.Colour);
             }
 
             return alpha;
@@ -2222,8 +2012,8 @@ namespace SharpChess
         /// </returns>
         private int Aspirate(Player player, int depth, ref Moves movesPV_Parent, int intLastIteractionsScore)
         {
-            int alpha = MIN_SCORE; // The score of the best move found so far
-            int beta = MAX_SCORE; // The score of the best move found by the enemy
+            int alpha = MinScore; // The score of the best move found so far
+            int beta = MaxScore; // The score of the best move found by the enemy
             int val = alpha;
             Moves movesPV = new Moves(); // Best moves line (Principal Variation) for the previously completed depth.
 
@@ -2242,13 +2032,12 @@ namespace SharpChess
                         break;
 
                     case 2:
-                        alpha = MIN_SCORE;
-                        beta = MAX_SCORE;
+                        alpha = MinScore;
+                        beta = MaxScore;
                         break;
                 }
 
-                val = this.AlphaBeta(
-                    player, this.m_intSearchDepth, this.m_intSearchDepth, alpha, beta, null, movesPV, 0);
+                val = this.AlphaBeta(player, this.SearchDepth, this.SearchDepth, alpha, beta, null, movesPV, 0);
                 if (val > alpha && val < beta)
                 {
                     break;
@@ -2342,17 +2131,24 @@ namespace SharpChess
                     move.Score += 99997;
                     return;
                 }
-                else if (move.From.Piece.Name == Piece.PieceNames.Bishop && move.To.Piece.Name == Piece.PieceNames.Bishop)
+                else if (move.From.Piece.Name == Piece.PieceNames.Bishop
+                         && move.To.Piece.Name == Piece.PieceNames.Bishop)
                 {
                     move.Score += 99996;
                     return;
                 }
-                else if (move.From.Piece.Name == Piece.PieceNames.Bishop && move.To.Piece.Name == Piece.PieceNames.Knight)
+                else if (move.From.Piece.Name == Piece.PieceNames.Bishop
+                         && move.To.Piece.Name == Piece.PieceNames.Knight)
                 {
                     move.Score += 99995;
                     return;
                 }
-                else if (move.From.Piece.Name == Piece.PieceNames.Pawn && (move.Name == Move.MoveNames.EnPassent && Board.GetPiece(move.To.Ordinal - player.PawnForwardOffset).Name == Piece.PieceNames.Pawn || move.To.Piece.Name == Piece.PieceNames.Pawn))
+                else if (move.From.Piece.Name == Piece.PieceNames.Pawn
+                         &&
+                         (move.Name == Move.MoveNames.EnPassent
+                          &&
+                          Board.GetPiece(move.To.Ordinal - player.PawnForwardOffset).Name
+                          == Piece.PieceNames.Pawn || move.To.Piece.Name == Piece.PieceNames.Pawn))
                 {
                     move.Score += 99994;
                     return;
@@ -2419,7 +2215,7 @@ namespace SharpChess
             {
                 Move moveUndo = move.Piece.Move(move.Name, move.To);
 
-                this.m_intPositionsSearched++;
+                this.PositionsSearched++;
 
                 // Debug.WriteLine(move.DebugText + ",");
                 this.Perft_Ply(player.OtherPlayer, depth - 1);

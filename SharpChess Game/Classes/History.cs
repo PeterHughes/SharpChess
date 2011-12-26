@@ -78,9 +78,9 @@ namespace SharpChess
         /// <param name="value">
         /// The history heuristic weighting value.
         /// </param>
-        public static void Record(Player.enmColour colour, int ordinalFrom, int ordinalTo, int value)
+        public static void Record(Player.ColourNames colour, int ordinalFrom, int ordinalTo, int value)
         {
-            if (colour == Player.enmColour.White)
+            if (colour == Player.ColourNames.White)
             {
                 HistoryTableEntriesforWhite[ordinalFrom, ordinalTo] += value;
             }
@@ -105,9 +105,9 @@ namespace SharpChess
         /// <returns>
         /// The history heuristic weighting value.
         /// </returns>
-        public static int Retrieve(Player.enmColour colour, int ordinalFrom, int ordinalTo)
+        public static int Retrieve(Player.ColourNames colour, int ordinalFrom, int ordinalTo)
         {
-            return colour == Player.enmColour.White ? HistoryTableEntriesforWhite[ordinalFrom, ordinalTo] : HistoryTableEntriesforBlack[ordinalFrom, ordinalTo];
+            return colour == Player.ColourNames.White ? HistoryTableEntriesforWhite[ordinalFrom, ordinalTo] : HistoryTableEntriesforBlack[ordinalFrom, ordinalTo];
         }
 
         #endregion

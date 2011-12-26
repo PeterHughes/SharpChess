@@ -118,7 +118,7 @@ namespace SharpChess
         {
             fixed (HashEntry* phashBase = &hashTableEntries[0])
             {
-                if (player.Colour == Player.enmColour.Black)
+                if (player.Colour == Player.ColourNames.Black)
                 {
                     hashCodeA |= 0x1;
                     hashCodeB |= 0x1;

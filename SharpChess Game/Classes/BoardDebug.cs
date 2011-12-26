@@ -148,7 +148,7 @@ namespace SharpChess
                          indMov++)
                     {
                         Move moveThis = Game.MoveHistory[indMov];
-                        if (moveThis.Piece.Player.Colour == Player.enmColour.White)
+                        if (moveThis.Piece.Player.Colour == Player.ColourNames.White)
                         {
                             strbBoard.Append(indMov >> 1);
                             strbBoard.Append(". ");
@@ -176,7 +176,7 @@ namespace SharpChess
         {
             var strbBoard = new StringBuilder(160);
             strbBoard.Append("  0 1 2 3 4 5 6 7 :PlayerToPlay = ");
-            strbBoard.Append((Game.PlayerToPlay.Colour == Player.enmColour.White) ? "White\n" : "Black\n");
+            strbBoard.Append((Game.PlayerToPlay.Colour == Player.ColourNames.White) ? "White\n" : "Black\n");
             for (int indRank = 7; indRank >= 0; indRank--)
             {
                 strbBoard.Append(indRank + 1);
@@ -194,7 +194,7 @@ namespace SharpChess
                         {
                             switch (square.Piece.Player.Colour)
                             {
-                                case Player.enmColour.White:
+                                case Player.ColourNames.White:
                                     strbBoard.Append(square.Piece.Abbreviation);
                                     break;
                                 default:

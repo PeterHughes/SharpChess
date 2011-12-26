@@ -102,7 +102,7 @@ namespace SharpChess
         {
             get
             {
-                return this.Base.Player.Colour == Player.enmColour.White ? 3 : 2;
+                return this.Base.Player.Colour == Player.ColourNames.White ? 3 : 2;
             }
         }
 
@@ -185,9 +185,9 @@ namespace SharpChess
 
                     // 7th rank
                     if (
-                        (this.Base.Player.Colour == Player.enmColour.White && this.Base.Square.Rank == 6)
+                        (this.Base.Player.Colour == Player.ColourNames.White && this.Base.Square.Rank == 6)
                         || 
-                        (this.Base.Player.Colour == Player.enmColour.Black && this.Base.Square.Rank == 1))
+                        (this.Base.Player.Colour == Player.ColourNames.Black && this.Base.Square.Rank == 1))
                     {
                         intPoints += 30;
                     }

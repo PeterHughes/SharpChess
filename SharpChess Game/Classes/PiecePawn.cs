@@ -123,7 +123,7 @@ namespace SharpChess
         {
             get
             {
-                return this.Base.Player.Colour == Player.enmColour.White ? 9 : 8;
+                return this.Base.Player.Colour == Player.ColourNames.White ? 9 : 8;
             }
         }
 
@@ -293,9 +293,9 @@ namespace SharpChess
                     {
                         // still at rank 2
                         if (
-                            (this.Base.Player.Colour == Player.enmColour.White && this.Base.Square.Rank == 1)
+                            (this.Base.Player.Colour == Player.ColourNames.White && this.Base.Square.Rank == 1)
                             || 
-                            (this.Base.Player.Colour == Player.enmColour.Black && this.Base.Square.Rank == 6))
+                            (this.Base.Player.Colour == Player.ColourNames.Black && this.Base.Square.Rank == 6))
                         {
                             intPoints -= 200;
                         }
@@ -309,9 +309,9 @@ namespace SharpChess
                     {
                         // Bonus for rank 5
                         if (
-                            (this.Base.Player.Colour == Player.enmColour.White && this.Base.Square.Rank == 4)
+                            (this.Base.Player.Colour == Player.ColourNames.White && this.Base.Square.Rank == 4)
                             ||
-                            (this.Base.Player.Colour == Player.enmColour.Black && this.Base.Square.Rank == 3))
+                            (this.Base.Player.Colour == Player.ColourNames.Black && this.Base.Square.Rank == 3))
                         {
                             intPoints -= 300;
                         }
@@ -324,7 +324,7 @@ namespace SharpChess
                 intPoints += FileBonus[this.Base.Square.File];
 
                 // Advancement
-                int intAdvancementBonus = AdvancementBonus[this.Base.Player.Colour == Player.enmColour.White ? this.Base.Square.Rank : 7 - this.Base.Square.Rank];
+                int intAdvancementBonus = AdvancementBonus[this.Base.Player.Colour == Player.ColourNames.White ? this.Base.Square.Rank : 7 - this.Base.Square.Rank];
 
                 // Passed Pawns
                 bool blnIsPassed = true;
@@ -335,9 +335,9 @@ namespace SharpChess
                     {
                         if (
                                 (
-                                    (this.Base.Player.Colour == Player.enmColour.White && piece.Square.Rank > this.Base.Square.Rank) 
+                                    (this.Base.Player.Colour == Player.ColourNames.White && piece.Square.Rank > this.Base.Square.Rank) 
                                     || 
-                                    (this.Base.Player.Colour == Player.enmColour.Black && piece.Square.Rank < this.Base.Square.Rank)
+                                    (this.Base.Player.Colour == Player.ColourNames.Black && piece.Square.Rank < this.Base.Square.Rank)
                                 ) 
                                 && 
                                 (piece.Square.File == this.Base.Square.File || piece.Square.File == this.Base.Square.File - 1 || piece.Square.File == this.Base.Square.File + 1)
@@ -411,8 +411,8 @@ namespace SharpChess
             };
 
             Square square;
-            bool isPromotion = (this.Base.Player.Colour == Player.enmColour.White && this.Base.Square.Rank == 6)
-                               || (this.Base.Player.Colour == Player.enmColour.Black && this.Base.Square.Rank == 1);
+            bool isPromotion = (this.Base.Player.Colour == Player.ColourNames.White && this.Base.Square.Rank == 6)
+                               || (this.Base.Player.Colour == Player.ColourNames.Black && this.Base.Square.Rank == 1);
 
             int intMovesToGenerate = isPromotion ? promotionTypes.Length : 1;
 
@@ -501,9 +501,9 @@ namespace SharpChess
 
             // En Passent 
             if (
-                (this.Base.Square.Rank == 4 && this.Base.Player.Colour == Player.enmColour.White)
+                (this.Base.Square.Rank == 4 && this.Base.Player.Colour == Player.ColourNames.White)
                 || 
-                (this.Base.Square.Rank == 3 && this.Base.Player.Colour == Player.enmColour.Black))
+                (this.Base.Square.Rank == 3 && this.Base.Player.Colour == Player.ColourNames.Black))
             {
                 Piece piecePassed;
 

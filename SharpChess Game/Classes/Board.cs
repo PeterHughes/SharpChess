@@ -441,7 +441,7 @@ namespace SharpChess
         /// The first piece on the line, or null.
         /// </returns>
         public static Piece LinesFirstPiece(
-            Player.enmColour colour, Piece.PieceNames pieceName, Square squareStart, int offset)
+            Player.ColourNames colour, Piece.PieceNames pieceName, Square squareStart, int offset)
         {
             int intOrdinal = squareStart.Ordinal;
             Square square;
@@ -486,7 +486,7 @@ namespace SharpChess
         /// <returns>
         /// The open line penalty.
         /// </returns>
-        public static int OpenLinePenalty(Player.enmColour colour, Square squareStart, int directionOffset)
+        public static int OpenLinePenalty(Player.ColourNames colour, Square squareStart, int directionOffset)
         {
             int intOrdinal = squareStart.Ordinal;
             int intSquareCount = 0;

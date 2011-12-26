@@ -174,7 +174,7 @@ namespace SharpChess
         /// <returns>
         /// Best move, or null.
         /// </returns>
-        public static unsafe Move ProbeForBestMove(ulong hashCodeA, ulong hashCodeB, Player.enmColour colour)
+        public static unsafe Move ProbeForBestMove(ulong hashCodeA, ulong hashCodeB, Player.ColourNames colour)
         {
             fixed (HashEntry* phashBase = &hashTableEntries[0])
             {
@@ -200,7 +200,7 @@ namespace SharpChess
 
                 if (phashEntry->HashCodeA == hashCodeA && phashEntry->HashCodeB == hashCodeB)
                 {
-                    if (colour == Player.enmColour.White)
+                    if (colour == Player.ColourNames.White)
                     {
                         if (phashEntry->WhiteFrom >= 0)
                         {
@@ -263,7 +263,7 @@ namespace SharpChess
         /// The positional score.
         /// </returns>
         public static unsafe int ProbeHash(
-            ulong hashCodeA, ulong hashCodeB, int depth, int alpha, int beta, Player.enmColour colour)
+            ulong hashCodeA, ulong hashCodeB, int depth, int alpha, int beta, Player.ColourNames colour)
         {
             Probes++;
 
@@ -359,7 +359,7 @@ namespace SharpChess
             int from, 
             int to, 
             Move.MoveNames moveName, 
-            Player.enmColour colour)
+            Player.ColourNames colour)
         {
             Writes++;
             fixed (HashEntry* phashBase = &hashTableEntries[0])
@@ -403,7 +403,7 @@ namespace SharpChess
                 phashEntry->Colour = colour;
                 if (from > -1)
                 {
-                    if (colour == Player.enmColour.White)
+                    if (colour == Player.ColourNames.White)
                     {
                         phashEntry->WhiteMoveName = moveName;
                         phashEntry->WhiteFrom = (sbyte)from;
@@ -458,7 +458,7 @@ namespace SharpChess
             /// <summary>
             ///   Player colour.
             /// </summary>
-            public Player.enmColour Colour;
+            public Player.ColourNames Colour;
 
             /// <summary>
             ///   Search depth.

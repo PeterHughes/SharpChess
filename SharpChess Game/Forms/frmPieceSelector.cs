@@ -50,7 +50,7 @@ namespace SharpChess
         /// <summary>
         /// The m_ colour.
         /// </summary>
-        private Player.enmColour m_Colour = Player.enmColour.Black;
+        private Player.ColourNames m_Colour = Player.ColourNames.Black;
 
         /// <summary>
         /// The m_ move name selected.
@@ -117,7 +117,7 @@ namespace SharpChess
         /// <summary>
         /// Sets Colour.
         /// </summary>
-        public Player.enmColour Colour
+        public Player.ColourNames Colour
         {
             set
             {
@@ -331,14 +331,14 @@ namespace SharpChess
         {
             switch (this.m_Colour)
             {
-                case Player.enmColour.White:
+                case Player.ColourNames.White:
                     this.picWhiteQueen.Visible = true;
                     this.picWhiteRook.Visible = true;
                     this.picWhiteBishop.Visible = true;
                     this.picWhiteKnight.Visible = true;
                     break;
 
-                case Player.enmColour.Black:
+                case Player.ColourNames.Black:
                     this.picBlackQueen.Visible = true;
                     this.picBlackRook.Visible = true;
                     this.picBlackBishop.Visible = true;

@@ -100,7 +100,7 @@ namespace SharpChess
         {
             get
             {
-                return this.Base.Player.Colour == Player.enmColour.White ? 7 : 6;
+                return this.Base.Player.Colour == Player.ColourNames.White ? 7 : 6;
             }
         }
 

@@ -765,12 +765,12 @@ namespace SharpChess
             this.lvwMoveHistory.Items.Add(new ListViewItem(lvi));
             switch (move.Piece.Player.Colour)
             {
-                case Player.enmColour.White:
+                case Player.ColourNames.White:
                     this.lvwMoveHistory.Items[this.lvwMoveHistory.Items.Count - 1].BackColor = Color.White;
                     this.lvwMoveHistory.Items[this.lvwMoveHistory.Items.Count - 1].ForeColor = Color.Blue;
                     break;
 
-                case Player.enmColour.Black:
+                case Player.ColourNames.Black:
                     this.lvwMoveHistory.Items[this.lvwMoveHistory.Items.Count - 1].BackColor = Color.White;
                     this.lvwMoveHistory.Items[this.lvwMoveHistory.Items.Count - 1].ForeColor = Color.Black;
                     break;
@@ -2243,7 +2243,7 @@ namespace SharpChess
             {
                 this.lblWhiteClock.BorderStyle = BorderStyle.FixedSingle;
                 this.lblBlackClock.BorderStyle = BorderStyle.None;
-                this.lblWhiteClock.BackColor = Game.PlayerWhite.Status == Player.enmStatus.InCheckMate
+                this.lblWhiteClock.BackColor = Game.PlayerWhite.Status == Player.StatusNames.InCheckMate
                                                    ? Color.Red
                                                    : (Game.PlayerWhite.IsInCheck ? Color.Orange : Color.LightGray);
                 this.lblBlackClock.BackColor = Color.FromName(KnownColor.Control.ToString());
@@ -2253,7 +2253,7 @@ namespace SharpChess
                 this.lblBlackClock.BorderStyle = BorderStyle.FixedSingle;
                 this.lblWhiteClock.BorderStyle = BorderStyle.None;
                 this.lblWhiteClock.BackColor = Color.FromName(KnownColor.Control.ToString());
-                this.lblBlackClock.BackColor = Game.PlayerBlack.Status == Player.enmStatus.InCheckMate
+                this.lblBlackClock.BackColor = Game.PlayerBlack.Status == Player.StatusNames.InCheckMate
                                                    ? Color.Red
                                                    : (Game.PlayerBlack.IsInCheck ? Color.Orange : Color.LightGray);
             }
@@ -2278,21 +2278,21 @@ namespace SharpChess
             this.lblStage.Text = Game.Stage.ToString() + " Game - ";
             switch (Game.PlayerToPlay.Status)
             {
-                case Player.enmStatus.Normal:
+                case Player.StatusNames.Normal:
                     this.lblStage.Text += Game.PlayerToPlay.Colour.ToString() + " to play";
 
                     // 	lblStage.Text = "A: " + Board.HashCodeA.ToString() + "     B: " + Board.HashCodeB.ToString();
                     break;
 
-                case Player.enmStatus.InCheck:
+                case Player.StatusNames.InCheck:
                     this.lblStage.Text += Game.PlayerToPlay.Colour.ToString() + " in check!";
                     break;
 
-                case Player.enmStatus.InCheckMate:
+                case Player.StatusNames.InCheckMate:
                     this.lblStage.Text += Game.PlayerToPlay.Colour.ToString() + " in checkmate!";
                     break;
 
-                case Player.enmStatus.InStaleMate:
+                case Player.StatusNames.InStaleMate:
                     this.lblStage.Text += Game.PlayerToPlay.Colour.ToString() + " in stalemate!";
                     break;
             }
@@ -2426,7 +2426,7 @@ namespace SharpChess
 
                 if (Game.ShowThinking)
                 {
-                    strMsg += " Pos: " + playerToPlay.PositionsSearched + " Q: " + playerToPlay.MaxQuiesDepth + " E: "
+                    strMsg += " Pos: " + playerToPlay.PositionsSearched + " Q: " + playerToPlay.MaxQuiesenceDepthReached + " E: "
                               + playerToPlay.MaxExtensions;
                     strMsg += " P/S: " + playerToPlay.PositionsPerSecond.ToString();
                     if (!Game.PlayerToPlay.IsPondering)
@@ -2554,10 +2554,10 @@ namespace SharpChess
                 pic.Enabled = !WinBoard.Active && Game.PlayerToPlay.CanMove; // && (!Game.IsPaused)
             }
 
-            this.cboIntellegenceWhite.SelectedIndex = Game.PlayerWhite.Intellegence == Player.enmIntellegence.Human
+            this.cboIntellegenceWhite.SelectedIndex = Game.PlayerWhite.Intellegence == Player.IntellegenceNames.Human
                                                           ? INTELLEGENCE_HUMAN
                                                           : INTELLEGENCE_COMPUTER;
-            this.cboIntellegenceBlack.SelectedIndex = Game.PlayerBlack.Intellegence == Player.enmIntellegence.Human
+            this.cboIntellegenceBlack.SelectedIndex = Game.PlayerBlack.Intellegence == Player.IntellegenceNames.Human
                                                           ? INTELLEGENCE_HUMAN
                                                           : INTELLEGENCE_COMPUTER;
         }
@@ -2736,8 +2736,8 @@ namespace SharpChess
         private void cboIntellegenceBlack_SelectedIndexChanged(object sender, EventArgs e)
         {
             Game.PlayerBlack.Intellegence = this.cboIntellegenceBlack.SelectedIndex == INTELLEGENCE_HUMAN
-                                                ? Player.enmIntellegence.Human
-                                                : Player.enmIntellegence.Computer;
+                                                ? Player.IntellegenceNames.Human
+                                                : Player.IntellegenceNames.Computer;
         }
 
         /// <summary>
@@ -2752,8 +2752,8 @@ namespace SharpChess
         private void cboIntellegenceWhite_SelectedIndexChanged(object sender, EventArgs e)
         {
             Game.PlayerWhite.Intellegence = this.cboIntellegenceWhite.SelectedIndex == INTELLEGENCE_HUMAN
-                                                ? Player.enmIntellegence.Human
-                                                : Player.enmIntellegence.Computer;
+                                                ? Player.IntellegenceNames.Human
+                                                : Player.IntellegenceNames.Computer;
         }
 
         /// <summary>

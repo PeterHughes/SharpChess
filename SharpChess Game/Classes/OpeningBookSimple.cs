@@ -128,7 +128,7 @@ namespace SharpChess
         /// </returns>
         public static Move SuggestRandomMove(Player player)
         {
-            Hashtable hashtable = player.Colour == Player.enmColour.White ? HashtableWhite : HashtableBlack;
+            Hashtable hashtable = player.Colour == Player.ColourNames.White ? HashtableWhite : HashtableBlack;
             if (hashtable.ContainsKey(Board.HashCodeA))
             {
                 Moves moves = (Moves)hashtable[Board.HashCodeA];
@@ -173,7 +173,7 @@ namespace SharpChess
         private static void BuildHashtable(XmlElement xmlnodeParent, Player player)
         {
             Moves moves;
-            Hashtable hashtable = player.Colour == Player.enmColour.White ? HashtableWhite : HashtableBlack;
+            Hashtable hashtable = player.Colour == Player.ColourNames.White ? HashtableWhite : HashtableBlack;
 
             if (!hashtable.ContainsKey(Board.HashCodeA))
             {

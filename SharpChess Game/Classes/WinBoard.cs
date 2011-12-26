@@ -227,12 +227,12 @@ namespace SharpChess
                     Game.EnablePondering = false;
                     Game.ClockIncrementPerMove = new TimeSpan(0, 0, 0);
                     Game.ClockFixedTimePerMove = new TimeSpan(0, 0, 0);
-                    Game.PlayerWhite.Intellegence = Player.enmIntellegence.Human;
-                    Game.PlayerBlack.Intellegence = Player.enmIntellegence.Human;
+                    Game.PlayerWhite.Intellegence = Player.IntellegenceNames.Human;
+                    Game.PlayerBlack.Intellegence = Player.IntellegenceNames.Human;
                     Game.New();
                     Game.SuspendPondering();
-                    Game.PlayerWhite.Intellegence = Player.enmIntellegence.Human;
-                    Game.PlayerBlack.Intellegence = Player.enmIntellegence.Computer;
+                    Game.PlayerWhite.Intellegence = Player.IntellegenceNames.Human;
+                    Game.PlayerBlack.Intellegence = Player.IntellegenceNames.Computer;
                     Game.ResumePondering();
                 }
                 else if (strMessage.StartsWith("load "))
@@ -273,8 +273,8 @@ namespace SharpChess
                     // moves of its own. 
                     Game.SuspendPondering();
                     Game.PlayerToPlay.Clock.Stop();
-                    Game.PlayerWhite.Intellegence = Player.enmIntellegence.Human;
-                    Game.PlayerBlack.Intellegence = Player.enmIntellegence.Human;
+                    Game.PlayerWhite.Intellegence = Player.IntellegenceNames.Human;
+                    Game.PlayerBlack.Intellegence = Player.IntellegenceNames.Human;
                 }
                 else if (strMessage == "go")
                 {
@@ -284,8 +284,8 @@ namespace SharpChess
                     // is not on move. Start the engine's clock. Start thinking and eventually make a move. 
                     Game.SuspendPondering();
                     Game.PlayerToPlay.OtherPlayer.Clock.Stop();
-                    Game.PlayerToPlay.Intellegence = Player.enmIntellegence.Computer;
-                    Game.PlayerToPlay.OtherPlayer.Intellegence = Player.enmIntellegence.Human;
+                    Game.PlayerToPlay.Intellegence = Player.IntellegenceNames.Computer;
+                    Game.PlayerToPlay.OtherPlayer.Intellegence = Player.IntellegenceNames.Human;
                     Game.PlayerToPlay.Clock.Stop();
                     Game.PlayerToPlay.Clock.Start();
                     Game.PlayerToPlay.StartThinking();
@@ -302,8 +302,8 @@ namespace SharpChess
                     */
                     Game.SuspendPondering();
                     Game.PlayerToPlay = Game.PlayerToPlay.OtherPlayer;
-                    Game.PlayerToPlay.Intellegence = Player.enmIntellegence.Computer;
-                    Game.PlayerToPlay.OtherPlayer.Intellegence = Player.enmIntellegence.Human;
+                    Game.PlayerToPlay.Intellegence = Player.IntellegenceNames.Computer;
+                    Game.PlayerToPlay.OtherPlayer.Intellegence = Player.IntellegenceNames.Human;
                     Game.PlayerToPlay.OtherPlayer.Clock.Stop();
                     Game.PlayerToPlay.Clock.Start();
                     Game.ResumePondering();
@@ -322,8 +322,8 @@ namespace SharpChess
 
                     Game.PlayerToPlay.Clock.Stop();
                     Game.PlayerToPlay = Game.PlayerWhite;
-                    Game.PlayerWhite.Intellegence = Player.enmIntellegence.Human;
-                    Game.PlayerBlack.Intellegence = Player.enmIntellegence.Computer;
+                    Game.PlayerWhite.Intellegence = Player.IntellegenceNames.Human;
+                    Game.PlayerBlack.Intellegence = Player.IntellegenceNames.Computer;
                 }
                 else if (strMessage == "black")
                 {
@@ -339,8 +339,8 @@ namespace SharpChess
 
                     Game.PlayerToPlay.Clock.Stop();
                     Game.PlayerToPlay = Game.PlayerBlack;
-                    Game.PlayerWhite.Intellegence = Player.enmIntellegence.Computer;
-                    Game.PlayerBlack.Intellegence = Player.enmIntellegence.Human;
+                    Game.PlayerWhite.Intellegence = Player.IntellegenceNames.Computer;
+                    Game.PlayerBlack.Intellegence = Player.IntellegenceNames.Human;
                 }
                 else if (strMessage.StartsWith("level "))
                 {
@@ -618,8 +618,8 @@ namespace SharpChess
                     Game.SuspendPondering();
 
                     Game.PlayerToPlay.Clock.Stop();
-                    Game.PlayerWhite.Intellegence = Player.enmIntellegence.Computer;
-                    Game.PlayerBlack.Intellegence = Player.enmIntellegence.Computer;
+                    Game.PlayerWhite.Intellegence = Player.IntellegenceNames.Computer;
+                    Game.PlayerBlack.Intellegence = Player.IntellegenceNames.Computer;
                     Game.IsInAnalyseMode = true;
 
                     Game.PlayerToPlay.StartThinking();

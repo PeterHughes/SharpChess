@@ -71,7 +71,7 @@ namespace SharpChess
         /// </param>
         public Move(int turnNo, int lastMoveTurnNo, MoveNames moveName, Piece piece, Square from, Square to, Piece pieceCaptured, int pieceCapturedOrdinal, int score)
         {
-            this.EnemyStatus = Player.enmStatus.Normal;
+            this.EnemyStatus = Player.StatusNames.Normal;
             this.TurnNo = turnNo;
             this.LastMoveTurnNo = lastMoveTurnNo;
             this.Name = moveName;
@@ -226,15 +226,15 @@ namespace SharpChess
 
                 switch (this.EnemyStatus)
                 {
-                    case Player.enmStatus.InCheckMate:
-                        strbMove.Append((this.Piece.Player.Colour == Player.enmColour.White) ? "# 1-0" : "# 0-1");
+                    case Player.StatusNames.InCheckMate:
+                        strbMove.Append((this.Piece.Player.Colour == Player.ColourNames.White) ? "# 1-0" : "# 0-1");
                         break;
 
-                    case Player.enmStatus.InStaleMate:
+                    case Player.StatusNames.InStaleMate:
                         strbMove.Append(" 1/2-1/2");
                         break;
 
-                    case Player.enmStatus.InCheck:
+                    case Player.StatusNames.InCheck:
                         strbMove.Append("+");
                         break;
                 }
@@ -251,7 +251,7 @@ namespace SharpChess
         /// <summary>
         /// Gets or sets status of the enemy e.g. In check, stalemate, checkmate etc.
         /// </summary>
-        public Player.enmStatus EnemyStatus { get; set; }
+        public Player.StatusNames EnemyStatus { get; set; }
 
         /// <summary>
         /// Gets a counter indicating closeness to a fifty-move-draw condition.
@@ -524,7 +524,7 @@ namespace SharpChess
             switch (move.Name)
             {
                 case MoveNames.CastleKingSide:
-                    pieceRook = move.Piece.Player.Colour == Player.enmColour.White ? Board.GetPiece(5, 0) : Board.GetPiece(5, 7);
+                    pieceRook = move.Piece.Player.Colour == Player.ColourNames.White ? Board.GetPiece(5, 0) : Board.GetPiece(5, 7);
                     Board.HashCodeA ^= pieceRook.HashCodeA;
                     Board.HashCodeB ^= pieceRook.HashCodeB;
                     pieceRook.Square = Board.GetSquare(7, move.Piece.Square.Rank);
@@ -538,7 +538,7 @@ namespace SharpChess
                     break;
 
                 case MoveNames.CastleQueenSide:
-                    pieceRook = move.Piece.Player.Colour == Player.enmColour.White ? Board.GetPiece(3, 0) : Board.GetPiece(3, 7);
+                    pieceRook = move.Piece.Player.Colour == Player.ColourNames.White ? Board.GetPiece(3, 0) : Board.GetPiece(3, 7);
                     Board.HashCodeA ^= pieceRook.HashCodeA;
                     Board.HashCodeB ^= pieceRook.HashCodeB;
                     pieceRook.Square = Board.GetSquare(0, move.Piece.Square.Rank);

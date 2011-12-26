@@ -81,7 +81,7 @@ namespace SharpChess
         {
             get
             {
-                return this.Base.Player.Colour == Player.enmColour.White ? 11 : 10;
+                return this.Base.Player.Colour == Player.ColourNames.White ? 11 : 10;
             }
         }
 
@@ -120,7 +120,7 @@ namespace SharpChess
                 // "taxicab" distance to the enemy king.
                 if (Game.Stage == Game.GameStageNames.Opening)
                 {
-                    if (this.Base.Player.Colour == Player.enmColour.White)
+                    if (this.Base.Player.Colour == Player.ColourNames.White)
                     {
                         intPoints -= this.Base.Square.Rank * 7;
                     }

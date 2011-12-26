@@ -790,7 +790,7 @@ namespace SharpChess
             switch (moveName)
             {
                 case SharpChess.Move.MoveNames.CastleKingSide:
-                    pieceRook = move.Piece.Player.Colour == Player.enmColour.White
+                    pieceRook = move.Piece.Player.Colour == Player.ColourNames.White
                                     ? Board.GetPiece(7, 0)
                                     : Board.GetPiece(7, 7);
                     Board.HashCodeA ^= pieceRook.HashCodeA;
@@ -806,7 +806,7 @@ namespace SharpChess
                     break;
 
                 case SharpChess.Move.MoveNames.CastleQueenSide:
-                    pieceRook = move.Piece.Player.Colour == Player.enmColour.White
+                    pieceRook = move.Piece.Player.Colour == Player.ColourNames.White
                                     ? Board.GetPiece(0, 0)
                                     : Board.GetPiece(0, 7);
                     Board.HashCodeA ^= pieceRook.HashCodeA;

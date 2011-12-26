@@ -123,7 +123,7 @@ namespace SharpChess
         /// <returns>
         /// The best move from the opening book.
         /// </returns>
-        public static Move SearchForGoodMove(ulong boardHashCodeA, ulong boardHashCodeB, Player.enmColour colour)
+        public static Move SearchForGoodMove(ulong boardHashCodeA, ulong boardHashCodeB, Player.ColourNames colour)
         {
             return ProbeForBestMove(boardHashCodeA, boardHashCodeB, colour);
         }
@@ -147,9 +147,9 @@ namespace SharpChess
         /// <returns>
         /// The best move in the opening book (hash table) or null if there is no opening book entry for the specified board position.
         /// </returns>
-        private static unsafe Move ProbeForBestMove(ulong hashCodeA, ulong hashCodeB, Player.enmColour colour)
+        private static unsafe Move ProbeForBestMove(ulong hashCodeA, ulong hashCodeB, Player.ColourNames colour)
         {
-            if (colour == Player.enmColour.Black)
+            if (colour == Player.ColourNames.Black)
             {
                 hashCodeA |= 0x1;
                 hashCodeB |= 0x1;
@@ -195,9 +195,9 @@ namespace SharpChess
         /// <param name="colour">
         /// The player colour.
         /// </param>
-        private static unsafe void RecordHash(ulong hashCodeA, ulong hashCodeB, byte from, byte to, Move.MoveNames moveName, Player.enmColour colour)
+        private static unsafe void RecordHash(ulong hashCodeA, ulong hashCodeB, byte from, byte to, Move.MoveNames moveName, Player.ColourNames colour)
         {
-            if (colour == Player.enmColour.Black)
+            if (colour == Player.ColourNames.Black)
             {
                 hashCodeA |= 0x1;
                 hashCodeB |= 0x1;
@@ -245,7 +245,7 @@ namespace SharpChess
                 Square to = Board.GetSquare(xmlnodeMove.GetAttribute("T"));
                 Piece piece = from.Piece;
 
-                int intScore = Convert.ToInt32(xmlnodeMove.GetAttribute(player.Colour == Player.enmColour.White ? "W" : "B"));
+                int intScore = Convert.ToInt32(xmlnodeMove.GetAttribute(player.Colour == Player.ColourNames.White ? "W" : "B"));
                 if (intScore > intReturnScore)
                 {
                     intReturnScore = intScore;

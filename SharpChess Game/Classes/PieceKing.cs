@@ -107,7 +107,7 @@ namespace SharpChess
                 }
 
                 // Rook is still there i.e. hasnt been taken
-                Piece pieceRook = this.Base.Player.Colour == Player.enmColour.White ? Board.GetPiece(7, 0) : Board.GetPiece(7, 7);
+                Piece pieceRook = this.Base.Player.Colour == Player.ColourNames.White ? Board.GetPiece(7, 0) : Board.GetPiece(7, 7);
                 if (pieceRook == null || pieceRook.Name != Piece.PieceNames.Rook || pieceRook.Player.Colour != this.Base.Player.Colour)
                 {
                     return false;
@@ -170,7 +170,7 @@ namespace SharpChess
                 }
 
                 // Rook is still there i.e. hasnt been taken
-                Piece pieceRook = this.Base.Player.Colour == Player.enmColour.White ? Board.GetPiece(0, 0) : Board.GetPiece(0, 7);
+                Piece pieceRook = this.Base.Player.Colour == Player.ColourNames.White ? Board.GetPiece(0, 0) : Board.GetPiece(0, 7);
                 if (pieceRook == null || pieceRook.Name != Piece.PieceNames.Rook || pieceRook.Player.Colour != this.Base.Player.Colour)
                 {
                     return false;
@@ -231,7 +231,7 @@ namespace SharpChess
         {
             get
             {
-                return this.Base.Player.Colour == Player.enmColour.White ? 5 : 4;
+                return this.Base.Player.Colour == Player.ColourNames.White ? 5 : 4;
             }
         }
 
