@@ -80,6 +80,19 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.0"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.0"
+                    }
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Windows.Installer.3.1"
+                    {
+                    "Name" = "8:Windows Installer 3.1"
+                    "ProductCode" = "8:Microsoft.Windows.Installer.3.1"
+                    }
+                }
             }
         }
     }
@@ -198,7 +211,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:SharpChess 2.6.1"
         "ProductCode" = "8:{1ED78A3F-C6A4-4ADF-8734-3CFCF5723F5C}"
-        "PackageCode" = "8:{4F62C878-8EBA-4BA0-91A7-231305812869}"
+        "PackageCode" = "8:{917220CA-34F0-467F-96EA-A9C333CFD44F}"
         "UpgradeCode" = "8:{0D95FE29-AB20-45A4-8A09-FA93F828D577}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
