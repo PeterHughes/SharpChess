@@ -141,40 +141,46 @@ namespace SharpChess
         /// </summary>
         private void InitializeComponent()
         {
-            ResourceManager resources = new ResourceManager(typeof(frmWinBoard));
-            this.lvwWinBoard = new ListView();
-            this.colDirection = new ColumnHeader();
-            this.colMessage = new ColumnHeader();
+            System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(frmWinBoard));
+            this.lvwWinBoard = new System.Windows.Forms.ListView();
+            this.colDirection = new System.Windows.Forms.ColumnHeader();
+            this.colMessage = new System.Windows.Forms.ColumnHeader();
             this.SuspendLayout();
-
+            // 
             // lvwWinBoard
-            this.lvwWinBoard.Columns.AddRange(new[] { this.colDirection, this.colMessage });
+            // 
+            this.lvwWinBoard.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+																						  this.colDirection,
+																						  this.colMessage});
             this.lvwWinBoard.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvwWinBoard.FullRowSelect = true;
             this.lvwWinBoard.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.lvwWinBoard.Location = new Point(0, 0);
+            this.lvwWinBoard.Location = new System.Drawing.Point(0, 0);
             this.lvwWinBoard.Name = "lvwWinBoard";
-            this.lvwWinBoard.Size = new Size(248, 262);
+            this.lvwWinBoard.Size = new System.Drawing.Size(248, 262);
             this.lvwWinBoard.TabIndex = 143;
             this.lvwWinBoard.View = System.Windows.Forms.View.Details;
-
+            // 
             // colDirection
+            // 
             this.colDirection.Text = "Dir";
             this.colDirection.Width = 29;
-
+            // 
             // colMessage
+            // 
             this.colMessage.Text = "Message";
             this.colMessage.Width = 199;
-
+            // 
             // frmWinBoard
-            this.AutoScaleBaseSize = new Size(5, 13);
-            this.ClientSize = new Size(248, 262);
+            // 
+            this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+            this.ClientSize = new System.Drawing.Size(248, 262);
             this.Controls.Add(this.lvwWinBoard);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
-            this.Icon = (System.Drawing.Icon)resources.GetObject("$this.Icon");
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmWinBoard";
             this.Text = "WinBoard Message Log";
-            this.Closing += new CancelEventHandler(this.frmWinBoard_Closing);
+            this.Closing += new System.ComponentModel.CancelEventHandler(this.frmWinBoard_Closing);
             this.ResumeLayout(false);
         }
 

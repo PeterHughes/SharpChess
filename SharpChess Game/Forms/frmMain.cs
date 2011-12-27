@@ -1020,440 +1020,523 @@ namespace SharpChess
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new Container();
-            ComponentResourceManager resources = new ComponentResourceManager(typeof(frmMain));
-            this.sbr = new StatusBar();
-            this.imgPieces = new ImageList(this.components);
-            this.mnu = new MainMenu(this.components);
-            this.mnuFile = new MenuItem();
-            this.mnuNew = new MenuItem();
-            this.mnuOpen = new MenuItem();
-            this.mnuSave = new MenuItem();
-            this.mnuSep1 = new MenuItem();
-            this.mnuExit = new MenuItem();
-            this.mnuEdit = new MenuItem();
-            this.mnuUndoMove = new MenuItem();
-            this.mnuRedoMove = new MenuItem();
-            this.mnuUndoAllMoves = new MenuItem();
-            this.mnuRedoAllMoves = new MenuItem();
-            this.mnuSep2 = new MenuItem();
-            this.mnuCopyFEN = new MenuItem();
-            this.mnuPasteFEN = new MenuItem();
-            this.menuItem2 = new MenuItem();
-            this.mnuEditBoardPosition = new MenuItem();
-            this.mnuView = new MenuItem();
-            this.mnuFlipBoard = new MenuItem();
-            this.mnuSep3 = new MenuItem();
-            this.mnuShowThinking = new MenuItem();
-            this.mnuDisplayMoveAnalysisTree = new MenuItem();
-            this.mnuDisplayWinBoardMessageLog = new MenuItem();
-            this.mnuGame = new MenuItem();
-            this.mnuPausePlay = new MenuItem();
-            this.mnuResumePlay = new MenuItem();
-            this.mnuComputer = new MenuItem();
-            this.mnuDifficulty = new MenuItem();
-            this.menuItem1 = new MenuItem();
-            this.mnuThink = new MenuItem();
-            this.mnuMoveNow = new MenuItem();
-            this.mnuHelp = new MenuItem();
-            this.mnuAbout = new MenuItem();
-            this.tbr = new ToolBar();
-            this.tbrNew = new ToolBarButton();
-            this.tbrOpen = new ToolBarButton();
-            this.tbrSave = new ToolBarButton();
-            this.tbrSep1 = new ToolBarButton();
-            this.tbrUndoAllMoves = new ToolBarButton();
-            this.tbrUndoMove = new ToolBarButton();
-            this.tbrResumePlay = new ToolBarButton();
-            this.tbrPausePlay = new ToolBarButton();
-            this.tbrRedoMove = new ToolBarButton();
-            this.tbrRedoAllMoves = new ToolBarButton();
-            this.tbrSep2 = new ToolBarButton();
-            this.tbrFlipBoard = new ToolBarButton();
-            this.tbrSep3 = new ToolBarButton();
-            this.tbrThink = new ToolBarButton();
-            this.tbrSep4 = new ToolBarButton();
-            this.tbrMoveNow = new ToolBarButton();
-            this.imgToolMenus = new ImageList(this.components);
-            this.pnlMain = new Panel();
-            this.numPerftDepth = new NumericUpDown();
-            this.btnPerft = new Button();
-            this.lblGamePaused = new Label();
-            this.btnPrune = new Button();
-            this.txtOutput = new TextBox();
-            this.lvwMoveHistory = new ListView();
-            this.lvcMoveNo = new ColumnHeader();
-            this.lvcTime = new ColumnHeader();
-            this.lvcMove = new ColumnHeader();
-            this.btnXMLtoOB = new Button();
-            this.btnPGNtoXML = new Button();
-            this.label5 = new Label();
-            this.label3 = new Label();
-            this.lblBlacksCaptures = new Label();
-            this.lblWhitesCaptures = new Label();
-            this.lblPlayer = new Label();
-            this.lblBlackClock = new Label();
-            this.lblBlackPosition = new Label();
-            this.lblBlackScore = new Label();
-            this.cboIntellegenceBlack = new ComboBox();
-            this.lblBlackPoints = new Label();
-            this.lblWhiteClock = new Label();
-            this.lblWhitePosition = new Label();
-            this.lblWhiteScore = new Label();
-            this.cboIntellegenceWhite = new ComboBox();
-            this.lblWhitePoints = new Label();
-            this.lblPlayerClocks = new Label();
-            this.label2 = new Label();
-            this.label4 = new Label();
-            this.label1 = new Label();
-            this.panel1 = new Panel();
-            this.panel3 = new Panel();
-            this.panel4 = new Panel();
-            this.panel2 = new Panel();
-            this.pbr = new ProgressBar();
-            this.lblStage = new Label();
-            this.pnlEdging = new Panel();
-            this.groupBox1 = new GroupBox();
-            this.imgTiles = new ImageList(this.components);
-            this.timer = new Timer(this.components);
-            this.imageList1 = new ImageList(this.components);
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
+            this.sbr = new System.Windows.Forms.StatusBar();
+            this.imgPieces = new System.Windows.Forms.ImageList(this.components);
+            this.mnu = new System.Windows.Forms.MainMenu(this.components);
+            this.mnuFile = new System.Windows.Forms.MenuItem();
+            this.mnuNew = new System.Windows.Forms.MenuItem();
+            this.mnuOpen = new System.Windows.Forms.MenuItem();
+            this.mnuSave = new System.Windows.Forms.MenuItem();
+            this.mnuSep1 = new System.Windows.Forms.MenuItem();
+            this.mnuExit = new System.Windows.Forms.MenuItem();
+            this.mnuEdit = new System.Windows.Forms.MenuItem();
+            this.mnuUndoMove = new System.Windows.Forms.MenuItem();
+            this.mnuRedoMove = new System.Windows.Forms.MenuItem();
+            this.mnuUndoAllMoves = new System.Windows.Forms.MenuItem();
+            this.mnuRedoAllMoves = new System.Windows.Forms.MenuItem();
+            this.mnuSep2 = new System.Windows.Forms.MenuItem();
+            this.mnuCopyFEN = new System.Windows.Forms.MenuItem();
+            this.mnuPasteFEN = new System.Windows.Forms.MenuItem();
+            this.menuItem2 = new System.Windows.Forms.MenuItem();
+            this.mnuEditBoardPosition = new System.Windows.Forms.MenuItem();
+            this.mnuView = new System.Windows.Forms.MenuItem();
+            this.mnuFlipBoard = new System.Windows.Forms.MenuItem();
+            this.mnuSep3 = new System.Windows.Forms.MenuItem();
+            this.mnuShowThinking = new System.Windows.Forms.MenuItem();
+            this.mnuDisplayMoveAnalysisTree = new System.Windows.Forms.MenuItem();
+            this.mnuDisplayWinBoardMessageLog = new System.Windows.Forms.MenuItem();
+            this.mnuGame = new System.Windows.Forms.MenuItem();
+            this.mnuPausePlay = new System.Windows.Forms.MenuItem();
+            this.mnuResumePlay = new System.Windows.Forms.MenuItem();
+            this.mnuComputer = new System.Windows.Forms.MenuItem();
+            this.mnuDifficulty = new System.Windows.Forms.MenuItem();
+            this.menuItem1 = new System.Windows.Forms.MenuItem();
+            this.mnuThink = new System.Windows.Forms.MenuItem();
+            this.mnuMoveNow = new System.Windows.Forms.MenuItem();
+            this.mnuHelp = new System.Windows.Forms.MenuItem();
+            this.mnuAbout = new System.Windows.Forms.MenuItem();
+            this.tbr = new System.Windows.Forms.ToolBar();
+            this.tbrNew = new System.Windows.Forms.ToolBarButton();
+            this.tbrOpen = new System.Windows.Forms.ToolBarButton();
+            this.tbrSave = new System.Windows.Forms.ToolBarButton();
+            this.tbrSep1 = new System.Windows.Forms.ToolBarButton();
+            this.tbrUndoAllMoves = new System.Windows.Forms.ToolBarButton();
+            this.tbrUndoMove = new System.Windows.Forms.ToolBarButton();
+            this.tbrResumePlay = new System.Windows.Forms.ToolBarButton();
+            this.tbrPausePlay = new System.Windows.Forms.ToolBarButton();
+            this.tbrRedoMove = new System.Windows.Forms.ToolBarButton();
+            this.tbrRedoAllMoves = new System.Windows.Forms.ToolBarButton();
+            this.tbrSep2 = new System.Windows.Forms.ToolBarButton();
+            this.tbrFlipBoard = new System.Windows.Forms.ToolBarButton();
+            this.tbrSep3 = new System.Windows.Forms.ToolBarButton();
+            this.tbrThink = new System.Windows.Forms.ToolBarButton();
+            this.tbrSep4 = new System.Windows.Forms.ToolBarButton();
+            this.tbrMoveNow = new System.Windows.Forms.ToolBarButton();
+            this.imgToolMenus = new System.Windows.Forms.ImageList(this.components);
+            this.pnlMain = new System.Windows.Forms.Panel();
+            this.numPerftDepth = new System.Windows.Forms.NumericUpDown();
+            this.btnPerft = new System.Windows.Forms.Button();
+            this.lblGamePaused = new System.Windows.Forms.Label();
+            this.btnPrune = new System.Windows.Forms.Button();
+            this.txtOutput = new System.Windows.Forms.TextBox();
+            this.lvwMoveHistory = new System.Windows.Forms.ListView();
+            this.lvcMoveNo = new System.Windows.Forms.ColumnHeader();
+            this.lvcTime = new System.Windows.Forms.ColumnHeader();
+            this.lvcMove = new System.Windows.Forms.ColumnHeader();
+            this.btnXMLtoOB = new System.Windows.Forms.Button();
+            this.btnPGNtoXML = new System.Windows.Forms.Button();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.lblBlacksCaptures = new System.Windows.Forms.Label();
+            this.lblWhitesCaptures = new System.Windows.Forms.Label();
+            this.lblPlayer = new System.Windows.Forms.Label();
+            this.lblBlackClock = new System.Windows.Forms.Label();
+            this.lblBlackPosition = new System.Windows.Forms.Label();
+            this.lblBlackScore = new System.Windows.Forms.Label();
+            this.cboIntellegenceBlack = new System.Windows.Forms.ComboBox();
+            this.lblBlackPoints = new System.Windows.Forms.Label();
+            this.lblWhiteClock = new System.Windows.Forms.Label();
+            this.lblWhitePosition = new System.Windows.Forms.Label();
+            this.lblWhiteScore = new System.Windows.Forms.Label();
+            this.cboIntellegenceWhite = new System.Windows.Forms.ComboBox();
+            this.lblWhitePoints = new System.Windows.Forms.Label();
+            this.lblPlayerClocks = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.pbr = new System.Windows.Forms.ProgressBar();
+            this.lblStage = new System.Windows.Forms.Label();
+            this.pnlEdging = new System.Windows.Forms.Panel();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.imgTiles = new System.Windows.Forms.ImageList(this.components);
+            this.timer = new System.Windows.Forms.Timer(this.components);
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.pnlMain.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)this.numPerftDepth).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numPerftDepth)).BeginInit();
             this.SuspendLayout();
-
+            // 
             // sbr
-            this.sbr.Location = new Point(0, 523);
+            // 
+            this.sbr.Location = new System.Drawing.Point(0, 523);
             this.sbr.Name = "sbr";
-            this.sbr.Size = new Size(690, 16);
+            this.sbr.Size = new System.Drawing.Size(690, 16);
             this.sbr.SizingGrip = false;
             this.sbr.TabIndex = 7;
-
+            // 
             // imgPieces
-            this.imgPieces.ImageStream = (System.Windows.Forms.ImageListStreamer)resources.GetObject("imgPieces.ImageStream");
+            // 
+            this.imgPieces.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imgPieces.ImageStream")));
             this.imgPieces.TransparentColor = System.Drawing.Color.Transparent;
-            this.imgPieces.Images.SetKeyName(0, string.Empty);
-            this.imgPieces.Images.SetKeyName(1, string.Empty);
-            this.imgPieces.Images.SetKeyName(2, string.Empty);
-            this.imgPieces.Images.SetKeyName(3, string.Empty);
-            this.imgPieces.Images.SetKeyName(4, string.Empty);
-            this.imgPieces.Images.SetKeyName(5, string.Empty);
-            this.imgPieces.Images.SetKeyName(6, string.Empty);
-            this.imgPieces.Images.SetKeyName(7, string.Empty);
-            this.imgPieces.Images.SetKeyName(8, string.Empty);
-            this.imgPieces.Images.SetKeyName(9, string.Empty);
-            this.imgPieces.Images.SetKeyName(10, string.Empty);
-            this.imgPieces.Images.SetKeyName(11, string.Empty);
-
+            this.imgPieces.Images.SetKeyName(0, "");
+            this.imgPieces.Images.SetKeyName(1, "");
+            this.imgPieces.Images.SetKeyName(2, "");
+            this.imgPieces.Images.SetKeyName(3, "");
+            this.imgPieces.Images.SetKeyName(4, "");
+            this.imgPieces.Images.SetKeyName(5, "");
+            this.imgPieces.Images.SetKeyName(6, "");
+            this.imgPieces.Images.SetKeyName(7, "");
+            this.imgPieces.Images.SetKeyName(8, "");
+            this.imgPieces.Images.SetKeyName(9, "");
+            this.imgPieces.Images.SetKeyName(10, "");
+            this.imgPieces.Images.SetKeyName(11, "");
+            // 
             // mnu
-            this.mnu.MenuItems.AddRange(
-                new[] { this.mnuFile, this.mnuEdit, this.mnuView, this.mnuGame, this.mnuComputer, this.mnuHelp });
-
+            // 
+            this.mnu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.mnuFile,
+            this.mnuEdit,
+            this.mnuView,
+            this.mnuGame,
+            this.mnuComputer,
+            this.mnuHelp});
+            // 
             // mnuFile
+            // 
             this.mnuFile.Index = 0;
-            this.mnuFile.MenuItems.AddRange(
-                new[] { this.mnuNew, this.mnuOpen, this.mnuSave, this.mnuSep1, this.mnuExit });
+            this.mnuFile.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.mnuNew,
+            this.mnuOpen,
+            this.mnuSave,
+            this.mnuSep1,
+            this.mnuExit});
             this.mnuFile.Text = "&File";
-
+            // 
             // mnuNew
+            // 
             this.mnuNew.Index = 0;
             this.mnuNew.Shortcut = System.Windows.Forms.Shortcut.CtrlN;
             this.mnuNew.Text = "&New";
-            this.mnuNew.Click += new EventHandler(this.mnuNew_Click);
-
+            this.mnuNew.Click += new System.EventHandler(this.mnuNew_Click);
+            // 
             // mnuOpen
+            // 
             this.mnuOpen.Index = 1;
             this.mnuOpen.Shortcut = System.Windows.Forms.Shortcut.CtrlO;
             this.mnuOpen.Text = "&Open...";
-            this.mnuOpen.Click += new EventHandler(this.mnuOpen_Click);
-
+            this.mnuOpen.Click += new System.EventHandler(this.mnuOpen_Click);
+            // 
             // mnuSave
+            // 
             this.mnuSave.Index = 2;
             this.mnuSave.Shortcut = System.Windows.Forms.Shortcut.CtrlS;
             this.mnuSave.Text = "Save &As...";
-            this.mnuSave.Click += new EventHandler(this.mnuSave_Click);
-
+            this.mnuSave.Click += new System.EventHandler(this.mnuSave_Click);
+            // 
             // mnuSep1
+            // 
             this.mnuSep1.Index = 3;
             this.mnuSep1.Text = "-";
-
+            // 
             // mnuExit
+            // 
             this.mnuExit.Index = 4;
             this.mnuExit.Text = "E&xit";
-            this.mnuExit.Click += new EventHandler(this.mnuExit_Click);
-
+            this.mnuExit.Click += new System.EventHandler(this.mnuExit_Click);
+            // 
             // mnuEdit
+            // 
             this.mnuEdit.Index = 1;
-            this.mnuEdit.MenuItems.AddRange(
-                new[]
-                    {
-                        this.mnuUndoMove, this.mnuRedoMove, this.mnuUndoAllMoves, this.mnuRedoAllMoves, this.mnuSep2, 
-                        this.mnuCopyFEN, this.mnuPasteFEN, this.menuItem2, this.mnuEditBoardPosition
-                    });
+            this.mnuEdit.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.mnuUndoMove,
+            this.mnuRedoMove,
+            this.mnuUndoAllMoves,
+            this.mnuRedoAllMoves,
+            this.mnuSep2,
+            this.mnuCopyFEN,
+            this.mnuPasteFEN,
+            this.menuItem2,
+            this.mnuEditBoardPosition});
             this.mnuEdit.Text = "&Edit";
-
+            // 
             // mnuUndoMove
+            // 
             this.mnuUndoMove.Index = 0;
             this.mnuUndoMove.Shortcut = System.Windows.Forms.Shortcut.CtrlZ;
             this.mnuUndoMove.Text = "&Undo Move";
-            this.mnuUndoMove.Click += new EventHandler(this.mnuUndoMove_Click);
-
+            this.mnuUndoMove.Click += new System.EventHandler(this.mnuUndoMove_Click);
+            // 
             // mnuRedoMove
+            // 
             this.mnuRedoMove.Index = 1;
             this.mnuRedoMove.Shortcut = System.Windows.Forms.Shortcut.CtrlY;
             this.mnuRedoMove.Text = "&Redo Move";
-            this.mnuRedoMove.Click += new EventHandler(this.mnuRedoMove_Click);
-
+            this.mnuRedoMove.Click += new System.EventHandler(this.mnuRedoMove_Click);
+            // 
             // mnuUndoAllMoves
+            // 
             this.mnuUndoAllMoves.Index = 2;
             this.mnuUndoAllMoves.Text = "U&ndo All Moves";
-            this.mnuUndoAllMoves.Click += new EventHandler(this.mnuUndoAllMoves_Click);
-
+            this.mnuUndoAllMoves.Click += new System.EventHandler(this.mnuUndoAllMoves_Click);
+            // 
             // mnuRedoAllMoves
+            // 
             this.mnuRedoAllMoves.Index = 3;
             this.mnuRedoAllMoves.Text = "Re&do All Moves";
-            this.mnuRedoAllMoves.Click += new EventHandler(this.mnuRedoAllMoves_Click);
-
+            this.mnuRedoAllMoves.Click += new System.EventHandler(this.mnuRedoAllMoves_Click);
+            // 
             // mnuSep2
+            // 
             this.mnuSep2.Index = 4;
             this.mnuSep2.Text = "-";
-
+            // 
             // mnuCopyFEN
+            // 
             this.mnuCopyFEN.Index = 5;
             this.mnuCopyFEN.Shortcut = System.Windows.Forms.Shortcut.CtrlC;
             this.mnuCopyFEN.Text = "&Copy FEN Position";
-            this.mnuCopyFEN.Click += new EventHandler(this.mnuCopyFEN_Click);
-
+            this.mnuCopyFEN.Click += new System.EventHandler(this.mnuCopyFEN_Click);
+            // 
             // mnuPasteFEN
+            // 
             this.mnuPasteFEN.Index = 6;
             this.mnuPasteFEN.Shortcut = System.Windows.Forms.Shortcut.CtrlV;
             this.mnuPasteFEN.Text = "&Paste FEN Position";
-            this.mnuPasteFEN.Click += new EventHandler(this.mnuPasteFEN_Click);
-
+            this.mnuPasteFEN.Click += new System.EventHandler(this.mnuPasteFEN_Click);
+            // 
             // menuItem2
+            // 
             this.menuItem2.Index = 7;
             this.menuItem2.Text = "-";
-
+            // 
             // mnuEditBoardPosition
+            // 
             this.mnuEditBoardPosition.Index = 8;
             this.mnuEditBoardPosition.Text = "&Edit Board Position";
-            this.mnuEditBoardPosition.Click += new EventHandler(this.mnuEditPosition_Click);
-
+            this.mnuEditBoardPosition.Click += new System.EventHandler(this.mnuEditPosition_Click);
+            // 
             // mnuView
+            // 
             this.mnuView.Index = 2;
-            this.mnuView.MenuItems.AddRange(
-                new[]
-                    {
-                        this.mnuFlipBoard, this.mnuSep3, this.mnuShowThinking, this.mnuDisplayMoveAnalysisTree, 
-                        this.mnuDisplayWinBoardMessageLog
-                    });
+            this.mnuView.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.mnuFlipBoard,
+            this.mnuSep3,
+            this.mnuShowThinking,
+            this.mnuDisplayMoveAnalysisTree,
+            this.mnuDisplayWinBoardMessageLog});
             this.mnuView.Text = "&View";
-
+            // 
             // mnuFlipBoard
+            // 
             this.mnuFlipBoard.Index = 0;
             this.mnuFlipBoard.Text = "&Flip Board";
-            this.mnuFlipBoard.Click += new EventHandler(this.mnuFlipBoard_Click);
-
+            this.mnuFlipBoard.Click += new System.EventHandler(this.mnuFlipBoard_Click);
+            // 
             // mnuSep3
+            // 
             this.mnuSep3.Index = 1;
             this.mnuSep3.Text = "-";
-
+            // 
             // mnuShowThinking
+            // 
             this.mnuShowThinking.Index = 2;
             this.mnuShowThinking.Text = "&Show Thinking";
-            this.mnuShowThinking.Click += new EventHandler(this.mnuShowThinking_Click);
-
+            this.mnuShowThinking.Click += new System.EventHandler(this.mnuShowThinking_Click);
+            // 
             // mnuDisplayMoveAnalysisTree
+            // 
             this.mnuDisplayMoveAnalysisTree.Index = 3;
             this.mnuDisplayMoveAnalysisTree.Text = "S&how Move Analysis Tree";
-            this.mnuDisplayMoveAnalysisTree.Click += new EventHandler(this.mnuDisplayMoveAnalysisTree_Click);
-
+            this.mnuDisplayMoveAnalysisTree.Click += new System.EventHandler(this.mnuDisplayMoveAnalysisTree_Click);
+            // 
             // mnuDisplayWinBoardMessageLog
+            // 
             this.mnuDisplayWinBoardMessageLog.Index = 4;
             this.mnuDisplayWinBoardMessageLog.Text = "Sh&ow WinBoard Message Log";
-            this.mnuDisplayWinBoardMessageLog.Click += new EventHandler(this.mnuDisplayWinBoardMessageLog_Click);
-
+            this.mnuDisplayWinBoardMessageLog.Click += new System.EventHandler(this.mnuDisplayWinBoardMessageLog_Click);
+            // 
             // mnuGame
+            // 
             this.mnuGame.Index = 3;
-            this.mnuGame.MenuItems.AddRange(new[] { this.mnuPausePlay, this.mnuResumePlay });
+            this.mnuGame.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.mnuPausePlay,
+            this.mnuResumePlay});
             this.mnuGame.Text = "&Game";
-
+            // 
             // mnuPausePlay
+            // 
             this.mnuPausePlay.Enabled = false;
             this.mnuPausePlay.Index = 0;
             this.mnuPausePlay.Text = "&Pause Game";
-            this.mnuPausePlay.Click += new EventHandler(this.mnuPausePlay_Click);
-
+            this.mnuPausePlay.Click += new System.EventHandler(this.mnuPausePlay_Click);
+            // 
             // mnuResumePlay
+            // 
             this.mnuResumePlay.Index = 1;
             this.mnuResumePlay.Text = "&Resume Game";
-            this.mnuResumePlay.Click += new EventHandler(this.mnuResumePlay_Click);
-
+            this.mnuResumePlay.Click += new System.EventHandler(this.mnuResumePlay_Click);
+            // 
             // mnuComputer
+            // 
             this.mnuComputer.Index = 4;
-            this.mnuComputer.MenuItems.AddRange(
-                new[] { this.mnuDifficulty, this.menuItem1, this.mnuThink, this.mnuMoveNow });
+            this.mnuComputer.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.mnuDifficulty,
+            this.menuItem1,
+            this.mnuThink,
+            this.mnuMoveNow});
             this.mnuComputer.Text = "&Computer";
-
+            // 
             // mnuDifficulty
+            // 
             this.mnuDifficulty.Index = 0;
             this.mnuDifficulty.Shortcut = System.Windows.Forms.Shortcut.CtrlD;
             this.mnuDifficulty.Text = "&Difficulty...";
-            this.mnuDifficulty.Click += new EventHandler(this.mnuDifficulty_Click);
-
+            this.mnuDifficulty.Click += new System.EventHandler(this.mnuDifficulty_Click);
+            // 
             // menuItem1
+            // 
             this.menuItem1.Index = 1;
             this.menuItem1.Text = "-";
-
+            // 
             // mnuThink
+            // 
             this.mnuThink.Index = 2;
             this.mnuThink.Shortcut = System.Windows.Forms.Shortcut.CtrlT;
             this.mnuThink.Text = "&Think";
-            this.mnuThink.Click += new EventHandler(this.mnuThink_Click);
-
+            this.mnuThink.Click += new System.EventHandler(this.mnuThink_Click);
+            // 
             // mnuMoveNow
+            // 
             this.mnuMoveNow.Index = 3;
             this.mnuMoveNow.Shortcut = System.Windows.Forms.Shortcut.CtrlM;
             this.mnuMoveNow.Text = "&Move Now";
-            this.mnuMoveNow.Click += new EventHandler(this.mnuMoveNow_Click);
-
+            this.mnuMoveNow.Click += new System.EventHandler(this.mnuMoveNow_Click);
+            // 
             // mnuHelp
+            // 
             this.mnuHelp.Index = 5;
-            this.mnuHelp.MenuItems.AddRange(new[] { this.mnuAbout });
+            this.mnuHelp.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.mnuAbout});
             this.mnuHelp.Text = "&Help";
-
+            // 
             // mnuAbout
+            // 
             this.mnuAbout.Index = 0;
             this.mnuAbout.Text = "&About SharpChess";
-            this.mnuAbout.Click += new EventHandler(this.mnuAbout_Click);
-
+            this.mnuAbout.Click += new System.EventHandler(this.mnuAbout_Click);
+            // 
             // tbr
+            // 
             this.tbr.Appearance = System.Windows.Forms.ToolBarAppearance.Flat;
-            this.tbr.Buttons.AddRange(
-                new[]
-                    {
-                        this.tbrNew, this.tbrOpen, this.tbrSave, this.tbrSep1, this.tbrUndoAllMoves, this.tbrUndoMove, 
-                        this.tbrResumePlay, this.tbrPausePlay, this.tbrRedoMove, this.tbrRedoAllMoves, this.tbrSep2, 
-                        this.tbrFlipBoard, this.tbrSep3, this.tbrThink, this.tbrSep4, this.tbrMoveNow
-                    });
+            this.tbr.Buttons.AddRange(new System.Windows.Forms.ToolBarButton[] {
+            this.tbrNew,
+            this.tbrOpen,
+            this.tbrSave,
+            this.tbrSep1,
+            this.tbrUndoAllMoves,
+            this.tbrUndoMove,
+            this.tbrResumePlay,
+            this.tbrPausePlay,
+            this.tbrRedoMove,
+            this.tbrRedoAllMoves,
+            this.tbrSep2,
+            this.tbrFlipBoard,
+            this.tbrSep3,
+            this.tbrThink,
+            this.tbrSep4,
+            this.tbrMoveNow});
             this.tbr.DropDownArrows = true;
             this.tbr.ImageList = this.imgToolMenus;
-            this.tbr.Location = new Point(0, 0);
+            this.tbr.Location = new System.Drawing.Point(0, 0);
             this.tbr.Name = "tbr";
             this.tbr.ShowToolTips = true;
-            this.tbr.Size = new Size(690, 28);
+            this.tbr.Size = new System.Drawing.Size(690, 28);
             this.tbr.TabIndex = 32;
             this.tbr.TextAlign = System.Windows.Forms.ToolBarTextAlign.Right;
             this.tbr.Wrappable = false;
-            this.tbr.ButtonClick += new ToolBarButtonClickEventHandler(this.tbr_ButtonClick);
-
+            this.tbr.ButtonClick += new System.Windows.Forms.ToolBarButtonClickEventHandler(this.tbr_ButtonClick);
+            // 
             // tbrNew
+            // 
             this.tbrNew.ImageIndex = 0;
             this.tbrNew.Name = "tbrNew";
             this.tbrNew.Tag = "New";
             this.tbrNew.ToolTipText = "Start a new chess game";
-
+            // 
             // tbrOpen
+            // 
             this.tbrOpen.ImageIndex = 1;
             this.tbrOpen.Name = "tbrOpen";
             this.tbrOpen.Tag = "Open";
             this.tbrOpen.ToolTipText = "Open a saved chess game";
-
+            // 
             // tbrSave
+            // 
             this.tbrSave.ImageIndex = 2;
             this.tbrSave.Name = "tbrSave";
             this.tbrSave.Tag = "Save";
             this.tbrSave.ToolTipText = "Save the current chess game";
-
+            // 
             // tbrSep1
+            // 
             this.tbrSep1.Name = "tbrSep1";
             this.tbrSep1.Style = System.Windows.Forms.ToolBarButtonStyle.Separator;
-
+            // 
             // tbrUndoAllMoves
+            // 
             this.tbrUndoAllMoves.ImageIndex = 6;
             this.tbrUndoAllMoves.Name = "tbrUndoAllMoves";
             this.tbrUndoAllMoves.Tag = "UndoAllMoves";
             this.tbrUndoAllMoves.ToolTipText = "Undo all moves played so far";
-
+            // 
             // tbrUndoMove
+            // 
             this.tbrUndoMove.ImageIndex = 4;
             this.tbrUndoMove.Name = "tbrUndoMove";
             this.tbrUndoMove.Tag = "UndoMove";
             this.tbrUndoMove.ToolTipText = "Undo the last move";
-
+            // 
             // tbrResumePlay
+            // 
             this.tbrResumePlay.ImageIndex = 8;
             this.tbrResumePlay.Name = "tbrResumePlay";
             this.tbrResumePlay.Tag = "ResumePlay";
             this.tbrResumePlay.ToolTipText = "Resume play";
-
+            // 
             // tbrPausePlay
+            // 
             this.tbrPausePlay.Enabled = false;
             this.tbrPausePlay.ImageIndex = 9;
             this.tbrPausePlay.Name = "tbrPausePlay";
             this.tbrPausePlay.Tag = "PausePlay";
             this.tbrPausePlay.ToolTipText = "Pause play";
-
+            // 
             // tbrRedoMove
+            // 
             this.tbrRedoMove.ImageIndex = 5;
             this.tbrRedoMove.Name = "tbrRedoMove";
             this.tbrRedoMove.Tag = "RedoMove";
             this.tbrRedoMove.ToolTipText = "Redo move";
-
+            // 
             // tbrRedoAllMoves
+            // 
             this.tbrRedoAllMoves.ImageIndex = 7;
             this.tbrRedoAllMoves.Name = "tbrRedoAllMoves";
             this.tbrRedoAllMoves.Tag = "RedoAllMoves";
             this.tbrRedoAllMoves.ToolTipText = "Redo all moves";
-
+            // 
             // tbrSep2
+            // 
             this.tbrSep2.Name = "tbrSep2";
             this.tbrSep2.Style = System.Windows.Forms.ToolBarButtonStyle.Separator;
-
+            // 
             // tbrFlipBoard
+            // 
             this.tbrFlipBoard.ImageIndex = 10;
             this.tbrFlipBoard.Name = "tbrFlipBoard";
             this.tbrFlipBoard.Tag = "FlipBoard";
             this.tbrFlipBoard.Text = "Flip Board";
-
+            // 
             // tbrSep3
+            // 
             this.tbrSep3.Name = "tbrSep3";
             this.tbrSep3.Style = System.Windows.Forms.ToolBarButtonStyle.Separator;
-
+            // 
             // tbrThink
+            // 
             this.tbrThink.ImageIndex = 3;
             this.tbrThink.Name = "tbrThink";
             this.tbrThink.Tag = "Think";
             this.tbrThink.Text = "Think";
             this.tbrThink.ToolTipText = "Make the computer play the next move";
-
+            // 
             // tbrSep4
+            // 
             this.tbrSep4.Name = "tbrSep4";
             this.tbrSep4.Style = System.Windows.Forms.ToolBarButtonStyle.Separator;
-
+            // 
             // tbrMoveNow
+            // 
             this.tbrMoveNow.ImageIndex = 11;
             this.tbrMoveNow.Name = "tbrMoveNow";
             this.tbrMoveNow.Tag = "MoveNow";
             this.tbrMoveNow.Text = "Move Now";
             this.tbrMoveNow.ToolTipText = "Make the computer immediately play the best move it has found so far";
-
+            // 
             // imgToolMenus
-            this.imgToolMenus.ImageStream = (System.Windows.Forms.ImageListStreamer)resources.GetObject("imgToolMenus.ImageStream");
+            // 
+            this.imgToolMenus.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imgToolMenus.ImageStream")));
             this.imgToolMenus.TransparentColor = System.Drawing.Color.Transparent;
-            this.imgToolMenus.Images.SetKeyName(0, string.Empty);
-            this.imgToolMenus.Images.SetKeyName(1, string.Empty);
-            this.imgToolMenus.Images.SetKeyName(2, string.Empty);
-            this.imgToolMenus.Images.SetKeyName(3, string.Empty);
-            this.imgToolMenus.Images.SetKeyName(4, string.Empty);
-            this.imgToolMenus.Images.SetKeyName(5, string.Empty);
-            this.imgToolMenus.Images.SetKeyName(6, string.Empty);
-            this.imgToolMenus.Images.SetKeyName(7, string.Empty);
-            this.imgToolMenus.Images.SetKeyName(8, string.Empty);
-            this.imgToolMenus.Images.SetKeyName(9, string.Empty);
-            this.imgToolMenus.Images.SetKeyName(10, string.Empty);
-            this.imgToolMenus.Images.SetKeyName(11, string.Empty);
-
+            this.imgToolMenus.Images.SetKeyName(0, "");
+            this.imgToolMenus.Images.SetKeyName(1, "");
+            this.imgToolMenus.Images.SetKeyName(2, "");
+            this.imgToolMenus.Images.SetKeyName(3, "");
+            this.imgToolMenus.Images.SetKeyName(4, "");
+            this.imgToolMenus.Images.SetKeyName(5, "");
+            this.imgToolMenus.Images.SetKeyName(6, "");
+            this.imgToolMenus.Images.SetKeyName(7, "");
+            this.imgToolMenus.Images.SetKeyName(8, "");
+            this.imgToolMenus.Images.SetKeyName(9, "");
+            this.imgToolMenus.Images.SetKeyName(10, "");
+            this.imgToolMenus.Images.SetKeyName(11, "");
+            // 
             // pnlMain
+            // 
             this.pnlMain.BackColor = System.Drawing.Color.Transparent;
             this.pnlMain.Controls.Add(this.numPerftDepth);
             this.pnlMain.Controls.Add(this.btnPerft);
@@ -1489,434 +1572,470 @@ namespace SharpChess
             this.pnlMain.Controls.Add(this.pbr);
             this.pnlMain.Controls.Add(this.lblStage);
             this.pnlMain.Controls.Add(this.pnlEdging);
-            this.pnlMain.Location = new Point(0, 26);
+            this.pnlMain.Location = new System.Drawing.Point(0, 26);
             this.pnlMain.Name = "pnlMain";
-            this.pnlMain.Size = new Size(690, 496);
+            this.pnlMain.Size = new System.Drawing.Size(690, 496);
             this.pnlMain.TabIndex = 33;
-
+            // 
             // numPerftDepth
-            this.numPerftDepth.Location = new Point(64, 416);
-            this.numPerftDepth.Maximum = new decimal(new[] { 10, 0, 0, 0 });
-            this.numPerftDepth.Minimum = new decimal(new[] { 1, 0, 0, 0 });
+            // 
+            this.numPerftDepth.Location = new System.Drawing.Point(64, 416);
+            this.numPerftDepth.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numPerftDepth.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numPerftDepth.Name = "numPerftDepth";
-            this.numPerftDepth.Size = new Size(40, 20);
+            this.numPerftDepth.Size = new System.Drawing.Size(40, 20);
             this.numPerftDepth.TabIndex = 143;
-            this.numPerftDepth.Value = new decimal(new[] { 1, 0, 0, 0 });
+            this.numPerftDepth.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numPerftDepth.Visible = false;
-
+            // 
             // btnPerft
-            this.btnPerft.Location = new Point(104, 416);
+            // 
+            this.btnPerft.Location = new System.Drawing.Point(104, 416);
             this.btnPerft.Name = "btnPerft";
-            this.btnPerft.Size = new Size(75, 23);
+            this.btnPerft.Size = new System.Drawing.Size(75, 23);
             this.btnPerft.TabIndex = 142;
             this.btnPerft.Text = "Perft";
             this.btnPerft.Visible = false;
-            this.btnPerft.Click += new EventHandler(this.btnPerft_Click);
-
+            this.btnPerft.Click += new System.EventHandler(this.btnPerft_Click);
+            // 
             // lblGamePaused
-            this.lblGamePaused.Font = new Font(
-                "Microsoft Sans Serif", 
-                12F, 
-                (System.Drawing.FontStyle)(System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic), 
-                System.Drawing.GraphicsUnit.Point, 
-                (byte)0);
-            this.lblGamePaused.Location = new Point(40, 168);
+            // 
+            this.lblGamePaused.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblGamePaused.Location = new System.Drawing.Point(40, 168);
             this.lblGamePaused.Name = "lblGamePaused";
-            this.lblGamePaused.Size = new Size(320, 24);
+            this.lblGamePaused.Size = new System.Drawing.Size(320, 24);
             this.lblGamePaused.TabIndex = 141;
             this.lblGamePaused.Text = "Game Paused";
             this.lblGamePaused.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lblGamePaused.Visible = false;
-
+            // 
             // btnPrune
-            this.btnPrune.Location = new Point(200, 416);
+            // 
+            this.btnPrune.Location = new System.Drawing.Point(200, 416);
             this.btnPrune.Name = "btnPrune";
-            this.btnPrune.Size = new Size(75, 23);
+            this.btnPrune.Size = new System.Drawing.Size(75, 23);
             this.btnPrune.TabIndex = 140;
             this.btnPrune.Text = "Prune";
             this.btnPrune.Visible = false;
-            this.btnPrune.Click += new EventHandler(this.btnPrune_Click);
-
+            this.btnPrune.Click += new System.EventHandler(this.btnPrune_Click);
+            // 
             // txtOutput
-            this.txtOutput.Location = new Point(280, 416);
+            // 
+            this.txtOutput.Location = new System.Drawing.Point(280, 416);
             this.txtOutput.Multiline = true;
             this.txtOutput.Name = "txtOutput";
-            this.txtOutput.Size = new Size(120, 40);
+            this.txtOutput.Size = new System.Drawing.Size(120, 40);
             this.txtOutput.TabIndex = 139;
             this.txtOutput.Visible = false;
-
+            // 
             // lvwMoveHistory
+            // 
             this.lvwMoveHistory.BackColor = System.Drawing.SystemColors.Control;
-            this.lvwMoveHistory.Columns.AddRange(new[] { this.lvcMoveNo, this.lvcTime, this.lvcMove });
-            this.lvwMoveHistory.Location = new Point(400, 176);
+            this.lvwMoveHistory.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.lvcMoveNo,
+            this.lvcTime,
+            this.lvcMove});
+            this.lvwMoveHistory.Location = new System.Drawing.Point(400, 176);
             this.lvwMoveHistory.Name = "lvwMoveHistory";
-            this.lvwMoveHistory.Size = new Size(248, 128);
+            this.lvwMoveHistory.Size = new System.Drawing.Size(248, 128);
             this.lvwMoveHistory.TabIndex = 39;
             this.lvwMoveHistory.UseCompatibleStateImageBehavior = false;
             this.lvwMoveHistory.View = System.Windows.Forms.View.Details;
-
+            // 
             // lvcMoveNo
+            // 
             this.lvcMoveNo.Text = "#";
             this.lvcMoveNo.Width = 19;
-
+            // 
             // lvcTime
+            // 
             this.lvcTime.Text = "Time";
             this.lvcTime.Width = 56;
-
+            // 
             // lvcMove
+            // 
             this.lvcMove.Text = "Move";
             this.lvcMove.Width = 152;
-
+            // 
             // btnXMLtoOB
-            this.btnXMLtoOB.Location = new Point(496, 416);
+            // 
+            this.btnXMLtoOB.Location = new System.Drawing.Point(496, 416);
             this.btnXMLtoOB.Name = "btnXMLtoOB";
-            this.btnXMLtoOB.Size = new Size(75, 23);
+            this.btnXMLtoOB.Size = new System.Drawing.Size(75, 23);
             this.btnXMLtoOB.TabIndex = 138;
             this.btnXMLtoOB.Text = "XML to OB";
             this.btnXMLtoOB.Visible = false;
-            this.btnXMLtoOB.Click += new EventHandler(this.btnXMLtoOB_Click);
-
+            this.btnXMLtoOB.Click += new System.EventHandler(this.btnXMLtoOB_Click);
+            // 
             // btnPGNtoXML
-            this.btnPGNtoXML.Location = new Point(408, 416);
+            // 
+            this.btnPGNtoXML.Location = new System.Drawing.Point(408, 416);
             this.btnPGNtoXML.Name = "btnPGNtoXML";
-            this.btnPGNtoXML.Size = new Size(75, 23);
+            this.btnPGNtoXML.Size = new System.Drawing.Size(75, 23);
             this.btnPGNtoXML.TabIndex = 137;
             this.btnPGNtoXML.Text = "PGN to XML";
             this.btnPGNtoXML.Visible = false;
-            this.btnPGNtoXML.Click += new EventHandler(this.btnPGNtoXML_Click);
-
+            this.btnPGNtoXML.Click += new System.EventHandler(this.btnPGNtoXML_Click);
+            // 
             // label5
-            this.label5.Font = new Font(
-                "Microsoft Sans Serif", 
-                8.25F, 
-                System.Drawing.FontStyle.Bold, 
-                System.Drawing.GraphicsUnit.Point, 
-                (byte)0);
-            this.label5.Location = new Point(552, 8);
+            // 
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(552, 8);
             this.label5.Name = "label5";
-            this.label5.Size = new Size(96, 23);
+            this.label5.Size = new System.Drawing.Size(96, 23);
             this.label5.TabIndex = 136;
             this.label5.Text = "Black";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-
+            // 
             // label3
-            this.label3.Font = new Font(
-                "Microsoft Sans Serif", 
-                8.25F, 
-                System.Drawing.FontStyle.Bold, 
-                System.Drawing.GraphicsUnit.Point, 
-                (byte)0);
-            this.label3.Location = new Point(448, 8);
+            // 
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(448, 8);
             this.label3.Name = "label3";
-            this.label3.Size = new Size(96, 23);
+            this.label3.Size = new System.Drawing.Size(96, 23);
             this.label3.TabIndex = 135;
             this.label3.Text = "White";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-
+            // 
             // lblBlacksCaptures
+            // 
             this.lblBlacksCaptures.BackColor = System.Drawing.Color.Transparent;
             this.lblBlacksCaptures.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.lblBlacksCaptures.CausesValidation = false;
-            this.lblBlacksCaptures.Font = new Font(
-                "Microsoft Sans Serif", 
-                12F, 
-                System.Drawing.FontStyle.Regular, 
-                System.Drawing.GraphicsUnit.Point, 
-                (byte)0);
-            this.lblBlacksCaptures.Location = new Point(644, 428);
+            this.lblBlacksCaptures.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblBlacksCaptures.Location = new System.Drawing.Point(644, 428);
             this.lblBlacksCaptures.Name = "lblBlacksCaptures";
             this.lblBlacksCaptures.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.lblBlacksCaptures.Size = new Size(42, 42);
+            this.lblBlacksCaptures.Size = new System.Drawing.Size(42, 42);
             this.lblBlacksCaptures.TabIndex = 134;
             this.lblBlacksCaptures.Text = "0";
             this.lblBlacksCaptures.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-
+            // 
             // lblWhitesCaptures
+            // 
             this.lblWhitesCaptures.BackColor = System.Drawing.Color.Transparent;
             this.lblWhitesCaptures.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.lblWhitesCaptures.CausesValidation = false;
-            this.lblWhitesCaptures.Font = new Font(
-                "Microsoft Sans Serif", 
-                12F, 
-                System.Drawing.FontStyle.Regular, 
-                System.Drawing.GraphicsUnit.Point, 
-                (byte)0);
-            this.lblWhitesCaptures.Location = new Point(644, 384);
+            this.lblWhitesCaptures.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblWhitesCaptures.Location = new System.Drawing.Point(644, 384);
             this.lblWhitesCaptures.Name = "lblWhitesCaptures";
             this.lblWhitesCaptures.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.lblWhitesCaptures.Size = new Size(42, 42);
+            this.lblWhitesCaptures.Size = new System.Drawing.Size(42, 42);
             this.lblWhitesCaptures.TabIndex = 133;
             this.lblWhitesCaptures.Text = "0";
             this.lblWhitesCaptures.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-
+            // 
             // lblPlayer
+            // 
             this.lblPlayer.BackColor = System.Drawing.Color.Transparent;
-            this.lblPlayer.Location = new Point(392, 32);
+            this.lblPlayer.Location = new System.Drawing.Point(392, 32);
             this.lblPlayer.Name = "lblPlayer";
-            this.lblPlayer.Size = new Size(48, 24);
+            this.lblPlayer.Size = new System.Drawing.Size(48, 24);
             this.lblPlayer.TabIndex = 131;
             this.lblPlayer.Text = "Player";
             this.lblPlayer.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-
+            // 
             // lblBlackClock
+            // 
             this.lblBlackClock.BackColor = System.Drawing.Color.Transparent;
             this.lblBlackClock.CausesValidation = false;
             this.lblBlackClock.ForeColor = System.Drawing.Color.Black;
-            this.lblBlackClock.Location = new Point(552, 64);
+            this.lblBlackClock.Location = new System.Drawing.Point(552, 64);
             this.lblBlackClock.Name = "lblBlackClock";
             this.lblBlackClock.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.lblBlackClock.Size = new Size(96, 23);
+            this.lblBlackClock.Size = new System.Drawing.Size(96, 23);
             this.lblBlackClock.TabIndex = 130;
             this.lblBlackClock.Text = ":";
             this.lblBlackClock.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-
+            // 
             // lblBlackPosition
+            // 
             this.lblBlackPosition.BackColor = System.Drawing.Color.Transparent;
             this.lblBlackPosition.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.lblBlackPosition.CausesValidation = false;
-            this.lblBlackPosition.Location = new Point(552, 144);
+            this.lblBlackPosition.Location = new System.Drawing.Point(552, 144);
             this.lblBlackPosition.Name = "lblBlackPosition";
             this.lblBlackPosition.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.lblBlackPosition.Size = new Size(96, 23);
+            this.lblBlackPosition.Size = new System.Drawing.Size(96, 23);
             this.lblBlackPosition.TabIndex = 128;
             this.lblBlackPosition.Text = "0";
             this.lblBlackPosition.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-
+            // 
             // lblBlackScore
+            // 
             this.lblBlackScore.BackColor = System.Drawing.Color.Transparent;
             this.lblBlackScore.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.lblBlackScore.CausesValidation = false;
-            this.lblBlackScore.Location = new Point(552, 96);
+            this.lblBlackScore.Location = new System.Drawing.Point(552, 96);
             this.lblBlackScore.Name = "lblBlackScore";
             this.lblBlackScore.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.lblBlackScore.Size = new Size(96, 23);
+            this.lblBlackScore.Size = new System.Drawing.Size(96, 23);
             this.lblBlackScore.TabIndex = 127;
             this.lblBlackScore.Text = "0";
             this.lblBlackScore.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-
+            // 
             // cboIntellegenceBlack
+            // 
             this.cboIntellegenceBlack.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboIntellegenceBlack.Items.AddRange(new object[] { "Human", "Computer" });
-            this.cboIntellegenceBlack.Location = new Point(552, 32);
+            this.cboIntellegenceBlack.Items.AddRange(new object[] {
+            "Human",
+            "Computer"});
+            this.cboIntellegenceBlack.Location = new System.Drawing.Point(552, 32);
             this.cboIntellegenceBlack.Name = "cboIntellegenceBlack";
-            this.cboIntellegenceBlack.Size = new Size(96, 21);
+            this.cboIntellegenceBlack.Size = new System.Drawing.Size(96, 21);
             this.cboIntellegenceBlack.TabIndex = 126;
-            this.cboIntellegenceBlack.SelectedIndexChanged +=
-                new EventHandler(this.cboIntellegenceBlack_SelectedIndexChanged);
-
+            this.cboIntellegenceBlack.SelectedIndexChanged += new System.EventHandler(this.cboIntellegenceBlack_SelectedIndexChanged);
+            // 
             // lblBlackPoints
+            // 
             this.lblBlackPoints.BackColor = System.Drawing.Color.Transparent;
             this.lblBlackPoints.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.lblBlackPoints.CausesValidation = false;
-            this.lblBlackPoints.Location = new Point(552, 120);
+            this.lblBlackPoints.Location = new System.Drawing.Point(552, 120);
             this.lblBlackPoints.Name = "lblBlackPoints";
             this.lblBlackPoints.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.lblBlackPoints.Size = new Size(96, 23);
+            this.lblBlackPoints.Size = new System.Drawing.Size(96, 23);
             this.lblBlackPoints.TabIndex = 125;
             this.lblBlackPoints.Text = "0";
             this.lblBlackPoints.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-
+            // 
             // lblWhiteClock
+            // 
             this.lblWhiteClock.BackColor = System.Drawing.Color.Transparent;
             this.lblWhiteClock.CausesValidation = false;
             this.lblWhiteClock.ForeColor = System.Drawing.Color.Black;
-            this.lblWhiteClock.Location = new Point(448, 64);
+            this.lblWhiteClock.Location = new System.Drawing.Point(448, 64);
             this.lblWhiteClock.Name = "lblWhiteClock";
             this.lblWhiteClock.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.lblWhiteClock.Size = new Size(96, 23);
+            this.lblWhiteClock.Size = new System.Drawing.Size(96, 23);
             this.lblWhiteClock.TabIndex = 124;
             this.lblWhiteClock.Text = ":";
             this.lblWhiteClock.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-
+            // 
             // lblWhitePosition
+            // 
             this.lblWhitePosition.BackColor = System.Drawing.Color.Transparent;
             this.lblWhitePosition.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.lblWhitePosition.CausesValidation = false;
-            this.lblWhitePosition.Location = new Point(448, 144);
+            this.lblWhitePosition.Location = new System.Drawing.Point(448, 144);
             this.lblWhitePosition.Name = "lblWhitePosition";
             this.lblWhitePosition.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.lblWhitePosition.Size = new Size(96, 23);
+            this.lblWhitePosition.Size = new System.Drawing.Size(96, 23);
             this.lblWhitePosition.TabIndex = 122;
             this.lblWhitePosition.Text = "0";
             this.lblWhitePosition.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-
+            // 
             // lblWhiteScore
+            // 
             this.lblWhiteScore.BackColor = System.Drawing.Color.Transparent;
             this.lblWhiteScore.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.lblWhiteScore.CausesValidation = false;
-            this.lblWhiteScore.Location = new Point(448, 96);
+            this.lblWhiteScore.Location = new System.Drawing.Point(448, 96);
             this.lblWhiteScore.Name = "lblWhiteScore";
             this.lblWhiteScore.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.lblWhiteScore.Size = new Size(96, 23);
+            this.lblWhiteScore.Size = new System.Drawing.Size(96, 23);
             this.lblWhiteScore.TabIndex = 121;
             this.lblWhiteScore.Text = "0";
             this.lblWhiteScore.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-
+            // 
             // cboIntellegenceWhite
+            // 
             this.cboIntellegenceWhite.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboIntellegenceWhite.Items.AddRange(new object[] { "Human", "Computer" });
-            this.cboIntellegenceWhite.Location = new Point(448, 32);
+            this.cboIntellegenceWhite.Items.AddRange(new object[] {
+            "Human",
+            "Computer"});
+            this.cboIntellegenceWhite.Location = new System.Drawing.Point(448, 32);
             this.cboIntellegenceWhite.Name = "cboIntellegenceWhite";
-            this.cboIntellegenceWhite.Size = new Size(96, 21);
+            this.cboIntellegenceWhite.Size = new System.Drawing.Size(96, 21);
             this.cboIntellegenceWhite.TabIndex = 120;
-            this.cboIntellegenceWhite.SelectedIndexChanged +=
-                new EventHandler(this.cboIntellegenceWhite_SelectedIndexChanged);
-
+            this.cboIntellegenceWhite.SelectedIndexChanged += new System.EventHandler(this.cboIntellegenceWhite_SelectedIndexChanged);
+            // 
             // lblWhitePoints
+            // 
             this.lblWhitePoints.BackColor = System.Drawing.Color.Transparent;
             this.lblWhitePoints.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.lblWhitePoints.CausesValidation = false;
-            this.lblWhitePoints.Location = new Point(448, 120);
+            this.lblWhitePoints.Location = new System.Drawing.Point(448, 120);
             this.lblWhitePoints.Name = "lblWhitePoints";
             this.lblWhitePoints.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.lblWhitePoints.Size = new Size(96, 23);
+            this.lblWhitePoints.Size = new System.Drawing.Size(96, 23);
             this.lblWhitePoints.TabIndex = 119;
             this.lblWhitePoints.Text = "0";
             this.lblWhitePoints.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-
+            // 
             // lblPlayerClocks
+            // 
             this.lblPlayerClocks.BackColor = System.Drawing.Color.Transparent;
-            this.lblPlayerClocks.Location = new Point(392, 64);
+            this.lblPlayerClocks.Location = new System.Drawing.Point(392, 64);
             this.lblPlayerClocks.Name = "lblPlayerClocks";
-            this.lblPlayerClocks.Size = new Size(48, 24);
+            this.lblPlayerClocks.Size = new System.Drawing.Size(48, 24);
             this.lblPlayerClocks.TabIndex = 118;
             this.lblPlayerClocks.Text = "Clock";
             this.lblPlayerClocks.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-
+            // 
             // label2
+            // 
             this.label2.BackColor = System.Drawing.Color.Transparent;
-            this.label2.Location = new Point(392, 144);
+            this.label2.Location = new System.Drawing.Point(392, 144);
             this.label2.Name = "label2";
-            this.label2.Size = new Size(48, 24);
+            this.label2.Size = new System.Drawing.Size(48, 24);
             this.label2.TabIndex = 116;
             this.label2.Text = "Position";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-
+            // 
             // label4
+            // 
             this.label4.BackColor = System.Drawing.Color.Transparent;
-            this.label4.Location = new Point(400, 96);
+            this.label4.Location = new System.Drawing.Point(400, 96);
             this.label4.Name = "label4";
-            this.label4.Size = new Size(40, 24);
+            this.label4.Size = new System.Drawing.Size(40, 24);
             this.label4.TabIndex = 115;
             this.label4.Text = "Score";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-
+            // 
             // label1
+            // 
             this.label1.BackColor = System.Drawing.Color.Transparent;
-            this.label1.Location = new Point(400, 120);
+            this.label1.Location = new System.Drawing.Point(400, 120);
             this.label1.Name = "label1";
-            this.label1.Size = new Size(40, 24);
+            this.label1.Size = new System.Drawing.Size(40, 24);
             this.label1.TabIndex = 114;
             this.label1.Text = "Points";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-
+            // 
             // panel1
+            // 
             this.panel1.BackColor = System.Drawing.Color.Black;
-            this.panel1.BackgroundImage = (System.Drawing.Image)resources.GetObject("panel1.BackgroundImage");
+            this.panel1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel1.BackgroundImage")));
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Location = new Point(32, 350);
+            this.panel1.Location = new System.Drawing.Point(32, 350);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new Size(342, 8);
+            this.panel1.Size = new System.Drawing.Size(342, 8);
             this.panel1.TabIndex = 55;
-
+            // 
             // panel3
+            // 
             this.panel3.BackColor = System.Drawing.Color.Black;
-            this.panel3.BackgroundImage = (System.Drawing.Image)resources.GetObject("panel3.BackgroundImage");
+            this.panel3.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel3.BackgroundImage")));
             this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel3.Location = new Point(366, 6);
+            this.panel3.Location = new System.Drawing.Point(366, 6);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new Size(8, 352);
+            this.panel3.Size = new System.Drawing.Size(8, 352);
             this.panel3.TabIndex = 57;
-
+            // 
             // panel4
+            // 
             this.panel4.BackColor = System.Drawing.Color.Black;
-            this.panel4.BackgroundImage = (System.Drawing.Image)resources.GetObject("panel4.BackgroundImage");
+            this.panel4.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel4.BackgroundImage")));
             this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel4.Location = new Point(24, 6);
+            this.panel4.Location = new System.Drawing.Point(24, 6);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new Size(342, 8);
+            this.panel4.Size = new System.Drawing.Size(342, 8);
             this.panel4.TabIndex = 58;
-
+            // 
             // panel2
+            // 
             this.panel2.BackColor = System.Drawing.Color.Black;
-            this.panel2.BackgroundImage = (System.Drawing.Image)resources.GetObject("panel2.BackgroundImage");
+            this.panel2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel2.BackgroundImage")));
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel2.Location = new Point(24, 8);
+            this.panel2.Location = new System.Drawing.Point(24, 8);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new Size(8, 350);
+            this.panel2.Size = new System.Drawing.Size(8, 350);
             this.panel2.TabIndex = 56;
-
+            // 
             // pbr
-            this.pbr.Location = new Point(0, 472);
+            // 
+            this.pbr.Location = new System.Drawing.Point(0, 472);
             this.pbr.Name = "pbr";
-            this.pbr.Size = new Size(688, 23);
+            this.pbr.Size = new System.Drawing.Size(688, 23);
             this.pbr.TabIndex = 54;
-
+            // 
             // lblStage
+            // 
             this.lblStage.BackColor = System.Drawing.Color.Transparent;
             this.lblStage.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.lblStage.CausesValidation = false;
-            this.lblStage.Location = new Point(376, 358);
+            this.lblStage.Location = new System.Drawing.Point(376, 358);
             this.lblStage.Name = "lblStage";
             this.lblStage.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.lblStage.Size = new Size(312, 23);
+            this.lblStage.Size = new System.Drawing.Size(312, 23);
             this.lblStage.TabIndex = 50;
             this.lblStage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-
+            // 
             // pnlEdging
+            // 
             this.pnlEdging.BackColor = System.Drawing.SystemColors.Control;
             this.pnlEdging.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlEdging.Location = new Point(28, 12);
+            this.pnlEdging.Location = new System.Drawing.Point(28, 12);
             this.pnlEdging.Name = "pnlEdging";
-            this.pnlEdging.Size = new Size(340, 340);
+            this.pnlEdging.Size = new System.Drawing.Size(340, 340);
             this.pnlEdging.TabIndex = 35;
-
+            // 
             // groupBox1
+            // 
             this.groupBox1.BackColor = System.Drawing.Color.Transparent;
-            this.groupBox1.Location = new Point(0, 21);
+            this.groupBox1.Location = new System.Drawing.Point(0, 21);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new Size(800, 8);
+            this.groupBox1.Size = new System.Drawing.Size(800, 8);
             this.groupBox1.TabIndex = 34;
             this.groupBox1.TabStop = false;
-
+            // 
             // imgTiles
-            this.imgTiles.ImageStream = (System.Windows.Forms.ImageListStreamer)resources.GetObject("imgTiles.ImageStream");
+            // 
+            this.imgTiles.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imgTiles.ImageStream")));
             this.imgTiles.TransparentColor = System.Drawing.Color.Transparent;
-            this.imgTiles.Images.SetKeyName(0, string.Empty);
-            this.imgTiles.Images.SetKeyName(1, string.Empty);
-
+            this.imgTiles.Images.SetKeyName(0, "");
+            this.imgTiles.Images.SetKeyName(1, "");
+            // 
             // timer
+            // 
             this.timer.Interval = 333;
-            this.timer.Tick += new EventHandler(this.timer_Tick);
-
+            this.timer.Tick += new System.EventHandler(this.timer_Tick);
+            // 
             // imageList1
+            // 
             this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
-            this.imageList1.ImageSize = new Size(16, 16);
+            this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-
+            // 
             // frmMain
-            this.AutoScaleBaseSize = new Size(5, 13);
-            this.ClientSize = new Size(690, 539);
+            // 
+            this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+            this.ClientSize = new System.Drawing.Size(690, 539);
             this.Controls.Add(this.tbr);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.pnlMain);
             this.Controls.Add(this.sbr);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Icon = (System.Drawing.Icon)resources.GetObject("$this.Icon");
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Menu = this.mnu;
             this.Name = "frmMain";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "SharpChess";
-            this.Closing += new CancelEventHandler(this.frmMain_Closing);
-            this.Load += new EventHandler(this.frmMain_Load);
+            this.Closing += new System.ComponentModel.CancelEventHandler(this.frmMain_Closing);
+            this.Load += new System.EventHandler(this.frmMain_Load);
             this.pnlMain.ResumeLayout(false);
             this.pnlMain.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)this.numPerftDepth).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numPerftDepth)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
+
 
         /// <summary>
         /// Load the m_acurPieceCursors array with the cursors that are embedded in this assembly

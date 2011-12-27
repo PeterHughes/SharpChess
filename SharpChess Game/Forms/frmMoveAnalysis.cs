@@ -158,32 +158,34 @@ namespace SharpChess
         /// </summary>
         private void InitializeComponent()
         {
-            ResourceManager resources = new ResourceManager(typeof(frmMoveAnalysis));
-            this.tvwMoves = new TreeView();
+            System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(frmMoveAnalysis));
+            this.tvwMoves = new System.Windows.Forms.TreeView();
             this.SuspendLayout();
-
+            // 
             // tvwMoves
+            // 
             this.tvwMoves.BackColor = System.Drawing.SystemColors.Window;
             this.tvwMoves.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tvwMoves.ImageIndex = -1;
-            this.tvwMoves.Location = new Point(0, 0);
+            this.tvwMoves.Location = new System.Drawing.Point(0, 0);
             this.tvwMoves.Name = "tvwMoves";
-            this.tvwMoves.Nodes.AddRange(
-                new[] { new TreeNode("Move analysis will be recorded when the next move begins") });
+            this.tvwMoves.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
+																				 new System.Windows.Forms.TreeNode("Move analysis will be recorded when the next move begins")});
             this.tvwMoves.SelectedImageIndex = -1;
-            this.tvwMoves.Size = new Size(376, 470);
+            this.tvwMoves.Size = new System.Drawing.Size(376, 470);
             this.tvwMoves.TabIndex = 64;
-            this.tvwMoves.AfterExpand += new TreeViewEventHandler(this.tvwMoves_AfterExpand);
-
+            this.tvwMoves.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.tvwMoves_AfterExpand);
+            // 
             // frmMoveAnalysis
-            this.AutoScaleBaseSize = new Size(5, 13);
-            this.ClientSize = new Size(376, 470);
+            // 
+            this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+            this.ClientSize = new System.Drawing.Size(376, 470);
             this.Controls.Add(this.tvwMoves);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
-            this.Icon = (System.Drawing.Icon)resources.GetObject("$this.Icon");
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmMoveAnalysis";
             this.Text = "Move Analysis Tree";
-            this.Closing += new CancelEventHandler(this.frmMoveAnalysis_Closing);
+            this.Closing += new System.ComponentModel.CancelEventHandler(this.frmMoveAnalysis_Closing);
             this.ResumeLayout(false);
         }
 
