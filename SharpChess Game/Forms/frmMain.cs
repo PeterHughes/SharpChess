@@ -1082,9 +1082,9 @@ namespace SharpChess
             this.btnPrune = new System.Windows.Forms.Button();
             this.txtOutput = new System.Windows.Forms.TextBox();
             this.lvwMoveHistory = new System.Windows.Forms.ListView();
-            this.lvcMoveNo = new System.Windows.Forms.ColumnHeader();
-            this.lvcTime = new System.Windows.Forms.ColumnHeader();
-            this.lvcMove = new System.Windows.Forms.ColumnHeader();
+            this.lvcMoveNo = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.lvcTime = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.lvcMove = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.btnXMLtoOB = new System.Windows.Forms.Button();
             this.btnPGNtoXML = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
@@ -1263,11 +1263,13 @@ namespace SharpChess
             // 
             this.menuItem2.Index = 7;
             this.menuItem2.Text = "-";
+            this.menuItem2.Visible = false;
             // 
             // mnuEditBoardPosition
             // 
             this.mnuEditBoardPosition.Index = 8;
             this.mnuEditBoardPosition.Text = "&Edit Board Position";
+            this.mnuEditBoardPosition.Visible = false;
             this.mnuEditBoardPosition.Click += new System.EventHandler(this.mnuEditPosition_Click);
             // 
             // mnuView
