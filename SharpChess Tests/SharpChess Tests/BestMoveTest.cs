@@ -214,6 +214,32 @@ namespace SharpChess_Tests
 
         #endregion
 
+        #region Silent but deadly tests
+        // http://chessprogramming.wikispaces.com/Silent+but+deadly#cite_note-3
+
+        [TestMethod]
+        public void Sbd_001()
+        {
+            this.BestMoveTest("1qr3k1/p2nbppp/bp2p3/3p4/3P4/1P2PNP1/P2Q1PBP/1N2R1K1 b", "b8", "c7", 5);
+            // Nodes: 
+        }
+
+        [TestMethod]
+        public void Sbd_003()
+        {
+            this.BestMoveTest("2b1k2r/2p2ppp/1qp4n/7B/1p2P3/5Q2/PPPr2PP/R2N1R1K b k", "e8", "g8", 4);
+            // Nodes: 
+        }
+
+        [TestMethod]
+        public void Sbd_004()
+        {
+            this.BestMoveTest("2b5/1p4k1/p2R2P1/4Np2/1P3Pp1/1r6/5K2/8 w", "d6", "d8", 7);
+            // Nodes: 
+        }      
+        
+        #endregion
+
         #region Methods
 
         /// <summary>

@@ -158,7 +158,8 @@ namespace SharpChess
         /// </summary>
         private void InitializeComponent()
         {
-            System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(frmMoveAnalysis));
+            TreeNode treeNode1 = new TreeNode();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMoveAnalysis));
             this.tvwMoves = new System.Windows.Forms.TreeView();
             this.SuspendLayout();
             // 
@@ -166,12 +167,12 @@ namespace SharpChess
             // 
             this.tvwMoves.BackColor = System.Drawing.SystemColors.Window;
             this.tvwMoves.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tvwMoves.ImageIndex = -1;
             this.tvwMoves.Location = new System.Drawing.Point(0, 0);
             this.tvwMoves.Name = "tvwMoves";
+            treeNode1.Name = "";
+            treeNode1.Text = "Move analysis will be recorded when the next move begins. WARNING: drastically slows computer thinking, and uses LOTS of memory!";
             this.tvwMoves.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-																				 new System.Windows.Forms.TreeNode("Move analysis will be recorded when the next move begins")});
-            this.tvwMoves.SelectedImageIndex = -1;
+            treeNode1});
             this.tvwMoves.Size = new System.Drawing.Size(376, 470);
             this.tvwMoves.TabIndex = 64;
             this.tvwMoves.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.tvwMoves_AfterExpand);
@@ -187,6 +188,7 @@ namespace SharpChess
             this.Text = "Move Analysis Tree";
             this.Closing += new System.ComponentModel.CancelEventHandler(this.frmMoveAnalysis_Closing);
             this.ResumeLayout(false);
+
         }
 
         /// <summary>

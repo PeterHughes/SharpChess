@@ -111,17 +111,18 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Classes\Board.cs">
+    <Compile Include="Model\Board.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Classes\BoardDebug.cs" />
-    <Compile Include="Classes\ForceImmediateMoveException.cs" />
-    <Compile Include="Classes\PieceHashCodes.cs" />
-    <Compile Include="Classes\PlayerClock.cs" />
-    <Compile Include="Classes\FEN.cs">
+    <Compile Include="Model\BoardDebug.cs" />
+    <Compile Include="Model\Search.cs" />
+    <Compile Include="Model\ForceImmediateMoveException.cs" />
+    <Compile Include="Model\PieceHashCodes.cs" />
+    <Compile Include="Model\PlayerClock.cs" />
+    <Compile Include="Model\FEN.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Classes\PlayerDebug.cs" />
+    <Compile Include="Model\PlayerDebug.cs" />
     <Compile Include="Forms\frmAbout.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -140,82 +141,82 @@
     <Compile Include="Forms\frmWinBoard.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Classes\Game.cs">
+    <Compile Include="Model\Game.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Classes\HashTable.cs">
+    <Compile Include="Model\HashTable.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Classes\HashTableCheck.cs">
+    <Compile Include="Model\HashTableCheck.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Classes\HashTablePawnKing.cs">
+    <Compile Include="Model\HashTablePawnKing.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Classes\History.cs">
+    <Compile Include="Model\History.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Classes\IPieceTop.cs">
+    <Compile Include="Model\IPieceTop.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Classes\KillerMoves.cs">
+    <Compile Include="Model\KillerMoves.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Classes\Move.cs">
+    <Compile Include="Model\Move.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Classes\Moves.cs">
+    <Compile Include="Model\Moves.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Classes\OpeningBook.cs">
+    <Compile Include="Model\OpeningBook.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Classes\OpeningBookSimple.cs">
+    <Compile Include="Model\OpeningBookSimple.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Classes\PGNtoXML.cs">
+    <Compile Include="Model\PGNtoXML.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Classes\Piece.cs">
+    <Compile Include="Model\Piece.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Classes\PieceBishop.cs">
+    <Compile Include="Model\PieceBishop.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Classes\PieceKing.cs">
+    <Compile Include="Model\PieceKing.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Classes\PieceKnight.cs">
+    <Compile Include="Model\PieceKnight.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Classes\PiecePawn.cs">
+    <Compile Include="Model\PiecePawn.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Classes\PieceQueen.cs">
+    <Compile Include="Model\PieceQueen.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Classes\PieceRook.cs">
+    <Compile Include="Model\PieceRook.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Classes\Pieces.cs">
+    <Compile Include="Model\Pieces.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Classes\Player.cs">
+    <Compile Include="Model\Player.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Classes\PlayerBlack.cs">
+    <Compile Include="Model\PlayerBlack.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Classes\PlayerWhite.cs">
+    <Compile Include="Model\PlayerWhite.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Classes\Square.cs">
+    <Compile Include="Model\Square.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Classes\Squares.cs">
+    <Compile Include="Model\Squares.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Classes\WinBoard.cs">
+    <Compile Include="Model\WinBoard.cs">
       <SubType>Code</SubType>
     </Compile>
     <EmbeddedResource Include="Forms\frmAbout.resx">
