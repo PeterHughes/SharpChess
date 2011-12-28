@@ -33,6 +33,9 @@ namespace SharpChess
     using System.Reflection;
     using System.Windows.Forms;
 
+    using SharpChess.Model;
+    using SharpChess.Model.AI;
+
     #endregion
 
     /// <summary>
@@ -3413,7 +3416,7 @@ namespace SharpChess
                     {
                         // Check to see it the move is valid, by comparing against all possible valid moves
                         bool blnIsPromotion = false;
-                        Move.MoveNames movenamePromotion = SharpChess.Move.MoveNames.NullMove;
+                        Move.MoveNames movenamePromotion = Model.Move.MoveNames.NullMove;
                         foreach (Move move in this.m_movesPossible)
                         {
                             if (move.To == this.m_squareTo)
@@ -3422,10 +3425,10 @@ namespace SharpChess
                                 {
                                     switch (move.Name)
                                     {
-                                        case SharpChess.Move.MoveNames.PawnPromotionQueen:
-                                        case SharpChess.Move.MoveNames.PawnPromotionRook:
-                                        case SharpChess.Move.MoveNames.PawnPromotionBishop:
-                                        case SharpChess.Move.MoveNames.PawnPromotionKnight:
+                                        case Model.Move.MoveNames.PawnPromotionQueen:
+                                        case Model.Move.MoveNames.PawnPromotionRook:
+                                        case Model.Move.MoveNames.PawnPromotionBishop:
+                                        case Model.Move.MoveNames.PawnPromotionKnight:
                                             blnIsPromotion = true;
                                             frmPieceSelector formPieceSelector = new frmPieceSelector();
                                             formPieceSelector.Colour = move.Piece.Player.Colour;

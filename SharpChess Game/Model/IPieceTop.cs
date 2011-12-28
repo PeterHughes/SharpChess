@@ -24,7 +24,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-namespace SharpChess
+namespace SharpChess.Model
 {
     /// <summary>
     /// IPieceTop interface. The <see cref="Piece"/>  class represents the base of a chess piece, on which different "tops" can be placed. 

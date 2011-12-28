@@ -23,7 +23,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-namespace SharpChess
+namespace SharpChess.Model.AI
 {
     /// <summary>
     /// The hash table (also know as Transposition table) specifically for check positions.

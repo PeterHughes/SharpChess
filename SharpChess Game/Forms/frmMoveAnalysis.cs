@@ -32,6 +32,8 @@ namespace SharpChess
     using System.Resources;
     using System.Windows.Forms;
 
+    using SharpChess.Model;
+
     #endregion
 
     /// <summary>

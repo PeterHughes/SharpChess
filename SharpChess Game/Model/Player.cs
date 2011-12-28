@@ -23,7 +23,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-namespace SharpChess
+namespace SharpChess.Model
 {
     #region Using
 
@@ -31,6 +31,8 @@ namespace SharpChess
     using System.Diagnostics;
     using System.Linq;
     using System.Threading;
+
+    using SharpChess.Model.AI;
 
     using ThreadState = System.Threading.ThreadState;
 
@@ -113,7 +115,7 @@ namespace SharpChess
             this.PawnCountInPlay = 8;
             this.Pieces = new Pieces();
             this.CapturedEnemyPieces = new Pieces();
-            this.Search = new Search();
+            this.Brain = new Brain();
         }
 
         #endregion
@@ -211,9 +213,9 @@ namespace SharpChess
         #region Public Properties
 
         /// <summary>
-        /// Gets the player's chess brain. Conains all Search logic.
+        /// Gets the player's chess brain. Contains all computer AI player logic.
         /// </summary>
-        public Search Search { get; private set; }
+        public Brain Brain { get; private set; }
 
         /// <summary>
         ///   Gets a value indicating whether CanClaimFiftyMoveDraw.

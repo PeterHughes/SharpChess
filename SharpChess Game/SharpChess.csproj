@@ -111,12 +111,13 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Model\AI\Brain.cs" />
     <Compile Include="Model\Board.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Model\BoardDebug.cs" />
-    <Compile Include="Model\Search.cs" />
-    <Compile Include="Model\ForceImmediateMoveException.cs" />
+    <Compile Include="Model\AI\Search.cs" />
+    <Compile Include="Model\AI\ForceImmediateMoveException.cs" />
     <Compile Include="Model\PieceHashCodes.cs" />
     <Compile Include="Model\PlayerClock.cs" />
     <Compile Include="Model\FEN.cs">
@@ -144,22 +145,22 @@
     <Compile Include="Model\Game.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Model\HashTable.cs">
+    <Compile Include="Model\AI\HashTable.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Model\HashTableCheck.cs">
+    <Compile Include="Model\AI\HashTableCheck.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Model\HashTablePawnKing.cs">
+    <Compile Include="Model\AI\HashTablePawnKing.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Model\History.cs">
+    <Compile Include="Model\AI\History.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Model\IPieceTop.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Model\KillerMoves.cs">
+    <Compile Include="Model\AI\KillerMoves.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Model\Move.cs">
@@ -168,10 +169,10 @@
     <Compile Include="Model\Moves.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Model\OpeningBook.cs">
+    <Compile Include="Model\AI\OpeningBook.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Model\OpeningBookSimple.cs">
+    <Compile Include="Model\AI\OpeningBookSimple.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Model\PGNtoXML.cs">

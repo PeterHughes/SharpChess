@@ -23,7 +23,7 @@
 // along with PlayerDebug program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-namespace SharpChess
+namespace SharpChess.Model
 {
     #region Using
 

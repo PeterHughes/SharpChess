@@ -30,6 +30,7 @@ namespace SharpChess_Tests
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     using SharpChess;
+    using SharpChess.Model;
 
     #endregion
 

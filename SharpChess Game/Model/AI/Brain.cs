@@ -3,8 +3,7 @@
 //   Peter Hughes
 // </copyright>
 // <summary>
-//   Performs the central move-selection logic for SharpChess, referred to as the Search.
-//   http://chessprogramming.wikispaces.com/Search
+//   AI for the computer player.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -24,14 +23,12 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-namespace SharpChess
+namespace SharpChess.Model.AI
 {
     /// <summary>
-    /// Performs the central move-selection logic for SharpChess, referred to as the Search.
-    ///  http://chessprogramming.wikispaces.com/Search
+    /// AI for the computer player.
     /// </summary>
-    public class Search
+    public class Brain
     {
-        
     }
 }

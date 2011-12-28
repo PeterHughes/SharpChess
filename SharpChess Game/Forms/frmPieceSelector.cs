@@ -33,6 +33,8 @@ namespace SharpChess
     using System.Resources;
     using System.Windows.Forms;
 
+    using SharpChess.Model;
+
     #endregion
 
     /// <summary>
@@ -55,7 +57,7 @@ namespace SharpChess
         /// <summary>
         /// The m_ move name selected.
         /// </summary>
-        private Move.MoveNames m_MoveNameSelected = SharpChess.Move.MoveNames.NullMove;
+        private Move.MoveNames m_MoveNameSelected = Model.Move.MoveNames.NullMove;
 
         /// <summary>
         /// The pic black bishop.
@@ -389,19 +391,19 @@ namespace SharpChess
             switch ((string)((PictureBox)sender).Tag)
             {
                 case "Queen":
-                    this.m_MoveNameSelected = SharpChess.Move.MoveNames.PawnPromotionQueen;
+                    this.m_MoveNameSelected = Model.Move.MoveNames.PawnPromotionQueen;
                     break;
 
                 case "Rook":
-                    this.m_MoveNameSelected = SharpChess.Move.MoveNames.PawnPromotionRook;
+                    this.m_MoveNameSelected = Model.Move.MoveNames.PawnPromotionRook;
                     break;
 
                 case "Bishop":
-                    this.m_MoveNameSelected = SharpChess.Move.MoveNames.PawnPromotionBishop;
+                    this.m_MoveNameSelected = Model.Move.MoveNames.PawnPromotionBishop;
                     break;
 
                 case "Knight":
-                    this.m_MoveNameSelected = SharpChess.Move.MoveNames.PawnPromotionKnight;
+                    this.m_MoveNameSelected = Model.Move.MoveNames.PawnPromotionKnight;
                     break;
             }
 

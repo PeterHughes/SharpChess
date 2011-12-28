@@ -24,7 +24,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-namespace SharpChess
+namespace SharpChess.Model.AI
 {
     /// <summary>
     /// Represents the Killer Heuristic used to improve move ordering.
