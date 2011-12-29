@@ -27,14 +27,9 @@ namespace SharpChess.Model
 {
     #region Using
 
-    using System;
-    using System.Diagnostics;
     using System.Linq;
-    using System.Threading;
 
     using SharpChess.Model.AI;
-
-    using ThreadState = System.Threading.ThreadState;
 
     #endregion
 
@@ -79,7 +74,7 @@ namespace SharpChess.Model
         }
 
         /// <summary>
-        /// Player intellegence: Human or Computer. 
+        /// Player intellegence: Human or Computer.
         /// </summary>
         public enum PlayerIntellegenceNames
         {
@@ -125,7 +120,7 @@ namespace SharpChess.Model
         #region Public Properties
 
         /// <summary>
-        /// Gets the player's chess brain. Contains all computer AI chess logic.
+        ///   Gets the player's chess brain. Contains all computer AI chess logic.
         /// </summary>
         public Brain Brain { get; private set; }
 
@@ -251,7 +246,7 @@ namespace SharpChess.Model
         public bool HasCastled { get; set; }
 
         /// <summary>
-        /// Gets a value indicating whether the player's intellegence is human or computer.
+        ///   Gets or sets a value indicating whether the player's intellegence is human or computer.
         /// </summary>
         public PlayerIntellegenceNames Intellegence { get; set; }
 
@@ -294,7 +289,7 @@ namespace SharpChess.Model
         /// <summary>
         ///   Gets a counter fo the number of material (non-Pawn) pieces on the board.
         /// </summary>
-        public int MaterialCount { get; protected set; }
+        public int MaterialCount { get; private set; }
 
         /// <summary>
         ///   Gets the opposing player.
@@ -316,6 +311,11 @@ namespace SharpChess.Model
         ///   Gets the ordinal square offset for a pawn attack to the right.
         /// </summary>
         public abstract int PawnAttackRightOffset { get; }
+
+        /// <summary>
+        ///   Gets or sets the number of pawns in play.
+        /// </summary>
+        public int PawnCountInPlay { get; set; }
 
         /// <summary>
         ///   Gets the ordinal square offset for a pawn advancing one square forward.
@@ -360,80 +360,6 @@ namespace SharpChess.Model
         */
 
         /// <summary>
-        /// The generate lazy moves.
-        /// </summary>
-        /// <param name="depth">
-        /// The depth.
-        /// </param>
-        /// <param name="moves">
-        /// The moves.
-        /// </param>
-        /// <param name="movesType">
-        /// The moves type.
-        /// </param>
-        /// <param name="squareAttacking">
-        /// The square attacking.
-        /// </param>
-        public void GenerateLazyMoves(int depth, Moves moves, Moves.MoveListNames movesType, Square squareAttacking)
-        {
-            // if (squareAttacking==null)
-            // {
-            // All moves as defined by movesType
-            foreach (Piece piece in this.Pieces)
-            {
-                piece.GenerateLazyMoves(moves, movesType);
-
-                /*
-                if (movesType != Moves.MoveListNames.All)
-                {
-                    int intIndex;
-                    for (intIndex = moves.Count - 1; intIndex >= 0; intIndex--)
-                    {
-                        Move move = moves[intIndex];
-                        if (!( 
-                             move.Name == Move.MoveNames.PawnPromotionQueen
-                             &&
-                             move.PieceCaptured == null
-                             (move.Name == Move.MoveNames.Standard
-                              && move.From.Piece.BasicValue < move.To.Piece.BasicValue)
-                             ||
-                             (move.Name == Move.MoveNames.Standard
-                              && !move.To.PlayerCanMoveToThisSquare(move.Piece.Player.OtherPlayer))
-                             ||
-                             move.To.Ordinal==squareAttacking.Ordinal 
-                             ))
-                        {
-                            // TODO generating all then removing non-captures must be very slow!
-                            moves.Remove(move);
-                        }
-                    }
-                }
-                */
-            }
-
-            // }
-            // else
-            // {
-            // Just re-capture moves
-            // squareAttacking.AttackerMoveList(moves, this);
-            // }
-        }
-
-        /// <summary>
-        /// The generate legal moves.
-        /// </summary>
-        /// <param name="moves">
-        /// The moves.
-        /// </param>
-        public void GenerateLegalMoves(Moves moves)
-        {
-            foreach (Piece piece in this.Pieces)
-            {
-                piece.GenerateLegalMoves(moves);
-            }
-        }
-        
-        /// <summary>
         ///   Gets the sum of the basic value of all the players pieces in play.
         /// </summary>
         public int PieceBasicValue
@@ -445,9 +371,9 @@ namespace SharpChess.Model
         }
 
         /// <summary>
-        ///   Gets or sets all the player's pieces in play.
+        ///   Gets all the player's pieces in play.
         /// </summary>
-        public Pieces Pieces { get; protected set; }
+        public Pieces Pieces { get; private set; }
 
         /// <summary>
         ///   Gets positional points for all the player's pieces in play, including matieral value.
@@ -459,14 +385,13 @@ namespace SharpChess.Model
             {
                 int intPoints = 0;
                 int intIndex;
-                Piece piece;
 
                 // intPoints += this.PawnKingPoints;
                 int intBishopCount = 0;
                 int intRookCount = 0;
                 for (intIndex = this.Pieces.Count - 1; intIndex >= 0; intIndex--)
                 {
-                    piece = this.Pieces.Item(intIndex);
+                    Piece piece = this.Pieces.Item(intIndex);
 
                     /*
                     switch (piece.Name)
@@ -626,12 +551,6 @@ namespace SharpChess.Model
             }
         }
 
-
-        /// <summary>
-        ///   Gets or sets the number of pawns in play.
-        /// </summary>
-        public int PawnCountInPlay { get; set; }
-        
         #endregion
 
         #region Public Methods
@@ -656,12 +575,11 @@ namespace SharpChess.Model
             // {
             // return false;
             // }
-            Move move;
             int intRepetitionCount = 1;
             int intIndex = Game.MoveHistory.Count - 1;
             for (; intIndex >= 0; intIndex--, intIndex--)
             {
-                move = Game.MoveHistory[intIndex];
+                Move move = Game.MoveHistory[intIndex];
                 if (move.HashCodeA == Board.HashCodeA && move.HashCodeB == Board.HashCodeB)
                 {
                     if (intRepetitionCount >= numberOfMoves)
@@ -728,7 +646,7 @@ namespace SharpChess.Model
         /// The determine check status.
         /// </summary>
         /// <returns>
-        /// The determine check status.
+        /// Return check status.
         /// </returns>
         public bool DetermineCheckStatus()
         {
@@ -736,13 +654,87 @@ namespace SharpChess.Model
         }
 
         /// <summary>
-        /// The has piece name.
+        /// The generate lazy moves.
+        /// </summary>
+        /// <param name="depth">
+        /// The depth.
+        /// </param>
+        /// <param name="moves">
+        /// The moves.
+        /// </param>
+        /// <param name="movesType">
+        /// The moves type.
+        /// </param>
+        /// <param name="squareAttacking">
+        /// The square attacking.
+        /// </param>
+        public void GenerateLazyMoves(int depth, Moves moves, Moves.MoveListNames movesType, Square squareAttacking)
+        {
+            // if (squareAttacking==null)
+            // {
+            // All moves as defined by movesType
+            foreach (Piece piece in this.Pieces)
+            {
+                piece.GenerateLazyMoves(moves, movesType);
+
+                /*
+                if (movesType != Moves.MoveListNames.All)
+                {
+                    int intIndex;
+                    for (intIndex = moves.Count - 1; intIndex >= 0; intIndex--)
+                    {
+                        Move move = moves[intIndex];
+                        if (!( 
+                             move.Name == Move.MoveNames.PawnPromotionQueen
+                             &&
+                             move.PieceCaptured == null
+                             (move.Name == Move.MoveNames.Standard
+                              && move.From.Piece.BasicValue < move.To.Piece.BasicValue)
+                             ||
+                             (move.Name == Move.MoveNames.Standard
+                              && !move.To.PlayerCanMoveToThisSquare(move.Piece.Player.OtherPlayer))
+                             ||
+                             move.To.Ordinal==squareAttacking.Ordinal 
+                             ))
+                        {
+                            // TODO generating all then removing non-captures must be very slow!
+                            moves.Remove(move);
+                        }
+                    }
+                }
+                */
+            }
+
+            // }
+            // else
+            // {
+            // Just re-capture moves
+            // squareAttacking.AttackerMoveList(moves, this);
+            // }
+        }
+
+        /// <summary>
+        /// The generate legal moves.
+        /// </summary>
+        /// <param name="moves">
+        /// The moves.
+        /// </param>
+        public void GenerateLegalMoves(Moves moves)
+        {
+            foreach (Piece piece in this.Pieces)
+            {
+                piece.GenerateLegalMoves(moves);
+            }
+        }
+
+        /// <summary>
+        /// Determines of the player has the specified piece.
         /// </summary>
         /// <param name="piecename">
         /// The piecename.
         /// </param>
         /// <returns>
-        /// The has piece name.
+        /// True if player has the piece.
         /// </returns>
         public bool HasPieceName(Piece.PieceNames piecename)
         {
@@ -751,15 +743,7 @@ namespace SharpChess.Model
                 return true;
             }
 
-            foreach (Piece piece in this.Pieces)
-            {
-                if (piece.Name == piecename)
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return this.Pieces.Cast<Piece>().Any(piece => piece.Name == piecename);
         }
 
         /// <summary>
@@ -777,6 +761,8 @@ namespace SharpChess.Model
         {
             this.PawnCountInPlay++;
         }
+
+        #endregion
 
         /*
         public Move MoveFromNotation(string Text)
@@ -928,16 +914,12 @@ namespace SharpChess.Model
                 return new Move(0, 0, MoveName, piece, from, to, pieceTaken, 0, 0);
         }
 */
-
-        #endregion
-
         #region Methods
 
         /// <summary>
         /// The set pieces at starting positions.
         /// </summary>
         protected abstract void SetPiecesAtStartingPositions();
-
 
         #endregion
     }
