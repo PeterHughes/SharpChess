@@ -252,17 +252,17 @@ namespace SharpChess_Tests
             Game_Accessor.NewInternal(testPositionFen);
             Game_Accessor.MaximumSearchDepth = expectedDepth;
             Game_Accessor.ClockFixedTimePerMove = new TimeSpan(0, MaximumSecondsPerTest, 0);
-            Game_Accessor.PlayerToPlay.Think();
-            int positions = Game_Accessor.PlayerToPlay.PositionsSearched;
+            Game_Accessor.PlayerToPlay.Brain.Think();
+            int positions = Game_Accessor.PlayerToPlay.Brain.Search.PositionsSearched;
 
-            TimeSpan elpased = Game_Accessor.PlayerToPlay.ThinkingTimeElpased;
+            TimeSpan elpased = Game_Accessor.PlayerToPlay.Brain.ThinkingTimeElpased;
 
-            Debug.WriteLine(string.Format("Nodes: {0} ", Game_Accessor.PlayerToPlay.PositionsSearched));
-            Debug.WriteLine(string.Format("Time: {0} ", Game_Accessor.PlayerToPlay.ThinkingTimeElpased));
-            Debug.WriteLine(string.Format("Score: {0} ", Game_Accessor.PlayerToPlay.PrincipalVariation[0].Score));
+            Debug.WriteLine(string.Format("Nodes: {0} ", Game_Accessor.PlayerToPlay.Brain.Search.PositionsSearched));
+            Debug.WriteLine(string.Format("Time: {0} ", Game_Accessor.PlayerToPlay.Brain.ThinkingTimeElpased));
+            Debug.WriteLine(string.Format("Score: {0} ", Game_Accessor.PlayerToPlay.Brain.PrincipalVariation[0].Score));
 
-            Assert.IsTrue(Game_Accessor.PlayerToPlay.PrincipalVariation[0].From.Name == expectedMoveFrom, "From move wrong");
-            Assert.IsTrue(Game_Accessor.PlayerToPlay.PrincipalVariation[0].To.Name == expectedMoveTo, "To move wrong");
+            Assert.IsTrue(Game_Accessor.PlayerToPlay.Brain.PrincipalVariation[0].From.Name == expectedMoveFrom, "From move wrong");
+            Assert.IsTrue(Game_Accessor.PlayerToPlay.Brain.PrincipalVariation[0].To.Name == expectedMoveTo, "To move wrong");
         }
 
         #endregion

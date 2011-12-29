@@ -227,12 +227,12 @@ namespace SharpChess.Model
                     Game.EnablePondering = false;
                     Game.ClockIncrementPerMove = new TimeSpan(0, 0, 0);
                     Game.ClockFixedTimePerMove = new TimeSpan(0, 0, 0);
-                    Game.PlayerWhite.Intellegence = Player.IntellegenceNames.Human;
-                    Game.PlayerBlack.Intellegence = Player.IntellegenceNames.Human;
+                    Game.PlayerWhite.Intellegence = Player.PlayerIntellegenceNames.Human;
+                    Game.PlayerBlack.Intellegence = Player.PlayerIntellegenceNames.Human;
                     Game.New();
                     Game.SuspendPondering();
-                    Game.PlayerWhite.Intellegence = Player.IntellegenceNames.Human;
-                    Game.PlayerBlack.Intellegence = Player.IntellegenceNames.Computer;
+                    Game.PlayerWhite.Intellegence = Player.PlayerIntellegenceNames.Human;
+                    Game.PlayerBlack.Intellegence = Player.PlayerIntellegenceNames.Computer;
                     Game.ResumePondering();
                 }
                 else if (strMessage.StartsWith("load "))
@@ -273,8 +273,8 @@ namespace SharpChess.Model
                     // moves of its own. 
                     Game.SuspendPondering();
                     Game.PlayerToPlay.Clock.Stop();
-                    Game.PlayerWhite.Intellegence = Player.IntellegenceNames.Human;
-                    Game.PlayerBlack.Intellegence = Player.IntellegenceNames.Human;
+                    Game.PlayerWhite.Intellegence = Player.PlayerIntellegenceNames.Human;
+                    Game.PlayerBlack.Intellegence = Player.PlayerIntellegenceNames.Human;
                 }
                 else if (strMessage == "go")
                 {
@@ -283,12 +283,12 @@ namespace SharpChess.Model
                     // Associate the engine's clock with the color that is on move, the opponent's clock with the color that 
                     // is not on move. Start the engine's clock. Start thinking and eventually make a move. 
                     Game.SuspendPondering();
-                    Game.PlayerToPlay.OtherPlayer.Clock.Stop();
-                    Game.PlayerToPlay.Intellegence = Player.IntellegenceNames.Computer;
-                    Game.PlayerToPlay.OtherPlayer.Intellegence = Player.IntellegenceNames.Human;
+                    Game.PlayerToPlay.OpposingPlayer.Clock.Stop();
+                    Game.PlayerToPlay.Intellegence = Player.PlayerIntellegenceNames.Computer;
+                    Game.PlayerToPlay.OpposingPlayer.Intellegence = Player.PlayerIntellegenceNames.Human;
                     Game.PlayerToPlay.Clock.Stop();
                     Game.PlayerToPlay.Clock.Start();
-                    Game.PlayerToPlay.StartThinking();
+                    Game.PlayerToPlay.Brain.StartThinking();
                 }
                 else if (strMessage == "playother")
                 {
@@ -301,10 +301,10 @@ namespace SharpChess.Model
                         receives a move, it should start thinking and eventually reply. 
                     */
                     Game.SuspendPondering();
-                    Game.PlayerToPlay = Game.PlayerToPlay.OtherPlayer;
-                    Game.PlayerToPlay.Intellegence = Player.IntellegenceNames.Computer;
-                    Game.PlayerToPlay.OtherPlayer.Intellegence = Player.IntellegenceNames.Human;
-                    Game.PlayerToPlay.OtherPlayer.Clock.Stop();
+                    Game.PlayerToPlay = Game.PlayerToPlay.OpposingPlayer;
+                    Game.PlayerToPlay.Intellegence = Player.PlayerIntellegenceNames.Computer;
+                    Game.PlayerToPlay.OpposingPlayer.Intellegence = Player.PlayerIntellegenceNames.Human;
+                    Game.PlayerToPlay.OpposingPlayer.Clock.Stop();
                     Game.PlayerToPlay.Clock.Start();
                     Game.ResumePondering();
                 }
@@ -315,15 +315,15 @@ namespace SharpChess.Model
                     // older engines unless you disable it with the feature command.) 
                     // Set White on move. Set the engine to play Black. Stop clocks. 
                     Game.SuspendPondering();
-                    if (Game.PlayerToPlay.IsThinking)
+                    if (Game.PlayerToPlay.Brain.IsThinking)
                     {
-                        Game.PlayerToPlay.ForceImmediateMove();
+                        Game.PlayerToPlay.Brain.ForceImmediateMove();
                     }
 
                     Game.PlayerToPlay.Clock.Stop();
                     Game.PlayerToPlay = Game.PlayerWhite;
-                    Game.PlayerWhite.Intellegence = Player.IntellegenceNames.Human;
-                    Game.PlayerBlack.Intellegence = Player.IntellegenceNames.Computer;
+                    Game.PlayerWhite.Intellegence = Player.PlayerIntellegenceNames.Human;
+                    Game.PlayerBlack.Intellegence = Player.PlayerIntellegenceNames.Computer;
                 }
                 else if (strMessage == "black")
                 {
@@ -332,15 +332,15 @@ namespace SharpChess.Model
                     // older engines unless you disable it with the feature command.) 
                     // Set Black on move. Set the engine to play White. Stop clocks. 
                     Game.SuspendPondering();
-                    if (Game.PlayerToPlay.IsThinking)
+                    if (Game.PlayerToPlay.Brain.IsThinking)
                     {
-                        Game.PlayerToPlay.ForceImmediateMove();
+                        Game.PlayerToPlay.Brain.ForceImmediateMove();
                     }
 
                     Game.PlayerToPlay.Clock.Stop();
                     Game.PlayerToPlay = Game.PlayerBlack;
-                    Game.PlayerWhite.Intellegence = Player.IntellegenceNames.Computer;
-                    Game.PlayerBlack.Intellegence = Player.IntellegenceNames.Human;
+                    Game.PlayerWhite.Intellegence = Player.PlayerIntellegenceNames.Computer;
+                    Game.PlayerBlack.Intellegence = Player.PlayerIntellegenceNames.Human;
                 }
                 else if (strMessage.StartsWith("level "))
                 {
@@ -380,20 +380,20 @@ namespace SharpChess.Model
                     */
                     if (Game.ClockFixedTimePerMove.Ticks > 0)
                     {
-                        Game.PlayerToPlay.OtherPlayer.Clock.TimeElapsed =
+                        Game.PlayerToPlay.OpposingPlayer.Clock.TimeElapsed =
                             (new TimeSpan(Game.ClockFixedTimePerMove.Ticks * Game.MoveNo))
                             - (new TimeSpan(long.Parse(strMessage.Substring("time ".Length)) * 100000));
                     }
                     else if (Game.ClockIncrementPerMove.Ticks > 0)
                     {
-                        Game.PlayerToPlay.OtherPlayer.Clock.TimeElapsed =
+                        Game.PlayerToPlay.OpposingPlayer.Clock.TimeElapsed =
                             (new TimeSpan(Game.ClockTime.Ticks + (Game.ClockIncrementPerMove.Ticks * Game.MoveNo)))
                             - (new TimeSpan(long.Parse(strMessage.Substring("time ".Length)) * 100000));
                     }
                     else
                     {
-                        Game.PlayerToPlay.OtherPlayer.Clock.TimeElapsed =
-                            (new TimeSpan(Game.ClockTime.Ticks * Game.PlayerToPlay.OtherPlayer.Clock.ControlPeriod))
+                        Game.PlayerToPlay.OpposingPlayer.Clock.TimeElapsed =
+                            (new TimeSpan(Game.ClockTime.Ticks * Game.PlayerToPlay.OpposingPlayer.Clock.ControlPeriod))
                             - (new TimeSpan(long.Parse(strMessage.Substring("time ".Length)) * 100000));
                     }
 
@@ -453,9 +453,9 @@ namespace SharpChess.Model
                         ignored (treated as a no-op). It is permissible for your engine to always ignore the ? command. 
                         The only bad consequence is that xboard's Move Now menu command will do nothing. 
                     */
-                    if (Game.PlayerToPlay.IsThinking && !Game.PlayerToPlay.IsPondering)
+                    if (Game.PlayerToPlay.Brain.IsThinking && !Game.PlayerToPlay.Brain.IsPondering)
                     {
-                        Game.PlayerToPlay.ForceImmediateMove();
+                        Game.PlayerToPlay.Brain.ForceImmediateMove();
                     }
                 }
                 else if (strMessage.StartsWith("ping "))
@@ -478,7 +478,7 @@ namespace SharpChess.Model
                         it. It is especially important in simple engines that do not ponder and do not poll for input while 
                         thinking, but it is needed in all engines. 
                     */
-                    while (Game.PlayerToPlay.IsThinking && !Game.PlayerToPlay.IsPondering)
+                    while (Game.PlayerToPlay.Brain.IsThinking && !Game.PlayerToPlay.Brain.IsPondering)
                     {
                         // Wait for thinking to finish
                         Thread.Sleep(250);
@@ -618,24 +618,24 @@ namespace SharpChess.Model
                     Game.SuspendPondering();
 
                     Game.PlayerToPlay.Clock.Stop();
-                    Game.PlayerWhite.Intellegence = Player.IntellegenceNames.Computer;
-                    Game.PlayerBlack.Intellegence = Player.IntellegenceNames.Computer;
+                    Game.PlayerWhite.Intellegence = Player.PlayerIntellegenceNames.Computer;
+                    Game.PlayerBlack.Intellegence = Player.PlayerIntellegenceNames.Computer;
                     Game.IsInAnalyseMode = true;
 
-                    Game.PlayerToPlay.StartThinking();
+                    Game.PlayerToPlay.Brain.StartThinking();
                 }
                 else if (strMessage == ".")
                 {
                     // Status update
-                    if (Game.PlayerToPlay.IsThinking)
+                    if (Game.PlayerToPlay.Brain.IsThinking)
                     {
                         SendAnalyzeStatus(
-                            Game.PlayerToPlay.ThinkingTimeElpased,
-                            Game.PlayerToPlay.PositionsSearched, 
-                            Game.PlayerToPlay.SearchDepth, 
-                            Game.PlayerToPlay.TotalPositionsToSearch - Game.PlayerToPlay.SearchPositionNo, 
-                            Game.PlayerToPlay.TotalPositionsToSearch, 
-                            Game.PlayerToPlay.CurrentMove);
+                            Game.PlayerToPlay.Brain.ThinkingTimeElpased,
+                            Game.PlayerToPlay.Brain.Search.PositionsSearched,
+                            Game.PlayerToPlay.Brain.Search.SearchDepth,
+                            Game.PlayerToPlay.Brain.Search.TotalPositionsToSearch - Game.PlayerToPlay.Brain.Search.SearchPositionNo,
+                            Game.PlayerToPlay.Brain.Search.TotalPositionsToSearch, 
+                            Game.PlayerToPlay.Brain.Search.CurrentMoveSearched);
                     }
                 }
                 else if (strMessage == "exit")

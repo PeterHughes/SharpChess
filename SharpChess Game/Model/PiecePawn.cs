@@ -123,7 +123,7 @@ namespace SharpChess.Model
         {
             get
             {
-                return this.Base.Player.Colour == Player.ColourNames.White ? 9 : 8;
+                return this.Base.Player.Colour == Player.PlayerColourNames.White ? 9 : 8;
             }
         }
 
@@ -295,9 +295,9 @@ namespace SharpChess.Model
                     {
                         // still at rank 2
                         if (
-                            (this.Base.Player.Colour == Player.ColourNames.White && this.Base.Square.Rank == 1)
+                            (this.Base.Player.Colour == Player.PlayerColourNames.White && this.Base.Square.Rank == 1)
                             || 
-                            (this.Base.Player.Colour == Player.ColourNames.Black && this.Base.Square.Rank == 6))
+                            (this.Base.Player.Colour == Player.PlayerColourNames.Black && this.Base.Square.Rank == 6))
                         {
                             intPoints -= 200;
                         }
@@ -311,9 +311,9 @@ namespace SharpChess.Model
                     {
                         // Bonus for rank 5
                         if (
-                            (this.Base.Player.Colour == Player.ColourNames.White && this.Base.Square.Rank == 4)
+                            (this.Base.Player.Colour == Player.PlayerColourNames.White && this.Base.Square.Rank == 4)
                             ||
-                            (this.Base.Player.Colour == Player.ColourNames.Black && this.Base.Square.Rank == 3))
+                            (this.Base.Player.Colour == Player.PlayerColourNames.Black && this.Base.Square.Rank == 3))
                         {
                             intPoints -= 300;
                         }
@@ -326,20 +326,20 @@ namespace SharpChess.Model
                 intPoints += FileBonus[this.Base.Square.File];
 
                 // Advancement
-                int intAdvancementBonus = AdvancementBonus[this.Base.Player.Colour == Player.ColourNames.White ? this.Base.Square.Rank : 7 - this.Base.Square.Rank];
+                int intAdvancementBonus = AdvancementBonus[this.Base.Player.Colour == Player.PlayerColourNames.White ? this.Base.Square.Rank : 7 - this.Base.Square.Rank];
 
                 // Passed Pawns
                 bool blnIsPassed = true;
-                for (intIndex = this.Base.Player.OtherPlayer.Pieces.Count - 1; intIndex >= 0; intIndex--)
+                for (intIndex = this.Base.Player.OpposingPlayer.Pieces.Count - 1; intIndex >= 0; intIndex--)
                 {
-                    piece = this.Base.Player.OtherPlayer.Pieces.Item(intIndex);
+                    piece = this.Base.Player.OpposingPlayer.Pieces.Item(intIndex);
                     if (piece.Name == Piece.PieceNames.Pawn)
                     {
                         if (
                                 (
-                                    (this.Base.Player.Colour == Player.ColourNames.White && piece.Square.Rank > this.Base.Square.Rank) 
+                                    (this.Base.Player.Colour == Player.PlayerColourNames.White && piece.Square.Rank > this.Base.Square.Rank) 
                                     || 
-                                    (this.Base.Player.Colour == Player.ColourNames.Black && piece.Square.Rank < this.Base.Square.Rank)
+                                    (this.Base.Player.Colour == Player.PlayerColourNames.Black && piece.Square.Rank < this.Base.Square.Rank)
                                 ) 
                                 && 
                                 (piece.Square.File == this.Base.Square.File || piece.Square.File == this.Base.Square.File - 1 || piece.Square.File == this.Base.Square.File + 1)
@@ -413,8 +413,8 @@ namespace SharpChess.Model
             };
 
             Square square;
-            bool isPromotion = (this.Base.Player.Colour == Player.ColourNames.White && this.Base.Square.Rank == 6)
-                               || (this.Base.Player.Colour == Player.ColourNames.Black && this.Base.Square.Rank == 1);
+            bool isPromotion = (this.Base.Player.Colour == Player.PlayerColourNames.White && this.Base.Square.Rank == 6)
+                               || (this.Base.Player.Colour == Player.PlayerColourNames.Black && this.Base.Square.Rank == 1);
 
             int intMovesToGenerate = isPromotion ? promotionTypes.Length : 1;
 
@@ -503,9 +503,9 @@ namespace SharpChess.Model
 
             // En Passent 
             if (
-                (this.Base.Square.Rank == 4 && this.Base.Player.Colour == Player.ColourNames.White)
+                (this.Base.Square.Rank == 4 && this.Base.Player.Colour == Player.PlayerColourNames.White)
                 || 
-                (this.Base.Square.Rank == 3 && this.Base.Player.Colour == Player.ColourNames.Black))
+                (this.Base.Square.Rank == 3 && this.Base.Player.Colour == Player.PlayerColourNames.Black))
             {
                 Piece piecePassed;
 

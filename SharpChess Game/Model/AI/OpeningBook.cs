@@ -125,7 +125,7 @@ namespace SharpChess.Model.AI
         /// <returns>
         /// The best move from the opening book.
         /// </returns>
-        public static Move SearchForGoodMove(ulong boardHashCodeA, ulong boardHashCodeB, Player.ColourNames colour)
+        public static Move SearchForGoodMove(ulong boardHashCodeA, ulong boardHashCodeB, Player.PlayerColourNames colour)
         {
             return ProbeForBestMove(boardHashCodeA, boardHashCodeB, colour);
         }
@@ -149,9 +149,9 @@ namespace SharpChess.Model.AI
         /// <returns>
         /// The best move in the opening book (hash table) or null if there is no opening book entry for the specified board position.
         /// </returns>
-        private static unsafe Move ProbeForBestMove(ulong hashCodeA, ulong hashCodeB, Player.ColourNames colour)
+        private static unsafe Move ProbeForBestMove(ulong hashCodeA, ulong hashCodeB, Player.PlayerColourNames colour)
         {
-            if (colour == Player.ColourNames.Black)
+            if (colour == Player.PlayerColourNames.Black)
             {
                 hashCodeA |= 0x1;
                 hashCodeB |= 0x1;
@@ -197,9 +197,9 @@ namespace SharpChess.Model.AI
         /// <param name="colour">
         /// The player colour.
         /// </param>
-        private static unsafe void RecordHash(ulong hashCodeA, ulong hashCodeB, byte from, byte to, Move.MoveNames moveName, Player.ColourNames colour)
+        private static unsafe void RecordHash(ulong hashCodeA, ulong hashCodeB, byte from, byte to, Move.MoveNames moveName, Player.PlayerColourNames colour)
         {
-            if (colour == Player.ColourNames.Black)
+            if (colour == Player.PlayerColourNames.Black)
             {
                 hashCodeA |= 0x1;
                 hashCodeB |= 0x1;
@@ -247,7 +247,7 @@ namespace SharpChess.Model.AI
                 Square to = Board.GetSquare(xmlnodeMove.GetAttribute("T"));
                 Piece piece = from.Piece;
 
-                int intScore = Convert.ToInt32(xmlnodeMove.GetAttribute(player.Colour == Player.ColourNames.White ? "W" : "B"));
+                int intScore = Convert.ToInt32(xmlnodeMove.GetAttribute(player.Colour == Player.PlayerColourNames.White ? "W" : "B"));
                 if (intScore > intReturnScore)
                 {
                     intReturnScore = intScore;
@@ -256,10 +256,10 @@ namespace SharpChess.Model.AI
 
                 Move moveUndo = piece.Move(movename, to);
 
-                int intScanMove = ScanPly(player.OtherPlayer, xmlnodeMove);
+                int intScanMove = ScanPly(player.OpposingPlayer, xmlnodeMove);
                 if (intScanMove != 0)
                 {
-                    RecordHash(Board.HashCodeA, Board.HashCodeB, (byte)(intScanMove >> 8 & 0xff), (byte)(intScanMove & 0xff), movename, player.OtherPlayer.Colour);
+                    RecordHash(Board.HashCodeA, Board.HashCodeB, (byte)(intScanMove >> 8 & 0xff), (byte)(intScanMove & 0xff), movename, player.OpposingPlayer.Colour);
                 }
 
                 Move.Undo(moveUndo);

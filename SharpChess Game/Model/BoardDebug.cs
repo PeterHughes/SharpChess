@@ -142,13 +142,13 @@ namespace SharpChess.Model
 
                 case 5:
                     int turnNumberOld = Game.TurnNo; // Backup TurNo
-                    Game.TurnNo -= Game.PlayerToPlay.SearchDepth;
-                    for (int indMov = Math.Max(1, Game.MoveHistory.Count - Game.PlayerToPlay.MaxSearchDepth);
+                    Game.TurnNo -= Game.PlayerToPlay.Brain.Search.SearchDepth;
+                    for (int indMov = Math.Max(1, Game.MoveHistory.Count - Game.PlayerToPlay.Brain.Search.MaxSearchDepth);
                          indMov < Game.MoveHistory.Count;
                          indMov++)
                     {
                         Move moveThis = Game.MoveHistory[indMov];
-                        if (moveThis.Piece.Player.Colour == Player.ColourNames.White)
+                        if (moveThis.Piece.Player.Colour == Player.PlayerColourNames.White)
                         {
                             strbBoard.Append(indMov >> 1);
                             strbBoard.Append(". ");
@@ -176,7 +176,7 @@ namespace SharpChess.Model
         {
             var strbBoard = new StringBuilder(160);
             strbBoard.Append("  0 1 2 3 4 5 6 7 :PlayerToPlay = ");
-            strbBoard.Append((Game.PlayerToPlay.Colour == Player.ColourNames.White) ? "White\n" : "Black\n");
+            strbBoard.Append((Game.PlayerToPlay.Colour == Player.PlayerColourNames.White) ? "White\n" : "Black\n");
             for (int indRank = 7; indRank >= 0; indRank--)
             {
                 strbBoard.Append(indRank + 1);
@@ -194,7 +194,7 @@ namespace SharpChess.Model
                         {
                             switch (square.Piece.Player.Colour)
                             {
-                                case Player.ColourNames.White:
+                                case Player.PlayerColourNames.White:
                                     strbBoard.Append(square.Piece.Abbreviation);
                                     break;
                                 default:

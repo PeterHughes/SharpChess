@@ -116,7 +116,7 @@ namespace SharpChess.Model
             FenGet1Pieces(strbFen);
 
             // Field 2: Active color
-            strbFen.Append((Game.PlayerToPlay.Colour == Player.ColourNames.White) ? " w " : " b ");
+            strbFen.Append((Game.PlayerToPlay.Colour == Player.PlayerColourNames.White) ? " w " : " b ");
 
             // Field 3: Castling availability
             bool whiteCanCastle = FenGet3CastlingIsPossible(Game.PlayerWhite.King, strbFen);
@@ -225,28 +225,28 @@ namespace SharpChess.Model
 
             // White King's Rook
             if ((pieceRook = Board.GetPiece(7, 0)) != null && pieceRook.Name == Piece.PieceNames.Rook
-                && pieceRook.Player.Colour == Player.ColourNames.White)
+                && pieceRook.Player.Colour == Player.PlayerColourNames.White)
             {
                 pieceRook.NoOfMoves = strCastlingRights.LastIndexOf("K") >= 0 ? 0 : 1;
             }
 
             // Black King's Rook
             if ((pieceRook = Board.GetPiece(7, 7)) != null && pieceRook.Name == Piece.PieceNames.Rook
-                && pieceRook.Player.Colour == Player.ColourNames.Black)
+                && pieceRook.Player.Colour == Player.PlayerColourNames.Black)
             {
                 pieceRook.NoOfMoves = strCastlingRights.LastIndexOf("k") >= 0 ? 0 : 1;
             }
 
             // White Queen's Rook
             if ((pieceRook = Board.GetPiece(0, 0)) != null && pieceRook.Name == Piece.PieceNames.Rook
-                && pieceRook.Player.Colour == Player.ColourNames.White)
+                && pieceRook.Player.Colour == Player.PlayerColourNames.White)
             {
                 pieceRook.NoOfMoves = strCastlingRights.LastIndexOf("Q") >= 0 ? 0 : 1;
             }
 
             // Black Queen's Rook
             if ((pieceRook = Board.GetPiece(0, 7)) != null && pieceRook.Name == Piece.PieceNames.Rook
-                && pieceRook.Player.Colour == Player.ColourNames.Black)
+                && pieceRook.Player.Colour == Player.PlayerColourNames.Black)
             {
                 pieceRook.NoOfMoves = strCastlingRights.LastIndexOf("q") >= 0 ? 0 : 1;
             }
@@ -256,7 +256,7 @@ namespace SharpChess.Model
 
             // Full move number. Default 1. Must be defined before En Passant.
             Game.TurnNo = (int.Parse(strFullMoveNumber) - 1) << 1;
-            if (Game.PlayerToPlay.Colour == Player.ColourNames.Black)
+            if (Game.PlayerToPlay.Colour == Player.PlayerColourNames.Black)
             {
                 Game.TurnNo++; // Always odd for the previous White's move 
             }
@@ -717,7 +717,7 @@ namespace SharpChess.Model
 
                         switch (pieceThis.Player.Colour)
                         {
-                            case Player.ColourNames.Black:
+                            case Player.PlayerColourNames.Black:
                                 strbFen.Append(pieceThis.Abbreviation.ToLower()); // Blacks in lowercase
                                 break;
                             default:
@@ -772,14 +772,14 @@ namespace SharpChess.Model
             if (((PieceKing)pieceKing.Top).CanCastleKingSide)
             {
                 // King could castle Rook-side in the future
-                fenString.Append((pieceKing.Player.Colour == Player.ColourNames.White) ? "K" : "k");
+                fenString.Append((pieceKing.Player.Colour == Player.PlayerColourNames.White) ? "K" : "k");
                 canCastle = true;
             }
 
             if (((PieceKing)pieceKing.Top).CanCastleQueenSide)
             {
                 // King could castle Queen-side in the future
-                fenString.Append((pieceKing.Player.Colour == Player.ColourNames.White) ? "Q" : "q");
+                fenString.Append((pieceKing.Player.Colour == Player.PlayerColourNames.White) ? "Q" : "q");
                 canCastle = true;
             }
 
@@ -810,13 +810,13 @@ namespace SharpChess.Model
                 && (Game.MoveHistory.Last.From.File == Game.MoveHistory.Last.To.File)
                 &&
                 (((Game.MoveHistory.Last.From.Rank == Game.MoveHistory.Last.To.Rank + 2)
-                  && (Game.MoveHistory.Last.Piece.Player.Colour == Player.ColourNames.Black))
+                  && (Game.MoveHistory.Last.Piece.Player.Colour == Player.PlayerColourNames.Black))
                  ||
                  ((Game.MoveHistory.Last.From.Rank == Game.MoveHistory.Last.To.Rank - 2)
-                  && (Game.MoveHistory.Last.Piece.Player.Colour == Player.ColourNames.White))))
+                  && (Game.MoveHistory.Last.Piece.Player.Colour == Player.PlayerColourNames.White))))
             {
                 return " " + Game.MoveHistory.Last.From.FileName
-                       + ((Game.MoveHistory.Last.Piece.Player.Colour == Player.ColourNames.White) ? "3 " : "6 ");
+                       + ((Game.MoveHistory.Last.Piece.Player.Colour == Player.PlayerColourNames.White) ? "3 " : "6 ");
                     
                     // The case between From and To
             }
@@ -920,7 +920,7 @@ namespace SharpChess.Model
             // Try to find the required piece in from the available pool of captured 
             // pieces that haven't been placed on the board yet.
             Piece pieceToUse = null;
-            foreach (Piece pieceCaptured in player.OtherPlayer.CapturedEnemyPieces)
+            foreach (Piece pieceCaptured in player.OpposingPlayer.CapturedEnemyPieces)
             {
                 if ((pieceCaptured.Name == piecename || (blnAllowPromotion && pieceCaptured.Name == Piece.PieceNames.Pawn))
                     && (pieceCaptured.StartLocation == Board.GetSquare(intFile, intRank) || blnAnyLocation))

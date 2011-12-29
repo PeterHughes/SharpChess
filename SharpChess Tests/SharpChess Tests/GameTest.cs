@@ -87,10 +87,10 @@ namespace SharpChess_Tests
             Game_Accessor.NewInternal(Fen);
             Game_Accessor.MaximumSearchDepth = 5;
             Game_Accessor.ClockFixedTimePerMove = new TimeSpan(0, 10, 0); // 10 minute max
-            Game_Accessor.PlayerToPlay.Think();
-            int positions = Game_Accessor.PlayerToPlay.PositionsSearched;
+            Game_Accessor.PlayerToPlay.Brain.Think();
+            int positions = Game_Accessor.PlayerToPlay.Brain.Search.PositionsSearched;
 
-            TimeSpan elpased = Game_Accessor.PlayerToPlay.ThinkingTimeElpased;
+            TimeSpan elpased = Game_Accessor.PlayerToPlay.Brain.ThinkingTimeElpased;
 
             // Assert.IsTrue(positions == 52931); Before finding pawn king hash score b-u-g.
             // Assert.IsTrue(positions == 94138); Before all captures in quiesence.

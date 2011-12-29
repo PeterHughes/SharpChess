@@ -768,12 +768,12 @@ namespace SharpChess
             this.lvwMoveHistory.Items.Add(new ListViewItem(lvi));
             switch (move.Piece.Player.Colour)
             {
-                case Player.ColourNames.White:
+                case Player.PlayerColourNames.White:
                     this.lvwMoveHistory.Items[this.lvwMoveHistory.Items.Count - 1].BackColor = Color.White;
                     this.lvwMoveHistory.Items[this.lvwMoveHistory.Items.Count - 1].ForeColor = Color.Blue;
                     break;
 
-                case Player.ColourNames.Black:
+                case Player.PlayerColourNames.Black:
                     this.lvwMoveHistory.Items[this.lvwMoveHistory.Items.Count - 1].BackColor = Color.White;
                     this.lvwMoveHistory.Items[this.lvwMoveHistory.Items.Count - 1].ForeColor = Color.Black;
                     break;
@@ -2090,9 +2090,9 @@ namespace SharpChess
         /// </summary>
         private void MoveNow()
         {
-            if (Game.PlayerToPlay.IsThinking && !Game.PlayerToPlay.IsPondering)
+            if (Game.PlayerToPlay.Brain.IsThinking && !Game.PlayerToPlay.Brain.IsPondering)
             {
-                Game.PlayerToPlay.ForceImmediateMove();
+                Game.PlayerToPlay.Brain.ForceImmediateMove();
             }
         }
 
@@ -2220,11 +2220,11 @@ namespace SharpChess
                          : this.BOARD_SQUARE_COLOUR_BLACK;
             }
 
-            if (Game.ShowThinking && Game.PlayerToPlay.IsThinking && !Game.PlayerToPlay.IsPondering)
+            if (Game.ShowThinking && Game.PlayerToPlay.Brain.IsThinking && !Game.PlayerToPlay.Brain.IsPondering)
             {
-                if (Game.PlayerToPlay.CurrentMove != null)
+                if (Game.PlayerToPlay.Brain.Search.CurrentMoveSearched != null)
                 {
-                    this.m_squareLastFrom = Game.PlayerToPlay.CurrentMove.From;
+                    this.m_squareLastFrom = Game.PlayerToPlay.Brain.Search.CurrentMoveSearched.From;
 
                     // m_picSquares[m_squareLastFrom.File, m_squareLastFrom.Rank].BackColor = System.Drawing.Color.Yellow;
                     this.m_picSquares[this.m_squareLastFrom.File, this.m_squareLastFrom.Rank].BackColor =
@@ -2244,11 +2244,11 @@ namespace SharpChess
                          : this.BOARD_SQUARE_COLOUR_BLACK;
             }
 
-            if (Game.ShowThinking && Game.PlayerToPlay.IsThinking && !Game.PlayerToPlay.IsPondering)
+            if (Game.ShowThinking && Game.PlayerToPlay.Brain.IsThinking && !Game.PlayerToPlay.Brain.IsPondering)
             {
-                if (Game.PlayerToPlay.CurrentMove != null)
+                if (Game.PlayerToPlay.Brain.Search.CurrentMoveSearched != null)
                 {
-                    this.m_squareLastTo = Game.PlayerToPlay.CurrentMove.To;
+                    this.m_squareLastTo = Game.PlayerToPlay.Brain.Search.CurrentMoveSearched.To;
 
                     // m_picSquares[m_squareLastTo.File, m_squareLastTo.Rank].BackColor=System.Drawing.Color.Yellow;
                     this.m_picSquares[this.m_squareLastTo.File, this.m_squareLastTo.Rank].BackColor =
@@ -2367,7 +2367,7 @@ namespace SharpChess
             {
                 this.lblWhiteClock.BorderStyle = BorderStyle.FixedSingle;
                 this.lblBlackClock.BorderStyle = BorderStyle.None;
-                this.lblWhiteClock.BackColor = Game.PlayerWhite.Status == Player.StatusNames.InCheckMate
+                this.lblWhiteClock.BackColor = Game.PlayerWhite.Status == Player.PlayerStatusNames.InCheckMate
                                                    ? Color.Red
                                                    : (Game.PlayerWhite.IsInCheck ? Color.Orange : Color.LightGray);
                 this.lblBlackClock.BackColor = Color.FromName(KnownColor.Control.ToString());
@@ -2377,7 +2377,7 @@ namespace SharpChess
                 this.lblBlackClock.BorderStyle = BorderStyle.FixedSingle;
                 this.lblWhiteClock.BorderStyle = BorderStyle.None;
                 this.lblWhiteClock.BackColor = Color.FromName(KnownColor.Control.ToString());
-                this.lblBlackClock.BackColor = Game.PlayerBlack.Status == Player.StatusNames.InCheckMate
+                this.lblBlackClock.BackColor = Game.PlayerBlack.Status == Player.PlayerStatusNames.InCheckMate
                                                    ? Color.Red
                                                    : (Game.PlayerBlack.IsInCheck ? Color.Orange : Color.LightGray);
             }
@@ -2402,21 +2402,21 @@ namespace SharpChess
             this.lblStage.Text = Game.Stage.ToString() + " Game - ";
             switch (Game.PlayerToPlay.Status)
             {
-                case Player.StatusNames.Normal:
+                case Player.PlayerStatusNames.Normal:
                     this.lblStage.Text += Game.PlayerToPlay.Colour.ToString() + " to play";
 
                     // 	lblStage.Text = "A: " + Board.HashCodeA.ToString() + "     B: " + Board.HashCodeB.ToString();
                     break;
 
-                case Player.StatusNames.InCheck:
+                case Player.PlayerStatusNames.InCheck:
                     this.lblStage.Text += Game.PlayerToPlay.Colour.ToString() + " in check!";
                     break;
 
-                case Player.StatusNames.InCheckMate:
+                case Player.PlayerStatusNames.InCheckMate:
                     this.lblStage.Text += Game.PlayerToPlay.Colour.ToString() + " in checkmate!";
                     break;
 
-                case Player.StatusNames.InStaleMate:
+                case Player.PlayerStatusNames.InStalemate:
                     this.lblStage.Text += Game.PlayerToPlay.Colour.ToString() + " in stalemate!";
                     break;
             }
@@ -2530,37 +2530,37 @@ namespace SharpChess
 
             string strMsg = string.Empty;
 
-            if (playerToPlay.IsThinking)
+            if (playerToPlay.Brain.IsThinking)
             {
-                strMsg += Game.PlayerToPlay.IsPondering ? "Pondering..." : "Thinking...";
+                strMsg += Game.PlayerToPlay.Brain.IsPondering ? "Pondering..." : "Thinking...";
 
                 if (Game.ShowThinking)
                 {
-                    strMsg += "Ply: " + playerToPlay.SearchDepth.ToString() + "/"
-                              + playerToPlay.MaxSearchDepth.ToString();
-                    strMsg += ". Move: " + playerToPlay.SearchPositionNo.ToString() + "/"
-                              + playerToPlay.TotalPositionsToSearch.ToString();
+                    strMsg += "Ply: " + playerToPlay.Brain.Search.SearchDepth.ToString() + "/"
+                              + playerToPlay.Brain.Search.MaxSearchDepth.ToString();
+                    strMsg += ". Move: " + playerToPlay.Brain.Search.SearchPositionNo.ToString() + "/"
+                              + playerToPlay.Brain.Search.TotalPositionsToSearch.ToString();
                 }
 
-                if (!Game.PlayerToPlay.IsPondering)
+                if (!Game.PlayerToPlay.Brain.IsPondering)
                 {
-                    strMsg += ". Secs: " + ((int)playerToPlay.ThinkingTimeRemaining.TotalSeconds).ToString() + "/"
-                              + ((int)playerToPlay.ThinkingTimeAllotted.TotalSeconds).ToString();
+                    strMsg += ". Secs: " + ((int)playerToPlay.Brain.ThinkingTimeRemaining.TotalSeconds).ToString() + "/"
+                              + ((int)playerToPlay.Brain.ThinkingTimeAllotted.TotalSeconds).ToString();
                 }
 
                 if (Game.ShowThinking)
                 {
-                    strMsg += " Pos: " + playerToPlay.PositionsSearched + " Q: " + playerToPlay.MaxQuiesenceDepthReached + " E: "
-                              + playerToPlay.MaxExtensions;
-                    strMsg += " P/S: " + playerToPlay.PositionsPerSecond.ToString();
-                    if (!Game.PlayerToPlay.IsPondering)
+                    strMsg += " Pos: " + playerToPlay.Brain.Search.PositionsSearched + " Q: " + playerToPlay.Brain.Search.MaxQuiesenceDepthReached + " E: "
+                              + playerToPlay.Brain.Search.MaxExtensions;
+                    strMsg += " P/S: " + playerToPlay.Brain.Search.PositionsPerSecond.ToString();
+                    if (!Game.PlayerToPlay.Brain.IsPondering)
                     {
-                        if (playerToPlay.PrincipalVariation != null && playerToPlay.PrincipalVariation.Count > 0)
+                        if (playerToPlay.Brain.PrincipalVariation != null && playerToPlay.Brain.PrincipalVariation.Count > 0)
                         {
-                            strMsg += " Scr:" + playerToPlay.PrincipalVariation[0].Score;
+                            strMsg += " Scr:" + playerToPlay.Brain.PrincipalVariation[0].Score;
                         }
 
-                        strMsg += " " + playerToPlay.PrincipalVariationText;
+                        strMsg += " " + playerToPlay.Brain.PrincipalVariationText;
                     }
                 }
             }
@@ -2568,19 +2568,19 @@ namespace SharpChess
             {
                 if (Game.MoveHistory.Count > 0)
                 {
-                    // 					strMsg += "Last move: " + Game.MoveHistory.Last.Piece.Player.Colour.ToString() + ": " + Game.MoveHistory.Last.Description;
+                    // strMsg += "Last move: " + Game.MoveHistory.Last.Piece.Player.Colour.ToString() + ": " + Game.MoveHistory.Last.Description;
                 }
             }
 
-            if (!Game.ShowThinking || !Game.PlayerToPlay.IsThinking || Game.PlayerToPlay.IsPondering)
+            if (!Game.ShowThinking || !Game.PlayerToPlay.Brain.IsThinking || Game.PlayerToPlay.Brain.IsPondering)
             {
                 this.pbr.Maximum = 0;
                 this.pbr.Value = 0;
             }
             else
             {
-                this.pbr.Maximum = Math.Max(playerToPlay.TotalPositionsToSearch, playerToPlay.SearchPositionNo);
-                this.pbr.Value = playerToPlay.SearchPositionNo;
+                this.pbr.Maximum = Math.Max(playerToPlay.Brain.Search.TotalPositionsToSearch, playerToPlay.Brain.Search.SearchPositionNo);
+                this.pbr.Value = playerToPlay.Brain.Search.SearchPositionNo;
             }
 
             if (strMsg != string.Empty && this.sbr.Text != strMsg)
@@ -2624,34 +2624,34 @@ namespace SharpChess
         /// </summary>
         private void SetFormState()
         {
-            this.mnuNew.Enabled = !WinBoard.Active && (!Game.PlayerToPlay.IsThinking || Game.PlayerToPlay.IsPondering);
-            this.mnuOpen.Enabled = !WinBoard.Active && (!Game.PlayerToPlay.IsThinking || Game.PlayerToPlay.IsPondering);
+            this.mnuNew.Enabled = !WinBoard.Active && (!Game.PlayerToPlay.Brain.IsThinking || Game.PlayerToPlay.Brain.IsPondering);
+            this.mnuOpen.Enabled = !WinBoard.Active && (!Game.PlayerToPlay.Brain.IsThinking || Game.PlayerToPlay.Brain.IsPondering);
             this.mnuSave.Enabled = !Game.EditModeActive
-                                   && (!Game.PlayerToPlay.IsThinking || Game.PlayerToPlay.IsPondering);
+                                   && (!Game.PlayerToPlay.Brain.IsThinking || Game.PlayerToPlay.Brain.IsPondering);
             this.mnuUndoMove.Enabled = !Game.EditModeActive && !WinBoard.Active
                                        &&
-                                       ((!Game.PlayerToPlay.IsThinking || Game.PlayerToPlay.IsPondering)
+                                       ((!Game.PlayerToPlay.Brain.IsThinking || Game.PlayerToPlay.Brain.IsPondering)
                                          && Game.MoveHistory.Count > 0);
             this.mnuRedoMove.Enabled = !Game.EditModeActive && !WinBoard.Active
                                        &&
-                                       ((!Game.PlayerToPlay.IsThinking || Game.PlayerToPlay.IsPondering)
+                                       ((!Game.PlayerToPlay.Brain.IsThinking || Game.PlayerToPlay.Brain.IsPondering)
                                          && Game.MoveRedoList.Count > 0);
             this.mnuUndoAllMoves.Enabled = !Game.EditModeActive && !WinBoard.Active && this.mnuUndoMove.Enabled;
             this.mnuRedoAllMoves.Enabled = !Game.EditModeActive && !WinBoard.Active && this.mnuRedoMove.Enabled;
             this.mnuEditBoardPosition.Enabled = !WinBoard.Active;
             this.mnuPasteFEN.Enabled = !WinBoard.Active
-                                       && (!Game.PlayerToPlay.IsThinking || Game.PlayerToPlay.IsPondering);
+                                       && (!Game.PlayerToPlay.Brain.IsThinking || Game.PlayerToPlay.Brain.IsPondering);
             this.mnuThink.Enabled = !Game.EditModeActive && !WinBoard.Active
                                     &&
-                                    ((!Game.PlayerToPlay.IsThinking || Game.PlayerToPlay.IsPondering)
+                                    ((!Game.PlayerToPlay.Brain.IsThinking || Game.PlayerToPlay.Brain.IsPondering)
                                       && Game.PlayerToPlay.CanMove);
             this.mnuMoveNow.Enabled = !Game.EditModeActive && !WinBoard.Active
-                                      && (Game.PlayerToPlay.IsThinking && !Game.PlayerToPlay.IsPondering);
+                                      && (Game.PlayerToPlay.Brain.IsThinking && !Game.PlayerToPlay.Brain.IsPondering);
             this.mnuResumePlay.Enabled = !Game.EditModeActive && !WinBoard.Active && Game.IsPaused
                                          && Game.PlayerToPlay.CanMove;
             this.mnuPausePlay.Enabled = !Game.EditModeActive && !WinBoard.Active && (!Game.IsPaused);
             this.mnuDifficulty.Enabled = !Game.EditModeActive && !WinBoard.Active
-                                         && (!Game.PlayerToPlay.IsThinking || Game.PlayerToPlay.IsPondering);
+                                         && (!Game.PlayerToPlay.Brain.IsThinking || Game.PlayerToPlay.Brain.IsPondering);
             this.mnuGame.Enabled = !Game.EditModeActive;
             this.mnuComputer.Enabled = !Game.EditModeActive;
             this.mnuShowThinking.Enabled = !Game.EditModeActive;
@@ -2669,19 +2669,19 @@ namespace SharpChess
             this.tbrPausePlay.Enabled = this.mnuPausePlay.Enabled;
 
             this.cboIntellegenceWhite.Enabled = !WinBoard.Active
-                                                && (!Game.PlayerToPlay.IsThinking || Game.PlayerToPlay.IsPondering);
+                                                && (!Game.PlayerToPlay.Brain.IsThinking || Game.PlayerToPlay.Brain.IsPondering);
             this.cboIntellegenceBlack.Enabled = !WinBoard.Active
-                                                && (!Game.PlayerToPlay.IsThinking || Game.PlayerToPlay.IsPondering);
+                                                && (!Game.PlayerToPlay.Brain.IsThinking || Game.PlayerToPlay.Brain.IsPondering);
 
             foreach (PictureBox pic in this.m_picSquares)
             {
                 pic.Enabled = !WinBoard.Active && Game.PlayerToPlay.CanMove; // && (!Game.IsPaused)
             }
 
-            this.cboIntellegenceWhite.SelectedIndex = Game.PlayerWhite.Intellegence == Player.IntellegenceNames.Human
+            this.cboIntellegenceWhite.SelectedIndex = Game.PlayerWhite.Intellegence == Player.PlayerIntellegenceNames.Human
                                                           ? INTELLEGENCE_HUMAN
                                                           : INTELLEGENCE_COMPUTER;
-            this.cboIntellegenceBlack.SelectedIndex = Game.PlayerBlack.Intellegence == Player.IntellegenceNames.Human
+            this.cboIntellegenceBlack.SelectedIndex = Game.PlayerBlack.Intellegence == Player.PlayerIntellegenceNames.Human
                                                           ? INTELLEGENCE_HUMAN
                                                           : INTELLEGENCE_COMPUTER;
         }
@@ -2816,8 +2816,8 @@ namespace SharpChess
         /// </param>
         private void btnPerft_Click(object sender, EventArgs e)
         {
-            Game.PlayerToPlay.Perft((int)this.numPerftDepth.Value);
-            MessageBox.Show(Game.PlayerToPlay.PositionsSearched.ToString());
+            Game.PlayerToPlay.Brain.Search.Perft(Game.PlayerToPlay, (int)this.numPerftDepth.Value);
+            MessageBox.Show(Game.PlayerToPlay.Brain.Search.PositionsSearched.ToString());
         }
 
         /// <summary>
@@ -2860,8 +2860,8 @@ namespace SharpChess
         private void cboIntellegenceBlack_SelectedIndexChanged(object sender, EventArgs e)
         {
             Game.PlayerBlack.Intellegence = this.cboIntellegenceBlack.SelectedIndex == INTELLEGENCE_HUMAN
-                                                ? Player.IntellegenceNames.Human
-                                                : Player.IntellegenceNames.Computer;
+                                                ? Player.PlayerIntellegenceNames.Human
+                                                : Player.PlayerIntellegenceNames.Computer;
         }
 
         /// <summary>
@@ -2876,8 +2876,8 @@ namespace SharpChess
         private void cboIntellegenceWhite_SelectedIndexChanged(object sender, EventArgs e)
         {
             Game.PlayerWhite.Intellegence = this.cboIntellegenceWhite.SelectedIndex == INTELLEGENCE_HUMAN
-                                                ? Player.IntellegenceNames.Human
-                                                : Player.IntellegenceNames.Computer;
+                                                ? Player.PlayerIntellegenceNames.Human
+                                                : Player.PlayerIntellegenceNames.Computer;
         }
 
         /// <summary>
@@ -2905,10 +2905,10 @@ namespace SharpChess
         /// </param>
         private void frmMain_Load(object sender, EventArgs e)
         {
-            Game.PlayerWhite.MoveConsidered += this.Player_MoveConsidered;
-            Game.PlayerBlack.MoveConsidered += this.Player_MoveConsidered;
-            Game.PlayerWhite.ThinkingBeginning += this.Player_ThinkingBeginning;
-            Game.PlayerBlack.ThinkingBeginning += this.Player_ThinkingBeginning;
+            Game.PlayerWhite.Brain.MoveConsideredEvent += this.Player_MoveConsidered;
+            Game.PlayerBlack.Brain.MoveConsideredEvent += this.Player_MoveConsidered;
+            Game.PlayerWhite.Brain.ThinkingBeginningEvent += this.Player_ThinkingBeginning;
+            Game.PlayerBlack.Brain.ThinkingBeginningEvent += this.Player_ThinkingBeginning;
 
             Game.BoardPositionChanged += this.Game_BoardPositionChanged;
             Game.GamePaused += this.RenderBoard;
@@ -3371,7 +3371,7 @@ namespace SharpChess
             this.m_blnIsLeftMouseButtonDown = true;
             this.m_blnInMouseDown = true;
 
-            if (Game.PlayerToPlay.IsThinking && !Game.PlayerToPlay.IsPondering)
+            if (Game.PlayerToPlay.Brain.IsThinking && !Game.PlayerToPlay.Brain.IsPondering)
             {
                 return;
             }

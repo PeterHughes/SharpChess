@@ -128,7 +128,7 @@ namespace SharpChess.Model.AI
         /// </returns>
         public static Move SuggestRandomMove(Player player)
         {
-            Hashtable hashtable = player.Colour == Player.ColourNames.White ? HashtableWhite : HashtableBlack;
+            Hashtable hashtable = player.Colour == Player.PlayerColourNames.White ? HashtableWhite : HashtableBlack;
             if (hashtable.ContainsKey(Board.HashCodeA))
             {
                 Moves moves = (Moves)hashtable[Board.HashCodeA];
@@ -173,7 +173,7 @@ namespace SharpChess.Model.AI
         private static void BuildHashtable(XmlElement xmlnodeParent, Player player)
         {
             Moves moves;
-            Hashtable hashtable = player.Colour == Player.ColourNames.White ? HashtableWhite : HashtableBlack;
+            Hashtable hashtable = player.Colour == Player.PlayerColourNames.White ? HashtableWhite : HashtableBlack;
 
             if (!hashtable.ContainsKey(Board.HashCodeA))
             {
@@ -190,7 +190,7 @@ namespace SharpChess.Model.AI
                 Move moveThis = Board.GetSquare(xmlnodeMove.GetAttribute("f")).Piece.Move(Move.MoveNameFromString(xmlnodeMove.GetAttribute("n")), Board.GetSquare(xmlnodeMove.GetAttribute("t")));
                 moveThis.Score = xmlnodeMove.ChildNodes.Count;
                 moves.Add(moveThis);
-                BuildHashtable(xmlnodeMove, player.OtherPlayer);
+                BuildHashtable(xmlnodeMove, player.OpposingPlayer);
                 Move.Undo(moveThis);
             }
         }

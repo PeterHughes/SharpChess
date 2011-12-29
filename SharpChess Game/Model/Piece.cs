@@ -581,7 +581,7 @@ namespace SharpChess.Model
         /// </summary>
         public void Capture()
         {
-            this.Player.OtherPlayer.CapturedEnemyPieces.Add(this);
+            this.Player.OpposingPlayer.CapturedEnemyPieces.Add(this);
             this.Player.Pieces.Remove(this);
             this.Square.Piece = null;
             this.IsInPlay = false;
@@ -790,7 +790,7 @@ namespace SharpChess.Model
             switch (moveName)
             {
                 case Model.Move.MoveNames.CastleKingSide:
-                    pieceRook = move.Piece.Player.Colour == Player.ColourNames.White
+                    pieceRook = move.Piece.Player.Colour == Player.PlayerColourNames.White
                                     ? Board.GetPiece(7, 0)
                                     : Board.GetPiece(7, 7);
                     Board.HashCodeA ^= pieceRook.HashCodeA;
@@ -806,7 +806,7 @@ namespace SharpChess.Model
                     break;
 
                 case Model.Move.MoveNames.CastleQueenSide:
-                    pieceRook = move.Piece.Player.Colour == Player.ColourNames.White
+                    pieceRook = move.Piece.Player.Colour == Player.PlayerColourNames.White
                                     ? Board.GetPiece(0, 0)
                                     : Board.GetPiece(0, 7);
                     Board.HashCodeA ^= pieceRook.HashCodeA;
@@ -857,7 +857,7 @@ namespace SharpChess.Model
             }
 
             move.IsInCheck = move.Piece.Player.IsInCheck;
-            move.IsEnemyInCheck = move.Piece.Player.OtherPlayer.IsInCheck;
+            move.IsEnemyInCheck = move.Piece.Player.OpposingPlayer.IsInCheck;
 
             move.HashCodeA = Board.HashCodeA;
             move.HashCodeB = Board.HashCodeB;
@@ -932,8 +932,8 @@ namespace SharpChess.Model
         /// </returns>
         public int TaxiCabDistanceToEnemyKingPenalty()
         {
-            return Math.Abs(this.Square.Rank - this.Player.OtherPlayer.King.Square.Rank)
-                   + Math.Abs(this.Square.File - this.Player.OtherPlayer.King.Square.File);
+            return Math.Abs(this.Square.Rank - this.Player.OpposingPlayer.King.Square.Rank)
+                   + Math.Abs(this.Square.File - this.Player.OpposingPlayer.King.Square.File);
         }
 
         /// <summary>
@@ -945,7 +945,7 @@ namespace SharpChess.Model
         public void Uncapture(int ordinal)
         {
             this.Player.Pieces.Insert(ordinal, this);
-            this.Player.OtherPlayer.CapturedEnemyPieces.Remove(this);
+            this.Player.OpposingPlayer.CapturedEnemyPieces.Remove(this);
             this.IsInPlay = true;
             if (this.Name == PieceNames.Pawn)
             {

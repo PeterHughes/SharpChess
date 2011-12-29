@@ -100,7 +100,7 @@ namespace SharpChess.Model
         {
             get
             {
-                return this.Base.Player.Colour == Player.ColourNames.White ? 7 : 6;
+                return this.Base.Player.Colour == Player.PlayerColourNames.White ? 7 : 6;
             }
         }
 

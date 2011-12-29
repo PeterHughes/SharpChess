@@ -118,7 +118,7 @@ namespace SharpChess.Model.AI
         {
             fixed (HashEntry* phashBase = &hashTableEntries[0])
             {
-                if (player.Colour == Player.ColourNames.Black)
+                if (player.Colour == Player.PlayerColourNames.Black)
                 {
                     hashCodeA |= 0x1;
                     hashCodeB |= 0x1;

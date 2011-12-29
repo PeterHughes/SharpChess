@@ -174,7 +174,7 @@ namespace SharpChess.Model.AI
         /// <returns>
         /// Best move, or null.
         /// </returns>
-        public static unsafe Move ProbeForBestMove(ulong hashCodeA, ulong hashCodeB, Player.ColourNames colour)
+        public static unsafe Move ProbeForBestMove(ulong hashCodeA, ulong hashCodeB, Player.PlayerColourNames colour)
         {
             fixed (HashEntry* phashBase = &hashTableEntries[0])
             {
@@ -200,7 +200,7 @@ namespace SharpChess.Model.AI
 
                 if (phashEntry->HashCodeA == hashCodeA && phashEntry->HashCodeB == hashCodeB)
                 {
-                    if (colour == Player.ColourNames.White)
+                    if (colour == Player.PlayerColourNames.White)
                     {
                         if (phashEntry->WhiteFrom >= 0)
                         {
@@ -263,7 +263,7 @@ namespace SharpChess.Model.AI
         /// The positional score.
         /// </returns>
         public static unsafe int ProbeHash(
-            ulong hashCodeA, ulong hashCodeB, int depth, int alpha, int beta, Player.ColourNames colour)
+            ulong hashCodeA, ulong hashCodeB, int depth, int alpha, int beta, Player.PlayerColourNames colour)
         {
             Probes++;
 
@@ -359,7 +359,7 @@ namespace SharpChess.Model.AI
             int from, 
             int to, 
             Move.MoveNames moveName, 
-            Player.ColourNames colour)
+            Player.PlayerColourNames colour)
         {
             Writes++;
             fixed (HashEntry* phashBase = &hashTableEntries[0])
@@ -403,7 +403,7 @@ namespace SharpChess.Model.AI
                 phashEntry->Colour = colour;
                 if (from > -1)
                 {
-                    if (colour == Player.ColourNames.White)
+                    if (colour == Player.PlayerColourNames.White)
                     {
                         phashEntry->WhiteMoveName = moveName;
                         phashEntry->WhiteFrom = (sbyte)from;
@@ -458,7 +458,7 @@ namespace SharpChess.Model.AI
             /// <summary>
             ///   Player colour.
             /// </summary>
-            public Player.ColourNames Colour;
+            public Player.PlayerColourNames Colour;
 
             /// <summary>
             ///   Search depth.

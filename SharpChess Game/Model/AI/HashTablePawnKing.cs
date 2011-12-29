@@ -142,9 +142,9 @@ namespace SharpChess.Model.AI
         /// <returns>
         /// Pawn and king specific score for the specified position.
         /// </returns>
-        public static unsafe int ProbeHash(ulong hashCodeA, ulong hashCodeB, Player.ColourNames colour)
+        public static unsafe int ProbeHash(ulong hashCodeA, ulong hashCodeB, Player.PlayerColourNames colour)
         {
-            if (colour == Player.ColourNames.Black)
+            if (colour == Player.PlayerColourNames.Black)
             {
                 hashCodeA |= 0x1;
                 hashCodeB |= 0x1;
@@ -187,9 +187,9 @@ namespace SharpChess.Model.AI
         /// <param name="colour">
         /// Player colour.
         /// </param>
-        public static unsafe void RecordHash(ulong hashCodeA, ulong hashCodeB, int val, Player.ColourNames colour)
+        public static unsafe void RecordHash(ulong hashCodeA, ulong hashCodeB, int val, Player.PlayerColourNames colour)
         {
-            if (colour == Player.ColourNames.Black)
+            if (colour == Player.PlayerColourNames.Black)
             {
                 hashCodeA |= 0x1;
                 hashCodeB |= 0x1;

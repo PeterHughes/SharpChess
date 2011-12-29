@@ -107,7 +107,7 @@ namespace SharpChess.Model
                 }
 
                 // Rook is still there i.e. hasnt been taken
-                Piece pieceRook = this.Base.Player.Colour == Player.ColourNames.White ? Board.GetPiece(7, 0) : Board.GetPiece(7, 7);
+                Piece pieceRook = this.Base.Player.Colour == Player.PlayerColourNames.White ? Board.GetPiece(7, 0) : Board.GetPiece(7, 7);
                 if (pieceRook == null || pieceRook.Name != Piece.PieceNames.Rook || pieceRook.Player.Colour != this.Base.Player.Colour)
                 {
                     return false;
@@ -142,12 +142,12 @@ namespace SharpChess.Model
                 }
 
                 // The king does not move over a square that is attacked by an enemy piece during the castling move
-                if (Board.GetSquare(this.Base.Square.Ordinal + 1).PlayerCanMoveToThisSquare(this.Base.Player.OtherPlayer))
+                if (Board.GetSquare(this.Base.Square.Ordinal + 1).PlayerCanMoveToThisSquare(this.Base.Player.OpposingPlayer))
                 {
                     return false;
                 }
 
-                if (Board.GetSquare(this.Base.Square.Ordinal + 2).PlayerCanMoveToThisSquare(this.Base.Player.OtherPlayer))
+                if (Board.GetSquare(this.Base.Square.Ordinal + 2).PlayerCanMoveToThisSquare(this.Base.Player.OpposingPlayer))
                 {
                     return false;
                 }
@@ -170,7 +170,7 @@ namespace SharpChess.Model
                 }
 
                 // Rook is still there i.e. hasnt been taken
-                Piece pieceRook = this.Base.Player.Colour == Player.ColourNames.White ? Board.GetPiece(0, 0) : Board.GetPiece(0, 7);
+                Piece pieceRook = this.Base.Player.Colour == Player.PlayerColourNames.White ? Board.GetPiece(0, 0) : Board.GetPiece(0, 7);
                 if (pieceRook == null || pieceRook.Name != Piece.PieceNames.Rook || pieceRook.Player.Colour != this.Base.Player.Colour)
                 {
                     return false;
@@ -210,12 +210,12 @@ namespace SharpChess.Model
                 }
 
                 // The king does not move over a square that is attacked by an enemy piece during the castling move
-                if (Board.GetSquare(this.Base.Square.Ordinal - 1).PlayerCanMoveToThisSquare(this.Base.Player.OtherPlayer))
+                if (Board.GetSquare(this.Base.Square.Ordinal - 1).PlayerCanMoveToThisSquare(this.Base.Player.OpposingPlayer))
                 {
                     return false;
                 }
 
-                if (Board.GetSquare(this.Base.Square.Ordinal - 2).PlayerCanMoveToThisSquare(this.Base.Player.OtherPlayer))
+                if (Board.GetSquare(this.Base.Square.Ordinal - 2).PlayerCanMoveToThisSquare(this.Base.Player.OpposingPlayer))
                 {
                     return false;
                 }
@@ -231,7 +231,7 @@ namespace SharpChess.Model
         {
             get
             {
-                return this.Base.Player.Colour == Player.ColourNames.White ? 5 : 4;
+                return this.Base.Player.Colour == Player.PlayerColourNames.White ? 5 : 4;
             }
         }
 
@@ -266,7 +266,7 @@ namespace SharpChess.Model
             {
                 int intPoints = 0;
 
-                if (Game.Stage != Game.GameStageNames.Opening && this.Base.Player.OtherPlayer.HasPieceName(Piece.PieceNames.Queen))
+                if (Game.Stage != Game.GameStageNames.Opening && this.Base.Player.OpposingPlayer.HasPieceName(Piece.PieceNames.Queen))
                 {
                     // Penalty for not having pawn directly in front
                     Piece piece = Board.GetPiece(this.Base.Square.Ordinal + this.Base.Player.PawnForwardOffset);
@@ -407,7 +407,7 @@ namespace SharpChess.Model
         /// </returns>
         public bool DetermineCheckStatus()
         {
-            return this.Base.Square.PlayerCanMoveToThisSquare(this.Base.Player.OtherPlayer);
+            return this.Base.Square.PlayerCanMoveToThisSquare(this.Base.Player.OpposingPlayer);
         }
 
         /// <summary>

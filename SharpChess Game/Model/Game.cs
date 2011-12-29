@@ -79,8 +79,8 @@ namespace SharpChess.Model
             Board.EstablishHashKey();
             OpeningBookSimple.Initialise();
 
-            PlayerWhite.ReadyToMakeMove += PlayerReadyToMakeMove;
-            PlayerBlack.ReadyToMakeMove += PlayerReadyToMakeMove;
+            PlayerWhite.Brain.ReadyToMakeMoveEvent += PlayerReadyToMakeMove;
+            PlayerBlack.Brain.ReadyToMakeMoveEvent += PlayerReadyToMakeMove;
 
             RegistryKey registryKeySoftware = Registry.CurrentUser.OpenSubKey("Software", true);
             if (registryKeySoftware != null)
@@ -525,7 +525,7 @@ namespace SharpChess.Model
         public static void PausePlay()
         {
             PlayerToPlay.Clock.Stop();
-            PlayerToPlay.ForceImmediateMove();
+            PlayerToPlay.Brain.ForceImmediateMove();
             GamePaused();
         }
 
@@ -564,7 +564,7 @@ namespace SharpChess.Model
         {
             PlayerToPlay.Clock.Start();
             GameResumed();
-            if (PlayerToPlay.Intellegence == Player.IntellegenceNames.Computer)
+            if (PlayerToPlay.Intellegence == Player.PlayerIntellegenceNames.Computer)
             {
                 MakeNextComputerMove();
             }
@@ -589,17 +589,17 @@ namespace SharpChess.Model
                 return;
             }
 
-            if (PlayerWhite.Intellegence == Player.IntellegenceNames.Computer
-                && PlayerBlack.Intellegence == Player.IntellegenceNames.Computer)
+            if (PlayerWhite.Intellegence == Player.PlayerIntellegenceNames.Computer
+                && PlayerBlack.Intellegence == Player.PlayerIntellegenceNames.Computer)
             {
                 return;
             }
 
-            if (PlayerToPlay.OtherPlayer.Intellegence == Player.IntellegenceNames.Computer)
+            if (PlayerToPlay.OpposingPlayer.Intellegence == Player.PlayerIntellegenceNames.Computer)
             {
-                if (!PlayerToPlay.IsPondering)
+                if (!PlayerToPlay.Brain.IsPondering)
                 {
-                    PlayerToPlay.StartPondering();
+                    PlayerToPlay.Brain.StartPondering();
                 }
             }
         }
@@ -652,13 +652,13 @@ namespace SharpChess.Model
         /// </summary>
         public static void SuspendPondering()
         {
-            if (PlayerToPlay.IsPondering)
+            if (PlayerToPlay.Brain.IsPondering)
             {
-                PlayerToPlay.ForceImmediateMove();
+                PlayerToPlay.Brain.ForceImmediateMove();
             }
-            else if (PlayerToPlay.IsThinking)
+            else if (PlayerToPlay.Brain.IsThinking)
             {
-                PlayerToPlay.ForceImmediateMove();
+                PlayerToPlay.Brain.ForceImmediateMove();
                 UndoMove();
             }
         }
@@ -671,8 +671,8 @@ namespace SharpChess.Model
             WinBoard.StopListener();
 
             SuspendPondering();
-            PlayerWhite.AbortThinking();
-            PlayerBlack.AbortThinking();
+            PlayerWhite.Brain.AbortThinking();
+            PlayerBlack.Brain.AbortThinking();
 
             RegistryKey registryKeySoftware = Registry.CurrentUser.OpenSubKey("Software", true);
             if (registryKeySoftware != null)
@@ -760,14 +760,14 @@ namespace SharpChess.Model
         /// </summary>
         private static void CheckIfAutoNextMove()
         {
-            if (PlayerWhite.Intellegence == Player.IntellegenceNames.Computer
-                && PlayerBlack.Intellegence == Player.IntellegenceNames.Computer)
+            if (PlayerWhite.Intellegence == Player.PlayerIntellegenceNames.Computer
+                && PlayerBlack.Intellegence == Player.PlayerIntellegenceNames.Computer)
             {
                 // Dont want an infinate loop of Computer moves
                 return;
             }
 
-            if (PlayerToPlay.Intellegence == Player.IntellegenceNames.Computer)
+            if (PlayerToPlay.Intellegence == Player.PlayerIntellegenceNames.Computer)
             {
                 if (PlayerToPlay.CanMove)
                 {
@@ -813,15 +813,15 @@ namespace SharpChess.Model
             if (xmlnodeGame.GetAttribute("WhitePlayer") != string.Empty)
             {
                 PlayerWhite.Intellegence = xmlnodeGame.GetAttribute("WhitePlayer") == "Human"
-                                               ? Player.IntellegenceNames.Human
-                                               : Player.IntellegenceNames.Computer;
+                                               ? Player.PlayerIntellegenceNames.Human
+                                               : Player.PlayerIntellegenceNames.Computer;
             }
 
             if (xmlnodeGame.GetAttribute("BlackPlayer") != string.Empty)
             {
                 PlayerBlack.Intellegence = xmlnodeGame.GetAttribute("BlackPlayer") == "Human"
-                                               ? Player.IntellegenceNames.Human
-                                               : Player.IntellegenceNames.Computer;
+                                               ? Player.PlayerIntellegenceNames.Human
+                                               : Player.PlayerIntellegenceNames.Computer;
             }
 
             if (xmlnodeGame.GetAttribute("BoardOrientation") != string.Empty)
@@ -939,38 +939,38 @@ namespace SharpChess.Model
         {
             MoveRedoList.Clear();
             Move move = piece.Move(moveName, square);
-            move.EnemyStatus = move.Piece.Player.OtherPlayer.Status;
+            move.EnemyStatus = move.Piece.Player.OpposingPlayer.Status;
             PlayerToPlay.Clock.Stop();
             MoveHistory.Last.TimeStamp = PlayerToPlay.Clock.TimeElapsed;
-            if (PlayerToPlay.Intellegence == Player.IntellegenceNames.Computer)
+            if (PlayerToPlay.Intellegence == Player.PlayerIntellegenceNames.Computer)
             {
                 WinBoard.SendMove(move);
-                if (!PlayerToPlay.OtherPlayer.CanMove)
+                if (!PlayerToPlay.OpposingPlayer.CanMove)
                 {
-                    if (PlayerToPlay.OtherPlayer.IsInCheckMate)
+                    if (PlayerToPlay.OpposingPlayer.IsInCheckMate)
                     {
                         WinBoard.SendCheckMate();
                     }
-                    else if (!PlayerToPlay.OtherPlayer.IsInCheck)
+                    else if (!PlayerToPlay.OpposingPlayer.IsInCheck)
                     {
                         WinBoard.SendCheckStaleMate();
                     }
                 }
-                else if (PlayerToPlay.OtherPlayer.CanClaimThreeMoveRepetitionDraw)
+                else if (PlayerToPlay.OpposingPlayer.CanClaimThreeMoveRepetitionDraw)
                 {
                     WinBoard.SendDrawByRepetition();
                 }
-                else if (PlayerToPlay.OtherPlayer.CanClaimFiftyMoveDraw)
+                else if (PlayerToPlay.OpposingPlayer.CanClaimFiftyMoveDraw)
                 {
                     WinBoard.SendDrawByFiftyMoveRule();
                 }
-                else if (PlayerToPlay.OtherPlayer.CanClaimInsufficientMaterialDraw)
+                else if (PlayerToPlay.OpposingPlayer.CanClaimInsufficientMaterialDraw)
                 {
                     WinBoard.SendDrawByInsufficientMaterial();
                 }
             }
 
-            PlayerToPlay = PlayerToPlay.OtherPlayer;
+            PlayerToPlay = PlayerToPlay.OpposingPlayer;
             PlayerToPlay.Clock.Start();
         }
 
@@ -981,7 +981,7 @@ namespace SharpChess.Model
         {
             if (PlayerToPlay.CanMove)
             {
-                PlayerToPlay.StartThinking();
+                PlayerToPlay.Brain.StartThinking();
             }
         }
 
@@ -1019,7 +1019,7 @@ namespace SharpChess.Model
         }
 
         /// <summary>
-        /// Called when the com[uter has finished thinking, and is ready to make its move.
+        /// Called when the computer has finished thinking, and is ready to make its move.
         /// </summary>
         /// <exception cref="ApplicationException">
         /// Raised when principal variation is empty.
@@ -1027,9 +1027,9 @@ namespace SharpChess.Model
         private static void PlayerReadyToMakeMove()
         {
             Move move;
-            if (PlayerToPlay.PrincipalVariation.Count > 0)
+            if (PlayerToPlay.Brain.PrincipalVariation.Count > 0)
             {
-                move = PlayerToPlay.PrincipalVariation[0];
+                move = PlayerToPlay.Brain.PrincipalVariation[0];
             }
             else
             {
@@ -1054,8 +1054,8 @@ namespace SharpChess.Model
                 moveRedo.Piece.Move(moveRedo.Name, moveRedo.To);
                 PlayerToPlay.Clock.TimeElapsed = moveRedo.TimeStamp;
                 MoveHistory.Last.TimeStamp = moveRedo.TimeStamp;
-                MoveHistory.Last.EnemyStatus = moveRedo.Piece.Player.OtherPlayer.Status; // 14Mar05 Nimzo
-                PlayerToPlay = PlayerToPlay.OtherPlayer;
+                MoveHistory.Last.EnemyStatus = moveRedo.Piece.Player.OpposingPlayer.Status; // 14Mar05 Nimzo
+                PlayerToPlay = PlayerToPlay.OpposingPlayer;
                 MoveRedoList.RemoveLast();
                 PlayerToPlay.Clock.Start();
             }
@@ -1085,9 +1085,9 @@ namespace SharpChess.Model
             xmlnodeGame.SetAttribute("FEN", FenStartPosition == Fen.GameStartPosition ? string.Empty : FenStartPosition);
             xmlnodeGame.SetAttribute("TurnNo", TurnNo.ToString());
             xmlnodeGame.SetAttribute(
-                "WhitePlayer", PlayerWhite.Intellegence == Player.IntellegenceNames.Human ? "Human" : "Computer");
+                "WhitePlayer", PlayerWhite.Intellegence == Player.PlayerIntellegenceNames.Human ? "Human" : "Computer");
             xmlnodeGame.SetAttribute(
-                "BlackPlayer", PlayerBlack.Intellegence == Player.IntellegenceNames.Human ? "Human" : "Computer");
+                "BlackPlayer", PlayerBlack.Intellegence == Player.PlayerIntellegenceNames.Human ? "Human" : "Computer");
             xmlnodeGame.SetAttribute(
                 "BoardOrientation", Board.Orientation == Board.OrientationNames.White ? "White" : "Black");
             xmlnodeGame.SetAttribute("Version", Application.ProductVersion);
@@ -1142,7 +1142,7 @@ namespace SharpChess.Model
                 PlayerToPlay.Clock.Revert();
                 MoveRedoList.Add(moveUndo);
                 Move.Undo(moveUndo);
-                PlayerToPlay = PlayerToPlay.OtherPlayer;
+                PlayerToPlay = PlayerToPlay.OpposingPlayer;
                 if (MoveHistory.Count > 1)
                 {
                     Move movePenultimate = MoveHistory[MoveHistory.Count - 2];
