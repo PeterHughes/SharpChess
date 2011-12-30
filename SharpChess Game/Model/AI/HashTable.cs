@@ -269,6 +269,8 @@ namespace SharpChess.Model.AI
 
             fixed (HashEntry* phashBase = &hashTableEntries[0])
             {
+                //return NotFoundInHashTable; // TODO remove this
+
                 HashEntry* phashEntry = phashBase;
                 phashEntry += (uint)(hashCodeA % hashTableSize);
 

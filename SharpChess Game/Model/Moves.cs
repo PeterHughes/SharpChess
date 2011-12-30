@@ -83,10 +83,15 @@ namespace SharpChess.Model
             /// <summary>
             /// Recaptures only.
             /// </summary>
-            Recaptures, 
+            Recaptures,
 
             /// <summary>
-            /// Captures checks and promotions.
+            /// Captures and promotions.
+            /// </summary>
+            CapturesPromotions,
+
+            /// <summary>
+            /// Captures, checks and promotions.
             /// </summary>
             CapturesChecksPromotions
         }

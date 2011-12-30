@@ -94,7 +94,9 @@ namespace SharpChess_Tests
 
             // Assert.IsTrue(positions == 52931); Before finding pawn king hash score b-u-g.
             // Assert.IsTrue(positions == 94138); Before all captures in quiesence.
-            Assert.IsTrue(positions == 238012);
+            // Assert.IsTrue(positions == 89310); Before reinstating extensions/reductions
+            // Assert.IsTrue(positions == 58090); Dont reduce PV node.
+            Assert.IsTrue(positions == 58185);
         }
 
         #endregion

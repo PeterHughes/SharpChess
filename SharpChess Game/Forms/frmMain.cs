@@ -932,7 +932,7 @@ namespace SharpChess
             if (Game.MoveHistory.Count > 0)
             {
                 Move move = Game.MoveHistory.Last;
-                this.sbr.Text += "  Moved: " + move.Piece.Name.ToString() + " " + move.From.Name + "-" + move.To.Name
+                this.sbr.Text += "  Moved: " + move.Piece.Name.ToString() //+ " " + move.From.Name + "-" + move.To.Name
                                  + " " + move.Description;
             }
 

@@ -98,35 +98,38 @@ namespace SharpChess_Tests
         public void Ecm007()
         {
             this.BestMoveTest("3rr1k1/pb3pp1/1p1q1b1p/1P2NQ2/3P4/P1NB4/3K1P1P/2R3R1 w", "g1", "g7", 6);
-            // Nodes: 347,941
+            // Nodes: 525,713
+            // 678,000
         }
 
+        /*
         [TestMethod]
         public void Ecm009()
         {
             this.BestMoveTest("3r4/1b2k3/1pq1pp2/p3n1pr/2P5/5PPN/PP1N1QP1/R2R2K1 b", "h5", "h3", 8);
             // Nodes: 2,332,122
         }
+         * */
 
         [TestMethod]
         public void Ecm013()
         {
             this.BestMoveTest("rnb2rk1/pp2np1p/2p2q1b/8/2BPPN2/2P2Q2/PP4PP/R1B2RK1 w", "f4", "d5", 6);
-            // Nodes: 388,777
+            // Nodes: 235,000
         }
 
         [TestMethod]
         public void Ecm015()
         {
             this.BestMoveTest("r3kb1r/pp2pppp/3q4/3Pn3/6b1/2N1BN2/PP3PPP/R2QKB1R w KQkq", "f3", "e5", 6);
-            // Nodes: 288,261 
+            // Nodes: 374,000 
         }
 
         [TestMethod]
         public void Ecm017()
         {
             this.BestMoveTest("r1b1k3/5p1p/p1p5/3np3/1b2N3/4B3/PPP1BPrP/2KR3R w q", "d1", "d5", 7);
-            // Nodes: 482,422
+            // Nodes: 583,000
         }
 
         [TestMethod]
@@ -140,7 +143,7 @@ namespace SharpChess_Tests
         public void Ecm022()
         {
             this.BestMoveTest("r1r3k1/p3qpp1/b1P4p/3p4/3Nn3/4P3/P1Q2PPP/1BR1K2R b K", "e7", "b4", 2);
-            // Nodes: 398 
+            // Nodes: 1,269
         }
 
         /// <summary>
@@ -150,7 +153,7 @@ namespace SharpChess_Tests
         public void Ecm026()
         {
             this.BestMoveTest("r1b5/4k3/p7/3p1n2/3Bp3/2P2r1P/PPBK1P2/4R2R w", "d4", "c5", 2);
-            // Nodes: 462 
+            // Nodes: 917 
         }
 
         /// <summary>
@@ -160,7 +163,7 @@ namespace SharpChess_Tests
         public void Ecm027()
         {
             this.BestMoveTest("r4rk1/1b3Npp/p7/1p3Q2/3P4/1B2q3/P5PP/3n1R1K b", "b7", "g2", 3);
-            // Nodes: 8853
+            // Nodes: 11,298
         }
 
         [TestMethod]
@@ -178,33 +181,29 @@ namespace SharpChess_Tests
         public void Zugzwang_001()
         {
             this.BestMoveTest("8/8/p1p5/1p5p/1P5p/8/PPP2K1p/4R1rk w - - 0 1", "e1", "f1", 8);
-            // Nodes: 134,861
+            // Nodes: 145,000
         }
 
         [TestMethod]
         public void Zugzwang_002()
         {
             this.BestMoveTest("1q1k4/2Rr4/8/2Q3K1/8/8/8/8 w - - 0 1", "g5", "h6", 5);
-            // Nodes: 36,569
+            // Nodes: 37,500
         }
 
-        /*
         [TestMethod]
         public void Zugzwang_003()
         {
-            this.BestMoveTest("7k/5K2/5P1p/3p4/6P1/3p4/8/8 w - - 0 1", "g4", "g5", 99);
+            this.BestMoveTest("7k/5K2/5P1p/3p4/6P1/3p4/8/8 w - - 0 1", "g4", "g5", 10);
             // Nodes: 
         }
-         * */
 
-        /*
         [TestMethod]
         public void Zugzwang_004()
         {
             this.BestMoveTest("8/6B1/p5p1/Pp4kp/1P5r/5P1Q/4q1PK/8 w - - 0 32", "g5", "h6", 5);
             // Nodes: 
         }
-        */
 
         [TestMethod]
         public void Zugzwang_005()
@@ -221,7 +220,7 @@ namespace SharpChess_Tests
         [TestMethod]
         public void Sbd_001()
         {
-            this.BestMoveTest("1qr3k1/p2nbppp/bp2p3/3p4/3P4/1P2PNP1/P2Q1PBP/1N2R1K1 b", "b8", "c7", 5);
+            this.BestMoveTest("1qr3k1/p2nbppp/bp2p3/3p4/3P4/1P2PNP1/P2Q1PBP/1N2R1K1 b", "b8", "c7", 5); // best 5
             // Nodes: 
         }
 
@@ -229,14 +228,14 @@ namespace SharpChess_Tests
         public void Sbd_003()
         {
             this.BestMoveTest("2b1k2r/2p2ppp/1qp4n/7B/1p2P3/5Q2/PPPr2PP/R2N1R1K b k", "e8", "g8", 4);
-            // Nodes: 
+            // Nodes: 15,769
         }
 
         [TestMethod]
         public void Sbd_004()
         {
             this.BestMoveTest("2b5/1p4k1/p2R2P1/4Np2/1P3Pp1/1r6/5K2/8 w", "d6", "d8", 7);
-            // Nodes: 
+            // Nodes: 234,270
         }      
         
         #endregion

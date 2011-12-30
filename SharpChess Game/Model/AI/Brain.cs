@@ -487,13 +487,6 @@ namespace SharpChess.Model.AI
 
                 int score = this.Search.IterativeDeepeningSearch(
                     this.MyPlayer, this.PrincipalVariation, this.ThinkingTimeAllotted, this.ThinkingTimeMaxAllowed);
-
-                WinBoard.SendThinking(
-                    this.Search.SearchDepth, 
-                    score, 
-                    DateTime.Now - player.Clock.TurnStartTime, 
-                    this.Search.PositionsSearched, 
-                    this.PrincipalVariationText);
             }
             catch (ForceImmediateMoveException x)
             {

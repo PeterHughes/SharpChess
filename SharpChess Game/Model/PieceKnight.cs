@@ -236,7 +236,7 @@ namespace SharpChess.Model
 
                     break;
 
-                case Moves.MoveListNames.CapturesChecksPromotions:
+                case Moves.MoveListNames.CapturesPromotions:
                     square = Board.GetSquare(this.Base.Square.Ordinal + 33);
                     if (square != null && (square.Piece != null && (square.Piece.Player.Colour != this.Base.Player.Colour && square.Piece.IsCapturable)))
                     {
