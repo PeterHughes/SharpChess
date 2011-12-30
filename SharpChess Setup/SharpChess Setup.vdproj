@@ -56,6 +56,19 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.0,Profile=Client"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4 Client Profile (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.0,Profile=Client"
+                    }
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Windows.Installer.3.1"
+                    {
+                    "Name" = "8:Windows Installer 3.1"
+                    "ProductCode" = "8:Microsoft.Windows.Installer.3.1"
+                    }
+                }
             }
         }
         "Release"
@@ -209,20 +222,20 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:SharpChess 2.6.1"
-        "ProductCode" = "8:{1ED78A3F-C6A4-4ADF-8734-3CFCF5723F5C}"
-        "PackageCode" = "8:{917220CA-34F0-467F-96EA-A9C333CFD44F}"
+        "ProductName" = "8:SharpChess 2.6.2"
+        "ProductCode" = "8:{B5CB41C3-DB8F-438E-A7C0-8F72D2FF32AC}"
+        "PackageCode" = "8:{905E8E08-4B31-4CF9-99C3-39A2ABBFA5A8}"
         "UpgradeCode" = "8:{0D95FE29-AB20-45A4-8A09-FA93F828D577}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:2.6.1"
+        "ProductVersion" = "8:2.6.2"
         "Manufacturer" = "8:SharpChess.com"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://sharpchess.com"
-        "Title" = "8:Setup SharpChess 2.6.1"
+        "Title" = "8:Setup SharpChess 2.6.2"
         "Subject" = "8:SharpChess is a free computer application that enables you to play chess against the computer."
         "ARPCONTACT" = "8:Peter Hughes"
         "Keywords" = "8:SharpChess"
