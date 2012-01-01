@@ -486,6 +486,7 @@ namespace SharpChess.Model
         {
             get
             {
+                // return this.Square.Value;
                 return this.Top.PositionalPoints;
             }
         }

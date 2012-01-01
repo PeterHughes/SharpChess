@@ -27,8 +27,6 @@ namespace SharpChess.Model
 {
     #region Using
 
-    using System.Linq;
-
     using SharpChess.Model.AI;
 
     #endregion
@@ -366,7 +364,12 @@ namespace SharpChess.Model
         {
             get
             {
-                return this.Pieces.Cast<Piece>().Sum(piece => piece.BasicValue);
+                int intBasicValue = 0;
+                foreach (Piece piece in this.Pieces)
+                {
+                    intBasicValue += piece.BasicValue;
+                }
+                return intBasicValue;
             }
         }
 
@@ -547,7 +550,12 @@ namespace SharpChess.Model
         {
             get
             {
-                return this.Pieces.Cast<Piece>().Sum(piece => piece.Value);
+                int intValue = 0;
+                foreach (Piece piece in this.Pieces)
+                {
+                    intValue += piece.Value;
+                }
+                return intValue;
             }
         }
 
@@ -743,7 +751,14 @@ namespace SharpChess.Model
                 return true;
             }
 
-            return this.Pieces.Cast<Piece>().Any(piece => piece.Name == piecename);
+            foreach (Piece piece in this.Pieces)
+            {
+                if (piece.Name == piecename)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         /// <summary>

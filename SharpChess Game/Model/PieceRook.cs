@@ -25,8 +25,6 @@
 
 namespace SharpChess.Model
 {
-    using System.Linq;
-
     /// <summary>
     /// The piece rook.
     /// </summary>
@@ -201,7 +199,11 @@ namespace SharpChess.Model
                 Board.LineThreatenedBy(this.Base.Player, squares, this.Base.Square, 16);
                 Board.LineThreatenedBy(this.Base.Player, squares, this.Base.Square, -16);
 
-                int intSquareValue = squares.Cast<Square>().Sum(square => SquareValues[square.Ordinal]);
+                int intSquareValue = 0;
+                foreach (Square square in squares)
+                {
+                    intSquareValue += SquareValues[square.Ordinal];
+                }
 
                 intPoints += intSquareValue >> 2;
 

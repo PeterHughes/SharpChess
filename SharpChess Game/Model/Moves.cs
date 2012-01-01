@@ -42,7 +42,7 @@ namespace SharpChess.Model
         /// <summary>
         /// The m_col moves.
         /// </summary>
-        private readonly ArrayList moves = new ArrayList(48);
+        private readonly ArrayList moves = new ArrayList(64);
 
         #endregion
 

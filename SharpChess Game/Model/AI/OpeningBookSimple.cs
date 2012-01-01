@@ -30,7 +30,6 @@ namespace SharpChess.Model.AI
 
     using System;
     using System.Collections;
-    using System.Linq;
     using System.Xml;
 
     #endregion
@@ -206,7 +205,12 @@ namespace SharpChess.Model.AI
         /// </returns>
         private static int CalculateChildNoteTotalScore(Moves moves)
         {
-            return moves.Cast<Move>().Sum(move => move.Score);
+            int intTotal = 0;
+            foreach (Move move in moves)
+            {
+                intTotal += move.Score;
+            }
+            return intTotal;
         }
 
         /// <summary>

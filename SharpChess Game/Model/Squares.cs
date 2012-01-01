@@ -41,7 +41,7 @@ namespace SharpChess.Model
         /// <summary>
         /// The m_col squares.
         /// </summary>
-        private readonly ArrayList squareList = new ArrayList(24);
+        private readonly ArrayList squareList = new ArrayList(32);
 
         #endregion
 
