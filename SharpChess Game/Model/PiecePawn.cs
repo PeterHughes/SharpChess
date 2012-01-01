@@ -368,8 +368,8 @@ namespace SharpChess.Model
                                       / Game.MaxMaterialCount;
 
                 intPoints += intAdvancementBonus;
-                    
-                    // +this.PawnForkTwoMajorPiecesBonus(); // 15Mar06 Nimzo Added pawn fork bonus
+
+                // +this.PawnForkTwoMajorPiecesBonus(); // 15Mar06 Nimzo Added pawn fork bonus
                 return intPoints;
             }
         }
