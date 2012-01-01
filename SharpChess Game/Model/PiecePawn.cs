@@ -39,12 +39,12 @@ namespace SharpChess.Model
         #region Constants and Fields
 
         /// <summary>
-        /// The pawn advancement bonus.
+        ///   The pawn advancement bonus.
         /// </summary>
         private static readonly int[] AdvancementBonus = { 0, 0, 0, 45, 75, 120, 240, 999 };
 
         /// <summary>
-        /// The pawn file bonus.
+        ///   The pawn file bonus.
         /// </summary>
         private static readonly int[] FileBonus = { 0, 6, 16, 32, 32, 16, 6, 0 };
 
@@ -68,7 +68,7 @@ namespace SharpChess.Model
         #region Public Properties
 
         /// <summary>
-        /// Gets Abbreviation.
+        ///   Gets Abbreviation.
         /// </summary>
         public string Abbreviation
         {
@@ -79,12 +79,12 @@ namespace SharpChess.Model
         }
 
         /// <summary>
-        /// Gets the base part of the piece. i.e. the bit that sits on the chess square.
+        ///   Gets the base part of the piece. i.e. the bit that sits on the chess square.
         /// </summary>
         public Piece Base { get; private set; }
 
         /// <summary>
-        /// Gets basic value of the piece. e.g. pawn = 1, bishop = 3, queen = 9
+        ///   Gets basic value of the piece. e.g. pawn = 1, bishop = 3, queen = 9
         /// </summary>
         public int BasicValue
         {
@@ -117,7 +117,7 @@ namespace SharpChess.Model
 */
 
         /// <summary>
-        /// Gets the image index for this piece. Used to determine which graphic image is displayed for thie piece.
+        ///   Gets the image index for this piece. Used to determine which graphic image is displayed for thie piece.
         /// </summary>
         public int ImageIndex
         {
@@ -128,7 +128,7 @@ namespace SharpChess.Model
         }
 
         /// <summary>
-        /// Gets a value indicating whether the piece is capturable. Kings aren't, everything else is.
+        ///   Gets a value indicating whether the piece is capturable. Kings aren't, everything else is.
         /// </summary>
         public bool IsCapturable
         {
@@ -139,7 +139,7 @@ namespace SharpChess.Model
         }
 
         /// <summary>
-        /// Gets the piece's name.
+        ///   Gets the piece's name.
         /// </summary>
         public Piece.PieceNames Name
         {
@@ -150,14 +150,13 @@ namespace SharpChess.Model
         }
 
         /// <summary>
-        /// Gets the positional points assigned to this piece.
+        ///   Gets the positional points assigned to this piece.
         /// </summary>
         public int PositionalPoints
         {
             get
             {
                 // TODO Pawn score does not encourahge movement to D4 and e4.
-
                 int intPoints = 0;
                 int intIndex;
                 Piece piece;
@@ -263,22 +262,30 @@ namespace SharpChess.Model
 
                 // Backward pawn
                 bool blnIsBackward = true;
-                if ((piece = Board.GetPiece(this.Base.Square.Ordinal - 1)) != null && piece.Name == Piece.PieceNames.Pawn && piece.Player.Colour == this.Base.Player.Colour)
+                if ((piece = Board.GetPiece(this.Base.Square.Ordinal - 1)) != null
+                    && piece.Name == Piece.PieceNames.Pawn && piece.Player.Colour == this.Base.Player.Colour)
                 {
                     blnIsBackward = false;
                 }
 
-                if (blnIsBackward && (piece = Board.GetPiece(this.Base.Square.Ordinal + 1)) != null && piece.Name == Piece.PieceNames.Pawn && piece.Player.Colour == this.Base.Player.Colour)
+                if (blnIsBackward && (piece = Board.GetPiece(this.Base.Square.Ordinal + 1)) != null
+                    && piece.Name == Piece.PieceNames.Pawn && piece.Player.Colour == this.Base.Player.Colour)
                 {
                     blnIsBackward = false;
                 }
 
-                if (blnIsBackward && (piece = Board.GetPiece(this.Base.Square.Ordinal - this.Base.Player.PawnAttackLeftOffset)) != null && piece.Name == Piece.PieceNames.Pawn && piece.Player.Colour == this.Base.Player.Colour)
+                if (blnIsBackward
+                    &&
+                    (piece = Board.GetPiece(this.Base.Square.Ordinal - this.Base.Player.PawnAttackLeftOffset)) != null
+                    && piece.Name == Piece.PieceNames.Pawn && piece.Player.Colour == this.Base.Player.Colour)
                 {
                     blnIsBackward = false;
                 }
 
-                if (blnIsBackward && (piece = Board.GetPiece(this.Base.Square.Ordinal - this.Base.Player.PawnAttackRightOffset)) != null && piece.Name == Piece.PieceNames.Pawn && piece.Player.Colour == this.Base.Player.Colour)
+                if (blnIsBackward
+                    &&
+                    (piece = Board.GetPiece(this.Base.Square.Ordinal - this.Base.Player.PawnAttackRightOffset)) != null
+                    && piece.Name == Piece.PieceNames.Pawn && piece.Player.Colour == this.Base.Player.Colour)
                 {
                     blnIsBackward = false;
                 }
@@ -294,10 +301,8 @@ namespace SharpChess.Model
                     if (this.Base.Square.File == 3 || this.Base.Square.File == 4)
                     {
                         // still at rank 2
-                        if (
-                            (this.Base.Player.Colour == Player.PlayerColourNames.White && this.Base.Square.Rank == 1)
-                            || 
-                            (this.Base.Player.Colour == Player.PlayerColourNames.Black && this.Base.Square.Rank == 6))
+                        if ((this.Base.Player.Colour == Player.PlayerColourNames.White && this.Base.Square.Rank == 1)
+                            || (this.Base.Player.Colour == Player.PlayerColourNames.Black && this.Base.Square.Rank == 6))
                         {
                             intPoints -= 200;
                         }
@@ -310,12 +315,10 @@ namespace SharpChess.Model
                     if (this.Base.Square.File == 3 || this.Base.Square.File == 4)
                     {
                         // Bonus for rank 5
-                        if (
-                            (this.Base.Player.Colour == Player.PlayerColourNames.White && this.Base.Square.Rank == 4)
-                            ||
-                            (this.Base.Player.Colour == Player.PlayerColourNames.Black && this.Base.Square.Rank == 3))
+                        if ((this.Base.Player.Colour == Player.PlayerColourNames.White && this.Base.Square.Rank == 3)
+                            || (this.Base.Player.Colour == Player.PlayerColourNames.Black && this.Base.Square.Rank == 4))
                         {
-                            intPoints -= 300;
+                            intPoints += 150;
                         }
                     }
                 }
@@ -326,7 +329,11 @@ namespace SharpChess.Model
                 intPoints += FileBonus[this.Base.Square.File];
 
                 // Advancement
-                int intAdvancementBonus = AdvancementBonus[this.Base.Player.Colour == Player.PlayerColourNames.White ? this.Base.Square.Rank : 7 - this.Base.Square.Rank];
+                int intAdvancementBonus =
+                    AdvancementBonus[
+                        this.Base.Player.Colour == Player.PlayerColourNames.White
+                            ? this.Base.Square.Rank
+                            : 7 - this.Base.Square.Rank];
 
                 // Passed Pawns
                 bool blnIsPassed = true;
@@ -335,15 +342,15 @@ namespace SharpChess.Model
                     piece = this.Base.Player.OpposingPlayer.Pieces.Item(intIndex);
                     if (piece.Name == Piece.PieceNames.Pawn)
                     {
-                        if (
-                                (
-                                    (this.Base.Player.Colour == Player.PlayerColourNames.White && piece.Square.Rank > this.Base.Square.Rank) 
-                                    || 
-                                    (this.Base.Player.Colour == Player.PlayerColourNames.Black && piece.Square.Rank < this.Base.Square.Rank)
-                                ) 
-                                && 
-                                (piece.Square.File == this.Base.Square.File || piece.Square.File == this.Base.Square.File - 1 || piece.Square.File == this.Base.Square.File + 1)
-                           )
+                        if (((this.Base.Player.Colour == Player.PlayerColourNames.White
+                              && piece.Square.Rank > this.Base.Square.Rank)
+                             ||
+                             (this.Base.Player.Colour == Player.PlayerColourNames.Black
+                              && piece.Square.Rank < this.Base.Square.Rank))
+                            &&
+                            (piece.Square.File == this.Base.Square.File
+                             || piece.Square.File == this.Base.Square.File - 1
+                             || piece.Square.File == this.Base.Square.File + 1))
                         {
                             blnIsPassed = false;
                         }
@@ -357,16 +364,18 @@ namespace SharpChess.Model
                 }
 
                 // Slowly increase advancement bonus as material drops away.
-                intAdvancementBonus = intAdvancementBonus * ((Game.MaxMaterialCount - Game.LowestMaterialCount) * 2) / Game.MaxMaterialCount;
+                intAdvancementBonus = intAdvancementBonus * ((Game.MaxMaterialCount - Game.LowestMaterialCount) * 2)
+                                      / Game.MaxMaterialCount;
 
-                intPoints += intAdvancementBonus; // +this.PawnForkTwoMajorPiecesBonus(); // 15Mar06 Nimzo Added pawn fork bonus
-
+                intPoints += intAdvancementBonus;
+                    
+                    // +this.PawnForkTwoMajorPiecesBonus(); // 15Mar06 Nimzo Added pawn fork bonus
                 return intPoints;
             }
         }
 
         /// <summary>
-        /// Gets the material value of this piece.
+        ///   Gets the material value of this piece.
         /// </summary>
         public int Value
         {
@@ -405,16 +414,16 @@ namespace SharpChess.Model
         public void GenerateLazyMoves(Moves moves, Moves.MoveListNames movesType)
         {
             // Types of promotion to generate. Removed bishop and Rook.
-            Move.MoveNames[] promotionTypes = 
-            {
-                Move.MoveNames.PawnPromotionQueen, Move.MoveNames.PawnPromotionKnight
+            Move.MoveNames[] promotionTypes = {
+                                                  Move.MoveNames.PawnPromotionQueen, Move.MoveNames.PawnPromotionKnight
 
-                // Move.MoveNames.PawnPromotionBishop, Move.MoveNames.PawnPromotionRook // Why bother?
-            };
+                                                  // Move.MoveNames.PawnPromotionBishop, Move.MoveNames.PawnPromotionRook // Why bother?
+                                              };
 
             Square square;
             bool isPromotion = (this.Base.Player.Colour == Player.PlayerColourNames.White && this.Base.Square.Rank == 6)
-                               || (this.Base.Player.Colour == Player.PlayerColourNames.Black && this.Base.Square.Rank == 1);
+                               ||
+                               (this.Base.Player.Colour == Player.PlayerColourNames.Black && this.Base.Square.Rank == 1);
 
             int intMovesToGenerate = isPromotion ? promotionTypes.Length : 1;
 
@@ -428,14 +437,14 @@ namespace SharpChess.Model
                         && square.Piece.IsCapturable)
                     {
                         moves.Add(
-                            0,
-                            0,
-                            isPromotion ? promotionTypes[intIndex] : Move.MoveNames.Standard,
-                            this.Base,
-                            this.Base.Square,
-                            square,
-                            square.Piece,
-                            0,
+                            0, 
+                            0, 
+                            isPromotion ? promotionTypes[intIndex] : Move.MoveNames.Standard, 
+                            this.Base, 
+                            this.Base.Square, 
+                            square, 
+                            square.Piece, 
+                            0, 
                             0);
                     }
                 }
@@ -447,14 +456,14 @@ namespace SharpChess.Model
                         && square.Piece.IsCapturable)
                     {
                         moves.Add(
-                            0,
-                            0,
-                            isPromotion ? promotionTypes[intIndex] : Move.MoveNames.Standard,
-                            this.Base,
-                            this.Base.Square,
-                            square,
-                            square.Piece,
-                            0,
+                            0, 
+                            0, 
+                            isPromotion ? promotionTypes[intIndex] : Move.MoveNames.Standard, 
+                            this.Base, 
+                            this.Base.Square, 
+                            square, 
+                            square.Piece, 
+                            0, 
                             0);
                     }
                 }
@@ -466,14 +475,14 @@ namespace SharpChess.Model
                         != null && square.Piece == null)
                     {
                         moves.Add(
-                            0,
-                            0,
-                            isPromotion ? promotionTypes[intIndex] : Move.MoveNames.Standard,
-                            this.Base,
-                            this.Base.Square,
-                            square,
-                            square.Piece,
-                            0,
+                            0, 
+                            0, 
+                            isPromotion ? promotionTypes[intIndex] : Move.MoveNames.Standard, 
+                            this.Base, 
+                            this.Base.Square, 
+                            square, 
+                            square.Piece, 
+                            0, 
                             0);
                     }
                 }
@@ -502,10 +511,8 @@ namespace SharpChess.Model
             }
 
             // En Passent 
-            if (
-                (this.Base.Square.Rank == 4 && this.Base.Player.Colour == Player.PlayerColourNames.White)
-                || 
-                (this.Base.Square.Rank == 3 && this.Base.Player.Colour == Player.PlayerColourNames.Black))
+            if ((this.Base.Square.Rank == 4 && this.Base.Player.Colour == Player.PlayerColourNames.White)
+                || (this.Base.Square.Rank == 3 && this.Base.Player.Colour == Player.PlayerColourNames.Black))
             {
                 Piece piecePassed;
 
@@ -536,7 +543,9 @@ namespace SharpChess.Model
         /// <summary>
         /// Calculates a bonus when the pawn folk two major pieces.
         /// </summary>
-        /// <returns>Value of the cheapest forked piece.</returns>
+        /// <returns>
+        /// Value of the cheapest forked piece.
+        /// </returns>
         private int PawnForkTwoMajorPiecesBonus()
         {
             Square squareLeft;
@@ -544,13 +553,17 @@ namespace SharpChess.Model
             if ((squareLeft = Board.GetSquare(this.Base.Square.Ordinal + this.Base.Player.PawnAttackLeftOffset)) != null)
             {
                 Piece pieceLeft = squareLeft.Piece;
-                if (pieceLeft != null && pieceLeft.Player.Colour != this.Base.Player.Colour && pieceLeft.IsCapturable && pieceLeft.Name != Piece.PieceNames.Pawn)
+                if (pieceLeft != null && pieceLeft.Player.Colour != this.Base.Player.Colour && pieceLeft.IsCapturable
+                    && pieceLeft.Name != Piece.PieceNames.Pawn)
                 {
                     Square squareRight;
-                    if ((squareRight = Board.GetSquare(this.Base.Square.Ordinal + this.Base.Player.PawnAttackRightOffset)) != null)
+                    if (
+                        (squareRight =
+                         Board.GetSquare(this.Base.Square.Ordinal + this.Base.Player.PawnAttackRightOffset)) != null)
                     {
                         Piece pieceRight = squareRight.Piece;
-                        if (pieceRight != null && pieceRight.Player.Colour != this.Base.Player.Colour && pieceRight.IsCapturable && pieceRight.Name != Piece.PieceNames.Pawn)
+                        if (pieceRight != null && pieceRight.Player.Colour != this.Base.Player.Colour
+                            && pieceRight.IsCapturable && pieceRight.Name != Piece.PieceNames.Pawn)
                         {
                             return Math.Min(pieceLeft.Value, pieceRight.Value);
                         }

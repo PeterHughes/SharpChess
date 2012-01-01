@@ -96,7 +96,8 @@ namespace SharpChess_Tests
             // Assert.IsTrue(positions == 94138); Before all captures in quiesence.
             // Assert.IsTrue(positions == 89310); Before reinstating extensions/reductions
             // Assert.IsTrue(positions == 58090); Dont reduce PV node.
-            Assert.IsTrue(positions == 58185);
+            // Assert.IsTrue(positions == 58090); Before MVV/LVA if SEE returns zero.
+            Assert.IsTrue(positions == 54573);
         }
 
         #endregion

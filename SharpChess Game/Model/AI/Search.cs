@@ -701,21 +701,13 @@ namespace SharpChess.Model.AI
                     hashType = HashTable.HashTypeNames.Beta;
                     moveBest = moveThis;
 
-                    // if (move.Score < 15000)
-                    // {
-                    History.Record(
-                        player.Colour, moveThis.From.Ordinal, moveThis.To.Ordinal, variableDepth * variableDepth);
-
-                    // 15Mar06 Nimzo Don't include captures as killer moves
-                    if ((moveThis.PieceCaptured == null)
-                        && ((parentMove == null) || (parentMove.Name != Move.MoveNames.NullMove)))
+                    if (moveThis.PieceCaptured == null)
                     {
-                        KillerMoves.RecordPossibleKillerMove(ply, moveBest);
+                        History.Record(player.Colour, moveThis.From.Ordinal, moveThis.To.Ordinal, ply * ply);
+
+                        // 15Mar06 Nimzo Don't include captures as killer moves
+                        KillerMoves.RecordPossibleKillerMove(ply, moveThis);
                     }
-
-                    // End Nimzo code
-
-                    // }
                     goto Exit;
                 }
 
@@ -925,92 +917,61 @@ namespace SharpChess.Model.AI
             {
                 // Result of Static exchange evaluation
                 move.Score += this.SEE(move) * 100000;
-
                 if (move.Score != 0)
                 {
                     return;
                 }
 
-                // "Good" capture
-                if (move.From.Piece.Name == Piece.PieceNames.Queen && move.To.Piece.Name == Piece.PieceNames.Queen)
+                // SEE is even, so instead sort by MVV/LVA
+                move.Score = (move.PieceCaptured.Value * 100) - move.Piece.Value;
+                if (move.Score != 0)
                 {
-                    move.Score += 99999;
-                    return;
-                }
-
-                if (move.From.Piece.Name == Piece.PieceNames.Rook && move.To.Piece.Name == Piece.PieceNames.Rook)
-                {
-                    move.Score += 99998;
-                    return;
-                }
-
-                if (move.From.Piece.Name == Piece.PieceNames.Knight && move.To.Piece.Name == Piece.PieceNames.Bishop)
-                {
-                    move.Score += 99997;
-                    return;
-                }
-
-                if (move.From.Piece.Name == Piece.PieceNames.Bishop && move.To.Piece.Name == Piece.PieceNames.Bishop)
-                {
-                    move.Score += 99996;
-                    return;
-                }
-
-                if (move.From.Piece.Name == Piece.PieceNames.Bishop && move.To.Piece.Name == Piece.PieceNames.Knight)
-                {
-                    move.Score += 99995;
-                    return;
-                }
-
-                if (move.From.Piece.Name == Piece.PieceNames.Pawn
-                    &&
-                    ((move.Name == Move.MoveNames.EnPassent
-                      && Board.GetPiece(move.To.Ordinal - player.PawnForwardOffset).Name == Piece.PieceNames.Pawn)
-                     || move.To.Piece.Name == Piece.PieceNames.Pawn))
-                {
-                    move.Score += 99994;
                     return;
                 }
             }
-
-            move.Score += History.Retrieve(player.Colour, move.From.Ordinal, move.To.Ordinal);
-
-            /*
-            // Move from the Principal Variation
-            if (movePv != null && Move.MovesMatch(move, movePv))
-            {
-                move.Score += 10000;
-            }
-             * */
 
             // Killer moves
             if (moveKillerA != null && Move.MovesMatch(move, moveKillerA))
             {
-                move.Score += 400;
+                move.Score += 40000;
             }
 
             /*
             if (moveKillerA2 != null && Move.MovesMatch(move, moveKillerA2))
             {
-                move.Score += 20003;
-                return;
+                move.Score += 20000;
             }
             */
+
             if (moveKillerB != null && Move.MovesMatch(move, moveKillerB))
             {
-                move.Score += 200;
+                move.Score += 30000;
             }
 
             /*
             if (moveKillerB != null && Move.MovesMatch(move, moveKillerB2))
             {
-                move.Score += 20001;
+                move.Score += 10000;
+            }
+            */
+
+            if (move.Score != 0)
+            {
                 return;
             }
-            if (move.Score == 0)
+
+            move.Score += History.Retrieve(player.Colour, move.From.Ordinal, move.To.Ordinal);
+
+            if (move.Score != 0)
             {
-                // do something smart
-                int x = 0;
+                return;
+            }
+
+            /*
+            // Move from the Principal Variation
+            if (movePv != null && Move.MovesMatch(move, movePv))
+            {
+                move.Score += 100;
             }
             */
 
