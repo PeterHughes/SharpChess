@@ -165,12 +165,21 @@ namespace SharpChess.Model
             {
                 return (this.Piece != null ? this.Piece.Player.Colour.ToString() + " " 
                     + this.Piece.Name.ToString() : string.Empty) + " " 
-                    + this.From.Name + (this.PieceCaptured == null ? "-" : "x") + this.To.Name + " " 
+                    + this.From.Name 
+                    + (this.PieceCaptured == null ? "-" : "x") + this.To.Name + " " 
                     + (this.PieceCaptured == null ? string.Empty : this.PieceCaptured.Name.ToString()) + " " 
-                    + this.Name.ToString()
-                    + " A: " + this.Alpha + " B: " + this.Beta + " Score: " + this.Score; // + " h: " + this.m_HashEntries.ToString() + " c:" + this.m_HashCaptures.ToString();
+                    // + this.Name
+                    + " A: " + this.Alpha 
+                    + " B: " + this.Beta 
+                    + " Score: " + this.Score 
+                    + " " + this.DebugComment;  // + " h: " + this.m_HashEntries.ToString() + " c:" + this.m_HashCaptures.ToString();
             }
         }
+
+        /// <summary>
+        /// Gets or sets a comment string containing useful debug info.
+        /// </summary>
+        public string DebugComment { get; set; }
 
         /// <summary>
         /// Gets a texual description of the move.

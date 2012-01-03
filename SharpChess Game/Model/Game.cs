@@ -1007,9 +1007,13 @@ namespace SharpChess.Model
             }
 
             Fen.Validate(fenString);
+
             HashTable.Clear();
             HashTablePawnKing.Clear();
             HashTableCheck.Clear();
+            KillerMoves.Clear();
+            History.Clear();
+
             UndoAllMovesInternal();
             MoveRedoList.Clear();
             saveGameFileName = string.Empty;

@@ -86,28 +86,42 @@ namespace SharpChess.Model.AI
             bool blnAssignedA = false; // Have we assign Slot A?
 
             Move moveKillerA = RetrieveA(ply);
+            Move moveKillerB = RetrieveB(ply);
+
             if (moveKillerA == null)
             {
                 // Slot A is blank, so put anything in it.
                 AssignA(ply, moveMade);
                 blnAssignedA = true;
             }
-            else if (moveMade.Score > moveKillerA.Score)
+            else if ((moveMade.Score > moveKillerA.Score && !Move.MovesMatch(moveMade, moveKillerB)) || Move.MovesMatch(moveMade, moveKillerA))
             {
-                // Score is better than Slot A, so
-                // transfer move in Slot A to Slot B...
-                AssignB(ply, moveKillerA);
-
-                // record move is Slot A
-                AssignA(ply, moveMade);
+                // Move's score is better than A and isn't B, or the move IS A, 
                 blnAssignedA = true;
+                if (Move.MovesMatch(moveMade, moveKillerA))
+                {
+                    // Re-record move in Slot A, but only if it's better
+                    if (moveMade.Score > moveKillerA.Score)
+                    {
+                        AssignA(ply, moveMade);
+                    }
+                }
+                else
+                {
+                    // Score is better than Slot A
+
+                    // transfer move in Slot A to Slot B...
+                    AssignB(ply, moveKillerA);
+
+                    // record move is Slot A
+                    AssignA(ply, moveMade);
+                }
+                moveKillerA = RetrieveA(ply);
             }
 
-            // If the move wasn't assigned to Slot A, then see if it is good enough to go in Slot B
+            // If the move wasn't assigned to Slot A, then see if it is good enough to go in Slot B, or if move IS B
             if (!blnAssignedA)
             {
-                Move moveKillerB = RetrieveB(ply);
-
                 // Slot B is empty, so put anything in!
                 if (moveKillerB == null)
                 {
@@ -119,7 +133,17 @@ namespace SharpChess.Model.AI
                     // record move is Slot B
                     AssignB(ply, moveMade);
                 }
+                moveKillerB = RetrieveB(ply);
             }
+
+            // Finally check if B score is better than and A score, and if so swap.
+            if (moveKillerA != null && moveKillerB != null && moveKillerB.Score > moveKillerA.Score)
+            {
+                Move swap = moveKillerA;
+                AssignA(ply, moveKillerB);
+                AssignB(ply, swap);
+            }
+
         }
 
         /// <summary>

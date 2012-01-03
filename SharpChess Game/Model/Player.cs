@@ -705,7 +705,6 @@ namespace SharpChess.Model
                              move.To.Ordinal==squareAttacking.Ordinal 
                              ))
                         {
-                            // TODO generating all then removing non-captures must be very slow!
                             moves.Remove(move);
                         }
                     }

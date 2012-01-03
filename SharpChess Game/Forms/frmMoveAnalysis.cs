@@ -49,9 +49,14 @@ namespace SharpChess
         private readonly Container components = null;
 
         /// <summary>
-        /// The tvw moves.
+        /// Holds tree of moves.
         /// </summary>
         private TreeView tvwMoves;
+
+        /// <summary>
+        /// Used to count the total nodes at each depth.
+        /// </summary>
+        private int[] totalNodesPerDepth;
 
         #endregion
 
@@ -94,12 +99,58 @@ namespace SharpChess
         public void RenderMoveAnalysis()
         {
             this.tvwMoves.Nodes.Clear();
-            this.AddBranch(2, Game.MoveAnalysis, this.tvwMoves.Nodes);
+            this.AddBranch(5, Game.MoveAnalysis, this.tvwMoves.Nodes);
+
+            this.CalculateTotalNodesPerDepth();
         }
 
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Calculate the number of nodes at each depth of the move tree.
+        /// </summary>
+        private void CalculateTotalNodesPerDepth()
+        {
+            this.totalNodesPerDepth = new int[32];
+            this.GetNodesAtDepth(0, Game.MoveAnalysis);
+            this.Text = "Nodes/depth: ";
+            int totalNodes = 0;
+            foreach (int nodeCount in this.totalNodesPerDepth)
+            {
+                if (nodeCount > 0)
+                {
+                    totalNodes += nodeCount;
+                    this.Text += nodeCount + " ";
+                }
+                else
+                {
+                    break;
+                }
+            }
+            this.Text += " Total: " + totalNodes;
+        }
+
+        /// <summary>
+        /// Recursive method to walk the move tree, calculating nodes per depth.
+        /// </summary>
+        /// <param name="depth">Depth of tree node.</param>
+        /// <param name="moves">Branch at node of tree.</param>
+        private void GetNodesAtDepth(int depth, Moves moves)
+        {
+            if (moves != null)
+            {
+                this.totalNodesPerDepth[depth] += moves.Count;
+                foreach (Move move in moves)
+                {
+                    if (move.Moves != null && move.Moves.Count > 0)
+                    {
+                        this.GetNodesAtDepth(depth + 1, move.Moves);
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// Clean up any resources being used.
@@ -139,12 +190,11 @@ namespace SharpChess
                 return;
             }
 
-            TreeNode treeNode;
             if (moves != null)
             {
                 foreach (Move move in moves)
                 {
-                    treeNode = treeNodes.Add(move.DebugText);
+                    TreeNode treeNode = treeNodes.Add(move.DebugText);
                     treeNode.Tag = move;
                     if (move.Moves != null && move.Moves.Count > 0)
                     {
@@ -160,7 +210,8 @@ namespace SharpChess
         /// </summary>
         private void InitializeComponent()
         {
-            TreeNode treeNode1 = new TreeNode();
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Move analysis will be recorded when the next move begins. WARNING: drastically sl" +
+        "ows computer thinking, and uses LOTS of memory!");
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMoveAnalysis));
             this.tvwMoves = new System.Windows.Forms.TreeView();
             this.SuspendLayout();
@@ -172,17 +223,19 @@ namespace SharpChess
             this.tvwMoves.Location = new System.Drawing.Point(0, 0);
             this.tvwMoves.Name = "tvwMoves";
             treeNode1.Name = "";
-            treeNode1.Text = "Move analysis will be recorded when the next move begins. WARNING: drastically slows computer thinking, and uses LOTS of memory!";
+            treeNode1.Text = "Move analysis will be recorded when the next move begins. Max depth 6. WARNING: drastically slows computer thinking, and uses LOTS of memory!";
             this.tvwMoves.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
             treeNode1});
-            this.tvwMoves.Size = new System.Drawing.Size(376, 470);
+            this.tvwMoves.Size = new System.Drawing.Size(475, 592);
             this.tvwMoves.TabIndex = 64;
+            this.tvwMoves.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.tvwMoves_BeforeExpand);
             this.tvwMoves.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.tvwMoves_AfterExpand);
+            this.tvwMoves.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvwMoves_AfterSelect);
             // 
             // frmMoveAnalysis
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-            this.ClientSize = new System.Drawing.Size(376, 470);
+            this.ClientSize = new System.Drawing.Size(475, 592);
             this.Controls.Add(this.tvwMoves);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -220,12 +273,24 @@ namespace SharpChess
         /// </param>
         private void tvwMoves_AfterExpand(object sender, TreeViewEventArgs e)
         {
+            /*
             foreach (TreeNode tn in e.Node.Nodes)
             {
                 this.AddBranch(1, ((Move)tn.Tag).Moves, tn.Nodes);
             }
+            */
         }
 
         #endregion
+
+        private void tvwMoves_BeforeExpand(object sender, TreeViewCancelEventArgs e)
+        {
+
+        }
+
+        private void tvwMoves_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+
+        }
     }
 }

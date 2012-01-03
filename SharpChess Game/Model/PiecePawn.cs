@@ -156,7 +156,6 @@ namespace SharpChess.Model
         {
             get
             {
-                // TODO Pawn score does not encourahge movement to D4 and e4.
                 int intPoints = 0;
                 int intIndex;
                 Piece piece;
