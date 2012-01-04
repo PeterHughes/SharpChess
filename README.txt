@@ -1,6 +1,8 @@
-SharpChess is a free computer application that enables you to play chess against the computer. 
+SharpChess is a free, open-source, computer application that enables you to play chess against the computer.
 
-SharpChess is also a chess engine that completes in computer vs. computer chess tournaments
+SharpChess also uses the Chess Engine Communication Protocol, and can therefore play against other chess engines using WinBoard or Arena. SharpChess has competed in computer vs. computer chess tournaments (wbec and ChessWar). Developers are invited to participate in the open-source SharpChess project at GitHub in order to improve SharpChess's chess-playing powers!
+
+SharpChess has been wholly developed using, C# (C Sharp), and runs on Microsoft Windows and Mono.
 
 Find out more abnout SharpChess at http://SharpChess.com
 

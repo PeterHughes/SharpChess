@@ -139,13 +139,21 @@ namespace SharpChess.Model.AI
         public static void Clear()
         {
             ResetStats();
+
             for (uint intIndex = 0; intIndex < hashTableSize; intIndex++)
             {
+                hashTableEntries[intIndex].BlackFrom = -1;
+                hashTableEntries[intIndex].BlackMoveName = Move.MoveNames.NullMove;
+                hashTableEntries[intIndex].BlackTo = -1;
+                hashTableEntries[intIndex].Colour = Player.PlayerColourNames.White;
+                hashTableEntries[intIndex].Depth = sbyte.MinValue;
                 hashTableEntries[intIndex].HashCodeA = 0;
                 hashTableEntries[intIndex].HashCodeB = 0;
-                hashTableEntries[intIndex].Depth = sbyte.MinValue;
+                hashTableEntries[intIndex].Result = int.MinValue;
+                hashTableEntries[intIndex].Type = HashTypeNames.Exact;
                 hashTableEntries[intIndex].WhiteFrom = -1;
-                hashTableEntries[intIndex].BlackFrom = -1;
+                hashTableEntries[intIndex].WhiteMoveName = Move.MoveNames.NullMove;
+                hashTableEntries[intIndex].WhiteTo = -1;
             }
         }
 
@@ -176,6 +184,7 @@ namespace SharpChess.Model.AI
         /// </returns>
         public static unsafe Move ProbeForBestMove(ulong hashCodeA, ulong hashCodeB, Player.PlayerColourNames colour)
         {
+            // TODO Unit test Hash Table. What happens when same position stored at different depths in diffenent slots with the same hash?
             fixed (HashEntry* phashBase = &hashTableEntries[0])
             {
                 HashEntry* phashEntry = phashBase;
@@ -269,8 +278,6 @@ namespace SharpChess.Model.AI
 
             fixed (HashEntry* phashBase = &hashTableEntries[0])
             {
-                //return NotFoundInHashTable; // TODO remove this
-
                 HashEntry* phashEntry = phashBase;
                 phashEntry += (uint)(hashCodeA % hashTableSize);
 
@@ -368,7 +375,6 @@ namespace SharpChess.Model.AI
             {
                 HashEntry* phashEntry = phashBase;
                 phashEntry += (uint)(hashCodeA % hashTableSize);
-                HashEntry* phashFirst = phashEntry;
 
                 int intAttempt = 0;
                 while (phashEntry >= phashBase && phashEntry->HashCodeA != 0 && phashEntry->Depth > depth)

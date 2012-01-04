@@ -863,6 +863,7 @@ namespace SharpChess
                     picSquare.DragDrop += this.picSquare_DragDrop;
                     picSquare.DragOver += this.picSquare_DragOver;
                     picSquare.GiveFeedback += this.picSquare_GiveFeedback;
+                    picSquare.MouseMove += this.picSquare_MouseMove;
                     picSquare.AllowDrop = true;
                     this.pnlEdging.Controls.Add(picSquare);
                     this.m_picSquares[square.File, square.Rank] = picSquare;
@@ -932,6 +933,11 @@ namespace SharpChess
             if (Game.MoveHistory.Count > 0)
             {
                 Move move = Game.MoveHistory.Last;
+                if (this.sbr.Text.StartsWith("Thinking..."))
+                {
+                    this.sbr.Text = this.sbr.Text.Substring("Thinking...".Length);
+                }
+
                 this.sbr.Text += "  Moved: " + move.Piece.Name.ToString() //+ " " + move.From.Name + "-" + move.To.Name
                                  + " " + move.Description;
             }
@@ -2194,6 +2200,7 @@ namespace SharpChess
         private void PausePlay()
         {
             Game.PausePlay();
+            this.sbr.Text = string.Empty;
         }
 
         /// <summary>
@@ -2712,7 +2719,8 @@ namespace SharpChess
                 formDifficulty.ShowDialog(this);
             }
 
-            Game.StartNormalGame();
+            // Game.StartNormalGame();
+            Game.PlayerToPlay.Clock.Stop();
 
             this.OrientBoard();
             this.RenderBoard();
@@ -2930,7 +2938,7 @@ namespace SharpChess
 
             this.CreateBoard();
 
-            Game.BackupGamePath = Application.StartupPath + @"\BackupGame.sharpchess";
+            Game.BackupGamePath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\BackupGame.sharpchess";
 
             this.Text = Application.ProductName + " - " + Game.FileName;
             this.AssignMenuChecks();
@@ -3353,6 +3361,23 @@ namespace SharpChess
         }
 
         /// <summary>
+        /// Mouse move over a square.
+        /// </summary>
+        /// <param name="sender">Sender</param>
+        /// <param name="e">Event info</param>
+        private void picSquare_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (Game.PlayerToPlay.Brain.IsThinking && !Game.PlayerToPlay.Brain.IsPondering)
+            {
+                this.pnlEdging.Cursor = Cursors.WaitCursor;
+            }
+            else
+            {
+                this.pnlEdging.Cursor = Cursors.Default;
+            }
+        }
+
+        /// <summary>
         /// The pic square_ mouse down.
         /// </summary>
         /// <param name="sender">
@@ -3368,13 +3393,13 @@ namespace SharpChess
                 return;
             }
 
-            this.m_blnIsLeftMouseButtonDown = true;
-            this.m_blnInMouseDown = true;
-
             if (Game.PlayerToPlay.Brain.IsThinking && !Game.PlayerToPlay.Brain.IsPondering)
             {
                 return;
             }
+
+            this.m_blnIsLeftMouseButtonDown = true;
+            this.m_blnInMouseDown = true;
 
             Game.SuspendPondering();
 

@@ -579,6 +579,11 @@ namespace SharpChess.Model
         /// </summary>
         public static void ResumePondering()
         {
+            if (IsPaused)
+            {
+                return;
+            }
+
             if (!EnablePondering)
             {
                 return;
@@ -1061,7 +1066,10 @@ namespace SharpChess.Model
                 MoveHistory.Last.EnemyStatus = moveRedo.Piece.Player.OpposingPlayer.Status; // 14Mar05 Nimzo
                 PlayerToPlay = PlayerToPlay.OpposingPlayer;
                 MoveRedoList.RemoveLast();
-                PlayerToPlay.Clock.Start();
+                if (!IsPaused)
+                {
+                    PlayerToPlay.Clock.Start();
+                }
             }
         }
 
@@ -1157,7 +1165,10 @@ namespace SharpChess.Model
                     PlayerToPlay.Clock.TimeElapsed = new TimeSpan(0);
                 }
 
-                PlayerToPlay.Clock.Start();
+                if (!IsPaused)
+                {
+                    PlayerToPlay.Clock.Start();
+                }
             }
         }
 

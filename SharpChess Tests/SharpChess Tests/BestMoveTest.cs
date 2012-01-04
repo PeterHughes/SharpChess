@@ -261,8 +261,8 @@ namespace SharpChess_Tests
             Debug.WriteLine(string.Format("Time: {0} ", Game_Accessor.PlayerToPlay.Brain.ThinkingTimeElpased));
             Debug.WriteLine(string.Format("Score: {0} ", Game_Accessor.PlayerToPlay.Brain.PrincipalVariation[0].Score));
 
-            Assert.AreEqual(Game_Accessor.PlayerToPlay.Brain.PrincipalVariation[0].From.Name, expectedMoveFrom, "From move wrong");
-            Assert.AreEqual(Game_Accessor.PlayerToPlay.Brain.PrincipalVariation[0].To.Name, expectedMoveTo, "To move wrong");
+            Assert.AreEqual(expectedMoveFrom, Game_Accessor.PlayerToPlay.Brain.PrincipalVariation[0].From.Name , "From move wrong");
+            Assert.AreEqual(expectedMoveTo, Game_Accessor.PlayerToPlay.Brain.PrincipalVariation[0].To.Name, "To move wrong");
         }
 
         #endregion

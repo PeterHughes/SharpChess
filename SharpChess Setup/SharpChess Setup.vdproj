@@ -76,7 +76,7 @@
         "DisplayName" = "8:Release"
         "IsDebugOnly" = "11:FALSE"
         "IsReleaseOnly" = "11:TRUE"
-        "OutputFilename" = "8:Release\\SharpChessSetup_v2_6.msi"
+        "OutputFilename" = "8:Release\\SharpChessSetup_v2_6_4.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -95,10 +95,10 @@
             "ComponentsUrl" = "8:"
                 "Items"
                 {
-                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.0"
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.0,Profile=Client"
                     {
-                    "Name" = "8:Microsoft .NET Framework 4 (x86 and x64)"
-                    "ProductCode" = "8:.NETFramework,Version=v4.0"
+                    "Name" = "8:Microsoft .NET Framework 4 Client Profile (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.0,Profile=Client"
                     }
                     "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Windows.Installer.3.1"
                     {
@@ -128,7 +128,7 @@
                 {
                 "Name" = "8:.NET Framework"
                 "Message" = "8:[VSDNETMSG]"
-                "FrameworkVersion" = "8:.NETFramework,Version=v4.0"
+                "FrameworkVersion" = "8:.NETFramework,Version=v4.0,Profile=Client"
                 "AllowLaterVersions" = "11:FALSE"
                 "InstallUrl" = "8:http://go.microsoft.com/fwlink/?LinkId=131000"
                 }
@@ -222,20 +222,20 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:SharpChess 2.6.3"
-        "ProductCode" = "8:{14E01EB1-5C4E-4A08-9959-952773F9F14D}"
-        "PackageCode" = "8:{AE714D18-9F76-42A7-926F-269559A08B87}"
+        "ProductName" = "8:SharpChess 2.6.4"
+        "ProductCode" = "8:{C555157A-4CEE-4A5A-B33A-F9DC55B29377}"
+        "PackageCode" = "8:{F00C248B-F223-48CE-B25B-3A382B30FADD}"
         "UpgradeCode" = "8:{0D95FE29-AB20-45A4-8A09-FA93F828D577}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:2.6.3"
+        "ProductVersion" = "8:2.6.4"
         "Manufacturer" = "8:SharpChess.com"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://sharpchess.com"
-        "Title" = "8:Setup SharpChess 2.6.3"
+        "Title" = "8:Setup SharpChess 2.6.4"
         "Subject" = "8:SharpChess is a free computer application that enables you to play chess against the computer."
         "ARPCONTACT" = "8:Peter Hughes"
         "Keywords" = "8:SharpChess"

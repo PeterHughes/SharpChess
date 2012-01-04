@@ -91,8 +91,8 @@ namespace SharpChess_Tests
             // Assert.IsTrue(positions == 58090); Dont reduce PV node.
             // Assert.IsTrue(positions == 58090); Before MVV/LVA if SEE returns zero.
             // Assert.IsTrue(positions == 54573); Before history * 100
-            // Assert.AreEqual(positions, 49641); Less nodes without PVS, but more time WTF!
-            Assert.AreEqual(positions, 53728);
+            // Assert.AreEqual(49641, positions); Less nodes without PVS, but more time WTF!
+            Assert.AreEqual(53728, positions);
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace SharpChess_Tests
         public void MoveOrdering_Opening()
         {
             int positions = this.NodeCountTest(string.Empty, 5);
-            Assert.AreEqual(positions, 22984);
+            Assert.AreEqual(22984, positions);
         }
 
 
@@ -113,7 +113,7 @@ namespace SharpChess_Tests
         public void MoveOrdering_EndGameWithPromotion()
         {
             int positions = this.NodeCountTest("8/2R2pk1/2P5/2r5/1p6/1P2Pq2/8/2K1B3 w - - 5 44", 5);
-            Assert.AreEqual(positions, 13402);
+            Assert.AreEqual(13402, positions);
         }
         
         /// <summary>
@@ -129,7 +129,7 @@ namespace SharpChess_Tests
             Game_Accessor.UseRandomOpeningMoves = false;
             Game_Accessor.PlayerToPlay.Brain.Think();
 
-            Assert.IsTrue(Game.PlayerToPlay.Score == -141);
+            Assert.AreEqual(-141, Game.PlayerToPlay.Score);
         }
         #endregion
 
