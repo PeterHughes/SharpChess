@@ -1174,6 +1174,12 @@ namespace SharpChess.Model.AI
 
             foreach (Move move in movesPossible)
             {
+                if (move.Score < 0) 
+                {
+                    // Losing capture from SEE, so skip this move.
+                    continue;
+                }
+
                 // Make capture, but skip illegal moves
                 Move moveThis = move.Piece.Move(move.Name, move.To);
                 if (player.IsInCheck)
