@@ -92,7 +92,9 @@ namespace SharpChess_Tests
             // Assert.IsTrue(positions == 58090); Before MVV/LVA if SEE returns zero.
             // Assert.IsTrue(positions == 54573); Before history * 100
             // Assert.AreEqual(49641, positions); Less nodes without PVS, but more time WTF!
-            Assert.AreEqual(53728, positions);
+            // Assert.AreEqual(53728, positions); Before losing capture ignored in quiescense.
+            // Assert.AreEqual(50205, positions); Clear history and killer moves at the start of each iteration.
+            Assert.AreEqual(48483, positions);
         }
 
         /// <summary>
@@ -102,7 +104,7 @@ namespace SharpChess_Tests
         public void MoveOrdering_Opening()
         {
             int positions = this.NodeCountTest(string.Empty, 5);
-            Assert.AreEqual(22984, positions);
+            Assert.AreEqual(19267, positions);
         }
 
 
@@ -113,7 +115,7 @@ namespace SharpChess_Tests
         public void MoveOrdering_EndGameWithPromotion()
         {
             int positions = this.NodeCountTest("8/2R2pk1/2P5/2r5/1p6/1P2Pq2/8/2K1B3 w - - 5 44", 5);
-            Assert.AreEqual(13402, positions);
+            Assert.AreEqual(13030, positions);
         }
         
         /// <summary>

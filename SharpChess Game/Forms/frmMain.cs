@@ -2539,35 +2539,40 @@ namespace SharpChess
 
             if (playerToPlay.Brain.IsThinking)
             {
-                strMsg += Game.PlayerToPlay.Brain.IsPondering ? "Pondering..." : "Thinking...";
-
-                if (Game.ShowThinking)
+                lock (playerToPlay.Brain.PrincipalVariation)
                 {
-                    strMsg += "Ply: " + playerToPlay.Brain.Search.SearchDepth.ToString() + "/"
-                              + playerToPlay.Brain.Search.MaxSearchDepth.ToString();
-                    strMsg += ". Move: " + playerToPlay.Brain.Search.SearchPositionNo.ToString() + "/"
-                              + playerToPlay.Brain.Search.TotalPositionsToSearch.ToString();
-                }
+                    strMsg += Game.PlayerToPlay.Brain.IsPondering ? "Pondering..." : "Thinking...";
 
-                if (!Game.PlayerToPlay.Brain.IsPondering)
-                {
-                    strMsg += ". Secs: " + ((int)playerToPlay.Brain.ThinkingTimeRemaining.TotalSeconds).ToString() + "/"
-                              + ((int)playerToPlay.Brain.ThinkingTimeAllotted.TotalSeconds).ToString();
-                }
+                    if (Game.ShowThinking)
+                    {
+                        strMsg += "Ply: " + playerToPlay.Brain.Search.SearchDepth.ToString() + "/"
+                                  + playerToPlay.Brain.Search.MaxSearchDepth.ToString();
+                        strMsg += ". Move: " + playerToPlay.Brain.Search.SearchPositionNo.ToString() + "/"
+                                  + playerToPlay.Brain.Search.TotalPositionsToSearch.ToString();
+                    }
 
-                if (Game.ShowThinking)
-                {
-                    strMsg += " Pos: " + playerToPlay.Brain.Search.PositionsSearched + " Q: " + playerToPlay.Brain.Search.MaxQuiesenceDepthReached + " E: "
-                              + playerToPlay.Brain.Search.MaxExtensions;
-                    strMsg += " P/S: " + playerToPlay.Brain.Search.PositionsPerSecond.ToString();
                     if (!Game.PlayerToPlay.Brain.IsPondering)
                     {
-                        if (playerToPlay.Brain.PrincipalVariation != null && playerToPlay.Brain.PrincipalVariation.Count > 0)
-                        {
-                            strMsg += " Scr:" + playerToPlay.Brain.PrincipalVariation[0].Score;
-                        }
+                        strMsg += ". Secs: " + ((int)playerToPlay.Brain.ThinkingTimeRemaining.TotalSeconds).ToString()
+                                  + "/" + ((int)playerToPlay.Brain.ThinkingTimeAllotted.TotalSeconds).ToString();
+                    }
 
-                        strMsg += " " + playerToPlay.Brain.PrincipalVariationText;
+                    if (Game.ShowThinking)
+                    {
+                        strMsg += " Pos: " + playerToPlay.Brain.Search.PositionsSearched + " Q: "
+                                  + playerToPlay.Brain.Search.MaxQuiesenceDepthReached + " E: "
+                                  + playerToPlay.Brain.Search.MaxExtensions;
+                        strMsg += " P/S: " + playerToPlay.Brain.Search.PositionsPerSecond.ToString();
+                        if (!Game.PlayerToPlay.Brain.IsPondering)
+                        {
+                            if (playerToPlay.Brain.PrincipalVariation != null
+                                && playerToPlay.Brain.PrincipalVariation.Count > 0)
+                            {
+                                strMsg += " Scr:" + playerToPlay.Brain.PrincipalVariation[0].Score;
+                            }
+
+                            strMsg += " " + playerToPlay.Brain.PrincipalVariationText;
+                        }
                     }
                 }
             }

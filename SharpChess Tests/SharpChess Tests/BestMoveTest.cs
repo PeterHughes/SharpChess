@@ -182,7 +182,7 @@ namespace SharpChess_Tests
                 {
                     this.BestMoveTest("8/8/p1p5/1p5p/1P5p/8/PPP2K1p/4R1rk w - - 0 1", "e1", "f1", 8);
                     // Nodes: 145,000
-                }
+                }*/
 
                 [TestMethod]
                 public void Zugzwang_002()
@@ -190,7 +190,7 @@ namespace SharpChess_Tests
                     this.BestMoveTest("1q1k4/2Rr4/8/2Q3K1/8/8/8/8 w - - 0 1", "g5", "h6", 5);
                     // Nodes: 37,500
                 }
-
+        /*
                 [TestMethod]
                 public void Zugzwang_003()
                 {
@@ -216,7 +216,6 @@ namespace SharpChess_Tests
 
                 #region Silent but deadly tests
                 // http://chessprogramming.wikispaces.com/Silent+but+deadly#cite_note-3
-
                 [TestMethod]
                 public void Sbd_001()
                 {
@@ -224,20 +223,21 @@ namespace SharpChess_Tests
                     // Nodes: 
                 }
 
+        */
                 [TestMethod]
                 public void Sbd_003()
                 {
                     this.BestMoveTest("2b1k2r/2p2ppp/1qp4n/7B/1p2P3/5Q2/PPPr2PP/R2N1R1K b k", "e8", "g8", 4);
                     // Nodes: 15,769
                 }
-
+        /*
                 [TestMethod]
                 public void Sbd_004()
                 {
                     this.BestMoveTest("2b5/1p4k1/p2R2P1/4Np2/1P3Pp1/1r6/5K2/8 w", "d6", "d8", 7);
                     // Nodes: 234,270
                 }      
-        */        
+        */
         #endregion
 
         #region Methods

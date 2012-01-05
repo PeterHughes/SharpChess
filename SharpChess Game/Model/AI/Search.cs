@@ -223,14 +223,18 @@ namespace SharpChess.Model.AI
                 searchTimeCutoff = new TimeSpan(0, 0, 0, 2);
             }
 
-            KillerMoves.Clear(); // Clear enroneous killer moves from previous search.
-
             this.MaxSearchTimeAllowed = maximumSearchTimeAllowed;
 
             this.forceExitWithMove = false; // Set to stop thread thinking and return best move
             this.PositionsSearched = 0; // Total number of positions considered so far
             this.Evaluations = 0;
             this.LastPrincipalVariation.Clear();
+
+            // A little counter to record the deepest Quiescence depth searched on this move.
+            this.MaxQuiesenceDepthReached = 0;
+
+            // A little counter to track the number of extensions on this move.
+            this.MaxExtensions = 0;
 
             // Set max search depth, as defined is game difficulty settings
             this.MaxSearchDepth = Game.MaximumSearchDepth == 0 ? 32 : Game.MaximumSearchDepth;
@@ -239,6 +243,9 @@ namespace SharpChess.Model.AI
 
             for (this.SearchDepth = MinSearchDepth; this.SearchDepth <= this.MaxSearchDepth; this.SearchDepth++)
             {
+                KillerMoves.Clear(); // Clear killer moves from previous iteration.
+                History.Clear(); // Clear history when from previous iteration. 
+
                 if (Game.CaptureMoveAnalysisData && Game.MoveAnalysis.Count > 0)
                 {
                     Game.MoveAnalysis.Clear();
@@ -246,7 +253,6 @@ namespace SharpChess.Model.AI
 
                 score = this.Aspirate(player, principalVariation, score, Game.MoveAnalysis);
 
-                /* score = AlphaBeta(player, m_intSearchDepth, m_intSearchDepth, MIN_SCORE, MAX_SCORE, null, movesPV, intScore); */
                 if (!Game.IsInAnalyseMode && Game.ClockFixedTimePerMove.TotalSeconds <= 0 && !this.MyBrain.IsPondering
                     && (DateTime.Now - player.Clock.TurnStartTime) > searchTimeCutoff)
                 {
@@ -400,30 +406,30 @@ namespace SharpChess.Model.AI
                 return player.Score;
             }
 
-            if ((val = HashTable.ProbeHash(Board.HashCodeA, Board.HashCodeB, ply, alpha, beta, player.Colour))
+            if (ply != this.SearchDepth && (val = HashTable.ProbeHash(Board.HashCodeA, Board.HashCodeB, ply, alpha, beta, player.Colour))
                 != HashTable.NotFoundInHashTable)
             {
+                
                 // High values of "val" indicate that a checkmate has been found
                 if (val > 1000000 || val < -1000000)
                 {
+                    Comment(parentMove, "Mate: " + (this.MaxSearchDepth - variableDepth) + " ");
                     if (this.MaxSearchDepth - variableDepth > 0)
                     {
                         val /= this.MaxSearchDepth - variableDepth;
                     }
                 }
 
-                principalVariation.Clear();
+                /*
+                 * Why change the PV here? Only reason was when hash move was found before the search had even started. Prevented that from happening now.
                 if (HashTable.ProbeForBestMove(Board.HashCodeA, Board.HashCodeB, player.Colour) != null)
                 {
+                    principalVariation.Clear();
                     principalVariation.Add(HashTable.ProbeForBestMove(Board.HashCodeA, Board.HashCodeB, player.Colour));
                 }
+                 * */
 
                 return val;
-            }
-
-            if (totalExtensionsAndReducations > this.MaxExtensions)
-            {
-                this.MaxExtensions = totalExtensionsAndReducations;
             }
 
             // Generate moves
@@ -510,12 +516,6 @@ namespace SharpChess.Model.AI
                     {
                         this.SearchMoveConsideredEvent();
                     }
-
-                    // A little counter to record the deepest Quiescence depth searched on this move.
-                    this.MaxQuiesenceDepthReached = 0;
-
-                    // A little counter to track the number of extensions on this move.
-                    this.MaxExtensions = 0;
                 }
 
                 // This move put the player in check, so abort and move onto next move.
@@ -585,7 +585,8 @@ namespace SharpChess.Model.AI
                 {
                     if (variableDepth > 2 && !blnIsInCheck && moveThis.PieceCaptured == null && !moveThis.IsEnemyInCheck)
                     {
-                        int[] margin = {
+                        int[] margin = 
+                                       {
                                            0, 0, 0, 5000, 5000, 7000, 7000, 9000, 9000, 15000, 15000, 15000, 15000, 15000, 
                                            15000, 15000, 15000, 15000
                                        };
@@ -595,7 +596,7 @@ namespace SharpChess.Model.AI
                         if (alpha > intLazyEval + margin[variableDepth])
                         {
                             intExtensionOrReduction = -1;
-                            Comment(moveThis, "R-MARG" + (margin[variableDepth]/1000).ToString() + " ");
+                            Comment(moveThis, "R-MARG" + (margin[variableDepth] / 1000) + " ");
                         }
                     }
 
@@ -606,8 +607,7 @@ namespace SharpChess.Model.AI
                         {
                             case 2:
                             case 3:
-
-                                // case 4:
+                            //case 4:
                                 if (moveThis.PieceCaptured == null && !move.IsEnemyInCheck)
                                 {
                                     int intLazyEval = player.Score;
@@ -638,7 +638,7 @@ namespace SharpChess.Model.AI
 
                                         case 4:
 
-                                            // Razoring
+                                            // Deep Futility Pruning
                                             if (intLazyEval + 9750 <= alpha)
                                             {
                                                 intExtensionOrReduction = -1;
@@ -678,13 +678,18 @@ namespace SharpChess.Model.AI
                 }
                 */
 
+                if (totalExtensionsAndReducations > this.MaxExtensions)
+                {
+                    this.MaxExtensions = totalExtensionsAndReducations;
+                    Comment(moveThis, "^MaxExt: " + totalExtensionsAndReducations + " ");
+                }
+
                 /* #if DEBUG  // Avoid to break in a zero window research so alpha + 1 < beta
                    if ((alpha + 1 < beta) && DebugMatchVariation(m_intSearchDepth - ply, moveThis)) Debugger.Break();
                  #endif */
                 if (blnPvNode)
                 {
-                    Comment(moveThis, "*PV* ");
-
+                    // Attempt a Principal Variation Search (PVS) using a zero window. http://chessprogramming.wikispaces.com/Principal+Variation+Search
                     val =
                         -this.AlphaBetaPvs(
                             player.OpposingPlayer, 
@@ -699,16 +704,15 @@ namespace SharpChess.Model.AI
 
                     if ((val > alpha) && (val < beta))
                     {
-                        // PVS failed
-                        Comment(moveThis, "PV-FAIL ");
+                        // PVS failed. Have to re-search using a full alpha-beta window.
+                        Comment(moveThis, "-PVS-WIN- ");
 
                         if (Game.CaptureMoveAnalysisData && parentMove != null
                             && parentMove.Name != Move.MoveNames.NullMove)
                         {
                             moveThis.Moves.Clear();
                         }
-
-                        // Re0search using full window
+                        
                         val =
                             -this.AlphaBetaPvs(
                                 player.OpposingPlayer, 
@@ -721,9 +725,15 @@ namespace SharpChess.Model.AI
                                 totalExtensionsAndReducations + intExtensionOrReduction, 
                                 moveThis.Moves);
                     }
+                    else
+                    {
+                        Comment(moveThis, "-F- ");
+                    }
                 }
                 else
                 {
+                    // Not a PV node, so just do a normal alpha-beta search.
+
                     val =
                         -this.AlphaBetaPvs(
                             player.OpposingPlayer, 
@@ -748,13 +758,14 @@ namespace SharpChess.Model.AI
                     hashType = HashTable.HashTypeNames.Beta;
                     moveBest = moveThis;
 
-                    Comment(moveThis, "CUT ");
+                    Comment(parentMove, "(CUT) ");
 
                     if (moveThis.PieceCaptured == null)
                     {
+                        // Add this cut move to the history heuristic.
                         History.Record(player.Colour, moveThis.From.Ordinal, moveThis.To.Ordinal, ply * ply);
 
-                        // 15Mar06 Nimzo Don't include captures as killer moves
+                        // Add this cut move to the killer move heuristic.
                         KillerMoves.RecordPossibleKillerMove(ply, moveThis);
                     }
 
@@ -763,7 +774,7 @@ namespace SharpChess.Model.AI
 
                 if (val > alpha)
                 {
-                    Comment(moveThis, "ALL:" + alpha.ToString() + "<" + val.ToString());
+                    Comment(moveThis, "*PV* " + alpha + "<" + val);
 
                     blnPvNode = true; /* This is a PV node */
                     alpha = val;
@@ -771,11 +782,14 @@ namespace SharpChess.Model.AI
                     moveBest = moveThis;
 
                     // Collect the Prinicial Variation
-                    principalVariation.Clear();
-                    principalVariation.Add(moveThis);
-                    foreach (Move moveCopy in movesPv)
+                    lock (principalVariation)
                     {
-                        principalVariation.Add(moveCopy);
+                        principalVariation.Clear();
+                        principalVariation.Add(moveThis);
+                        foreach (Move moveCopy in movesPv)
+                        {
+                            principalVariation.Add(moveCopy);
+                        }
                     }
 
                     // #if DEBUG
@@ -791,6 +805,12 @@ namespace SharpChess.Model.AI
                     throw new ForceImmediateMoveException();
                 }
             }
+
+            if (!blnPvNode && parentMove != null)
+            {
+                Comment(parentMove, "(ALL) ");
+            }
+
 
             // Check for Stalemate
             if (intLegalMovesAttempted == 0)
@@ -951,7 +971,7 @@ namespace SharpChess.Model.AI
             if (moveHash != null && Move.MovesMatch(move, moveHash))
             {
                 move.Score = 10000000;
-                Comment(moveHash, "O-HASH:" + move.Score + " ");
+                Comment(move, "O-HASH:" + move.Score + " ");
                 return;
             }
 
@@ -1146,12 +1166,13 @@ namespace SharpChess.Model.AI
 
             if (standPat >= beta)
             {
-                Comment(parentMove, "(PAT-BETA) ");
+                Comment(parentMove, "(Q:PAT-CUT) ");
                 return beta;
             }
 
             if (alpha < standPat)
             {
+                // Comment(parentMove, "(Q:PAT-ALPHA) ");
                 alpha = standPat;
             }
 
@@ -1214,6 +1235,8 @@ namespace SharpChess.Model.AI
 
                 if (moveThis.Score >= beta)
                 {
+                    Comment(parentMove, "(Q:CUT) ");
+
                     return beta;
                 }
 
@@ -1221,17 +1244,20 @@ namespace SharpChess.Model.AI
                 {
                     alpha = moveThis.Score;
 
+                    // Comment(parentMove, "(Q:^ALPHA) ");
+
                     // Collect the Prinicial Variation
-                    principalVariation.Clear();
-                    principalVariation.Add(moveThis);
-                    foreach (Move moveCopy in movesPv)
+                    lock (principalVariation)
                     {
-                        principalVariation.Add(moveCopy);
+                        principalVariation.Clear();
+                        principalVariation.Add(moveThis);
+                        foreach (Move moveCopy in movesPv)
+                        {
+                            principalVariation.Add(moveCopy);
+                        }
                     }
                 }
             }
-
-            Comment(parentMove, "(ALPHA) ");
 
             return alpha;
         }

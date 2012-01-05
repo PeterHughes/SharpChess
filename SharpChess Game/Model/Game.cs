@@ -454,12 +454,11 @@ namespace SharpChess.Model
                 SendBoardPositionChangeEvent();
                 if (IsPaused)
                 {
-                    ResumePlay();
+                    // ResumePlay(); Don't want computer to play on loading a game.
                 }
             }
 
-            ResumePondering();
-
+            // ResumePondering();
             return blnSuccess;
         }
 

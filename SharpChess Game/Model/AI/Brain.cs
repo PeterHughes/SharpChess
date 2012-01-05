@@ -163,7 +163,7 @@ namespace SharpChess.Model.AI
                                 strText += (move.Piece.Name == Piece.PieceNames.Pawn
                                                 ? string.Empty
                                                 : move.Piece.Abbreviation) + move.From.Name
-                                           + (move.PieceCaptured != null ? "x" : string.Empty) + move.To.Name + " ";
+                                            + (move.PieceCaptured != null ? "x" : string.Empty) + move.To.Name + " ";
                             }
                         }
                     }
