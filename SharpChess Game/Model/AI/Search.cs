@@ -254,7 +254,7 @@ namespace SharpChess.Model.AI
                 score = this.Aspirate(player, principalVariation, score, Game.MoveAnalysis);
 
                 if (!Game.IsInAnalyseMode && Game.ClockFixedTimePerMove.TotalSeconds <= 0 && !this.MyBrain.IsPondering
-                    && (DateTime.Now - player.Clock.TurnStartTime) > searchTimeCutoff)
+                    && (this.MyBrain.ThinkingTimeElpased) > searchTimeCutoff)
                 {
                     throw new ForceImmediateMoveException();
                 }
@@ -419,15 +419,6 @@ namespace SharpChess.Model.AI
                         val /= this.MaxSearchDepth - variableDepth;
                     }
                 }
-
-                /*
-                 * Why change the PV here? Only reason was when hash move was found before the search had even started. Prevented that from happening now.
-                if (HashTable.ProbeForBestMove(Board.HashCodeA, Board.HashCodeB, player.Colour) != null)
-                {
-                    principalVariation.Clear();
-                    principalVariation.Add(HashTable.ProbeForBestMove(Board.HashCodeA, Board.HashCodeB, player.Colour));
-                }
-                 * */
 
                 return val;
             }
@@ -800,7 +791,7 @@ namespace SharpChess.Model.AI
                 moveThis.Alpha = alpha;
                 moveThis.Beta = beta;
                 if (!Game.IsInAnalyseMode && !this.MyBrain.IsPondering && this.SearchDepth > MinSearchDepth
-                    && (DateTime.Now - player.Clock.TurnStartTime) > this.MaxSearchTimeAllowed)
+                    && MyBrain.ThinkingTimeElpased > this.MaxSearchTimeAllowed)
                 {
                     throw new ForceImmediateMoveException();
                 }

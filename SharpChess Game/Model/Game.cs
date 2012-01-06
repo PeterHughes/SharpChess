@@ -452,13 +452,9 @@ namespace SharpChess.Model
             {
                 SaveBackup();
                 SendBoardPositionChangeEvent();
-                if (IsPaused)
-                {
-                    // ResumePlay(); Don't want computer to play on loading a game.
-                }
             }
+            PausePlay();
 
-            // ResumePondering();
             return blnSuccess;
         }
 
