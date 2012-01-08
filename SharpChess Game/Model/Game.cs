@@ -11,14 +11,17 @@
 
 // SharpChess
 // Copyright (C) 2011 Peter Hughes
+// 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
+// 
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
+// 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
@@ -38,7 +41,7 @@ namespace SharpChess.Model
     #endregion
 
     /// <summary>
-    /// Represents the game of chess over its lfetime. Holds the board, players, turn number and everything related to the chess game in progress.
+    ///   Represents the game of chess over its lfetime. Holds the board, players, turn number and everything related to the chess game in progress.
     /// </summary>
     public static class Game
     {
@@ -54,10 +57,11 @@ namespace SharpChess.Model
         #region Constructors and Destructors
 
         /// <summary>
-        ///   Initializes static members of the <see cref = "Game" /> class.
+        ///   Initializes static members of the <see cref="Game" /> class.
         /// </summary>
         static Game()
         {
+            EnableFeatures();
             ClockIncrementPerMove = new TimeSpan(0, 0, 0);
             ClockFixedTimePerMove = new TimeSpan(0, 0, 0);
             DifficultyLevel = 1;
@@ -138,7 +142,7 @@ namespace SharpChess.Model
         #region Delegates
 
         /// <summary>
-        /// The game event type, raised to the UI when significant game events occur.
+        ///   The game event type, raised to the UI when significant game events occur.
         /// </summary>
         public delegate void GameEvent();
 
@@ -176,19 +180,19 @@ namespace SharpChess.Model
         #region Enums
 
         /// <summary>
-        /// Game stages.
+        ///   Game stages.
         /// </summary>
         public enum GameStageNames
         {
             /// <summary>
             ///   The opening.
             /// </summary>
-            Opening, 
+            Opening,
 
             /// <summary>
             ///   The middle.
             /// </summary>
-            Middle, 
+            Middle,
 
             /// <summary>
             ///   The end.
@@ -261,9 +265,69 @@ namespace SharpChess.Model
         public static bool EditModeActive { get; private set; }
 
         /// <summary>
+        ///   Gets or sets a value indicating whether to use Aspiration Search.
+        /// </summary>
+        public static bool EnableAspiration { get; set; }
+
+        /// <summary>
+        ///   Gets or sets a value indicating whether to use Search Extensions.
+        /// </summary>
+        public static bool EnableExtensions { get; set; }
+
+        /// <summary>
+        ///   Gets or sets a value indicating whether to use the history heuristic ( <see cref="HistoryHeuristic" /> class).
+        /// </summary>
+        public static bool EnableHistoryHeuristic { get; set; }
+
+        /// <summary>
+        ///   Gets or sets a value indicating whether to use the killer move heuristic ( <see cref="KillerMoves" /> class).
+        /// </summary>
+        public static bool EnableKillerMoves { get; set; }
+
+        /// <summary>
+        ///   Gets or sets a value indicating whether to use Null Move Forward Pruning.
+        /// </summary>
+        public static bool EnableNullMovePruning { get; set; }
+
+        /// <summary>
         ///   Gets or sets a value indicating whether Pondering has been enabled.
         /// </summary>
         public static bool EnablePondering { get; set; }
+
+        /// <summary>
+        ///   Gets or sets a value indicating whether to use PVS Search.
+        /// </summary>
+        public static bool EnablePvsSearch { get; set; }
+
+        /// <summary>
+        ///   Gets or sets a value indicating whether to use Quiescense.
+        /// </summary>
+        public static bool EnableQuiescense { get; set; }
+
+        /// <summary>
+        ///   Gets or sets a value indicating whether to use Search Reductions.
+        /// </summary>
+        public static bool EnableReductions { get; set; }
+
+        /// <summary>
+        ///   Gets or sets a value indicating whether to use Late Move Reductions.
+        /// </summary>
+        public static bool EnableReductionLateMove { get; set; }
+
+        /// <summary>
+        ///   Gets or sets a value indicating whether to use Margin Futilty Reductions.
+        /// </summary>
+        public static bool EnableReductionFutilityMargin { get; set; }
+
+        /// <summary>
+        ///   Gets or sets a value indicating whether to use Fixed Depth Futilty Reductions.
+        /// </summary>
+        public static bool EnableReductionFutilityFixedDepth { get; set; }
+
+        /// <summary>
+        ///   Gets or sets a value indicating whether to use the transposition table ( <see cref="HashTable" /> class).
+        /// </summary>
+        public static bool EnableTranspositionTable { get; set; }
 
         /// <summary>
         ///   Gets or sets the FEN string for the chess Start Position.
@@ -271,9 +335,7 @@ namespace SharpChess.Model
         public static string FenStartPosition { private get; set; }
 
         /// <summary>
-        ///   Gets or sets FiftyMoveDrawBase. 
-        ///   Appears to be a value set when using a FEN string. Doesn't seem quite right!
-        ///   TODO Invesigate FiftyMoveDrawBase.
+        ///   Gets or sets FiftyMoveDrawBase. Appears to be a value set when using a FEN string. Doesn't seem quite right! TODO Invesigate FiftyMoveDrawBase.
         /// </summary>
         public static int FiftyMoveDrawBase { get; set; }
 
@@ -415,7 +477,7 @@ namespace SharpChess.Model
         #region Public Methods
 
         /// <summary>
-        /// Captures all pieces.
+        ///   Captures all pieces.
         /// </summary>
         public static void CaptureAllPieces()
         {
@@ -424,7 +486,7 @@ namespace SharpChess.Model
         }
 
         /// <summary>
-        /// Demotes all pieces.
+        ///   Demotes all pieces.
         /// </summary>
         public static void DemoteAllPieces()
         {
@@ -433,14 +495,10 @@ namespace SharpChess.Model
         }
 
         /// <summary>
-        /// Load a saved game.
+        ///   Load a saved game.
         /// </summary>
-        /// <param name="fileName">
-        /// File name.
-        /// </param>
-        /// <returns>
-        /// Returns True is game loaded successfully.
-        /// </returns>
+        /// <param name="fileName"> File name. </param>
+        /// <returns> Returns True is game loaded successfully. </returns>
         public static bool Load(string fileName)
         {
             SuspendPondering();
@@ -453,34 +511,27 @@ namespace SharpChess.Model
                 SaveBackup();
                 SendBoardPositionChangeEvent();
             }
+
             PausePlay();
 
             return blnSuccess;
         }
 
         /// <summary>
-        /// Load backup game.
+        ///   Load backup game.
         /// </summary>
-        /// <returns>
-        /// Returns True is game loaded successfully.
-        /// </returns>
+        /// <returns> Returns True is game loaded successfully. </returns>
         public static bool LoadBackup()
         {
             return LoadGame(BackupGamePath);
         }
 
         /// <summary>
-        /// Make a move.
+        ///   Make a move.
         /// </summary>
-        /// <param name="moveName">
-        /// The move name.
-        /// </param>
-        /// <param name="piece">
-        /// The piece to move.
-        /// </param>
-        /// <param name="square">
-        /// The square to move to.
-        /// </param>
+        /// <param name="moveName"> The move name. </param>
+        /// <param name="piece"> The piece to move. </param>
+        /// <param name="square"> The square to move to. </param>
         public static void MakeAMove(Move.MoveNames moveName, Piece piece, Square square)
         {
             SuspendPondering();
@@ -491,7 +542,7 @@ namespace SharpChess.Model
         }
 
         /// <summary>
-        /// Start a new game.
+        ///   Start a new game.
         /// </summary>
         public static void New()
         {
@@ -499,11 +550,9 @@ namespace SharpChess.Model
         }
 
         /// <summary>
-        /// Start a new game using a FEN string.
+        ///   Start a new game using a FEN string.
         /// </summary>
-        /// <param name="fenString">
-        /// The FEN string.
-        /// </param>
+        /// <param name="fenString"> The FEN string. </param>
         public static void New(string fenString)
         {
             SuspendPondering();
@@ -515,7 +564,7 @@ namespace SharpChess.Model
         }
 
         /// <summary>
-        /// Pause the game.
+        ///   Pause the game.
         /// </summary>
         public static void PausePlay()
         {
@@ -525,7 +574,7 @@ namespace SharpChess.Model
         }
 
         /// <summary>
-        /// Redo all moves.
+        ///   Redo all moves.
         /// </summary>
         public static void RedoAllMoves()
         {
@@ -541,7 +590,7 @@ namespace SharpChess.Model
         }
 
         /// <summary>
-        /// Redo a move.
+        ///   Redo a move.
         /// </summary>
         public static void RedoMove()
         {
@@ -553,7 +602,7 @@ namespace SharpChess.Model
         }
 
         /// <summary>
-        /// Resume then game.
+        ///   Resume then game.
         /// </summary>
         public static void ResumePlay()
         {
@@ -570,7 +619,7 @@ namespace SharpChess.Model
         }
 
         /// <summary>
-        /// Resume pondering.
+        ///   Resume pondering.
         /// </summary>
         public static void ResumePondering()
         {
@@ -605,11 +654,9 @@ namespace SharpChess.Model
         }
 
         /// <summary>
-        /// Save the game as a file name.
+        ///   Save the game as a file name.
         /// </summary>
-        /// <param name="fileName">
-        /// The file name.
-        /// </param>
+        /// <param name="fileName"> The file name. </param>
         public static void Save(string fileName)
         {
             SuspendPondering();
@@ -624,7 +671,7 @@ namespace SharpChess.Model
         }
 
         /// <summary>
-        /// Call when settings have been changed in the UI.
+        ///   Call when settings have been changed in the UI.
         /// </summary>
         public static void SettingsUpdate()
         {
@@ -639,7 +686,7 @@ namespace SharpChess.Model
         }
 
         /// <summary>
-        /// Start normal game.
+        ///   Start normal game.
         /// </summary>
         public static void StartNormalGame()
         {
@@ -648,7 +695,7 @@ namespace SharpChess.Model
         }
 
         /// <summary>
-        /// Suspend pondering.
+        ///   Suspend pondering.
         /// </summary>
         public static void SuspendPondering()
         {
@@ -664,7 +711,7 @@ namespace SharpChess.Model
         }
 
         /// <summary>
-        /// Terminate the game.
+        ///   Terminate the game.
         /// </summary>
         public static void TerminateGame()
         {
@@ -688,7 +735,7 @@ namespace SharpChess.Model
         }
 
         /// <summary>
-        /// Instruct the computer to begin thinking, and take its turn.
+        ///   Instruct the computer to begin thinking, and take its turn.
         /// </summary>
         public static void Think()
         {
@@ -697,7 +744,7 @@ namespace SharpChess.Model
         }
 
         /// <summary>
-        /// Toggle edit mode.
+        ///   Toggle edit mode.
         /// </summary>
         public static void ToggleEditMode()
         {
@@ -705,7 +752,7 @@ namespace SharpChess.Model
         }
 
         /// <summary>
-        /// Undo all moves.
+        ///   Undo all moves.
         /// </summary>
         public static void UndoAllMoves()
         {
@@ -717,7 +764,7 @@ namespace SharpChess.Model
         }
 
         /// <summary>
-        /// Undo the last move.
+        ///   Undo the last move.
         /// </summary>
         public static void UndoMove()
         {
@@ -733,17 +780,11 @@ namespace SharpChess.Model
         #region Methods
 
         /// <summary>
-        /// Add a move node to the save game XML document.
+        ///   Add a move node to the save game XML document.
         /// </summary>
-        /// <param name="xmldoc">
-        /// Xml document representing the save game file.
-        /// </param>
-        /// <param name="xmlnodeGame">
-        /// Parent game xmlnode.
-        /// </param>
-        /// <param name="move">
-        /// Move to append to the save game Xml document.
-        /// </param>
+        /// <param name="xmldoc"> Xml document representing the save game file. </param>
+        /// <param name="xmlnodeGame"> Parent game xmlnode. </param>
+        /// <param name="move"> Move to append to the save game Xml document. </param>
         private static void AddSaveGameNode(XmlDocument xmldoc, XmlElement xmlnodeGame, Move move)
         {
             XmlElement xmlnodeMove = xmldoc.CreateElement("Move");
@@ -756,7 +797,7 @@ namespace SharpChess.Model
         }
 
         /// <summary>
-        /// Start then next move automatically, if its the computers turn.
+        ///   Start then next move automatically, if its the computers turn.
         /// </summary>
         private static void CheckIfAutoNextMove()
         {
@@ -777,14 +818,29 @@ namespace SharpChess.Model
         }
 
         /// <summary>
-        /// Load game from the specified file name.
+        /// Enable or disable SharpChess's features
         /// </summary>
-        /// <param name="strFileName">
-        /// The file name.
-        /// </param>
-        /// <returns>
-        /// True if load was successful.
-        /// </returns>
+        private static void EnableFeatures()
+        {
+            Game.EnableAspiration = false;
+            Game.EnableExtensions = true;
+            Game.EnableHistoryHeuristic = true;
+            Game.EnableKillerMoves = true;
+            Game.EnableNullMovePruning = true;
+            Game.EnablePvsSearch = true;
+            Game.EnableQuiescense = true;
+            Game.EnableReductions = true;
+            Game.EnableReductionFutilityMargin = false;
+            Game.EnableReductionFutilityFixedDepth = true;
+            Game.EnableReductionLateMove = true;
+            Game.EnableTranspositionTable = true;
+        }
+
+        /// <summary>
+        ///   Load game from the specified file name.
+        /// </summary>
+        /// <param name="strFileName"> The file name. </param>
+        /// <returns> True if load was successful. </returns>
         private static bool LoadGame(string strFileName)
         {
             MoveRedoList.Clear();
@@ -877,10 +933,11 @@ namespace SharpChess.Model
                     if (xmlnode.GetAttribute("FromFile") != string.Empty)
                     {
                         from = Board.GetSquare(
-                            Convert.ToInt32(xmlnode.GetAttribute("FromFile")), 
+                            Convert.ToInt32(xmlnode.GetAttribute("FromFile")),
                             Convert.ToInt32(xmlnode.GetAttribute("FromRank")));
                         to = Board.GetSquare(
-                            Convert.ToInt32(xmlnode.GetAttribute("ToFile")), Convert.ToInt32(xmlnode.GetAttribute("ToRank")));
+                            Convert.ToInt32(xmlnode.GetAttribute("ToFile")),
+                            Convert.ToInt32(xmlnode.GetAttribute("ToRank")));
                     }
                     else
                     {
@@ -924,17 +981,11 @@ namespace SharpChess.Model
         }
 
         /// <summary>
-        /// Make the specified move. For internal use only.
+        ///   Make the specified move. For internal use only.
         /// </summary>
-        /// <param name="moveName">
-        /// The move name.
-        /// </param>
-        /// <param name="piece">
-        /// The piece to move.
-        /// </param>
-        /// <param name="square">
-        /// The square to move to.
-        /// </param>
+        /// <param name="moveName"> The move name. </param>
+        /// <param name="piece"> The piece to move. </param>
+        /// <param name="square"> The square to move to. </param>
         private static void MakeAMoveInternal(Move.MoveNames moveName, Piece piece, Square square)
         {
             MoveRedoList.Clear();
@@ -975,7 +1026,7 @@ namespace SharpChess.Model
         }
 
         /// <summary>
-        /// Instruct the computer to make its next move.
+        ///   Instruct the computer to make its next move.
         /// </summary>
         private static void MakeNextComputerMove()
         {
@@ -986,7 +1037,7 @@ namespace SharpChess.Model
         }
 
         /// <summary>
-        /// Start a new game. For internal use only.
+        ///   Start a new game. For internal use only.
         /// </summary>
         private static void NewInternal()
         {
@@ -994,11 +1045,9 @@ namespace SharpChess.Model
         }
 
         /// <summary>
-        /// Start a new game from the specified FEN string position. For internal use only.
+        ///   Start a new game from the specified FEN string position. For internal use only.
         /// </summary>
-        /// <param name="fenString">
-        /// The str fen.
-        /// </param>
+        /// <param name="fenString"> The str fen. </param>
         private static void NewInternal(string fenString)
         {
             if (fenString == string.Empty)
@@ -1012,7 +1061,7 @@ namespace SharpChess.Model
             HashTablePawnKing.Clear();
             HashTableCheck.Clear();
             KillerMoves.Clear();
-            History.Clear();
+            HistoryHeuristic.Clear();
 
             UndoAllMovesInternal();
             MoveRedoList.Clear();
@@ -1023,11 +1072,9 @@ namespace SharpChess.Model
         }
 
         /// <summary>
-        /// Called when the computer has finished thinking, and is ready to make its move.
+        ///   Called when the computer has finished thinking, and is ready to make its move.
         /// </summary>
-        /// <exception cref="ApplicationException">
-        /// Raised when principal variation is empty.
-        /// </exception>
+        /// <exception cref="ApplicationException">Raised when principal variation is empty.</exception>
         private static void PlayerReadyToMakeMove()
         {
             Move move;
@@ -1047,7 +1094,7 @@ namespace SharpChess.Model
         }
 
         /// <summary>
-        /// Redo move. For internal use only.
+        ///   Redo move. For internal use only.
         /// </summary>
         private static void RedoMoveInternal()
         {
@@ -1069,19 +1116,21 @@ namespace SharpChess.Model
         }
 
         /// <summary>
-        /// Save a backup of the current game.
+        ///   Save a backup of the current game.
         /// </summary>
         private static void SaveBackup()
         {
-            SaveGame(BackupGamePath);
+            if (!WinBoard.Active)
+            {
+                // Only save backups if not using WinBoard.
+                SaveGame(BackupGamePath);
+            }
         }
 
         /// <summary>
-        /// Save game using the specified file name.
+        ///   Save game using the specified file name.
         /// </summary>
-        /// <param name="fileName">
-        /// The file name.
-        /// </param>
+        /// <param name="fileName"> The file name. </param>
         private static void SaveGame(string fileName)
         {
             XmlDocument xmldoc = new XmlDocument();
@@ -1120,7 +1169,7 @@ namespace SharpChess.Model
         }
 
         /// <summary>
-        /// The send board position change event.
+        ///   The send board position change event.
         /// </summary>
         private static void SendBoardPositionChangeEvent()
         {
@@ -1128,7 +1177,7 @@ namespace SharpChess.Model
         }
 
         /// <summary>
-        /// Undo all moves. For internal use pnly.
+        ///   Undo all moves. For internal use pnly.
         /// </summary>
         private static void UndoAllMovesInternal()
         {
@@ -1139,7 +1188,7 @@ namespace SharpChess.Model
         }
 
         /// <summary>
-        /// Undo move. For internal use only.
+        ///   Undo move. For internal use only.
         /// </summary>
         private static void UndoMoveInternal()
         {

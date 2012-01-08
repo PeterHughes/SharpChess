@@ -2559,7 +2559,7 @@ namespace SharpChess
 
                     if (Game.ShowThinking)
                     {
-                        strMsg += " Pos: " + playerToPlay.Brain.Search.PositionsSearched + " Q: "
+                        strMsg += " Pos: " + playerToPlay.Brain.Search.PositionsSearchedThisTurn + " Q: "
                                   + playerToPlay.Brain.Search.MaxQuiesenceDepthReached + " E: "
                                   + playerToPlay.Brain.Search.MaxExtensions;
                         strMsg += " P/S: " + playerToPlay.Brain.Search.PositionsPerSecond.ToString();
@@ -2830,7 +2830,7 @@ namespace SharpChess
         private void btnPerft_Click(object sender, EventArgs e)
         {
             Game.PlayerToPlay.Brain.Search.Perft(Game.PlayerToPlay, (int)this.numPerftDepth.Value);
-            MessageBox.Show(Game.PlayerToPlay.Brain.Search.PositionsSearched.ToString());
+            MessageBox.Show(Game.PlayerToPlay.Brain.Search.PositionsSearchedThisTurn.ToString());
         }
 
         /// <summary>

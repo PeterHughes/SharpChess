@@ -664,7 +664,7 @@ namespace SharpChess.Model
         }
 
         /// <summary>
-        /// Determins whether the specified player can move a piece to this square.
+        /// Determines whether the specified player can attack this square.
         /// </summary>
         /// <param name="player">
         /// The player being tested.
@@ -672,7 +672,7 @@ namespace SharpChess.Model
         /// <returns>
         /// True if player can move a piece to this square.
         /// </returns>
-        public bool PlayerCanMoveToThisSquare(Player player)
+        public bool PlayerCanAttackSquare(Player player)
         {
             Piece piece;
 

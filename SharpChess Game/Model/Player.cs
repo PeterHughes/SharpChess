@@ -369,6 +369,7 @@ namespace SharpChess.Model
                 {
                     intBasicValue += piece.BasicValue;
                 }
+
                 return intBasicValue;
             }
         }
@@ -555,6 +556,7 @@ namespace SharpChess.Model
                 {
                     intValue += piece.Value;
                 }
+
                 return intValue;
             }
         }
@@ -651,7 +653,7 @@ namespace SharpChess.Model
         }
 
         /// <summary>
-        /// The determine check status.
+        /// Determine check status.
         /// </summary>
         /// <returns>
         /// Return check status.
@@ -662,66 +664,24 @@ namespace SharpChess.Model
         }
 
         /// <summary>
-        /// The generate lazy moves.
+        /// Generate "lazy" moves for all pieces. Lazy means we include moves that put our own king in check.
         /// </summary>
-        /// <param name="depth">
-        /// The depth.
-        /// </param>
         /// <param name="moves">
-        /// The moves.
+        /// Move list to be filled with moves.
         /// </param>
         /// <param name="movesType">
-        /// The moves type.
+        /// Type of moves to be generated. e.g. all or just captures.
         /// </param>
-        /// <param name="squareAttacking">
-        /// The square attacking.
-        /// </param>
-        public void GenerateLazyMoves(int depth, Moves moves, Moves.MoveListNames movesType, Square squareAttacking)
+        public void GenerateLazyMoves(Moves moves, Moves.MoveListNames movesType)
         {
-            // if (squareAttacking==null)
-            // {
-            // All moves as defined by movesType
             foreach (Piece piece in this.Pieces)
             {
                 piece.GenerateLazyMoves(moves, movesType);
-
-                /*
-                if (movesType != Moves.MoveListNames.All)
-                {
-                    int intIndex;
-                    for (intIndex = moves.Count - 1; intIndex >= 0; intIndex--)
-                    {
-                        Move move = moves[intIndex];
-                        if (!( 
-                             move.Name == Move.MoveNames.PawnPromotionQueen
-                             &&
-                             move.PieceCaptured == null
-                             (move.Name == Move.MoveNames.Standard
-                              && move.From.Piece.BasicValue < move.To.Piece.BasicValue)
-                             ||
-                             (move.Name == Move.MoveNames.Standard
-                              && !move.To.PlayerCanMoveToThisSquare(move.Piece.Player.OtherPlayer))
-                             ||
-                             move.To.Ordinal==squareAttacking.Ordinal 
-                             ))
-                        {
-                            moves.Remove(move);
-                        }
-                    }
-                }
-                */
             }
-
-            // }
-            // else
-            // {
-            // Just re-capture moves
-            // squareAttacking.AttackerMoveList(moves, this);
-            // }
         }
 
         /// <summary>
-        /// The generate legal moves.
+        /// Generate legal moves. i.e. exclude moves that would put own king in check.
         /// </summary>
         /// <param name="moves">
         /// The moves.
@@ -757,6 +717,7 @@ namespace SharpChess.Model
                     return true;
                 }
             }
+
             return false;
         }
 

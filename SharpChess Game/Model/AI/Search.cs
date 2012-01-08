@@ -3,8 +3,7 @@
 //   Peter Hughes
 // </copyright>
 // <summary>
-//   Performs the central move-selection logic for SharpChess, referred to as the Search.
-//   http://chessprogramming.wikispaces.com/Search
+//   Performs the central move-selection logic for SharpChess, referred to as the Search. http://chessprogramming.wikispaces.com/Search
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -33,8 +32,7 @@ namespace SharpChess.Model.AI
     #endregion
 
     /// <summary>
-    /// Performs the central move-selection logic for SharpChess, referred to as the Search.
-    ///   http://chessprogramming.wikispaces.com/Search
+    ///   Performs the central move-selection logic for SharpChess, referred to as the Search. http://chessprogramming.wikispaces.com/Search
     /// </summary>
     public class Search
     {
@@ -65,11 +63,9 @@ namespace SharpChess.Model.AI
         #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Search"/> class.
+        ///   Initializes a new instance of the <see cref="Search" /> class.
         /// </summary>
-        /// <param name="brain">
-        /// The brain performing this search.
-        /// </param>
+        /// <param name="brain"> The brain performing this search. </param>
         public Search(Brain brain)
         {
             this.MyBrain = brain;
@@ -82,7 +78,7 @@ namespace SharpChess.Model.AI
         #region Delegates
 
         /// <summary>
-        /// The delegatetype Search event.
+        ///   The delegatetype Search event.
         /// </summary>
         public delegate void SearchEventDelegate();
 
@@ -152,15 +148,20 @@ namespace SharpChess.Model.AI
         {
             get
             {
-                return this.PositionsSearched
+                return this.PositionsSearchedThisTurn
                        / Math.Max(Convert.ToInt32(this.MyBrain.ThinkingTimeElpased.TotalSeconds), 1);
             }
         }
 
         /// <summary>
-        ///   Gets the number of positions searched.
+        ///   Gets the number of positions searched this iteration.
         /// </summary>
-        public int PositionsSearched { get; private set; }
+        public int PositionsSearchedThisIteration { get; private set; }
+
+        /// <summary>
+        ///   Gets the number of positions searched this turn.
+        /// </summary>
+        public int PositionsSearchedThisTurn { get; private set; }
 
         /// <summary>
         ///   Gets the current search depth.
@@ -191,42 +192,29 @@ namespace SharpChess.Model.AI
         #region Public Methods
 
         /// <summary>
-        /// Starts the iterative deepening search to find the best move for this player.
-        ///   http://chessprogramming.wikispaces.com/Iterative+Deepening
+        ///   Starts the iterative deepening search to find the best move for this player. http://chessprogramming.wikispaces.com/Iterative+Deepening
         /// </summary>
-        /// <param name="player">
-        /// The player to play.
-        /// </param>
-        /// <param name="principalVariation">
-        /// Move in the principal variation will be added to this list.
-        /// </param>
-        /// <param name="recommendedSearchTime">
-        /// Recommended search time allotted.
-        /// </param>
-        /// <param name="maximumSearchTimeAllowed">
-        /// The maximum search time allowed.
-        /// </param>
-        /// <returns>
-        /// The best move for the player.
-        /// </returns>
-        /// <exception cref="ForceImmediateMoveException">
-        /// Raised when the user requests for thinking to be terminated, and immediate move to made.
-        /// </exception>
+        /// <param name="player"> The player to play. </param>
+        /// <param name="principalVariation"> Move in the principal variation will be added to this list. </param>
+        /// <param name="recommendedSearchTime"> Recommended search time allotted. </param>
+        /// <param name="maximumSearchTimeAllowed"> The maximum search time allowed. </param>
+        /// <returns> The best move for the player. </returns>
+        /// <exception cref="ForceImmediateMoveException">Raised when the user requests for thinking to be terminated, and immediate move to made.</exception>
         public int IterativeDeepeningSearch(
             Player player, Moves principalVariation, TimeSpan recommendedSearchTime, TimeSpan maximumSearchTimeAllowed)
         {
             /* A new deeper ply of search will only be started, if the cutoff time hasnt been reached yet. 
-             Minimum search time = 2 seconds */
+             Minimum search time = 100 milli-second */
             TimeSpan searchTimeCutoff = new TimeSpan(recommendedSearchTime.Ticks / 3);
-            if (searchTimeCutoff.TotalMilliseconds < 2000)
+            if (searchTimeCutoff.TotalMilliseconds < 100)
             {
-                searchTimeCutoff = new TimeSpan(0, 0, 0, 2);
+                searchTimeCutoff = new TimeSpan(0, 0, 0, 0, 100);
             }
 
             this.MaxSearchTimeAllowed = maximumSearchTimeAllowed;
 
             this.forceExitWithMove = false; // Set to stop thread thinking and return best move
-            this.PositionsSearched = 0; // Total number of positions considered so far
+            this.PositionsSearchedThisTurn = 0; // Total number of positions considered so far this turn.
             this.Evaluations = 0;
             this.LastPrincipalVariation.Clear();
 
@@ -243,8 +231,9 @@ namespace SharpChess.Model.AI
 
             for (this.SearchDepth = MinSearchDepth; this.SearchDepth <= this.MaxSearchDepth; this.SearchDepth++)
             {
+                this.PositionsSearchedThisIteration = 0; // Reset positions searched this iteration.
                 KillerMoves.Clear(); // Clear killer moves from previous iteration.
-                History.Clear(); // Clear history when from previous iteration. 
+                HistoryHeuristic.Clear(); // Clear history when from previous iteration. 
 
                 if (Game.CaptureMoveAnalysisData && Game.MoveAnalysis.Count > 0)
                 {
@@ -254,7 +243,7 @@ namespace SharpChess.Model.AI
                 score = this.Aspirate(player, principalVariation, score, Game.MoveAnalysis);
 
                 if (!Game.IsInAnalyseMode && Game.ClockFixedTimePerMove.TotalSeconds <= 0 && !this.MyBrain.IsPondering
-                    && (this.MyBrain.ThinkingTimeElpased) > searchTimeCutoff)
+                    && this.MyBrain.ThinkingTimeElpased > searchTimeCutoff)
                 {
                     throw new ForceImmediateMoveException();
                 }
@@ -267,10 +256,10 @@ namespace SharpChess.Model.AI
                 }
 
                 WinBoard.SendThinking(
-                    this.SearchDepth, 
-                    score, 
-                    DateTime.Now - player.Clock.TurnStartTime, 
-                    this.PositionsSearched, 
+                    this.SearchDepth,
+                    score,
+                    DateTime.Now - player.Clock.TurnStartTime,
+                    this.PositionsSearchedThisIteration,
                     this.MyBrain.PrincipalVariationText);
 
                 if (score > 99999 || score < -99999)
@@ -283,23 +272,18 @@ namespace SharpChess.Model.AI
         }
 
         /// <summary>
-        /// Walks the move generation tree and counts all the leaf nodes of a certain depth, which can be compared to predetermined values and used to isolate bugs.
-        ///   http://chessprogramming.wikispaces.com/Perft
+        ///   Walks the move generation tree and counts all the leaf nodes of a certain depth, which can be compared to predetermined values and used to isolate bugs. http://chessprogramming.wikispaces.com/Perft
         /// </summary>
-        /// <param name="player">
-        /// The player to play.
-        /// </param>
-        /// <param name="targetDepth">
-        /// The target depth.
-        /// </param>
+        /// <param name="player"> The player to play. </param>
+        /// <param name="targetDepth"> The target depth. </param>
         public void Perft(Player player, int targetDepth)
         {
-            this.PositionsSearched = 0;
+            this.PositionsSearchedThisTurn = 0;
             this.PerftPly(player, targetDepth);
         }
 
         /// <summary>
-        /// The force search to exit with an immediate move.
+        ///   The force search to exit with an immediate move.
         /// </summary>
         public void SearchForceExitWithMove()
         {
@@ -311,14 +295,55 @@ namespace SharpChess.Model.AI
         #region Methods
 
         /// <summary>
-        /// Add a commnent to the Move Analysis move.
+        /// Apply Search Extensions
         /// </summary>
-        /// <param name="move">
-        /// Move to comment.
-        /// </param>
-        /// <param name="comment">
-        /// Comment to add.
-        /// </param>
+        /// <param name="extensionOrReduction">Number of extensions or reductions applied in the search node. Extensions positive, reductions negative.</param>
+        /// <param name="movesPossible">List of possible modes at this search node.</param>
+        /// <param name="moveMade">One of the candidate moves made from this search node.</param>
+        /// <param name="parentMove">Move that is the parent of this search node.</param>
+        private static void ApplyExtensions(
+            ref int extensionOrReduction, Moves movesPossible, Move moveMade, Move parentMove)
+        {
+            if (Game.EnableExtensions)
+            {
+                if (movesPossible.Count == 1)
+                {
+                    // Single Response
+                    extensionOrReduction = 1;
+                    Comment(moveMade, "E-1REP ");
+                }
+                else if (parentMove != null && parentMove.IsEnemyInCheck)
+                {
+                    // Check evasion
+                    extensionOrReduction = 1;
+                    Comment(moveMade, "E-CHK ");
+                }
+                else if (parentMove != null && parentMove.PieceCaptured != null && moveMade.PieceCaptured != null
+                         && parentMove.PieceCaptured.BasicValue == moveMade.PieceCaptured.BasicValue
+                         && parentMove.To == moveMade.To)
+                {
+                    // Recapture piece of same basic value (on the same square)
+                    extensionOrReduction = 1;
+                    Comment(moveMade, "E-RECAP ");
+                }
+                else if (moveMade.Piece.Name == Piece.PieceNames.Pawn
+                         &&
+                         ((moveMade.Piece.Player.Colour == Player.PlayerColourNames.White && moveMade.To.Rank == 6)
+                          ||
+                          (moveMade.Piece.Player.Colour == Player.PlayerColourNames.Black && moveMade.To.Rank == 1)))
+                {
+                    // Pawn push to 7th rank
+                    extensionOrReduction = 1;
+                    Comment(moveMade, "E-PAWN7 ");
+                }
+            }
+        }
+
+        /// <summary>
+        ///   Add a commnent to the Move Analysis move.
+        /// </summary>
+        /// <param name="move"> Move to comment. </param>
+        /// <param name="comment"> Comment to add. </param>
         private static void Comment(Move move, string comment)
         {
             if (Game.CaptureMoveAnalysisData)
@@ -328,88 +353,73 @@ namespace SharpChess.Model.AI
         }
 
         /// <summary>
-        /// Performs the search foe the best move, using a specialised form of alpha beta search, named Principal Variation Search (PVS) .
-        ///   http://chessprogramming.wikispaces.com/Alpha-Beta
-        ///   http://chessprogramming.wikispaces.com/Principal+Variation+Search
+        ///   Performs the search foe the best move, using a specialised form of alpha beta search, named Principal Variation Search (PVS) . http://chessprogramming.wikispaces.com/Alpha-Beta http://chessprogramming.wikispaces.com/Principal+Variation+Search
         /// </summary>
-        /// <param name="player">
-        /// The player to play. The player is alternated at each new ply of search.
-        /// </param>
-        /// <param name="ply">
-        /// True depth in plies. Starts at the max search depth and is DECREMENTED as alpha beta get deeper.
-        /// </param>
-        /// <param name="variableDepth">
-        /// Variable depth which starts at the max search depth and is DECREMENTED as alpha beta get deeper. 
-        ///   Its value is altered by search extension and reductions. Quiesence starts at depth 0.
-        ///   http://chessprogramming.wikispaces.com/Depth
-        /// </param>
-        /// <param name="alpha">
-        /// Alpha (α) is the lower bound, representing the minimum score that a node  must reach in order to change the value of a previous node.
-        ///   http://chessprogramming.wikispaces.com/Alpha
-        /// </param>
-        /// <param name="beta">
-        /// Beta (β) is the upper bound  of a score for the node. If the node value exceeds or equals beta, it means that the opponent will avoid this node, 
-        ///   since his guaranteed score (Alpha of the parent node) is already greater. Thus, Beta is the best-score the opponent (min-player) could archive so far...
-        ///   http://chessprogramming.wikispaces.com/Beta
-        /// </param>
-        /// <param name="parentMove">
-        /// Move from the parent alpha beta call.
-        /// </param>
-        /// <param name="principalVariation">
-        /// The Principal variation (PV) is a sequence of moves is considered best and therefore expect to be played. 
-        ///   This list of moves is collected during the alpha beta search.
-        ///   http://chessprogramming.wikispaces.com/Principal+variation
-        /// </param>
-        /// <param name="totalExtensionsAndReducations">
-        /// Holds a counter indicating the number of search extensions or reductions at the current search depth.
-        ///   A positive nunber indicates there have been extensions in a previous ply, negative indicates a reduction.
-        ///   http://chessprogramming.wikispaces.com/Extensions
-        ///   http://chessprogramming.wikispaces.com/Reductions
-        /// </param>
-        /// <param name="analysisParentBranch">
-        /// When move analysis is enabled, a tree of search moves is collected in this variable, which can be viewed in the GUI.
-        /// </param>
-        /// <returns>
-        /// The score of the best move.
-        /// </returns>
-        /// <exception cref="ForceImmediateMoveException">
-        /// Raised when the user requests for thinking to be terminated, and immediate move to made.
-        /// </exception>
+        /// <param name="player"> The player to play. The player is alternated at each new ply of search. </param>
+        /// <param name="ply"> True depth in plies. Starts at the max search depth and is DECREMENTED as alpha beta get deeper. </param>
+        /// <param name="variableDepth"> Variable depth which starts at the max search depth and is DECREMENTED as alpha beta get deeper. Its value is altered by search extension and reductions. Quiesence starts at depth 0. http://chessprogramming.wikispaces.com/Depth </param>
+        /// <param name="alpha"> Alpha (α) is the lower bound, representing the minimum score that a node must reach in order to change the value of a previous node. http://chessprogramming.wikispaces.com/Alpha </param>
+        /// <param name="beta"> Beta (β) is the upper bound of a score for the node. If the node value exceeds or equals beta, it means that the opponent will avoid this node, since his guaranteed score (Alpha of the parent node) is already greater. Thus, Beta is the best-score the opponent (min-player) could archive so far... http://chessprogramming.wikispaces.com/Beta </param>
+        /// <param name="parentMove"> Move from the parent alpha beta call. </param>
+        /// <param name="principalVariation"> The Principal variation (PV) is a sequence of moves is considered best and therefore expect to be played. This list of moves is collected during the alpha beta search. http://chessprogramming.wikispaces.com/Principal+variation </param>
+        /// <param name="totalExtensionsOrReductions"> Holds a counter indicating the number of search extensions or reductions at the current search depth. A positive nunber indicates there have been extensions in a previous ply, negative indicates a reduction. http://chessprogramming.wikispaces.com/Extensions http://chessprogramming.wikispaces.com/Reductions </param>
+        /// <param name="analysisParentBranch"> When move analysis is enabled, a tree of search moves is collected in this variable, which can be viewed in the GUI. </param>
+        /// <returns> The score of the best move. </returns>
+        /// <exception cref="ForceImmediateMoveException">Raised when the user requests for thinking to be terminated, and immediate move to made.</exception>
         private int AlphaBetaPvs(
-            Player player, 
-            int ply, 
-            int variableDepth, 
-            int alpha, 
-            int beta, 
-            Move parentMove, 
-            Moves principalVariation, 
-            int totalExtensionsAndReducations, 
+            Player player,
+            int ply,
+            int variableDepth,
+            int alpha,
+            int beta,
+            Move parentMove,
+            Moves principalVariation,
+            int totalExtensionsOrReductions,
             Moves analysisParentBranch)
         {
-            // TODO Don't generate hash or killer moves.
-            int val;
-            HashTable.HashTypeNames hashType = HashTable.HashTypeNames.Alpha;
-            Move moveBest = null;
-            bool blnPvNode = false;
-            int intLegalMovesAttempted = 0;
-            bool blnIsInCheck = player.IsInCheck;
+            // TODO Try hash and killer moves, before generating all moves. It will save time.
 
+            // Score of the move being examined in the move loop.
+            int val;
+
+            // Type of hash entry that will be stored in the Transposition Table. http://chessprogramming.wikispaces.com/Transposition+Table
+            HashTable.HashTypeNames hashType = HashTable.HashTypeNames.Alpha;
+
+            // The best move found at this node. Assigned if/when alpha is improved.
+            Move bestMove = null;
+
+            // Indicates that this entire node is a PV Node. http://chessprogramming.wikispaces.com/Node+Types
+            bool isPvNode = false;
+
+            // A counter of the number of legal moves we've examines in this node so far.
+            int legalMovesAttempted = 0;
+
+            // Indicates whether the player-to-play is in check at this node.
+            bool isInCheck = player.IsInCheck;
+
+            // Exit immediately, if instructed to do so. i.e. the user has click the "Move Now" button.
             if (this.forceExitWithMove)
             {
                 throw new ForceImmediateMoveException();
             }
 
-            this.PositionsSearched++;
-
+            // This node has reached 3-move-repetition, so return the current score, and don't bother searching any deeper.
             if (parentMove != null && parentMove.IsThreeMoveRepetition)
             {
                 return player.Score;
             }
 
-            if (ply != this.SearchDepth && (val = HashTable.ProbeHash(Board.HashCodeA, Board.HashCodeB, ply, alpha, beta, player.Colour))
+            if (totalExtensionsOrReductions > this.MaxExtensions)
+            {
+                this.MaxExtensions = totalExtensionsOrReductions;
+            }
+
+            // Check if this node (position) is in the tranposition (hash) table, and if appropriate, return the score stored there.
+            if (ply != this.SearchDepth
+                &&
+                (val = HashTable.ProbeForScore(Board.HashCodeA, Board.HashCodeB, ply, alpha, beta, player.Colour))
                 != HashTable.NotFoundInHashTable)
             {
-                
                 // High values of "val" indicate that a checkmate has been found
                 if (val > 1000000 || val < -1000000)
                 {
@@ -423,10 +433,6 @@ namespace SharpChess.Model.AI
                 return val;
             }
 
-            // Generate moves
-            Moves movesPossible = new Moves();
-            player.GenerateLazyMoves(variableDepth, movesPossible, Moves.MoveListNames.All, null);
-
             // Depth <= 0 means we're into Quiescence searching
             if (variableDepth <= 0)
             {
@@ -434,28 +440,37 @@ namespace SharpChess.Model.AI
                     player, ply, variableDepth, alpha, beta, parentMove, principalVariation, analysisParentBranch);
             }
 
-            Moves movesPv = new Moves();
+            // Generate "lazy" moves (lazy means we include moves that put our own king in check)
+            Moves movesPossible = new Moves();
+            player.GenerateLazyMoves(movesPossible, Moves.MoveListNames.All);
 
-            // Adaptive Null-move forward pruning
-            int r = variableDepth > 6 ? 3 : 2;
-            if (variableDepth > (r + 1) && parentMove != null && parentMove.Name != Move.MoveNames.NullMove
-                && Game.Stage != Game.GameStageNames.End && !blnIsInCheck)
+            // Stores the PV that is local to this node and it's children.
+            Moves localPrincipalVariation = new Moves();
+
+            if (Game.EnableNullMovePruning)
             {
-                Move moveNull = new Move(Game.TurnNo, 0, Move.MoveNames.NullMove, null, null, null, null, 0, 0);
-                val =
-                    -this.AlphaBetaPvs(
-                        player.OpposingPlayer, 
-                        ply - 1, 
-                        variableDepth - r - 1, 
-                        -beta, 
-                        -beta + 1, 
-                        moveNull, 
-                        movesPv, 
-                        totalExtensionsAndReducations, 
-                        null);
-                if (val >= beta)
+                // Adaptive Null-move pruning
+                // http://chessprogramming.wikispaces.com/Null+Move+Pruning
+                int r = variableDepth > 6 ? 3 : 2;
+                if (variableDepth > (r + 1) && parentMove != null && parentMove.Name != Move.MoveNames.NullMove
+                    && Game.Stage != Game.GameStageNames.End && !isInCheck)
                 {
-                    return beta;
+                    Move moveNull = new Move(Game.TurnNo, 0, Move.MoveNames.NullMove, null, null, null, null, 0, 0);
+                    val =
+                        -this.AlphaBetaPvs(
+                            player.OpposingPlayer,
+                            ply - 1,
+                            variableDepth - r - 1,
+                            -beta,
+                            -beta + 1,
+                            moveNull,
+                            localPrincipalVariation,
+                            totalExtensionsOrReductions,
+                            null);
+                    if (val >= beta)
+                    {
+                        return beta;
+                    }
                 }
             }
 
@@ -478,14 +493,14 @@ namespace SharpChess.Model.AI
 
             // Sort moves
             this.SortBestMoves(
-                movesPossible, 
-                variableDepth, 
-                movePv, 
-                moveHash, 
-                moveKillerA, 
-                moveKillerA2, 
-                moveKillerB, 
-                moveKillerB2, 
+                movesPossible,
+                variableDepth,
+                movePv,
+                moveHash,
+                moveKillerA,
+                moveKillerA2,
+                moveKillerB,
+                moveKillerB2,
                 player);
 
             if (ply == this.SearchDepth)
@@ -496,31 +511,36 @@ namespace SharpChess.Model.AI
 
             foreach (Move move in movesPossible)
             {
-                Move moveThis = move.Piece.Move(move.Name, move.To);
-                moveThis.DebugComment += move.DebugComment;
+                // Make the move
+                Move moveMade = move.Piece.Move(move.Name, move.To);
+
+                this.PositionsSearchedThisTurn++;
+                this.PositionsSearchedThisIteration++;
+
+                moveMade.DebugComment += move.DebugComment;
 
                 if (ply == this.SearchDepth)
                 {
                     this.SearchPositionNo++;
-                    this.CurrentMoveSearched = moveThis;
+                    this.CurrentMoveSearched = moveMade;
                     if (this.SearchMoveConsideredEvent != null)
                     {
                         this.SearchMoveConsideredEvent();
                     }
                 }
 
-                // This move put the player in check, so abort and move onto next move.
+                // This move put our player in check, so abort, and skip to next move.
                 if (player.IsInCheck)
                 {
-                    Move.Undo(moveThis);
+                    Move.Undo(moveMade);
                     continue;
                 }
 
-                intLegalMovesAttempted++;
+                legalMovesAttempted++;
 
-                if (moveBest == null)
+                if (bestMove == null)
                 {
-                    moveBest = moveThis;
+                    bestMove = moveMade;
                 }
 
                 if (Game.CaptureMoveAnalysisData)
@@ -528,236 +548,117 @@ namespace SharpChess.Model.AI
                     // Add moves to post-move analysis tree, if option set by user
                     if (parentMove == null || parentMove.Name != Move.MoveNames.NullMove)
                     {
-                        analysisParentBranch.Add(moveThis);
+                        if (analysisParentBranch != null)
+                        {
+                            analysisParentBranch.Add(moveMade);
+                        }
                     }
 
-                    moveThis.Moves = new Moves();
+                    moveMade.Moves = new Moves();
                 }
 
+                int extensionOrReduction = 0;
+
+                // Extensions
                 // http://chessprogramming.wikispaces.com/Extensions
-                // TODO Consider fractional extensions. 
-                // Search Extensions
-                int intExtensionOrReduction = 0;
-
-                if (movesPossible.Count == 1)
-                {
-                    // Single Response
-                    intExtensionOrReduction = 1;
-                    Comment(moveThis, "E-1REP ");
-                }
-                else if (parentMove != null && parentMove.IsEnemyInCheck)
-                {
-                    // Check evasion
-                    intExtensionOrReduction = 1;
-                    Comment(moveThis, "E-CHK ");
-                }
-                else if (parentMove != null && parentMove.PieceCaptured != null && moveThis.PieceCaptured != null
-                         && parentMove.PieceCaptured.BasicValue == moveThis.PieceCaptured.BasicValue
-                         && parentMove.To == moveThis.To)
-                {
-                    // Recapture piece of same basic value (on the same square)
-                    intExtensionOrReduction = 1;
-                    Comment(moveThis, "E-RECAP ");
-                }
-                else if (moveThis.Piece.Name == Piece.PieceNames.Pawn
-                         &&
-                         ((moveThis.Piece.Player.Colour == Player.PlayerColourNames.White && moveThis.To.Rank == 6)
-                          ||
-                          (moveThis.Piece.Player.Colour == Player.PlayerColourNames.Black && moveThis.To.Rank == 1)))
-                {
-                    // Pawn push to 7th rank
-                    intExtensionOrReduction = 1;
-                    Comment(moveThis, "E-PAWN7 ");
-                }
+                ApplyExtensions(ref extensionOrReduction, movesPossible, moveMade, parentMove);
 
                 // Reductions
-                // Only reduce if this move hasn't already been extended (or reduced).
-                if (!blnPvNode && intExtensionOrReduction == 0)
-                {
-                    if (variableDepth > 2 && !blnIsInCheck && moveThis.PieceCaptured == null && !moveThis.IsEnemyInCheck)
-                    {
-                        int[] margin = 
-                                       {
-                                           0, 0, 0, 5000, 5000, 7000, 7000, 9000, 9000, 15000, 15000, 15000, 15000, 15000, 
-                                           15000, 15000, 15000, 15000
-                                       };
+                // http://chessprogramming.wikispaces.com/Reductions
+                this.ApplyReductions(
+                    ref extensionOrReduction,
+                    totalExtensionsOrReductions,
+                    ply,
+                    variableDepth,
+                    isPvNode,
+                    isInCheck,
+                    alpha,
+                    player,
+                    moveMade,
+                    legalMovesAttempted,
+                    localPrincipalVariation);
 
-                        // int intLazyEval = this.TotalPieceValue - this.OtherPlayer.TotalPieceValue;
-                        int intLazyEval = player.Score;
-                        if (alpha > intLazyEval + margin[variableDepth])
-                        {
-                            intExtensionOrReduction = -1;
-                            Comment(moveThis, "R-MARG" + (margin[variableDepth] / 1000) + " ");
-                        }
-                    }
-
-                    // Futility Pruning http://chessprogramming.wikispaces.com/Futility+Pruning
-                    if (!blnIsInCheck && intExtensionOrReduction == 0)
-                    {
-                        switch (variableDepth)
-                        {
-                            case 2:
-                            case 3:
-                            //case 4:
-                                if (moveThis.PieceCaptured == null && !move.IsEnemyInCheck)
-                                {
-                                    int intLazyEval = player.Score;
-
-                                    switch (variableDepth)
-                                    {
-                                        case 2:
-
-                                            // Standard Futility Pruning
-                                            if (intLazyEval + 3000 <= alpha)
-                                            {
-                                                intExtensionOrReduction = -1;
-                                                Comment(moveThis, "R-FUT3 ");
-                                            }
-
-                                            break;
-
-                                        case 3:
-
-                                            // Extended Futility Pruning
-                                            if (intLazyEval + 5000 <= alpha)
-                                            {
-                                                intExtensionOrReduction = -1;
-                                                Comment(moveThis, "R-FUT5 ");
-                                            }
-
-                                            break;
-
-                                        case 4:
-
-                                            // Deep Futility Pruning
-                                            if (intLazyEval + 9750 <= alpha)
-                                            {
-                                                intExtensionOrReduction = -1;
-                                                Comment(moveThis, "R-FUT9 ");
-                                            }
-
-                                            break;
-                                    }
-                                }
-
-                                break;
-                        }
-                    }
-
-                    // Late Move Reductions http://chessprogramming.wikispaces.com/Late+Move+Reductions
-                    // Reduce if move is 1) low in the search order and 2) has a poor history score.
-                    /*
-                    if (!blnIsInCheck && intExtensionOrReduction == 0 && moveThis.PieceCaptured == null)
-                    {
-                        if (intLegalMovesAttempted > 3)
-                        {
-                            int historyScore = History.Retrieve(player.Colour, moveThis.From.Ordinal, moveThis.To.Ordinal);
-                            if (historyScore == 0)
-                            {
-                                intExtensionOrReduction = -1;
-                                Comment(moveThis, "R-LMR ");
-                            }
-                        }
-                    }
-                    */
-                }
-
-                /*
-                if (intExtension>0 && intTotalExtensions>=m_intSearchDepth)
-                {
-                    intExtension = 0;
-                }
-                */
-
-                if (totalExtensionsAndReducations > this.MaxExtensions)
-                {
-                    this.MaxExtensions = totalExtensionsAndReducations;
-                    Comment(moveThis, "^MaxExt: " + totalExtensionsAndReducations + " ");
-                }
-
-                /* #if DEBUG  // Avoid to break in a zero window research so alpha + 1 < beta
-                   if ((alpha + 1 < beta) && DebugMatchVariation(m_intSearchDepth - ply, moveThis)) Debugger.Break();
-                 #endif */
-                if (blnPvNode)
+                if (Game.EnablePvsSearch && isPvNode)
                 {
                     // Attempt a Principal Variation Search (PVS) using a zero window. http://chessprogramming.wikispaces.com/Principal+Variation+Search
                     val =
                         -this.AlphaBetaPvs(
-                            player.OpposingPlayer, 
-                            ply - 1, 
-                            (variableDepth + intExtensionOrReduction) - 1, 
-                            -alpha - 1, 
-                            -alpha, 
-                            moveThis, 
-                            movesPv, 
-                            totalExtensionsAndReducations + intExtensionOrReduction, 
-                            moveThis.Moves);
+                            player.OpposingPlayer,
+                            ply - 1,
+                            (variableDepth + extensionOrReduction) - 1,
+                            -alpha - 1,
+                            -alpha,
+                            moveMade,
+                            localPrincipalVariation,
+                            totalExtensionsOrReductions + extensionOrReduction,
+                            moveMade.Moves);
 
                     if ((val > alpha) && (val < beta))
                     {
                         // PVS failed. Have to re-search using a full alpha-beta window.
-                        Comment(moveThis, "-PVS-WIN- ");
+                        Comment(moveMade, "-PVS-WIN- ");
 
                         if (Game.CaptureMoveAnalysisData && parentMove != null
                             && parentMove.Name != Move.MoveNames.NullMove)
                         {
-                            moveThis.Moves.Clear();
+                            moveMade.Moves.Clear();
                         }
-                        
+
                         val =
                             -this.AlphaBetaPvs(
-                                player.OpposingPlayer, 
-                                ply - 1, 
-                                (variableDepth + intExtensionOrReduction) - 1, 
-                                -beta, 
-                                -alpha, 
-                                moveThis, 
-                                movesPv, 
-                                totalExtensionsAndReducations + intExtensionOrReduction, 
-                                moveThis.Moves);
+                                player.OpposingPlayer,
+                                ply - 1,
+                                (variableDepth + extensionOrReduction) - 1,
+                                -beta,
+                                -alpha,
+                                moveMade,
+                                localPrincipalVariation,
+                                totalExtensionsOrReductions + extensionOrReduction,
+                                moveMade.Moves);
                     }
                     else
                     {
-                        Comment(moveThis, "-F- ");
+                        Comment(moveMade, "-F- ");
                     }
                 }
                 else
                 {
                     // Not a PV node, so just do a normal alpha-beta search.
-
                     val =
                         -this.AlphaBetaPvs(
-                            player.OpposingPlayer, 
-                            ply - 1, 
-                            (variableDepth + intExtensionOrReduction) - 1, 
-                            -beta, 
-                            -alpha, 
-                            moveThis, 
-                            movesPv, 
-                            totalExtensionsAndReducations + intExtensionOrReduction, 
-                            moveThis.Moves);
+                            player.OpposingPlayer,
+                            ply - 1,
+                            (variableDepth + extensionOrReduction) - 1,
+                            -beta,
+                            -alpha,
+                            moveMade,
+                            localPrincipalVariation,
+                            totalExtensionsOrReductions + extensionOrReduction,
+                            moveMade.Moves);
                 }
 
-                move.Score = moveThis.Score = val;
+                move.Score = moveMade.Score = val;
 
-                Move.Undo(moveThis);
+                // Take back the move
+                Move.Undo(moveMade);
 
                 if (val >= beta)
                 {
+                    // Test for a beta cut-off http://chessprogramming.wikispaces.com/Beta-Cutoff
                     alpha = beta;
-                    moveThis.Beta = beta;
+                    moveMade.Beta = beta;
                     hashType = HashTable.HashTypeNames.Beta;
-                    moveBest = moveThis;
+                    bestMove = moveMade;
 
                     Comment(parentMove, "(CUT) ");
 
-                    if (moveThis.PieceCaptured == null)
+                    if (moveMade.PieceCaptured == null)
                     {
                         // Add this cut move to the history heuristic.
-                        History.Record(player.Colour, moveThis.From.Ordinal, moveThis.To.Ordinal, ply * ply);
+                        HistoryHeuristic.Record(player.Colour, moveMade.From.Ordinal, moveMade.To.Ordinal, ply * ply);
 
                         // Add this cut move to the killer move heuristic.
-                        KillerMoves.RecordPossibleKillerMove(ply, moveThis);
+                        KillerMoves.RecordPossibleKillerMove(ply, moveMade);
                     }
 
                     goto Exit;
@@ -765,46 +666,45 @@ namespace SharpChess.Model.AI
 
                 if (val > alpha)
                 {
-                    Comment(moveThis, "*PV* " + alpha + "<" + val);
+                    // Test if the move made can improve alpha. 
+                    // If so, then it become the new best move, and local PV for this node. http://chessprogramming.wikispaces.com/Node
+                    Comment(moveMade, "*PV* " + alpha + "<" + val);
 
-                    blnPvNode = true; /* This is a PV node */
+                    isPvNode = true; /* This is a PV node */
                     alpha = val;
                     hashType = HashTable.HashTypeNames.Exact;
-                    moveBest = moveThis;
+                    bestMove = moveMade;
 
                     // Collect the Prinicial Variation
                     lock (principalVariation)
                     {
                         principalVariation.Clear();
-                        principalVariation.Add(moveThis);
-                        foreach (Move moveCopy in movesPv)
+                        principalVariation.Add(moveMade);
+                        foreach (Move moveCopy in localPrincipalVariation)
                         {
                             principalVariation.Add(moveCopy);
                         }
                     }
-
-                    // #if DEBUG
-                    // Debug.WriteLineIf((ply == m_intSearchDepth) && (ply > 1), string.Format("{0} {1} {2}", ply, PvLine(principalVariation), alpha));
-                    // #endif
                 }
 
-                moveThis.Alpha = alpha;
-                moveThis.Beta = beta;
+                moveMade.Alpha = alpha;
+                moveMade.Beta = beta;
                 if (!Game.IsInAnalyseMode && !this.MyBrain.IsPondering && this.SearchDepth > MinSearchDepth
-                    && MyBrain.ThinkingTimeElpased > this.MaxSearchTimeAllowed)
+                    && this.MyBrain.ThinkingTimeElpased > this.MaxSearchTimeAllowed)
                 {
                     throw new ForceImmediateMoveException();
                 }
             }
 
-            if (!blnPvNode && parentMove != null)
+            if (!isPvNode && parentMove != null)
             {
+                // All positions were search at this node. It's not a PV node, and no beta cut-off occured,
+                // therefore it's an ALL node. http://chessprogramming.wikispaces.com/Node+Types#ALL
                 Comment(parentMove, "(ALL) ");
             }
 
-
             // Check for Stalemate
-            if (intLegalMovesAttempted == 0)
+            if (legalMovesAttempted == 0)
             {
                 alpha = player.Score;
             }
@@ -812,30 +712,30 @@ namespace SharpChess.Model.AI
             Exit:
 
             // Record best move
-            if (moveBest != null)
+            if (bestMove != null)
             {
                 HashTable.RecordHash(
-                    Board.HashCodeA, 
-                    Board.HashCodeB, 
-                    ply, 
-                    alpha, 
-                    hashType, 
-                    moveBest.From.Ordinal, 
-                    moveBest.To.Ordinal, 
-                    moveBest.Name, 
+                    Board.HashCodeA,
+                    Board.HashCodeB,
+                    ply,
+                    alpha,
+                    hashType,
+                    bestMove.From.Ordinal,
+                    bestMove.To.Ordinal,
+                    bestMove.Name,
                     player.Colour);
             }
             else
             {
                 HashTable.RecordHash(
-                    Board.HashCodeA, 
-                    Board.HashCodeB, 
-                    ply, 
-                    alpha, 
-                    hashType, 
-                    -1, 
-                    -1, 
-                    Move.MoveNames.NullMove, 
+                    Board.HashCodeA,
+                    Board.HashCodeB,
+                    ply,
+                    alpha,
+                    hashType,
+                    -1,
+                    -1,
+                    Move.MoveNames.NullMove,
                     player.Colour);
             }
 
@@ -843,29 +743,178 @@ namespace SharpChess.Model.AI
         }
 
         /// <summary>
-        /// Aspiration windows are a way to reduce the search space  in an alpha-beta search. 
-        ///   The technique is to use a guess of the expected value (usually from the last iteration in iterative deepening), 
-        ///   and use a window around this as the alpha-beta bounds. Because the window is narrower, more beta cutoffs are achieved, 
-        ///   and the search takes a shorter time. The drawback is that if the true score is outside this window, then a costly re-search must be made. 
-        ///   Typical window sizes are 1/2 to 1/4 of a pawn on either side of the guess.
-        ///   http://chessprogramming.wikispaces.com/Aspiration+Windows
-        ///   http://chessprogramming.wikispaces.com/PVS+and+aspiration
+        /// Apply reductions to the search node.
+        /// http://chessprogramming.wikispaces.com/Reductions
         /// </summary>
-        /// <param name="player">
-        /// The player to play.
-        /// </param>
-        /// <param name="principalVariation">
-        /// When move analysis is enabled, a tree of search moves is collected in this variable, which can be viewed in the GUI.
-        /// </param>
-        /// <param name="lastIterationsScore">
-        /// Score from the previous (iterative deepending) iteration. Used as the centre of the aspiration window.
-        /// </param>
-        /// <param name="analysisParentBranch">
-        /// The analysis Parent Branch. When move analysis is enabled, a tree of search moves is collected in this variable, which can be viewed in the GUI.
-        /// </param>
-        /// <returns>
-        /// Score of the best move found.
-        /// </returns>
+        /// <param name="extensionOrReduction">Number of extensions or reductions applied in the search node. Extensions positive, reductions negative.</param>
+        /// <param name="totalExtensionsOrReductions">Total number of extensions or reductions applied to the entire search tree. Extensions positive, reductions negative.</param>
+        /// <param name="ply"> True depth in plies. Starts at the max search depth and is DECREMENTED as alpha beta get deeper. </param>
+        /// <param name="variableDepth"> Variable depth which starts at the max search depth and is DECREMENTED as alpha beta get deeper. Its value is altered by search extension and reductions. Quiesence starts at depth 0. http://chessprogramming.wikispaces.com/Depth </param>
+        /// <param name="isPvNode">True if the search node is part of the principal variant.</param>
+        /// <param name="isInCheck">True if the play-to-play is in check.</param>
+        /// <param name="alpha"> Alpha (α) is the lower bound, representing the minimum score that a node must reach in order to change the value of a previous node. http://chessprogramming.wikispaces.com/Alpha </param>
+        /// <param name="player"> The player to play. The player is alternated at each new ply of search. </param>
+        /// <param name="moveMade">Move made by the player-to-play.</param>
+        /// <param name="legalMovesAttempted">Number of legal moves attempted.</param>
+        /// <param name="movesPv">Prinipal variant at and below this search node.</param>
+        private void ApplyReductions(
+            ref int extensionOrReduction,
+            int totalExtensionsOrReductions,
+            int ply,
+            int variableDepth,
+            bool isPvNode,
+            bool isInCheck,
+            int alpha,
+            Player player,
+            Move moveMade,
+            int legalMovesAttempted,
+            Moves movesPv)
+        {
+            if (!Game.EnableReductions)
+            {
+                // Reductions disabled, so exit.
+                return;
+            }
+
+            if (isPvNode)
+            {
+                // We're at a PV node, so not safe to reduce.
+                return;
+            }
+
+            if (extensionOrReduction != 0)
+            {
+                // Extension has been applied, so don't reduce.
+                return;
+            }
+
+            if (moveMade.PieceCaptured != null)
+            {
+                // Captures are too risky to reduce. 
+                // TODO Consider reducing LOSING captures, according to SEE.
+                return;
+            }
+
+            if (isInCheck)
+            {
+                // Player-to-play is in check, so not safe to reduce.
+                return;
+            }
+
+            if (moveMade.IsEnemyInCheck)
+            {
+                // Don't reduce move that put the enemy in check
+                return;
+            }
+
+            // Margin futility based reductions
+            if (Game.EnableReductionFutilityMargin && variableDepth > 2)
+            {
+                int[] margin =
+                               {
+                                   0, 0, 0, 5000, 5000, 7000, 7000, 9000, 9000, 15000, 15000, 15000, 15000, 15000, 15000,
+                                   15000, 15000, 15000
+                               };
+
+                int intLazyEval = player.Score;
+                if (alpha > intLazyEval + margin[variableDepth])
+                {
+                    extensionOrReduction = -1;
+                    Comment(moveMade, "R-MARG" + (margin[variableDepth] / 1000) + " ");
+                }
+            }
+
+            // Futility Pruning http://chessprogramming.wikispaces.com/Futility+Pruning
+            if (Game.EnableReductionFutilityFixedDepth && extensionOrReduction == 0)
+            {
+                switch (variableDepth)
+                {
+                    case 2:
+                    case 3:
+                        // case 4:
+                        int intLazyEval = player.Score;
+
+                        switch (variableDepth)
+                        {
+                            case 2:
+
+                                // Standard Futility Pruning
+                                if (intLazyEval + 3000 <= alpha)
+                                {
+                                    extensionOrReduction = -2;
+                                    Comment(moveMade, "R-FUT3 ");
+                                }
+
+                                break;
+
+                            case 3:
+
+                                // Extended Futility Pruning
+                                if (intLazyEval + 5000 <= alpha)
+                                {
+                                    extensionOrReduction = -3;
+                                    Comment(moveMade, "R-FUT5 ");
+                                }
+
+                                break;
+
+                            case 4:
+
+                                // Deep Futility Pruning
+                                if (intLazyEval + 9750 <= alpha)
+                                {
+                                    extensionOrReduction = -4;
+                                    Comment(moveMade, "R-FUT9 ");
+                                }
+
+                                break;
+                        }
+
+                        break;
+                }
+            }
+
+            // Late Move Reductions http://chessprogramming.wikispaces.com/Late+Move+Reductions
+            // Reduce if move is 1) low in the search order and 2) has a poor history score and 3) not in check and 4) not already reduced or extended.
+            if (Game.EnableReductionLateMove && extensionOrReduction == 0)
+            {
+                if (legalMovesAttempted > 3)
+                {
+                    int historyScore = HistoryHeuristic.Retrieve(
+                        player.Colour, moveMade.From.Ordinal, moveMade.To.Ordinal);
+
+                    if (historyScore == 0)
+                    {
+                        int eval =
+                            -this.AlphaBetaPvs(
+                                player.OpposingPlayer,
+                                ply - 1,
+                                variableDepth - 2,
+                                -alpha - 1,
+                                -alpha,
+                                moveMade,
+                                movesPv,
+                                totalExtensionsOrReductions,
+                                null);
+
+                        if (eval < alpha)
+                        {
+                            extensionOrReduction = -1;
+                            Comment(moveMade, "R-LMR ");
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        ///   Aspiration windows are a way to reduce the search space in an alpha-beta search. The technique is to use a guess of the expected value (usually from the last iteration in iterative deepening), and use a window around this as the alpha-beta bounds. Because the window is narrower, more beta cutoffs are achieved, and the search takes a shorter time. The drawback is that if the true score is outside this window, then a costly re-search must be made. Typical window sizes are 1/2 to 1/4 of a pawn on either side of the guess. http://chessprogramming.wikispaces.com/Aspiration+Windows http://chessprogramming.wikispaces.com/PVS+and+aspiration
+        /// </summary>
+        /// <param name="player"> The player to play. </param>
+        /// <param name="principalVariation"> When move analysis is enabled, a tree of search moves is collected in this variable, which can be viewed in the GUI. </param>
+        /// <param name="lastIterationsScore"> Score from the previous (iterative deepending) iteration. Used as the centre of the aspiration window. </param>
+        /// <param name="analysisParentBranch"> The analysis Parent Branch. When move analysis is enabled, a tree of search moves is collected in this variable, which can be viewed in the GUI. </param>
+        /// <returns> Score of the best move found. </returns>
         private int Aspirate(
             Player player, Moves principalVariation, int lastIterationsScore, Moves analysisParentBranch)
         {
@@ -874,13 +923,13 @@ namespace SharpChess.Model.AI
             int val = alpha;
 
             // TODO DISABLED: Investigate why aspiration is worse for SharpChess
-            for (int intAttempt = 2; intAttempt < 3; intAttempt++) 
+            for (int intAttempt = Game.EnableAspiration ? 0 : 2; intAttempt < 3; intAttempt++)
             {
                 switch (intAttempt)
                 {
                     case 0:
-                        alpha = lastIterationsScore - 500;
-                        beta = lastIterationsScore + 500;
+                        alpha = lastIterationsScore - 250;
+                        beta = lastIterationsScore + 250;
                         break;
 
                     case 1:
@@ -895,14 +944,14 @@ namespace SharpChess.Model.AI
                 }
 
                 val = this.AlphaBetaPvs(
-                    player, 
-                    this.SearchDepth, 
-                    this.SearchDepth, 
-                    alpha, 
-                    beta, 
-                    null, 
-                    principalVariation, 
-                    0, 
+                    player,
+                    this.SearchDepth,
+                    this.SearchDepth,
+                    alpha,
+                    beta,
+                    null,
+                    principalVariation,
+                    0,
                     analysisParentBranch);
                 if (val > alpha && val < beta)
                 {
@@ -914,46 +963,26 @@ namespace SharpChess.Model.AI
         }
 
         /// <summary>
-        /// Evaluates and assigns a move-order score to a move
+        ///   Evaluates and assigns a move-order score to a move
         /// </summary>
-        /// <param name="move">
-        /// Move to evaluate
-        /// </param>
-        /// <param name="variableDepth">
-        /// Variable depth which starts at the max search depth and is DECREMENTED as alpha beta get deeper. 
-        ///   Its value is altered by search extension and reductions. Quiesence starts at depth 0.
-        ///   http://chessprogramming.wikispaces.com/Depth
-        /// </param>
-        /// <param name="movePv">
-        /// Move from previous iteration's principal variation.
-        /// </param>
-        /// <param name="moveHash">
-        /// Best move from hash table.
-        /// </param>
-        /// <param name="moveKillerA">
-        /// Best killer move from this ply.
-        /// </param>
-        /// <param name="moveKillerA2">
-        /// Second best killer move from this ply.
-        /// </param>
-        /// <param name="moveKillerB">
-        /// Best killer move from previous ply.
-        /// </param>
-        /// <param name="moveKillerB2">
-        /// Second best killer move from previous ply.
-        /// </param>
-        /// <param name="player">
-        /// The player.
-        /// </param>
+        /// <param name="move"> Move to evaluate </param>
+        /// <param name="variableDepth"> Variable depth which starts at the max search depth and is DECREMENTED as alpha beta get deeper. Its value is altered by search extension and reductions. Quiesence starts at depth 0. http://chessprogramming.wikispaces.com/Depth </param>
+        /// <param name="movePv"> Move from previous iteration's principal variation. </param>
+        /// <param name="moveHash"> Best move from hash table. </param>
+        /// <param name="moveKillerA"> Best killer move from this ply. </param>
+        /// <param name="moveKillerA2"> Second best killer move from this ply. </param>
+        /// <param name="moveKillerB"> Best killer move from previous ply. </param>
+        /// <param name="moveKillerB2"> Second best killer move from previous ply. </param>
+        /// <param name="player"> The player. </param>
         private void AssignMoveOrderScore(
-            Move move, 
-            int variableDepth, 
-            Move movePv, 
-            Move moveHash, 
-            Move moveKillerA, 
-            Move moveKillerA2, 
-            Move moveKillerB, 
-            Move moveKillerB2, 
+            Move move,
+            int variableDepth,
+            Move movePv,
+            Move moveHash,
+            Move moveKillerA,
+            Move moveKillerA2,
+            Move moveKillerB,
+            Move moveKillerB2,
             Player player)
         {
             // TODO Create separate Quiescence move-ordering routine, with fewer parameters!
@@ -1038,7 +1067,8 @@ namespace SharpChess.Model.AI
             }
              * */
 
-            move.Score += ((int)Math.Sqrt(History.Retrieve(player.Colour, move.From.Ordinal, move.To.Ordinal))) * 100;
+            move.Score += ((int)Math.Sqrt(HistoryHeuristic.Retrieve(player.Colour, move.From.Ordinal, move.To.Ordinal)))
+                          * 100;
             if (move.Score != 0)
             {
                 Comment(move, "O-HIST:" + move.Score + " ");
@@ -1059,14 +1089,10 @@ namespace SharpChess.Model.AI
         }
 
         /// <summary>
-        /// Recursive element of Perft.
+        ///   Recursive element of Perft.
         /// </summary>
-        /// <param name="player">
-        /// The player.
-        /// </param>
-        /// <param name="depth">
-        /// The depth.
-        /// </param>
+        /// <param name="player"> The player. </param>
+        /// <param name="depth"> The depth. </param>
         private void PerftPly(Player player, int depth)
         {
             if (depth <= 0)
@@ -1081,7 +1107,7 @@ namespace SharpChess.Model.AI
             {
                 Move moveUndo = move.Piece.Move(move.Name, move.To);
 
-                this.PositionsSearched++;
+                this.PositionsSearchedThisTurn++;
 
                 // Debug.WriteLine(move.DebugText + ",");
                 this.PerftPly(player.OpposingPlayer, depth - 1);
@@ -1091,52 +1117,25 @@ namespace SharpChess.Model.AI
         }
 
         /// <summary>
-        /// The purpose of quiescence search is to only evaluate "quiet" positions, or positions where there are no winning tactical moves to be made. 
-        ///   This search is needed to avoid the horizon effect.
-        ///   http://chessprogramming.wikispaces.com/Quiescence+Search
+        ///   The purpose of quiescence search is to only evaluate "quiet" positions, or positions where there are no winning tactical moves to be made. This search is needed to avoid the horizon effect. http://chessprogramming.wikispaces.com/Quiescence+Search
         /// </summary>
-        /// <param name="player">
-        /// The player to play. The player is alternated at each new ply of search.
-        /// </param>
-        /// <param name="ply">
-        /// True depth in plies. Starts at the max search depth and is DECREMENTED as alpha beta get deeper.
-        /// </param>
-        /// <param name="variableDepth">
-        /// Depth which starts at one and INCREASES as the search deepens. 
-        ///   Its value is altered by search extension and reductions. Quiesence starts at depth 0.
-        ///   http://chessprogramming.wikispaces.com/Depth
-        /// </param>
-        /// <param name="alpha">
-        /// Alpha (α) is the lower bound, representing the minimum score that a node  must reach in order to change the value of a previous node.
-        ///   http://chessprogramming.wikispaces.com/Alpha
-        /// </param>
-        /// <param name="beta">
-        /// Beta (β) is the upper bound  of a score for the node. If the node value exceeds or equals beta, it means that the opponent will avoid this node, 
-        ///   since his guaranteed score (Alpha of the parent node) is already greater. Thus, Beta is the best-score the opponent (min-player) could archive so far...
-        ///   http://chessprogramming.wikispaces.com/Beta
-        /// </param>
-        /// <param name="parentMove">
-        /// Move from the parent alpha beta call.
-        /// </param>
-        /// <param name="principalVariation">
-        /// The Principal variation (PV) is a sequence of moves is considered best and therefore expect to be played. 
-        ///   This list of moves is collected during the alpha beta search.
-        ///   http://chessprogramming.wikispaces.com/Principal+variation
-        /// </param>
-        /// <param name="analysisParentBranch">
-        /// When move analysis is enabled, a tree of search moves is collected in this variable, which can be viewed in the GUI.
-        /// </param>
-        /// <returns>
-        /// The best move for the player.
-        /// </returns>
+        /// <param name="player"> The player to play. The player is alternated at each new ply of search. </param>
+        /// <param name="ply"> True depth in plies. Starts at the max search depth and is DECREMENTED as alpha beta get deeper. </param>
+        /// <param name="variableDepth"> Depth which starts at one and INCREASES as the search deepens. Its value is altered by search extension and reductions. Quiesence starts at depth 0. http://chessprogramming.wikispaces.com/Depth </param>
+        /// <param name="alpha"> Alpha (α) is the lower bound, representing the minimum score that a node must reach in order to change the value of a previous node. http://chessprogramming.wikispaces.com/Alpha </param>
+        /// <param name="beta"> Beta (β) is the upper bound of a score for the node. If the node value exceeds or equals beta, it means that the opponent will avoid this node, since his guaranteed score (Alpha of the parent node) is already greater. Thus, Beta is the best-score the opponent (min-player) could archive so far... http://chessprogramming.wikispaces.com/Beta </param>
+        /// <param name="parentMove"> Move from the parent alpha beta call. </param>
+        /// <param name="principalVariation"> The Principal variation (PV) is a sequence of moves is considered best and therefore expect to be played. This list of moves is collected during the alpha beta search. http://chessprogramming.wikispaces.com/Principal+variation </param>
+        /// <param name="analysisParentBranch"> When move analysis is enabled, a tree of search moves is collected in this variable, which can be viewed in the GUI. </param>
+        /// <returns> The best move for the player. </returns>
         private int Quiesce(
-            Player player, 
-            int ply, 
-            int variableDepth, 
-            int alpha, 
-            int beta, 
-            Move parentMove, 
-            Moves principalVariation, 
+            Player player,
+            int ply,
+            int variableDepth,
+            int alpha,
+            int beta,
+            Move parentMove,
+            Moves principalVariation,
             Moves analysisParentBranch)
         {
             // Gather some stats
@@ -1167,9 +1166,15 @@ namespace SharpChess.Model.AI
                 alpha = standPat;
             }
 
+            // Disable Quiescense is feature not enabled.
+            if (!Game.EnableQuiescense)
+            {
+                return standPat;
+            }
+
             // Generate moves - Captures and promotions only
             Moves movesPossible = new Moves();
-            player.GenerateLazyMoves(0, movesPossible, Moves.MoveListNames.CapturesPromotions, null);
+            player.GenerateLazyMoves(movesPossible, Moves.MoveListNames.CapturesPromotions);
 
             // Get move at same ply from previous iteration's principal variation.
             int indexPv = this.MaxSearchDepth - ply;
@@ -1186,7 +1191,7 @@ namespace SharpChess.Model.AI
 
             foreach (Move move in movesPossible)
             {
-                if (move.Score < 0) 
+                if (move.Score < 0)
                 {
                     // Losing capture from SEE, so skip this move.
                     continue;
@@ -1200,25 +1205,30 @@ namespace SharpChess.Model.AI
                     continue;
                 }
 
-                this.PositionsSearched++;
+                this.PositionsSearchedThisTurn++;
+                this.PositionsSearchedThisIteration++;
 
                 // If this is the deepest stage of iterative deepening, then capture move analysis data.
                 if (Game.CaptureMoveAnalysisData && this.SearchDepth == this.MaxSearchDepth)
                 {
                     // Add moves to post-move analysis tree, if option set by user
-                    analysisParentBranch.Add(moveThis);
+                    if (analysisParentBranch != null)
+                    {
+                        analysisParentBranch.Add(moveThis);
+                    }
+
                     moveThis.Moves = new Moves();
                 }
 
                 moveThis.Score =
                     -this.Quiesce(
-                        player.OpposingPlayer, 
-                        ply - 1, 
-                        variableDepth - 1, 
-                        -beta, 
-                        -alpha, 
-                        parentMove, 
-                        movesPv, 
+                        player.OpposingPlayer,
+                        ply - 1,
+                        variableDepth - 1,
+                        -beta,
+                        -alpha,
+                        parentMove,
+                        movesPv,
                         moveThis.Moves);
 
                 // Undo the capture move
@@ -1254,15 +1264,10 @@ namespace SharpChess.Model.AI
         }
 
         /// <summary>
-        /// Performs a Static Exchange Evaluation to determine the value of a move after all possible re-captures are resolved.
-        ///   http://chessprogramming.wikispaces.com/Static+Exchange+Evaluation
+        ///   Performs a Static Exchange Evaluation to determine the value of a move after all possible re-captures are resolved. http://chessprogramming.wikispaces.com/Static+Exchange+Evaluation
         /// </summary>
-        /// <param name="moveMade">
-        /// Move to be evaluated
-        /// </param>
-        /// <returns>
-        /// The see.
-        /// </returns>
+        /// <param name="moveMade"> Move to be evaluated </param>
+        /// <returns> The see. </returns>
         private int SEE(Move moveMade)
         {
             // Static Exchange Evaluator
@@ -1329,45 +1334,26 @@ namespace SharpChess.Model.AI
         }
 
         /// <summary>
-        /// Sorts moves so that the best moves are first
+        ///   Sorts moves so that the best moves are first
         /// </summary>
-        /// <param name="movesToSort">
-        /// List of moves to be sorted.
-        /// </param>
-        /// <param name="variableDepth">
-        /// Depth which starts at one and INCREASES as the search deepens. Its value is altered by search extension and reductions. Quiesence starts at depth 0.
-        ///   http://chessprogramming.wikispaces.com/Depth
-        /// </param>
-        /// <param name="movePv">
-        /// Move from previous iteration's principal variation.
-        /// </param>
-        /// <param name="moveHash">
-        /// // Best move from hash table.
-        /// </param>
-        /// <param name="moveKillerA">
-        /// Best killer move from this ply.
-        /// </param>
-        /// <param name="moveKillerA2">
-        /// Second best killer move from this ply.
-        /// </param>
-        /// <param name="moveKillerB">
-        /// Best killer move from previous ply.
-        /// </param>
-        /// <param name="moveKillerB2">
-        /// Second best killer move from previous ply.
-        /// </param>
-        /// <param name="player">
-        /// The player.
-        /// </param>
+        /// <param name="movesToSort"> List of moves to be sorted. </param>
+        /// <param name="variableDepth"> Depth which starts at one and INCREASES as the search deepens. Its value is altered by search extension and reductions. Quiesence starts at depth 0. http://chessprogramming.wikispaces.com/Depth </param>
+        /// <param name="movePv"> Move from previous iteration's principal variation. </param>
+        /// <param name="moveHash"> // Best move from hash table. </param>
+        /// <param name="moveKillerA"> Best killer move from this ply. </param>
+        /// <param name="moveKillerA2"> Second best killer move from this ply. </param>
+        /// <param name="moveKillerB"> Best killer move from previous ply. </param>
+        /// <param name="moveKillerB2"> Second best killer move from previous ply. </param>
+        /// <param name="player"> The player. </param>
         private void SortBestMoves(
-            Moves movesToSort, 
-            int variableDepth, 
-            Move movePv, 
-            Move moveHash, 
-            Move moveKillerA, 
-            Move moveKillerA2, 
-            Move moveKillerB, 
-            Move moveKillerB2, 
+            Moves movesToSort,
+            int variableDepth,
+            Move movePv,
+            Move moveHash,
+            Move moveKillerA,
+            Move moveKillerA2,
+            Move moveKillerB,
+            Move moveKillerB2,
             Player player)
         {
             foreach (Move movex in movesToSort)

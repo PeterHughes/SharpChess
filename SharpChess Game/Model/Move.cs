@@ -167,8 +167,7 @@ namespace SharpChess.Model
                     + this.Piece.Name.ToString() : string.Empty) + " " 
                     + this.From.Name 
                     + (this.PieceCaptured == null ? "-" : "x") + this.To.Name + " " 
-                    + (this.PieceCaptured == null ? string.Empty : this.PieceCaptured.Name.ToString()) + " " 
-                    // + this.Name
+                    + (this.PieceCaptured == null ? string.Empty : this.PieceCaptured.Name.ToString()) + " " // + this.Name
                     + " A: " + this.Alpha 
                     + " B: " + this.Beta 
                     + " Score: " + this.Score 
@@ -368,35 +367,6 @@ namespace SharpChess.Model
         #endregion
 
         #region Public Methods
-
-        /// <summary>
-        /// Determines whether a proposed move is valid.
-        /// </summary>
-        /// <param name="moveProposed">
-        /// The move proposed.
-        /// </param>
-        /// <returns>
-        /// True if valid.
-        /// </returns>
-        public static bool IsValid(Move moveProposed)
-        {
-            if (moveProposed.Piece != Board.GetPiece(moveProposed.From.Ordinal))
-            {
-                return false;
-            }
-
-            Moves movesPossible = new Moves();
-            moveProposed.Piece.GenerateLazyMoves(movesPossible, Moves.MoveListNames.All);
-            foreach (Move move in movesPossible)
-            {
-                if (moveProposed.Name == move.Name && moveProposed.To.Ordinal == move.To.Ordinal)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
 
         /// <summary>
         /// Gets move name from text.

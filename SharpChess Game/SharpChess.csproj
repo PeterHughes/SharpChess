@@ -164,7 +164,7 @@
     <Compile Include="Model\AI\HashTablePawnKing.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Model\AI\History.cs">
+    <Compile Include="Model\AI\HistoryHeuristic.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Model\IPieceTop.cs">

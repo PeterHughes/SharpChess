@@ -423,7 +423,7 @@ namespace SharpChess.Model
         }
 
         /// <summary>
-        /// The lines first piece.
+        /// Returns the first piece found in a vector from the specified Square.
         /// </summary>
         /// <param name="colour">
         /// The colour.
@@ -434,19 +434,19 @@ namespace SharpChess.Model
         /// <param name="squareStart">
         /// The square start.
         /// </param>
-        /// <param name="offset">
-        /// The offset.
+        /// <param name="vectorOffset">
+        /// The vector offset.
         /// </param>
         /// <returns>
         /// The first piece on the line, or null.
         /// </returns>
         public static Piece LinesFirstPiece(
-            Player.PlayerColourNames colour, Piece.PieceNames pieceName, Square squareStart, int offset)
+            Player.PlayerColourNames colour, Piece.PieceNames pieceName, Square squareStart, int vectorOffset)
         {
             int intOrdinal = squareStart.Ordinal;
             Square square;
 
-            intOrdinal += offset;
+            intOrdinal += vectorOffset;
             while ((square = GetSquare(intOrdinal)) != null)
             {
                 if (square.Piece == null)
@@ -465,7 +465,7 @@ namespace SharpChess.Model
                     return null;
                 }
 
-                intOrdinal += offset;
+                intOrdinal += vectorOffset;
             }
 
             return null;

@@ -83,6 +83,12 @@ namespace SharpChess.Model.AI
         /// </param>
         public static void RecordPossibleKillerMove(int ply, Move moveMade)
         {
+            // Disable if this feature when switched off.
+            if (!Game.EnableKillerMoves)
+            {
+                return;
+            }
+
             bool blnAssignedA = false; // Have we assign Slot A?
 
             Move moveKillerA = RetrieveA(ply);
@@ -116,6 +122,7 @@ namespace SharpChess.Model.AI
                     // record move is Slot A
                     AssignA(ply, moveMade);
                 }
+
                 moveKillerA = RetrieveA(ply);
             }
 
@@ -133,6 +140,7 @@ namespace SharpChess.Model.AI
                     // record move is Slot B
                     AssignB(ply, moveMade);
                 }
+
                 moveKillerB = RetrieveB(ply);
             }
 
@@ -143,7 +151,6 @@ namespace SharpChess.Model.AI
                 AssignA(ply, moveKillerB);
                 AssignB(ply, swap);
             }
-
         }
 
         /// <summary>

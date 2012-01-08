@@ -47,11 +47,6 @@ namespace SharpChess.Model.AI
         #region Public Properties
 
         /// <summary>
-        ///   Gets the number of hash table Collisions that have occured.
-        /// </summary>
-        public static int Collisions { get; private set; }
-
-        /// <summary>
         ///   Gets the number of hash table Hits that have occured.
         /// </summary>
         public static int Hits { get; private set; }
@@ -100,7 +95,7 @@ namespace SharpChess.Model.AI
         }
 
         /// <summary>
-        /// Checks is the player is in check for the specified position, and caches the result.
+        /// Checks if the player is in check for the specified position, and caches the result.
         /// </summary>
         /// <param name="hashCodeA">
         /// Hash Code for Board position A
@@ -129,14 +124,26 @@ namespace SharpChess.Model.AI
                     hashCodeB &= 0xFFFFFFFFFFFFFFFE;
                 }
 
+                Probes++;
+
                 HashEntry* phashEntry = phashBase;
                 phashEntry += (uint)(hashCodeA % hashTableSize);
 
                 if (phashEntry->HashCodeA != hashCodeA || phashEntry->HashCodeB != hashCodeB)
                 {
+                    if (phashEntry->HashCodeA != 0)
+                    {
+                        Overwrites++;
+                    }
+
                     phashEntry->HashCodeA = hashCodeA;
                     phashEntry->HashCodeB = hashCodeB;
                     phashEntry->IsInCheck = player.DetermineCheckStatus();
+                    Writes++;
+                }
+                else
+                {
+                    Hits++;
                 }
 
                 return phashEntry->IsInCheck;
@@ -151,7 +158,6 @@ namespace SharpChess.Model.AI
             Probes = 0;
             Hits = 0;
             Writes = 0;
-            Collisions = 0;
             Overwrites = 0;
         }
 

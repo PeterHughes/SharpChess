@@ -631,7 +631,7 @@ namespace SharpChess.Model
                     {
                         SendAnalyzeStatus(
                             Game.PlayerToPlay.Brain.ThinkingTimeElpased,
-                            Game.PlayerToPlay.Brain.Search.PositionsSearched,
+                            Game.PlayerToPlay.Brain.Search.PositionsSearchedThisIteration,
                             Game.PlayerToPlay.Brain.Search.SearchDepth,
                             Game.PlayerToPlay.Brain.Search.TotalPositionsToSearch - Game.PlayerToPlay.Brain.Search.SearchPositionNo,
                             Game.PlayerToPlay.Brain.Search.TotalPositionsToSearch, 

@@ -11,30 +11,17 @@
 
 // SharpChess
 // Copyright (C) 2011 Peter Hughes
+// 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
+// 
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#endregion
-
-#region License
-
-// SharpChess
-// Copyright (C) 2011 Peter Hughes
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+// 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
@@ -52,7 +39,7 @@ namespace SharpChess.Model.AI
     #endregion
 
     /// <summary>
-    /// AI for the computer player.
+    ///   AI for the computer player.
     /// </summary>
     public class Brain
     {
@@ -78,11 +65,9 @@ namespace SharpChess.Model.AI
         #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Brain"/> class.
+        ///   Initializes a new instance of the <see cref="Brain" /> class.
         /// </summary>
-        /// <param name="player">
-        /// The player.
-        /// </param>
+        /// <param name="player"> The player. </param>
         public Brain(Player player)
         {
             this.MyPlayer = player;
@@ -95,7 +80,7 @@ namespace SharpChess.Model.AI
         #region Delegates
 
         /// <summary>
-        /// The delegatetype Brain event.
+        ///   The delegatetype Brain event.
         /// </summary>
         public delegate void BrainEvent();
 
@@ -121,6 +106,11 @@ namespace SharpChess.Model.AI
         #endregion
 
         #region Public Properties
+
+        /// <summary>
+        ///   Gets or sets a value indicating whether to use random opening moves.
+        /// </summary>
+        public static bool UseRandomOpeningMoves { get; set; }
 
         /// <summary>
         ///   Gets a value indicating whether IsPondering.
@@ -163,7 +153,7 @@ namespace SharpChess.Model.AI
                                 strText += (move.Piece.Name == Piece.PieceNames.Pawn
                                                 ? string.Empty
                                                 : move.Piece.Abbreviation) + move.From.Name
-                                            + (move.PieceCaptured != null ? "x" : string.Empty) + move.To.Name + " ";
+                                           + (move.PieceCaptured != null ? "x" : string.Empty) + move.To.Name + " ";
                             }
                         }
                     }
@@ -174,8 +164,7 @@ namespace SharpChess.Model.AI
         }
 
         /// <summary>
-        ///   Gets the Search algorithm.
-        ///   http://chessprogramming.wikispaces.com/Search
+        ///   Gets the Search algorithm. http://chessprogramming.wikispaces.com/Search
         /// </summary>
         public Search Search { get; private set; }
 
@@ -225,7 +214,7 @@ namespace SharpChess.Model.AI
         #region Public Methods
 
         /// <summary>
-        /// The abort thinking.
+        ///   The abort thinking.
         /// </summary>
         public void AbortThinking()
         {
@@ -238,7 +227,7 @@ namespace SharpChess.Model.AI
         }
 
         /// <summary>
-        /// The force immediate move.
+        ///   The force immediate move.
         /// </summary>
         public void ForceImmediateMove()
         {
@@ -253,7 +242,7 @@ namespace SharpChess.Model.AI
         }
 
         /// <summary>
-        /// The start pondering.
+        ///   The start pondering.
         /// </summary>
         public void StartPondering()
         {
@@ -289,7 +278,7 @@ namespace SharpChess.Model.AI
         }
 
         /// <summary>
-        /// The start thinking.
+        ///   The start thinking.
         /// </summary>
         public void StartThinking()
         {
@@ -331,7 +320,7 @@ namespace SharpChess.Model.AI
         }
 
         /// <summary>
-        /// The stop pondering.
+        ///   The stop pondering.
         /// </summary>
         public void StopPondering()
         {
@@ -343,7 +332,7 @@ namespace SharpChess.Model.AI
         }
 
         /// <summary>
-        /// Instruct the computer to think and make its next move.
+        ///   Instruct the computer to think and make its next move.
         /// </summary>
         public void Think()
         {
@@ -392,6 +381,7 @@ namespace SharpChess.Model.AI
                 {
                     // Absolute fixed time per move. No time is carried over from one move to the next.
                     this.ThinkingTimeAllotted = Game.ClockFixedTimePerMove;
+                    this.ThinkingTimeMaxAllowed = Game.ClockFixedTimePerMove;
                 }
                 else if (Game.ClockIncrementPerMove.TotalSeconds > 0)
                 {
@@ -400,32 +390,36 @@ namespace SharpChess.Model.AI
                         new TimeSpan(
                             Game.ClockIncrementPerMove.Ticks
                             +
-                            ((
-                                ((Game.ClockIncrementPerMove.Ticks * Game.MoveNo)
-                                 + (Game.ClockTime.Ticks * Math.Min(Game.MoveNo, 40) / 40))
-                                - this.MyPlayer.Clock.TimeElapsed.Ticks) / 3));
+                            ((((Game.ClockIncrementPerMove.Ticks * Game.MoveNo)
+                               + (Game.ClockTime.Ticks * Math.Min(Game.MoveNo, 40) / 40))
+                              - this.MyPlayer.Clock.TimeElapsed.Ticks) / 3));
 
                     // Make sure we never think for less than half the "Increment" time
                     this.ThinkingTimeAllotted =
                         new TimeSpan(
                             Math.Max(this.ThinkingTimeAllotted.Ticks, (Game.ClockIncrementPerMove.Ticks / 2) + 1));
+                    this.ThinkingTimeMaxAllowed = Game.ClockFixedTimePerMove;
                 }
                 else if (Game.ClockMaxMoves == 0 && Game.ClockIncrementPerMove.TotalSeconds <= 0)
                 {
                     // Fixed game time
                     this.ThinkingTimeAllotted = new TimeSpan(this.MyPlayer.Clock.TimeRemaining.Ticks / 30);
+                    this.ThinkingTimeMaxAllowed = Game.ClockFixedTimePerMove;
                 }
                 else
                 {
                     // Conventional n moves in x minutes time
                     this.ThinkingTimeAllotted =
                         new TimeSpan(this.MyPlayer.Clock.TimeRemaining.Ticks / this.MyPlayer.Clock.MovesRemaining);
+
+                    this.ThinkingTimeMaxAllowed = new TimeSpan(this.MyPlayer.Clock.TimeRemaining.Ticks)
+                                                  - new TimeSpan(0, 0, 0, 0, 100);
                 }
 
-                // Minimum of 1 second thinking time
-                if (this.ThinkingTimeAllotted.TotalSeconds < 1)
+                // Minimum of 100 milli-second thinking time
+                if (this.ThinkingTimeAllotted.TotalMilliseconds < 100)
                 {
-                    this.ThinkingTimeAllotted = new TimeSpan(0, 0, 1);
+                    this.ThinkingTimeAllotted = new TimeSpan(0, 0, 0, 100);
                 }
 
                 // The computer only stops "thinking" when it has finished a full ply of thought, 
@@ -433,7 +427,7 @@ namespace SharpChess.Model.AI
                 if (Game.ClockFixedTimePerMove.TotalSeconds > 0)
                 {
                     // Fixed time per move
-                    this.ThinkingTimeMaxAllowed = Game.ClockFixedTimePerMove;
+                    this.ThinkingTimeMaxAllowed = Game.ClockFixedTimePerMove - new TimeSpan(0, 0, 0, 0, 100);
                 }
                 else
                 {
@@ -441,23 +435,16 @@ namespace SharpChess.Model.AI
                     this.ThinkingTimeMaxAllowed =
                         new TimeSpan(
                             Math.Min(
-                                this.ThinkingTimeAllotted.Ticks * 2, 
-                                this.MyPlayer.Clock.TimeRemaining.Ticks - (new TimeSpan(0, 0, 0, 2)).Ticks));
+                                this.ThinkingTimeAllotted.Ticks * 2,
+                                this.MyPlayer.Clock.TimeRemaining.Ticks - (new TimeSpan(0, 0, 0, 0, 100)).Ticks));
                 }
 
-                // Minimum of 2 seconds thinking time
-                if (this.ThinkingTimeMaxAllowed.TotalSeconds < 2)
-                {
-                    this.ThinkingTimeMaxAllowed = new TimeSpan(0, 0, 2);
-                }
-
-                // Total number of times the evaluation function has been called (May be less than PositonsSearched if hashtable works well)
                 if (Game.IsInAnalyseMode)
                 {
                     HashTable.Clear();
                     HashTableCheck.Clear();
                     HashTablePawnKing.Clear();
-                    History.Clear();
+                    HistoryHeuristic.Clear();
                 }
                 else
                 {
@@ -477,7 +464,7 @@ namespace SharpChess.Model.AI
                     HashTablePawnKing.ResetStats();
 
                     // And finally a hash table that stores the positional score of just the pawns.
-                    History.Clear(); // Clear down the History Heuristic info, at the start of each move.
+                    HistoryHeuristic.Clear(); // Clear down the History Heuristic info, at the start of each move.
                 }
 
                 if (!this.IsPondering)
@@ -524,7 +511,7 @@ namespace SharpChess.Model.AI
         #region Methods
 
         /// <summary>
-        /// The search move considered handler.
+        ///   The search move considered handler.
         /// </summary>
         private void SearchMoveConsideredHandler()
         {

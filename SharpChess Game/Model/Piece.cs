@@ -722,7 +722,24 @@ namespace SharpChess.Model
         }
 
         /// <summary>
-        /// Move the piece to a new sqaure.
+        /// Move the piece to a new square, after testing that the move is valid.
+        /// </summary>
+        /// <param name="moveName">
+        /// The move name.
+        /// </param>
+        /// <param name="square">
+        /// The square.
+        /// </param>
+        /// <returns>
+        /// Move made, or null if move is not valid.
+        /// </returns>
+        public Move TestAndMakeMove(Move.MoveNames moveName, Square square)
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// Move the piece to a new square.
         /// </summary>
         /// <param name="moveName">
         /// The move name.

@@ -184,6 +184,12 @@ namespace SharpChess.Model.AI
         /// </returns>
         public static unsafe Move ProbeForBestMove(ulong hashCodeA, ulong hashCodeB, Player.PlayerColourNames colour)
         {
+            // Disable if this feature when switched off.
+            if (!Game.EnableTranspositionTable)
+            {
+                return null;
+            }
+
             // TODO Unit test Hash Table. What happens when same position stored at different depths in diffenent slots with the same hash?
             fixed (HashEntry* phashBase = &hashTableEntries[0])
             {
@@ -271,9 +277,15 @@ namespace SharpChess.Model.AI
         /// <returns>
         /// The positional score.
         /// </returns>
-        public static unsafe int ProbeHash(
+        public static unsafe int ProbeForScore(
             ulong hashCodeA, ulong hashCodeB, int depth, int alpha, int beta, Player.PlayerColourNames colour)
         {
+            // Disable if this feature when switched off.
+            if (!Game.EnableTranspositionTable)
+            {
+                return NotFoundInHashTable;
+            }
+
             Probes++;
 
             fixed (HashEntry* phashBase = &hashTableEntries[0])
