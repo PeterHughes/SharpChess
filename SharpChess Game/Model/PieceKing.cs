@@ -651,7 +651,7 @@ namespace SharpChess.Model
                 goto exitpoint;
             }
 
-            exitpoint:
+        exitpoint:
             return intOpenness;
         }
 
