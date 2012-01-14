@@ -1,6 +1,6 @@
 // --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Board.cs" company="SharpChess.com">
-//   Peter Hughes
+//   SharpChess.com
 // </copyright>
 // <summary>
 //   Represents the chess board using a 0x88 represenation.
@@ -11,7 +11,7 @@
 #region License
 
 // SharpChess
-// Copyright (C) 2012 Peter Hughes
+// Copyright (C) 2012 SharpChess.com
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or

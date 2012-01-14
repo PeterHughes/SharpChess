@@ -1,6 +1,6 @@
 // --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Piece.cs" company="SharpChess.com">
-//   Peter Hughes
+//   SharpChess.com
 // </copyright>
 // <summary>
 //   Represents the base of a chess piece i.e. the but that sits on a chess square. A piece can have different tops e.g. A Pawn, Queen, Bishop etc.
@@ -12,7 +12,7 @@
 #region License
 
 // SharpChess
-// Copyright (C) 2012 Peter Hughes
+// Copyright (C) 2012 SharpChess.com
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or

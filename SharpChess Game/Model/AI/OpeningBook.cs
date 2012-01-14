@@ -1,6 +1,6 @@
 // --------------------------------------------------------------------------------------------------------------------
 // <copyright file="OpeningBook.cs" company="SharpChess.com">
-//   Peter Hughes
+//   SharpChess.com
 // </copyright>
 // <summary>
 //   Tournament standard opening book where the best possible move is always selected for the current board position.
@@ -11,7 +11,7 @@
 #region License
 
 // SharpChess
-// Copyright (C) 2012 Peter Hughes
+// Copyright (C) 2012 SharpChess.com
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or

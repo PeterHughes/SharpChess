@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Brain.cs" company="SharpChess.com">
-//   Peter Hughes
+//   SharpChess.com
 // </copyright>
 // <summary>
 //   AI for the computer player.
@@ -10,7 +10,7 @@
 #region License
 
 // SharpChess
-// Copyright (C) 2012 Peter Hughes
+// Copyright (C) 2012 SharpChess.com
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by

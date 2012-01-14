@@ -1,6 +1,6 @@
 // --------------------------------------------------------------------------------------------------------------------
 // <copyright file="OpeningBookSimple.cs" company="SharpChess.com">
-//   Peter Hughes
+//   SharpChess.com
 // </copyright>
 // <summary>
 //   A small, in-memory, book of opening moves used simply to vary SharpChess's games against human. Not competition standard by any means!
@@ -11,7 +11,7 @@
 #region License
 
 // SharpChess
-// Copyright (C) 2012 Peter Hughes
+// Copyright (C) 2012 SharpChess.com
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
