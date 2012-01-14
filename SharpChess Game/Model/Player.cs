@@ -320,60 +320,6 @@ namespace SharpChess.Model
         /// </summary>
         public abstract int PawnForwardOffset { get; }
 
-        /*
-         * PawmKing points removed because not safe to cache pawn scores that take into account non pawn pieces.
-        /// <summary>
-        ///   Gets PawnKingPoints.
-        /// </summary>
-        public int PawnKingPoints
-        {
-            get
-            {
-                int intPoints;
-                int intIndex;
-
-                if ((intPoints = HashTablePawnKing.ProbeHash(Board.HashCodeA, Board.HashCodeB, this.Colour)) == HashTablePawnKing.NotFoundInHashTable)
-                {
-                    Piece piece;
-                    intPoints = 0;
-                    for (intIndex = this.m_colPieces.Count - 1; intIndex >= 0; intIndex--)
-                    {
-                        piece = this.m_colPieces.Item(intIndex);
-                        switch (piece.Name)
-                        {
-                            case Piece.PieceNames.Pawn:
-                            case Piece.PieceNames.King:
-                                intPoints += piece.PointsTotal;
-                                break;
-                        }
-                    }
-
-                    HashTablePawnKing.RecordHash(Board.HashCodeA, Board.HashCodeB, intPoints, this.Colour);
-                }
-
-                return intPoints;
-            }
-        }
-        
-        */
-
-        /// <summary>
-        ///   Gets the sum of the basic value of all the players pieces in play.
-        /// </summary>
-        public int PieceBasicValue
-        {
-            get
-            {
-                int intBasicValue = 0;
-                foreach (Piece piece in this.Pieces)
-                {
-                    intBasicValue += piece.BasicValue;
-                }
-
-                return intBasicValue;
-            }
-        }
-
         /// <summary>
         ///   Gets all the player's pieces in play.
         /// </summary>
@@ -387,46 +333,54 @@ namespace SharpChess.Model
         {
             get
             {
-                int intPoints = 0;
-                int intIndex;
+                return this.PositionPoints + this.TotalPieceValue;
+            }
+        }
 
-                // intPoints += this.PawnKingPoints;
+        /// <summary>
+        ///   Gets the evaulation of the player's position, excluding material piece value.
+        /// </summary>
+        public int PositionPoints
+        {
+            get
+            {
+                int intPoints = 0;
+
+                // Start with pawn points.
+                intPoints += this.PositionPointsJustPawns; 
+
                 int intBishopCount = 0;
                 int intRookCount = 0;
-                for (intIndex = this.Pieces.Count - 1; intIndex >= 0; intIndex--)
+                for (int intIndex = this.Pieces.Count - 1; intIndex >= 0; intIndex--)
                 {
                     Piece piece = this.Pieces.Item(intIndex);
 
-                    /*
-                    switch (piece.Name)
+                    // Don't include pawns again!
+                    if (piece.Name != Piece.PieceNames.Pawn) 
                     {
-                        case Piece.PieceNames.Pawn:
-                        case Piece.PieceNames.King:
-                            break;
-                        default:
-                            intPoints += piece.PointsTotal;
-                            break;
-                    }
-                    */
-                    intPoints += piece.PointsTotal;
+                        intPoints += piece.PositionalPoints;
 
-                    switch (piece.Name)
-                    {
-                        case Piece.PieceNames.Bishop:
-                            intBishopCount++;
-                            break;
+                        // Count the number of bishops and rooks for later use.
+                        switch (piece.Name)
+                        {
+                            case Piece.PieceNames.Bishop:
+                                intBishopCount++;
+                                break;
 
-                        case Piece.PieceNames.Rook:
-                            intRookCount++;
-                            break;
+                            case Piece.PieceNames.Rook:
+                                intRookCount++;
+                                break;
+                        }
                     }
                 }
 
+                // Big bonus for having bishop pair.
                 if (intBishopCount >= 2)
                 {
                     intPoints += 500;
                 }
 
+                // Bonus for having rook pair.
                 if (intRookCount >= 2)
                 {
                     intPoints += 100;
@@ -439,8 +393,10 @@ namespace SharpChess.Model
                 // intPoints += m_aintAttackBonus[piece.Square.NoOfAttacksBy(this)];
                 // }
 
+
                 // Factor in human 3 move repition draw condition
-                // If this player is "human" then a draw if scored high, else a draw is scored low
+                // If this player is "human" then a draw if scored high, else a draw is scored low.
+                // TODO 3MR not working, investigate.i.e. computer doesn't avoid move.
                 if (Game.MoveHistory.Count > 0 && Game.MoveHistory.Last.IsThreeMoveRepetition)
                 {
                     intPoints += this.Intellegence == PlayerIntellegenceNames.Human ? 1000000000 : 0;
@@ -488,21 +444,33 @@ namespace SharpChess.Model
         }
 
         /// <summary>
-        ///   Gets the evaulation of the player's position, excluding material piece value.
+        ///   Gets the evaulation of the player's position, excluding material piece value, just for pawns.
         /// </summary>
-        public int PositionPoints
+        private int PositionPointsJustPawns
         {
             get
             {
-                int intTotalValue = 0;
-                int intIndex;
-                for (intIndex = this.Pieces.Count - 1; intIndex >= 0; intIndex--)
+                // Check is pawn position if cached in Hash Table.
+                int pawnPositionScore = HashTablePawn.ProbeHash(Board.HashCodeA, Board.HashCodeB, this.Colour);
+
+                if (pawnPositionScore == HashTablePawn.NotFoundInHashTable)
                 {
-                    Piece piece = this.Pieces.Item(intIndex);
-                    intTotalValue += piece.PositionalPoints;
+                    // Not cached, so calculate it.
+                    pawnPositionScore = 0;
+                    for (int intIndex = this.Pieces.Count - 1; intIndex >= 0; intIndex--)
+                    {
+                        Piece piece = this.Pieces.Item(intIndex);
+                        if (piece.Name == Piece.PieceNames.Pawn)
+                        {
+                            pawnPositionScore += piece.PositionalPoints;
+                        }
+                    }
                 }
 
-                return intTotalValue;
+                // Record positional score in pawn hash table.
+                HashTablePawn.RecordHash(Board.HashCodeA, Board.HashCodeB, pawnPositionScore, this.Colour);
+
+                return pawnPositionScore;
             }
         }
 

@@ -156,6 +156,18 @@ namespace SharpChess.Model
         {
             get
             {
+                return this.PositionalPointsCacheable;
+            }
+        }
+
+        /// <summary>
+        ///   Gets the positional points assigned to this piece, which are safe to cache in the Pawn hash table <see cref="HashTablePawm"/>.
+        ///   Position values are cachable if they are affected *exclusively* to pawn position.
+        /// </summary>
+        private int PositionalPointsCacheable
+        {
+            get
+            {
                 int intPoints = 0;
                 int intIndex;
                 Piece piece;
@@ -260,12 +272,8 @@ namespace SharpChess.Model
                 }
 
                 // Backward pawn
-                bool blnIsBackward = true;
-                if ((piece = Board.GetPiece(this.Base.Square.Ordinal - 1)) != null
-                    && piece.Name == Piece.PieceNames.Pawn && piece.Player.Colour == this.Base.Player.Colour)
-                {
-                    blnIsBackward = false;
-                }
+                bool blnIsBackward = !((piece = Board.GetPiece(this.Base.Square.Ordinal - 1)) != null
+                                       && piece.Name == Piece.PieceNames.Pawn && piece.Player.Colour == this.Base.Player.Colour);
 
                 if (blnIsBackward && (piece = Board.GetPiece(this.Base.Square.Ordinal + 1)) != null
                     && piece.Name == Piece.PieceNames.Pawn && piece.Player.Colour == this.Base.Player.Colour)

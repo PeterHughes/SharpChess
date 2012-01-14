@@ -443,7 +443,7 @@ namespace SharpChess.Model.AI
                 {
                     HashTable.Clear();
                     HashTableCheck.Clear();
-                    HashTablePawnKing.Clear();
+                    HashTablePawn.Clear();
                     HistoryHeuristic.Clear();
                 }
                 else
@@ -461,7 +461,7 @@ namespace SharpChess.Model.AI
                     HashTableCheck.ResetStats();
 
                     // We also have a hash table in which we just store the check status for both players
-                    HashTablePawnKing.ResetStats();
+                    HashTablePawn.ResetStats();
 
                     // And finally a hash table that stores the positional score of just the pawns.
                     HistoryHeuristic.Clear(); // Clear down the History Heuristic info, at the start of each move.

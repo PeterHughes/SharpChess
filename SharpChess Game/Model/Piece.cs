@@ -468,25 +468,12 @@ namespace SharpChess.Model
         public Player Player { get; private set; }
 
         /// <summary>
-        /// Gets the total score calculated for this piece, which takes into account the piece's material value, and its positional score.
-        /// </summary>
-        public int PointsTotal
-        {
-            get
-            {
-                return this.Value // + m_square.Value;
-                       + this.PositionalPoints;
-            }
-        }
-
-        /// <summary>
         /// Gets the positional points assigned to this piece.
         /// </summary>
         public int PositionalPoints
         {
             get
             {
-                // return this.Square.Value;
                 return this.Top.PositionalPoints;
             }
         }

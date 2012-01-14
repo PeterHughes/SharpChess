@@ -74,7 +74,7 @@ namespace SharpChess.Model
             MoveHistory = new Moves();
             FenStartPosition = string.Empty;
             HashTable.Initialise();
-            HashTablePawnKing.Initialise();
+            HashTablePawn.Initialise();
             HashTableCheck.Initialise();
 
             PlayerWhite = new PlayerWhite();
@@ -1058,7 +1058,7 @@ namespace SharpChess.Model
             Fen.Validate(fenString);
 
             HashTable.Clear();
-            HashTablePawnKing.Clear();
+            HashTablePawn.Clear();
             HashTableCheck.Clear();
             KillerMoves.Clear();
             HistoryHeuristic.Clear();

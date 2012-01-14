@@ -26,6 +26,8 @@
 
 namespace SharpChess.Model.AI
 {
+    // TODO Incorporate side-to-play colour into hash table key.
+    // TODO Incorporate 3 move repetition into hash table key.
     /// <summary>
     /// The hash table, also know as Transposition table. Stores information about positions previously considered. Stores scores and "best moves".
     /// http://chessprogramming.wikispaces.com/Transposition+Table

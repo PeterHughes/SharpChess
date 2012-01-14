@@ -3,7 +3,8 @@
 //   Peter Hughes
 // </copyright>
 // <summary>
-// The hash table purely for pawn king position. Used to optimised evalulation of score for pawn and kind positions.
+// The hash table purely for pawn position. Used to optimised evalulation of score for pawn and kind positions.
+// Position values are cachable if they are affected *exclusively* to pawn position.
 // http://chessprogramming.wikispaces.com/Pawn+Hash+Table
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
@@ -27,10 +28,11 @@
 namespace SharpChess.Model.AI
 {
     /// <summary>
-    /// The hash table purely for pawn king position. Used to optimised evalulation of score for pawn and kind positions.
+    /// The hash table purely for pawn position. Used to optimised evalulation of score for pawn positions.
+    /// Position values are cachable if they are affected *exclusively* to pawn position.
     /// http://chessprogramming.wikispaces.com/Pawn+Hash+Table
     /// </summary>
-    public static class HashTablePawnKing
+    public static class HashTablePawn
     {
         #region Constants and Fields
 
@@ -173,7 +175,7 @@ namespace SharpChess.Model.AI
         }
 
         /// <summary>
-        /// Record the pawn and kind specific positional score in the pawn king hash table.
+        /// Record the pawn and kind specific positional score in the pawn hash table.
         /// </summary>
         /// <param name="hashCodeA">
         /// Hash Code for Board position A
@@ -182,7 +184,7 @@ namespace SharpChess.Model.AI
         /// Hash Code for Board position B
         /// </param>
         /// <param name="val">
-        /// Pawn king specific score.
+        /// Pawn specific score.
         /// </param>
         /// <param name="colour">
         /// Player colour.
@@ -234,17 +236,17 @@ namespace SharpChess.Model.AI
             #region Constants and Fields
 
             /// <summary>
-            ///   Pawn king Position Hash code A.
+            ///   Pawn Position Hash code A.
             /// </summary>
             public ulong HashCodeA;
 
             /// <summary>
-            ///   Pawn king Position Hash code A.
+            ///   Pawn Position Hash code A.
             /// </summary>
             public ulong HashCodeB;
 
             /// <summary>
-            ///   Pawn King positional score.
+            ///   Pawn positional score.
             /// </summary>
             public int Points;
 

@@ -4,7 +4,7 @@ SharpChess also uses the Chess Engine Communication Protocol, and can therefore 
 
 SharpChess has been wholly developed using, C# (C Sharp), and runs on Microsoft Windows and Mono.
 
-Find out more abnout SharpChess at http://SharpChess.com
+Find out more about SharpChess at http://SharpChess.com
 
 An excellent resource for chess programming can be found at http://chessprogramming.wikispaces.com
 
