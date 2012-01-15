@@ -36,7 +36,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("SharpChess")]
 [assembly: AssemblyDescription("C# Chess Game")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("SharpChess.com")]
 [assembly: AssemblyProduct("SharpChess")]
 [assembly: AssemblyCopyright("Peter Hughes")]
 [assembly: AssemblyTrademark("")]

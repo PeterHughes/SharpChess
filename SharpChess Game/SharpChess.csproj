@@ -51,7 +51,7 @@
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DocumentationFile>
     </DocumentationFile>
     <DebugSymbols>true</DebugSymbols>
@@ -71,7 +71,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <BaseAddress>285212672</BaseAddress>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <ConfigurationOverrideFile>
@@ -92,7 +92,7 @@
     <WarningLevel>4</WarningLevel>
     <DebugType>none</DebugType>
     <ErrorReport>prompt</ErrorReport>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>false</SignManifests>
@@ -121,19 +121,6 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Model\AI\Brain.cs" />
-    <Compile Include="Model\Board.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Model\BoardDebug.cs" />
-    <Compile Include="Model\AI\Search.cs" />
-    <Compile Include="Model\AI\ForceImmediateMoveException.cs" />
-    <Compile Include="Model\PieceHashCodes.cs" />
-    <Compile Include="Model\PlayerClock.cs" />
-    <Compile Include="Model\FEN.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Model\PlayerDebug.cs" />
     <Compile Include="Forms\frmAbout.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -151,84 +138,6 @@
     </Compile>
     <Compile Include="Forms\frmWinBoard.cs">
       <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Model\Game.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Model\AI\HashTable.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Model\AI\HashTableCheck.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Model\AI\HashTablePawnKing.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Model\AI\HistoryHeuristic.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Model\IPieceTop.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Model\AI\KillerMoves.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Model\Move.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Model\Moves.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Model\AI\OpeningBook.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Model\AI\OpeningBookSimple.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Model\PGNtoXML.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Model\Piece.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Model\PieceBishop.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Model\PieceKing.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Model\PieceKnight.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Model\PiecePawn.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Model\PieceQueen.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Model\PieceRook.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Model\Pieces.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Model\Player.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Model\PlayerBlack.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Model\PlayerWhite.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Model\Square.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Model\Squares.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Model\WinBoard.cs">
-      <SubType>Code</SubType>
     </Compile>
     <EmbeddedResource Include="Forms\frmAbout.resx">
       <DependentUpon>frmAbout.cs</DependentUpon>
@@ -301,6 +210,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SharpChess.Model\SharpChess.Model.csproj">
+      <Project>{EE301A37-33A9-4B7A-BE08-D001057610CD}</Project>
+      <Name>SharpChess.Model</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
