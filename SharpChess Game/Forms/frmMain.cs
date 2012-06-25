@@ -2943,7 +2943,7 @@ namespace SharpChess
 
             this.CreateBoard();
 
-            Game.BackupGamePath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\BackupGame.sharpchess";
+            Game.BackupGamePath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "BackupGame.sharpchess");
 
             this.Text = Application.ProductName + " - " + Game.FileName;
             this.AssignMenuChecks();
