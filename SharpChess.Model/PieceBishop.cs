@@ -47,6 +47,11 @@ namespace SharpChess.Model
             10, 10, 10, 10, 10, 10, 10, 10,    0, 0, 0, 0, 0, 0, 0, 0
         };
 
+        /// <summary>
+        /// Directional vectors of where the piece can go
+        /// </summary>
+        private static int[] moveVectors = { 17, -17, 15, -15 };
+
         #endregion
 
         #region Constructors and Destructors
@@ -192,10 +197,10 @@ namespace SharpChess.Model
         /// </param>
         public void GenerateLazyMoves(Moves moves, Moves.MoveListNames movesType)
         {
-            Board.AppendPiecePath(moves, this.Base, this.Base.Player, 17, movesType);
-            Board.AppendPiecePath(moves, this.Base, this.Base.Player, 15, movesType);
-            Board.AppendPiecePath(moves, this.Base, this.Base.Player, -15, movesType);
-            Board.AppendPiecePath(moves, this.Base, this.Base.Player, -17, movesType);
+            for (int i = 0; i < moveVectors.Length; i++)
+            {
+                Board.AppendPiecePath(moves, this.Base, this.Base.Player, moveVectors[i], movesType);
+            }
         }
 
         #endregion

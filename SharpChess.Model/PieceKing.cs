@@ -47,6 +47,11 @@ namespace SharpChess.Model
             1, 1,  1,  1,  1,  1, 1, 1,   0, 0, 0, 0, 0, 0, 0, 0
         };
 
+        /// <summary>
+        /// Directional vectors of where the piece can go
+        /// </summary>
+        private static int[] moveVectors = { 1, 15, 16, 17, -1, -15, -16, -17 };
+
         #endregion
 
         #region Constructors and Destructors
@@ -425,53 +430,14 @@ namespace SharpChess.Model
             switch (movesType)
             {
                 case Moves.MoveListNames.All:
-                    square = Board.GetSquare(this.Base.Square.Ordinal - 1);
-                    if (square != null && (square.Piece == null || (square.Piece.Player.Colour != this.Base.Player.Colour && square.Piece.IsCapturable)))
+                    for (int i = 0; i < moveVectors.Length; i++)
                     {
-                        moves.Add(0, 0, Move.MoveNames.Standard, this.Base, this.Base.Square, square, square.Piece, 0, 0);
-                    }
-
-                    square = Board.GetSquare(this.Base.Square.Ordinal + 15);
-                    if (square != null && (square.Piece == null || (square.Piece.Player.Colour != this.Base.Player.Colour && square.Piece.IsCapturable)))
-                    {
-                        moves.Add(0, 0, Move.MoveNames.Standard, this.Base, this.Base.Square, square, square.Piece, 0, 0);
-                    }
-
-                    square = Board.GetSquare(this.Base.Square.Ordinal + 16);
-                    if (square != null && (square.Piece == null || (square.Piece.Player.Colour != this.Base.Player.Colour && square.Piece.IsCapturable)))
-                    {
-                        moves.Add(0, 0, Move.MoveNames.Standard, this.Base, this.Base.Square, square, square.Piece, 0, 0);
-                    }
-
-                    square = Board.GetSquare(this.Base.Square.Ordinal + 17);
-                    if (square != null && (square.Piece == null || (square.Piece.Player.Colour != this.Base.Player.Colour && square.Piece.IsCapturable)))
-                    {
-                        moves.Add(0, 0, Move.MoveNames.Standard, this.Base, this.Base.Square, square, square.Piece, 0, 0);
-                    }
-
-                    square = Board.GetSquare(this.Base.Square.Ordinal + 1);
-                    if (square != null && (square.Piece == null || (square.Piece.Player.Colour != this.Base.Player.Colour && square.Piece.IsCapturable)))
-                    {
-                        moves.Add(0, 0, Move.MoveNames.Standard, this.Base, this.Base.Square, square, square.Piece, 0, 0);
-                    }
-
-                    square = Board.GetSquare(this.Base.Square.Ordinal - 15);
-                    if (square != null && (square.Piece == null || (square.Piece.Player.Colour != this.Base.Player.Colour && square.Piece.IsCapturable)))
-                    {
-                        moves.Add(0, 0, Move.MoveNames.Standard, this.Base, this.Base.Square, square, square.Piece, 0, 0);
-                    }
-
-                    square = Board.GetSquare(this.Base.Square.Ordinal - 16);
-                    if (square != null && (square.Piece == null || (square.Piece.Player.Colour != this.Base.Player.Colour && square.Piece.IsCapturable)))
-                    {
-                        moves.Add(0, 0, Move.MoveNames.Standard, this.Base, this.Base.Square, square, square.Piece, 0, 0);
-                    }
-
-                    square = Board.GetSquare(this.Base.Square.Ordinal - 17);
-                    if (square != null && (square.Piece == null || (square.Piece.Player.Colour != this.Base.Player.Colour && square.Piece.IsCapturable)))
-                    {
-                        moves.Add(0, 0, Move.MoveNames.Standard, this.Base, this.Base.Square, square, square.Piece, 0, 0);
-                    }
+                        square = Board.GetSquare(this.Base.Square.Ordinal + moveVectors[i]);
+                        if (square != null && (square.Piece == null || (square.Piece.Player.Colour != this.Base.Player.Colour && square.Piece.IsCapturable)))
+                        {
+                            moves.Add(0, 0, Move.MoveNames.Standard, this.Base, this.Base.Square, square, square.Piece, 0, 0);
+                        }
+                    } 
 
                     if (this.CanCastleKingSide)
                     {
@@ -486,55 +452,15 @@ namespace SharpChess.Model
                     break;
 
                 case Moves.MoveListNames.CapturesPromotions:
-                    square = Board.GetSquare(this.Base.Square.Ordinal - 1);
-                    if (square != null && (square.Piece != null && (square.Piece.Player.Colour != this.Base.Player.Colour && square.Piece.IsCapturable)))
+                    for (int i = 0; i < moveVectors.Length; i++)
                     {
-                        moves.Add(0, 0, Move.MoveNames.Standard, this.Base, this.Base.Square, square, square.Piece, 0, 0);
+                        square = Board.GetSquare(this.Base.Square.Ordinal + moveVectors[i]);
+                        if (square != null && (square.Piece != null && (square.Piece.Player.Colour != this.Base.Player.Colour && square.Piece.IsCapturable)))
+                        {
+                            moves.Add(0, 0, Move.MoveNames.Standard, this.Base, this.Base.Square, square, square.Piece, 0, 0);
+                        }
                     }
-
-                    square = Board.GetSquare(this.Base.Square.Ordinal + 15);
-                    if (square != null && (square.Piece != null && (square.Piece.Player.Colour != this.Base.Player.Colour && square.Piece.IsCapturable)))
-                    {
-                        moves.Add(0, 0, Move.MoveNames.Standard, this.Base, this.Base.Square, square, square.Piece, 0, 0);
-                    }
-
-                    square = Board.GetSquare(this.Base.Square.Ordinal + 16);
-                    if (square != null && (square.Piece != null && (square.Piece.Player.Colour != this.Base.Player.Colour && square.Piece.IsCapturable)))
-                    {
-                        moves.Add(0, 0, Move.MoveNames.Standard, this.Base, this.Base.Square, square, square.Piece, 0, 0);
-                    }
-
-                    square = Board.GetSquare(this.Base.Square.Ordinal + 17);
-                    if (square != null && (square.Piece != null && (square.Piece.Player.Colour != this.Base.Player.Colour && square.Piece.IsCapturable)))
-                    {
-                        moves.Add(0, 0, Move.MoveNames.Standard, this.Base, this.Base.Square, square, square.Piece, 0, 0);
-                    }
-
-                    square = Board.GetSquare(this.Base.Square.Ordinal + 1);
-                    if (square != null && (square.Piece != null && (square.Piece.Player.Colour != this.Base.Player.Colour && square.Piece.IsCapturable)))
-                    {
-                        moves.Add(0, 0, Move.MoveNames.Standard, this.Base, this.Base.Square, square, square.Piece, 0, 0);
-                    }
-
-                    square = Board.GetSquare(this.Base.Square.Ordinal - 15);
-                    if (square != null && (square.Piece != null && (square.Piece.Player.Colour != this.Base.Player.Colour && square.Piece.IsCapturable)))
-                    {
-                        moves.Add(0, 0, Move.MoveNames.Standard, this.Base, this.Base.Square, square, square.Piece, 0, 0);
-                    }
-
-                    square = Board.GetSquare(this.Base.Square.Ordinal - 16);
-                    if (square != null && (square.Piece != null && (square.Piece.Player.Colour != this.Base.Player.Colour && square.Piece.IsCapturable)))
-                    {
-                        moves.Add(0, 0, Move.MoveNames.Standard, this.Base, this.Base.Square, square, square.Piece, 0, 0);
-                    }
-
-                    square = Board.GetSquare(this.Base.Square.Ordinal - 17);
-                    if (square != null && (square.Piece != null && (square.Piece.Player.Colour != this.Base.Player.Colour && square.Piece.IsCapturable)))
-                    {
-                        moves.Add(0, 0, Move.MoveNames.Standard, this.Base, this.Base.Square, square, square.Piece, 0, 0);
-                    }
-
-                    break;
+                    break;                    
             }
         }
 

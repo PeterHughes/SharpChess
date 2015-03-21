@@ -23,6 +23,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System.Collections.Generic;
+
 namespace SharpChess.Model
 {
     /// <summary>
@@ -46,6 +48,11 @@ namespace SharpChess.Model
             1, 7,  7,  7,  7,  7, 7, 1,    0, 0, 0, 0, 0, 0, 0, 0,
             1, 1,  1,  1,  1,  1, 1, 1,    0, 0, 0, 0, 0, 0, 0, 0
         };
+
+        /// <summary>
+        /// Directional vectors of where the piece can go
+        /// </summary>
+        public static int[] moveVectors = { 33, 18, -14, -31, -33, -18, 14, 31 };
 
         #endregion
 
@@ -186,105 +193,25 @@ namespace SharpChess.Model
             switch (movesType)
             {
                 case Moves.MoveListNames.All:
-                    square = Board.GetSquare(this.Base.Square.Ordinal + 33);
-                    if (square != null && (square.Piece == null || (square.Piece.Player.Colour != this.Base.Player.Colour && square.Piece.IsCapturable)))
+                    for (int i = 0; i < moveVectors.Length; i++)
                     {
-                        moves.Add(0, 0, Move.MoveNames.Standard, this.Base, this.Base.Square, square, square.Piece, 0, 0);
+                        square = Board.GetSquare(this.Base.Square.Ordinal + moveVectors[i]);
+                        if (square != null && (square.Piece == null || (square.Piece.Player.Colour != this.Base.Player.Colour && square.Piece.IsCapturable)))
+                        {
+                            moves.Add(0, 0, Move.MoveNames.Standard, this.Base, this.Base.Square, square, square.Piece, 0, 0);
+                        }
                     }
-
-                    square = Board.GetSquare(this.Base.Square.Ordinal + 18);
-                    if (square != null && (square.Piece == null || (square.Piece.Player.Colour != this.Base.Player.Colour && square.Piece.IsCapturable)))
-                    {
-                        moves.Add(0, 0, Move.MoveNames.Standard, this.Base, this.Base.Square, square, square.Piece, 0, 0);
-                    }
-
-                    square = Board.GetSquare(this.Base.Square.Ordinal - 14);
-                    if (square != null && (square.Piece == null || (square.Piece.Player.Colour != this.Base.Player.Colour && square.Piece.IsCapturable)))
-                    {
-                        moves.Add(0, 0, Move.MoveNames.Standard, this.Base, this.Base.Square, square, square.Piece, 0, 0);
-                    }
-
-                    square = Board.GetSquare(this.Base.Square.Ordinal - 31);
-                    if (square != null && (square.Piece == null || (square.Piece.Player.Colour != this.Base.Player.Colour && square.Piece.IsCapturable)))
-                    {
-                        moves.Add(0, 0, Move.MoveNames.Standard, this.Base, this.Base.Square, square, square.Piece, 0, 0);
-                    }
-
-                    square = Board.GetSquare(this.Base.Square.Ordinal - 33);
-                    if (square != null && (square.Piece == null || (square.Piece.Player.Colour != this.Base.Player.Colour && square.Piece.IsCapturable)))
-                    {
-                        moves.Add(0, 0, Move.MoveNames.Standard, this.Base, this.Base.Square, square, square.Piece, 0, 0);
-                    }
-
-                    square = Board.GetSquare(this.Base.Square.Ordinal - 18);
-                    if (square != null && (square.Piece == null || (square.Piece.Player.Colour != this.Base.Player.Colour && square.Piece.IsCapturable)))
-                    {
-                        moves.Add(0, 0, Move.MoveNames.Standard, this.Base, this.Base.Square, square, square.Piece, 0, 0);
-                    }
-
-                    square = Board.GetSquare(this.Base.Square.Ordinal + 14);
-                    if (square != null && (square.Piece == null || (square.Piece.Player.Colour != this.Base.Player.Colour && square.Piece.IsCapturable)))
-                    {
-                        moves.Add(0, 0, Move.MoveNames.Standard, this.Base, this.Base.Square, square, square.Piece, 0, 0);
-                    }
-
-                    square = Board.GetSquare(this.Base.Square.Ordinal + 31);
-                    if (square != null && (square.Piece == null || (square.Piece.Player.Colour != this.Base.Player.Colour && square.Piece.IsCapturable)))
-                    {
-                        moves.Add(0, 0, Move.MoveNames.Standard, this.Base, this.Base.Square, square, square.Piece, 0, 0);
-                    }
-
                     break;
 
                 case Moves.MoveListNames.CapturesPromotions:
-                    square = Board.GetSquare(this.Base.Square.Ordinal + 33);
-                    if (square != null && (square.Piece != null && (square.Piece.Player.Colour != this.Base.Player.Colour && square.Piece.IsCapturable)))
+                    for (int i = 0; i < moveVectors.Length; i++)
                     {
-                        moves.Add(0, 0, Move.MoveNames.Standard, this.Base, this.Base.Square, square, square.Piece, 0, 0);
+                        square = Board.GetSquare(this.Base.Square.Ordinal + moveVectors[i]);
+                        if (square != null && (square.Piece != null && (square.Piece.Player.Colour != this.Base.Player.Colour && square.Piece.IsCapturable)))
+                        {
+                            moves.Add(0, 0, Move.MoveNames.Standard, this.Base, this.Base.Square, square, square.Piece, 0, 0);
+                        }
                     }
-
-                    square = Board.GetSquare(this.Base.Square.Ordinal + 18);
-                    if (square != null && (square.Piece != null && (square.Piece.Player.Colour != this.Base.Player.Colour && square.Piece.IsCapturable)))
-                    {
-                        moves.Add(0, 0, Move.MoveNames.Standard, this.Base, this.Base.Square, square, square.Piece, 0, 0);
-                    }
-
-                    square = Board.GetSquare(this.Base.Square.Ordinal - 14);
-                    if (square != null && (square.Piece != null && (square.Piece.Player.Colour != this.Base.Player.Colour && square.Piece.IsCapturable)))
-                    {
-                        moves.Add(0, 0, Move.MoveNames.Standard, this.Base, this.Base.Square, square, square.Piece, 0, 0);
-                    }
-
-                    square = Board.GetSquare(this.Base.Square.Ordinal - 31);
-                    if (square != null && (square.Piece != null && (square.Piece.Player.Colour != this.Base.Player.Colour && square.Piece.IsCapturable)))
-                    {
-                        moves.Add(0, 0, Move.MoveNames.Standard, this.Base, this.Base.Square, square, square.Piece, 0, 0);
-                    }
-
-                    square = Board.GetSquare(this.Base.Square.Ordinal - 33);
-                    if (square != null && (square.Piece != null && (square.Piece.Player.Colour != this.Base.Player.Colour && square.Piece.IsCapturable)))
-                    {
-                        moves.Add(0, 0, Move.MoveNames.Standard, this.Base, this.Base.Square, square, square.Piece, 0, 0);
-                    }
-
-                    square = Board.GetSquare(this.Base.Square.Ordinal - 18);
-                    if (square != null && (square.Piece != null && (square.Piece.Player.Colour != this.Base.Player.Colour && square.Piece.IsCapturable)))
-                    {
-                        moves.Add(0, 0, Move.MoveNames.Standard, this.Base, this.Base.Square, square, square.Piece, 0, 0);
-                    }
-
-                    square = Board.GetSquare(this.Base.Square.Ordinal + 14);
-                    if (square != null && (square.Piece != null && (square.Piece.Player.Colour != this.Base.Player.Colour && square.Piece.IsCapturable)))
-                    {
-                        moves.Add(0, 0, Move.MoveNames.Standard, this.Base, this.Base.Square, square, square.Piece, 0, 0);
-                    }
-
-                    square = Board.GetSquare(this.Base.Square.Ordinal + 31);
-                    if (square != null && (square.Piece != null && (square.Piece.Player.Colour != this.Base.Player.Colour && square.Piece.IsCapturable)))
-                    {
-                        moves.Add(0, 0, Move.MoveNames.Standard, this.Base, this.Base.Square, square, square.Piece, 0, 0);
-                    }
-
                     break;
             }
         }
