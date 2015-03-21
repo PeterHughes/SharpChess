@@ -541,46 +541,15 @@ namespace SharpChess.Model
             Square square = squareKing;
 
             int intOpenness = 0;
-            intOpenness += Board.OpenLinePenalty(this.Base.Player.Colour, square, 16);
-            if (intOpenness > 900)
-            {
-                goto exitpoint;
-            }
 
-            intOpenness += Board.OpenLinePenalty(this.Base.Player.Colour, square, 17);
-            if (intOpenness > 900)
+            for (int i = 0; i < moveVectors.Length; i++)
             {
-                goto exitpoint;
+                intOpenness += Board.OpenLinePenalty(this.Base.Player.Colour, square, moveVectors[i]);
+                if (intOpenness > 900)
+                    return intOpenness;
             }
-
-            intOpenness += Board.OpenLinePenalty(this.Base.Player.Colour, square, -15);
-            if (intOpenness > 900)
-            {
-                goto exitpoint;
-            }
-
-            intOpenness += Board.OpenLinePenalty(this.Base.Player.Colour, square, -16);
-            if (intOpenness > 900)
-            {
-                goto exitpoint;
-            }
-
-            intOpenness += Board.OpenLinePenalty(this.Base.Player.Colour, square, -17);
-            if (intOpenness > 900)
-            {
-                goto exitpoint;
-            }
-
-            intOpenness += Board.OpenLinePenalty(this.Base.Player.Colour, square, 15);
-            if (intOpenness > 900)
-            {
-                goto exitpoint;
-            }
-
-        exitpoint:
             return intOpenness;
         }
-
         #endregion
     }
 }

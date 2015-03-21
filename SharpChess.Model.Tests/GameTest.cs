@@ -121,7 +121,7 @@ namespace SharpChess.Model.Tests
             Game_Accessor.UseRandomOpeningMoves = false;
             Game_Accessor.PlayerToPlay.Brain.Think();
 
-            Assert.AreEqual(-141, Game.PlayerToPlay.Score);
+            Assert.AreEqual(-441, Game.PlayerToPlay.Score);
         }
         #endregion
 
