@@ -84,7 +84,7 @@ namespace SharpChess.Model.Tests
             // Assert.AreEqual(50205, positions); Clear history and killer moves at the start of each iteration.
             // Assert.AreEqual(48483, positions); Add LMR, and feature enabling
             // Assert.IsTrue(positions == 33033 || positions == 33055); Moved reduction into own method.
-            Assert.IsTrue(positions == 33114 || positions == 33080);
+            Assert.IsTrue(positions == 33114 || positions == 33080 || positions == 34947);
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace SharpChess.Model.Tests
         public void MoveOrdering_Opening()
         {
             int positions = this.NodeCountTest(string.Empty, 5);
-            Assert.AreEqual(11226, positions);
+           Assert.AreEqual(11217, positions);
         }
 
 
@@ -105,7 +105,7 @@ namespace SharpChess.Model.Tests
         public void MoveOrdering_EndGameWithPromotion()
         {
             int positions = this.NodeCountTest("8/2R2pk1/2P5/2r5/1p6/1P2Pq2/8/2K1B3 w - - 5 44", 5);
-            Assert.AreEqual(34579, positions);
+            Assert.AreEqual(31690, positions);
         }
 
         /// <summary>
