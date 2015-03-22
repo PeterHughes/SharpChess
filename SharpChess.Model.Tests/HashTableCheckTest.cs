@@ -103,6 +103,18 @@ namespace SharpChess.Model.Tests
             int w = HashTableCheck.Writes;
         }
 
+
+        /// <summary>
+        /// ECM Test
+        /// </summary>
+        [TestMethod]
+        public void TimerTest()
+        {
+            TimeSpan t = this.NodeCountTime("r4rk1/1b3Npp/p7/1p3Q2/3P4/1B2q3/P5PP/3n1R1K b", 5);
+            Assert.IsTrue(t.Ticks <= 53174165);
+            // Nodes: 11,298
+        }
+
         #endregion
 
         private int NodeCountTest(string fen, int depth)
@@ -115,5 +127,23 @@ namespace SharpChess.Model.Tests
             // TimeSpan elpased = Game_Accessor.PlayerToPlay.Brain.ThinkingTimeElpased;
             return Game_Accessor.PlayerToPlay.Brain.Search.PositionsSearchedThisTurn;
         }
+
+        private TimeSpan NodeCountTime(string fen, int depth)
+        {
+            Game_Accessor.NewInternal(fen);
+            Game_Accessor.MaximumSearchDepth = depth;
+            Game_Accessor.ClockFixedTimePerMove = new TimeSpan(0, 10, 0); // 10 minute max
+            Game_Accessor.UseRandomOpeningMoves = false;
+            System.Diagnostics.Stopwatch s = new System.Diagnostics.Stopwatch();
+            s.Start();
+            Game_Accessor.PlayerToPlay.Brain.Think();
+           s.Stop();
+           System.Diagnostics.Debug.WriteLine("elapsted = " + s.Elapsed);
+           return s.Elapsed;
+            // Console.Debug("asdafsd");            
+//            // TimeSpan elpased = Game_Accessor.PlayerToPlay.Brain.ThinkingTimeElpased;
+ //           return Game_Accessor.PlayerToPlay.Brain.Search.PositionsSearchedThisTurn;
+        }
+
     }
 }
