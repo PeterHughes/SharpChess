@@ -363,47 +363,23 @@ namespace SharpChess.Model
             }
 
             // Bishop & Queen
-            if ((piece = Board.LinesFirstPiece(player.Colour, Piece.PieceNames.Bishop, this, 15)) != null)
+            for (int i = 0; i < PieceBishop.moveVectors.Length; i++)
             {
-                moves.Add(0, 0, Move.MoveNames.Standard, piece, piece.Square, this, this.Piece, 0, 0);
-            }
+                if ((piece = Board.LinesFirstPiece(player.Colour, Piece.PieceNames.Bishop, this, PieceBishop.moveVectors[i])) != null)
+                {
+                    moves.Add(0, 0, Move.MoveNames.Standard, piece, piece.Square, this, this.Piece, 0, 0);
+                }
 
-            if ((piece = Board.LinesFirstPiece(player.Colour, Piece.PieceNames.Bishop, this, 17)) != null)
-            {
-                moves.Add(0, 0, Move.MoveNames.Standard, piece, piece.Square, this, this.Piece, 0, 0);
-            }
-
-            if ((piece = Board.LinesFirstPiece(player.Colour, Piece.PieceNames.Bishop, this, -15)) != null)
-            {
-                moves.Add(0, 0, Move.MoveNames.Standard, piece, piece.Square, this, this.Piece, 0, 0);
-            }
-
-            if ((piece = Board.LinesFirstPiece(player.Colour, Piece.PieceNames.Bishop, this, -17)) != null)
-            {
-                moves.Add(0, 0, Move.MoveNames.Standard, piece, piece.Square, this, this.Piece, 0, 0);
             }
 
             // Rook & Queen
-            if ((piece = Board.LinesFirstPiece(player.Colour, Piece.PieceNames.Rook, this, 1)) != null)
+            for (int i = 0; i < PieceRook.moveVectors.Length; i++)
             {
-                moves.Add(0, 0, Move.MoveNames.Standard, piece, piece.Square, this, this.Piece, 0, 0);
+                if ((piece = Board.LinesFirstPiece(player.Colour, Piece.PieceNames.Rook, this, PieceRook.moveVectors[i])) != null)
+                {
+                    moves.Add(0, 0, Move.MoveNames.Standard, piece, piece.Square, this, this.Piece, 0, 0);
+                }
             }
-
-            if ((piece = Board.LinesFirstPiece(player.Colour, Piece.PieceNames.Rook, this, -1)) != null)
-            {
-                moves.Add(0, 0, Move.MoveNames.Standard, piece, piece.Square, this, this.Piece, 0, 0);
-            }
-
-            if ((piece = Board.LinesFirstPiece(player.Colour, Piece.PieceNames.Rook, this, 16)) != null)
-            {
-                moves.Add(0, 0, Move.MoveNames.Standard, piece, piece.Square, this, this.Piece, 0, 0);
-            }
-
-            if ((piece = Board.LinesFirstPiece(player.Colour, Piece.PieceNames.Rook, this, -16)) != null)
-            {
-                moves.Add(0, 0, Move.MoveNames.Standard, piece, piece.Square, this, this.Piece, 0, 0);
-            }
-
 
             // King!
             for (int i = 0; i < PieceKing.moveVectors.Length; i++)
@@ -445,6 +421,16 @@ namespace SharpChess.Model
             }
 
             // Knight
+            for (int i = 0; i < PieceKnight.moveVectors.Length; i++)
+            {
+                piece = Board.GetPiece(this.Ordinal + PieceKnight.moveVectors[i]);
+                if (piece != null && piece.Name == Piece.PieceNames.Knight && piece.Player.Colour == player.Colour)
+                {
+                    pieces.Add(piece);
+                }
+            }
+/*
+
             piece = Board.GetPiece(this.Ordinal + 33);
             if (piece != null && piece.Name == Piece.PieceNames.Knight && piece.Player.Colour == player.Colour)
             {
@@ -491,7 +477,7 @@ namespace SharpChess.Model
             if (piece != null && piece.Name == Piece.PieceNames.Knight && piece.Player.Colour == player.Colour)
             {
                 pieces.Add(piece);
-            }
+            } */
 
             // Bishop & Queen
             if ((piece = Board.LinesFirstPiece(player.Colour, Piece.PieceNames.Bishop, this, 15)) != null)
