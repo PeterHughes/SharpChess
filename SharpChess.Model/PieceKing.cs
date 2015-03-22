@@ -50,7 +50,7 @@ namespace SharpChess.Model
         /// <summary>
         /// Directional vectors of where the piece can go
         /// </summary>
-        private static int[] moveVectors = { 1, 15, 16, 17, -1, -15, -16, -17 };
+        public static int[] moveVectors = { 1, 15, 16, 17, -1, -15, -16, -17 };
 
         #endregion
 

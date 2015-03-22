@@ -404,53 +404,16 @@ namespace SharpChess.Model
                 moves.Add(0, 0, Move.MoveNames.Standard, piece, piece.Square, this, this.Piece, 0, 0);
             }
 
+
             // King!
-            piece = Board.GetPiece(this.Ordinal + 16);
-            if (piece != null && piece.Name == Piece.PieceNames.King && piece.Player.Colour == player.Colour)
+            for (int i = 0; i < PieceKing.moveVectors.Length; i++)
             {
-                moves.Add(0, 0, Move.MoveNames.Standard, piece, piece.Square, this, this.Piece, 0, 0);
-            }
+                piece = Board.GetPiece(this.Ordinal + PieceKing.moveVectors[i]);
+                if (piece != null && piece.Name == Piece.PieceNames.King && piece.Player.Colour == player.Colour)
+                {
+                    moves.Add(0, 0, Move.MoveNames.Standard, piece, piece.Square, this, this.Piece, 0, 0);
+                }
 
-            piece = Board.GetPiece(this.Ordinal + 17);
-            if (piece != null && piece.Name == Piece.PieceNames.King && piece.Player.Colour == player.Colour)
-            {
-                moves.Add(0, 0, Move.MoveNames.Standard, piece, piece.Square, this, this.Piece, 0, 0);
-            }
-
-            piece = Board.GetPiece(this.Ordinal + 1);
-            if (piece != null && piece.Name == Piece.PieceNames.King && piece.Player.Colour == player.Colour)
-            {
-                moves.Add(0, 0, Move.MoveNames.Standard, piece, piece.Square, this, this.Piece, 0, 0);
-            }
-
-            piece = Board.GetPiece(this.Ordinal - 15);
-            if (piece != null && piece.Name == Piece.PieceNames.King && piece.Player.Colour == player.Colour)
-            {
-                moves.Add(0, 0, Move.MoveNames.Standard, piece, piece.Square, this, this.Piece, 0, 0);
-            }
-
-            piece = Board.GetPiece(this.Ordinal - 16);
-            if (piece != null && piece.Name == Piece.PieceNames.King && piece.Player.Colour == player.Colour)
-            {
-                moves.Add(0, 0, Move.MoveNames.Standard, piece, piece.Square, this, this.Piece, 0, 0);
-            }
-
-            piece = Board.GetPiece(this.Ordinal - 17);
-            if (piece != null && piece.Name == Piece.PieceNames.King && piece.Player.Colour == player.Colour)
-            {
-                moves.Add(0, 0, Move.MoveNames.Standard, piece, piece.Square, this, this.Piece, 0, 0);
-            }
-
-            piece = Board.GetPiece(this.Ordinal - 1);
-            if (piece != null && piece.Name == Piece.PieceNames.King && piece.Player.Colour == player.Colour)
-            {
-                moves.Add(0, 0, Move.MoveNames.Standard, piece, piece.Square, this, this.Piece, 0, 0);
-            }
-
-            piece = Board.GetPiece(this.Ordinal + 15);
-            if (piece != null && piece.Name == Piece.PieceNames.King && piece.Player.Colour == player.Colour)
-            {
-                moves.Add(0, 0, Move.MoveNames.Standard, piece, piece.Square, this, this.Piece, 0, 0);
             }
         }
 
