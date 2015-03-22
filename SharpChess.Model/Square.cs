@@ -429,55 +429,7 @@ namespace SharpChess.Model
                     pieces.Add(piece);
                 }
             }
-/*
 
-            piece = Board.GetPiece(this.Ordinal + 33);
-            if (piece != null && piece.Name == Piece.PieceNames.Knight && piece.Player.Colour == player.Colour)
-            {
-                pieces.Add(piece);
-            }
-
-            piece = Board.GetPiece(this.Ordinal + 18);
-            if (piece != null && piece.Name == Piece.PieceNames.Knight && piece.Player.Colour == player.Colour)
-            {
-                pieces.Add(piece);
-            }
-
-            piece = Board.GetPiece(this.Ordinal - 14);
-            if (piece != null && piece.Name == Piece.PieceNames.Knight && piece.Player.Colour == player.Colour)
-            {
-                pieces.Add(piece);
-            }
-
-            piece = Board.GetPiece(this.Ordinal - 31);
-            if (piece != null && piece.Name == Piece.PieceNames.Knight && piece.Player.Colour == player.Colour)
-            {
-                pieces.Add(piece);
-            }
-
-            piece = Board.GetPiece(this.Ordinal - 33);
-            if (piece != null && piece.Name == Piece.PieceNames.Knight && piece.Player.Colour == player.Colour)
-            {
-                pieces.Add(piece);
-            }
-
-            piece = Board.GetPiece(this.Ordinal - 18);
-            if (piece != null && piece.Name == Piece.PieceNames.Knight && piece.Player.Colour == player.Colour)
-            {
-                pieces.Add(piece);
-            }
-
-            piece = Board.GetPiece(this.Ordinal + 14);
-            if (piece != null && piece.Name == Piece.PieceNames.Knight && piece.Player.Colour == player.Colour)
-            {
-                pieces.Add(piece);
-            }
-
-            piece = Board.GetPiece(this.Ordinal + 31);
-            if (piece != null && piece.Name == Piece.PieceNames.Knight && piece.Player.Colour == player.Colour)
-            {
-                pieces.Add(piece);
-            } */
 
             // Bishop & Queen
             if ((piece = Board.LinesFirstPiece(player.Colour, Piece.PieceNames.Bishop, this, 15)) != null)
@@ -522,52 +474,13 @@ namespace SharpChess.Model
             }
 
             // King!
-            piece = Board.GetPiece(this.Ordinal + 16);
-            if (piece != null && piece.Name == Piece.PieceNames.King && piece.Player.Colour == player.Colour)
+            for (int i = 0; i < PieceKing.moveVectors.Length; i++)
             {
-                pieces.Add(piece);
-            }
-
-            piece = Board.GetPiece(this.Ordinal + 17);
-            if (piece != null && piece.Name == Piece.PieceNames.King && piece.Player.Colour == player.Colour)
-            {
-                pieces.Add(piece);
-            }
-
-            piece = Board.GetPiece(this.Ordinal + 1);
-            if (piece != null && piece.Name == Piece.PieceNames.King && piece.Player.Colour == player.Colour)
-            {
-                pieces.Add(piece);
-            }
-
-            piece = Board.GetPiece(this.Ordinal - 15);
-            if (piece != null && piece.Name == Piece.PieceNames.King && piece.Player.Colour == player.Colour)
-            {
-                pieces.Add(piece);
-            }
-
-            piece = Board.GetPiece(this.Ordinal - 16);
-            if (piece != null && piece.Name == Piece.PieceNames.King && piece.Player.Colour == player.Colour)
-            {
-                pieces.Add(piece);
-            }
-
-            piece = Board.GetPiece(this.Ordinal - 17);
-            if (piece != null && piece.Name == Piece.PieceNames.King && piece.Player.Colour == player.Colour)
-            {
-                pieces.Add(piece);
-            }
-
-            piece = Board.GetPiece(this.Ordinal - 1);
-            if (piece != null && piece.Name == Piece.PieceNames.King && piece.Player.Colour == player.Colour)
-            {
-                pieces.Add(piece);
-            }
-
-            piece = Board.GetPiece(this.Ordinal + 15);
-            if (piece != null && piece.Name == Piece.PieceNames.King && piece.Player.Colour == player.Colour)
-            {
-                pieces.Add(piece);
+                piece = Board.GetPiece(this.Ordinal + PieceKing.moveVectors[i]);
+                if (piece != null && piece.Name == Piece.PieceNames.King && piece.Player.Colour == player.Colour)
+                {
+                    pieces.Add(piece);
+                }
             }
 
             return pieces;
