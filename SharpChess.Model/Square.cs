@@ -353,52 +353,13 @@ namespace SharpChess.Model
             }
 
             // Knight
-            piece = Board.GetPiece(this.Ordinal + 33);
-            if (piece != null && piece.Name == Piece.PieceNames.Knight && piece.Player.Colour == player.Colour)
+            for (int i = 0; i < PieceKnight.moveVectors.Length; i++)
             {
-                moves.Add(0, 0, Move.MoveNames.Standard, piece, piece.Square, this, this.Piece, 0, 0);
-            }
-
-            piece = Board.GetPiece(this.Ordinal + 18);
-            if (piece != null && piece.Name == Piece.PieceNames.Knight && piece.Player.Colour == player.Colour)
-            {
-                moves.Add(0, 0, Move.MoveNames.Standard, piece, piece.Square, this, this.Piece, 0, 0);
-            }
-
-            piece = Board.GetPiece(this.Ordinal - 14);
-            if (piece != null && piece.Name == Piece.PieceNames.Knight && piece.Player.Colour == player.Colour)
-            {
-                moves.Add(0, 0, Move.MoveNames.Standard, piece, piece.Square, this, this.Piece, 0, 0);
-            }
-
-            piece = Board.GetPiece(this.Ordinal - 31);
-            if (piece != null && piece.Name == Piece.PieceNames.Knight && piece.Player.Colour == player.Colour)
-            {
-                moves.Add(0, 0, Move.MoveNames.Standard, piece, piece.Square, this, this.Piece, 0, 0);
-            }
-
-            piece = Board.GetPiece(this.Ordinal - 33);
-            if (piece != null && piece.Name == Piece.PieceNames.Knight && piece.Player.Colour == player.Colour)
-            {
-                moves.Add(0, 0, Move.MoveNames.Standard, piece, piece.Square, this, this.Piece, 0, 0);
-            }
-
-            piece = Board.GetPiece(this.Ordinal - 18);
-            if (piece != null && piece.Name == Piece.PieceNames.Knight && piece.Player.Colour == player.Colour)
-            {
-                moves.Add(0, 0, Move.MoveNames.Standard, piece, piece.Square, this, this.Piece, 0, 0);
-            }
-
-            piece = Board.GetPiece(this.Ordinal + 14);
-            if (piece != null && piece.Name == Piece.PieceNames.Knight && piece.Player.Colour == player.Colour)
-            {
-                moves.Add(0, 0, Move.MoveNames.Standard, piece, piece.Square, this, this.Piece, 0, 0);
-            }
-
-            piece = Board.GetPiece(this.Ordinal + 31);
-            if (piece != null && piece.Name == Piece.PieceNames.Knight && piece.Player.Colour == player.Colour)
-            {
-                moves.Add(0, 0, Move.MoveNames.Standard, piece, piece.Square, this, this.Piece, 0, 0);
+                piece = Board.GetPiece(this.Ordinal + PieceKnight.moveVectors[i]);
+                if (piece != null && piece.Name == Piece.PieceNames.Knight && piece.Player.Colour == player.Colour)
+                {
+                    moves.Add(0, 0, Move.MoveNames.Standard, piece, piece.Square, this, this.Piece, 0, 0);
+                }
             }
 
             // Bishop & Queen
