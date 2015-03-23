@@ -163,29 +163,7 @@ namespace SharpChess.Model
             this.Ordinal = ordinal;
             this.File = ordinal % Board.MatrixWidth;
             this.Rank = ordinal / Board.MatrixWidth;
-
-            if (this.File == 0 || this.File == 2 || this.File == 4 || this.File == 6)
-            {
-                if (this.Rank == 0 || this.Rank == 2 || this.Rank == 4 || this.Rank == 6)
-                {
-                    this.Colour = ColourNames.Black;
-                }
-                else
-                {
-                    this.Colour = ColourNames.White;
-                }
-            }
-            else
-            {
-                if (this.Rank == 0 || this.Rank == 2 || this.Rank == 4 || this.Rank == 6)
-                {
-                    this.Colour = ColourNames.White;
-                }
-                else
-                {
-                    this.Colour = ColourNames.Black;
-                }
-            }
+            this.Colour = (this.File % 2 == this.Rank % 2) ? ColourNames.Black : ColourNames.White;
         }
 
         #endregion
