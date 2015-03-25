@@ -554,6 +554,11 @@ namespace SharpChess.Model
 
         }
 
+        public bool CanAttackSquare(Square square)
+        {
+            return this.Top.CanAttackSquare(square);
+        }
+
         /// <summary>
         /// Indicates whether the piece would be attackable by a nearby enemy pawm, if the enemy pawn were to advance.
         /// </summary>

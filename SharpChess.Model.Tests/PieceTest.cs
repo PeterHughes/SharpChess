@@ -97,7 +97,7 @@ namespace SharpChess.Model.Tests
             Game_Accessor.NewInternal(fen);
             string[] good_squares = { "b3", "b5", "b5", "c2", "c6", "e2", "e6", "f3", "f5" };
 
-            PieceKnight knight = (PieceKnight)Game_Accessor.PlayerWhite.Pieces.Item(0).Top;
+            Piece knight = Game_Accessor.PlayerWhite.Pieces.Item(0);
             foreach (string s in good_squares)
             {
                 bool canAttack = knight.CanAttackSquare(Board_Accessor.GetSquare(s));
@@ -120,7 +120,7 @@ namespace SharpChess.Model.Tests
             Game_Accessor.NewInternal(fen);
             string[] good_squares = { "c3", "c4", "c5", "d3", "d5", "e3", "e4", "e5" };
 
-            PieceKing king = (PieceKing)Game_Accessor.PlayerWhite.Pieces.Item(0).Top;
+            Piece king = Game_Accessor.PlayerWhite.Pieces.Item(0);
             foreach (string s in good_squares)
             {
                 bool canAttack = king.CanAttackSquare(Board_Accessor.GetSquare(s));
@@ -144,7 +144,7 @@ namespace SharpChess.Model.Tests
             string[] good_squares = { "a1", "b2", "c3", "e5", "f6", "g7", "h8",
                                     "a7", "b6", "c5", "e3", "f2", "g1"};
 
-            PieceBishop bishop = (PieceBishop)Game_Accessor.PlayerWhite.Pieces.Item(0).Top;
+            Piece bishop = Game_Accessor.PlayerWhite.Pieces.Item(0);
             foreach (string s in good_squares)
             {
                 bool canAttack = bishop.CanAttackSquare(Board_Accessor.GetSquare(s));
@@ -167,7 +167,7 @@ namespace SharpChess.Model.Tests
             string[] good_squares = { "a4", "b4", "c4", "e4", "f4", "g4", "h4",
                                     "d1", "d2", "d3", "d5", "d6", "d7", "d8"};
 
-            PieceRook rook = (PieceRook)Game_Accessor.PlayerWhite.Pieces.Item(0).Top;
+            Piece rook = Game_Accessor.PlayerWhite.Pieces.Item(0);
             foreach (string s in good_squares)
             {
                 bool canAttack = rook.CanAttackSquare(Board_Accessor.GetSquare(s));
@@ -193,7 +193,7 @@ namespace SharpChess.Model.Tests
                                     "a7", "b6", "c5", "e3", "f2", "g1"
                                     };
 
-            PieceQueen queen = (PieceQueen)Game_Accessor.PlayerWhite.Pieces.Item(0).Top;
+            Piece queen = Game_Accessor.PlayerWhite.Pieces.Item(0);
             foreach (string s in good_squares)
             {
                 bool canAttack = queen.CanAttackSquare(Board_Accessor.GetSquare(s));
@@ -215,7 +215,7 @@ namespace SharpChess.Model.Tests
             Game_Accessor.NewInternal(fen);
             string[] good_squares = { "c5", "e5"};
 
-            PiecePawn pawn = (PiecePawn)Game_Accessor.PlayerWhite.Pieces.Item(0).Top;
+            Piece pawn = Game_Accessor.PlayerWhite.Pieces.Item(0);
             foreach (string s in good_squares)
             {
                 bool canAttack = pawn.CanAttackSquare(Board_Accessor.GetSquare(s));

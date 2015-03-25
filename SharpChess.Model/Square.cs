@@ -385,12 +385,13 @@ namespace SharpChess.Model
             Piece piece;
             Pieces pieces = new Pieces();
 
-            foreach (Piece.PieceNames pieceName in player.PieceTypes())
+            foreach (Piece p in player.Pieces)
             {
-//                if (Piece.CanPlayerPieceNameAttackSquare(this, player, pieceName))
- //                   return true;
+                if (p.CanAttackSquare(this))
+                    pieces.Add(p);
             }
 
+            return pieces;
 
             // Pawn
             piece = Board.GetPiece(this.Ordinal - player.PawnAttackLeftOffset);
