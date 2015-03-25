@@ -526,7 +526,14 @@ namespace SharpChess.Model
 
         #region Public Methods
 
-        public static bool CanAttackSquare(Square square, Player player, Piece.PieceNames PieceName)
+        /// <summary>
+        ///  can a given player's piece name attack a given square?
+        /// </summary>
+        /// <param name="square"></param>
+        /// <param name="player"></param>
+        /// <param name="PieceName"></param>
+        /// <returns></returns>
+        public static bool CanPlayerPieceNameAttackSquare(Square square, Player player, Piece.PieceNames PieceName)
         {
             switch (PieceName)
             {

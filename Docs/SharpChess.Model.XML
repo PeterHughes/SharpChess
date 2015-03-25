@@ -2890,6 +2890,15 @@
             Piece identifier.
             </param>
         </member>
+        <member name="M:SharpChess.Model.Piece.CanPlayerPieceNameAttackSquare(SharpChess.Model.Square,SharpChess.Model.Player,SharpChess.Model.Piece.PieceNames)">
+            <summary>
+             can a given player's piece name attack a given square?
+            </summary>
+            <param name="square"></param>
+            <param name="player"></param>
+            <param name="PieceName"></param>
+            <returns></returns>
+        </member>
         <member name="M:SharpChess.Model.Piece.CanBeDrivenAwayByPawn">
             <summary>
             Indicates whether the piece would be attackable by a nearby enemy pawm, if the enemy pawn were to advance.

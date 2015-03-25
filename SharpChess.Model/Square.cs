@@ -385,6 +385,13 @@ namespace SharpChess.Model
             Piece piece;
             Pieces pieces = new Pieces();
 
+            foreach (Piece.PieceNames pieceName in player.PieceTypes())
+            {
+//                if (Piece.CanPlayerPieceNameAttackSquare(this, player, pieceName))
+ //                   return true;
+            }
+
+
             // Pawn
             piece = Board.GetPiece(this.Ordinal - player.PawnAttackLeftOffset);
             if (piece != null && piece.Name == Piece.PieceNames.Pawn && piece.Player.Colour == player.Colour)
@@ -455,7 +462,7 @@ namespace SharpChess.Model
 
             foreach (Piece.PieceNames pieceName in player.PieceTypes())
             {
-                if (Piece.CanAttackSquare(this, player, pieceName))
+                if (Piece.CanPlayerPieceNameAttackSquare(this, player, pieceName))
                     return true;
             }
 
