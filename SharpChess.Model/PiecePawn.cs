@@ -545,6 +545,22 @@ namespace SharpChess.Model
             }
         }
 
+        public bool CanAttackSquare(Square target_square)
+        {
+            int intOrdinal = this.Base.Square.Ordinal;
+            Square square;
+
+            square = Board.GetSquare(this.Base.Square.Ordinal + this.Base.Player.PawnAttackLeftOffset);
+            if (target_square.Ordinal == square.Ordinal)
+                return true;
+            square = Board.GetSquare(this.Base.Square.Ordinal + this.Base.Player.PawnAttackRightOffset);
+            if (target_square.Ordinal == square.Ordinal)
+                return true;
+
+            return false;
+
+        }
+
         #endregion
 
         #region Methods

@@ -203,6 +203,31 @@ namespace SharpChess.Model
             }
         }
 
+        public bool CanAttackSquare(Square target_square)
+        {
+            int intOrdinal = this.Base.Square.Ordinal;
+            Square square;
+
+            for (int i = 0; i < moveVectors.Length; i++)
+            {
+                intOrdinal = this.Base.Square.Ordinal + moveVectors[i];
+                while ((square = Board.GetSquare(intOrdinal)) != null)
+                {
+                    if (square.Ordinal == target_square.Ordinal)
+                        return true;
+
+                    if (square.Piece == null)
+                    {
+                        intOrdinal += moveVectors[i];
+                        continue;
+                    }
+                    else
+                        break;
+                }
+            }
+            return false;
+        }
+
         #endregion
 
         #region Static methods
