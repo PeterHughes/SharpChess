@@ -185,5 +185,31 @@ namespace SharpChess.Model
         }
 
         #endregion
+
+        #region Public static methods
+
+        static private Piece.PieceNames _pieceType = Piece.PieceNames.Queen;
+
+        /// <summary>
+        ///  static method to determine if a square is attacked by this piece
+        /// </summary>
+        /// <param name="square"></param>
+        /// <param name="player"></param>
+        /// <returns></returns>
+        static public bool DoesPieceAttackSquare(Square square, Player player)
+        {
+            for (int i = 0; i < moveVectors.Length; i++)
+            {
+                if (Board.LinesFirstPiece(player.Colour, _pieceType, square, moveVectors[i]) != null)
+                {
+                    return true;
+                }
+            }
+            return false;
+
+        }
+
+        #endregion     
+    
     }
 }

@@ -218,19 +218,23 @@ namespace SharpChess.Model
         #endregion
 
         #region public static methods
+
+        static private Piece.PieceNames _pieceType = Piece.PieceNames.Knight;
+        
         /// <summary>
         ///  static method to determine if a square is attacked by this piece
         /// </summary>
         /// <param name="square"></param>
         /// <param name="player"></param>
         /// <returns></returns>
+        /// 
         static public bool DoesPieceAttackSquare(Square square, Player player)
         {
             Piece piece;
-            for (int i = 0; i < PieceKnight.moveVectors.Length; i++)
+            for (int i = 0; i < moveVectors.Length; i++)
             {
-                piece = Board.GetPiece(square.Ordinal + PieceKnight.moveVectors[i]);
-                if (piece != null && piece.Name == Piece.PieceNames.Knight && piece.Player.Colour == player.Colour)
+                piece = Board.GetPiece(square.Ordinal + moveVectors[i]);
+                if (piece != null && piece.Name == _pieceType && piece.Player.Colour == player.Colour)
                 {
                     return true;
                 }

@@ -132,7 +132,11 @@ namespace SharpChess_Performance_Tester
         private void Main_Load(object sender, EventArgs e)
         {
             // Change ths SharpChess exe path here, if you want it to be somewhere more convenient.
-            this.testRig = new TestRig(@"..\..\..\SharpChess Game\bin\Release\SharpChess2.exe");
+//            this.testRig = new TestRig(@"..\..\..\SharpChess Game\bin\Release\SharpChess2.exe");
+
+            this.testRig = new TestRig(@"C:\Users\zass\Documents\Visual Studio 2013\Projects\SharpChess\SharpChess Game\bin\Release\SharpChess2.exe");
+            
+//C:\Users\zass\Documents\Visual Studio 2013\Projects\SharpChess\SharpChess Game\bin\Release            
             this.testRig.RaiseMessageEvent += this.HandleTestRigMessageEvent;
             this.testRig.ReportStartupMessages();
         }

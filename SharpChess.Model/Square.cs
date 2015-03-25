@@ -286,12 +286,6 @@ namespace SharpChess.Model
 
         #region Public Methods
 
-        /*
-         * jbb need to make a funciton  by
-         * we loop over each piece type the player has. if pieceattacks square
-         * 
-         * */
-
         /// <summary>
         /// Appends a list of moves of all the pieces that are attacking this square.
         /// </summary>
@@ -458,74 +452,14 @@ namespace SharpChess.Model
         /// </returns>
         public bool PlayerCanAttackSquare(Player player)
         {
-            Piece piece;
 
-            // Pawn
-            piece = Board.GetPiece(this.Ordinal - player.PawnAttackLeftOffset);
-            if (piece != null && piece.Name == Piece.PieceNames.Pawn && piece.Player.Colour == player.Colour)
+            foreach (Piece.PieceNames pieceName in player.PieceTypes())
             {
-                return true;
+                if (Piece.CanAttackSquare(this, player, pieceName))
+                    return true;
             }
 
-            piece = Board.GetPiece(this.Ordinal - player.PawnAttackRightOffset);
-            if (piece != null && piece.Name == Piece.PieceNames.Pawn && piece.Player.Colour == player.Colour)
-            {
-                return true;
-            }
-
-            // Knight
-            if (PieceKnight.DoesPieceAttackSquare(this, player))
-                return true;
-
-/*            for (int i = 0; i < PieceKnight.moveVectors.Length; i++)
-            {
-                piece = Board.GetPiece(this.Ordinal + PieceKnight.moveVectors[i]);
-                if (piece != null && piece.Name == Piece.PieceNames.Knight && piece.Player.Colour == player.Colour)
-                {
-                    return true;
-                }
-
-            }
-            */
-
-            // Bishop & Queen
-            if (PieceBishop.DoesPieceAttackSquare(this, player))
-                return true;
-            /*
-            for (int i = 0; i < PieceBishop.moveVectors.Length; i++)
-            {
-                if (Board.LinesFirstPiece(player.Colour, Piece.PieceNames.Bishop, this, PieceBishop.moveVectors[i]) != null)
-                {
-                    return true;
-                }
-
-            }*/
-
-
-            // Rook & Queen
-            for (int i = 0; i < PieceRook.moveVectors.Length; i++)
-            {
-                if (Board.LinesFirstPiece(player.Colour, Piece.PieceNames.Rook, this, PieceRook.moveVectors[i]) != null)
-                {
-                    return true;
-                }
-            }
-
-
-            // King!
-            if (PieceKing.DoesPieceAttackSquare(this, player))
-                return true;
-
-            /* for (int i = 0; i < PieceKing.moveVectors.Length; i++)
-            {
-                piece = Board.GetPiece(this.Ordinal + PieceKing.moveVectors[i]);
-                if (piece != null && piece.Name == Piece.PieceNames.King && piece.Player.Colour == player.Colour)
-                {
-                    return true;
-                }
-            }*/
-
-            return false; 
+            return false;
         }
 
         /// <summary>

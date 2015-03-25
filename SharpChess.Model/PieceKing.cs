@@ -467,6 +467,9 @@ namespace SharpChess.Model
         #endregion
 
         #region public static methods
+
+        static private Piece.PieceNames _pieceType = Piece.PieceNames.King;
+
         /// <summary>
         ///  static method to determine if a square is attacked by this piece
         /// </summary>
@@ -479,7 +482,7 @@ namespace SharpChess.Model
             for (int i = 0; i < moveVectors.Length; i++)
             {
                 piece = Board.GetPiece(square.Ordinal + moveVectors[i]);
-                if (piece != null && piece.Name == Piece.PieceNames.King && piece.Player.Colour == player.Colour)
+                if (piece != null && piece.Name == _pieceType && piece.Player.Colour == player.Colour)
                 {
                     return true;
                 }

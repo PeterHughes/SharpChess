@@ -526,6 +526,27 @@ namespace SharpChess.Model
 
         #region Public Methods
 
+        public static bool CanAttackSquare(Square square, Player player, Piece.PieceNames PieceName)
+        {
+            switch (PieceName)
+            {
+                case PieceNames.Bishop:
+                    return PieceBishop.DoesPieceAttackSquare(square, player);
+                case PieceNames.King:
+                    return PieceKing.DoesPieceAttackSquare(square, player);
+                case PieceNames.Knight:
+                    return PieceKnight.DoesPieceAttackSquare(square, player);
+                case PieceNames.Pawn:
+                    return PiecePawn.DoesPieceAttackSquare(square, player);
+                case PieceNames.Queen:
+                    return PieceQueen.DoesPieceAttackSquare(square, player);
+                case PieceNames.Rook:
+                    return PieceRook.DoesPieceAttackSquare(square, player);
+            }
+            return false;
+
+        }
+
         /// <summary>
         /// Indicates whether the piece would be attackable by a nearby enemy pawm, if the enemy pawn were to advance.
         /// </summary>

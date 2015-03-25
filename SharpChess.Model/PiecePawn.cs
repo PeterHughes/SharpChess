@@ -584,5 +584,34 @@ namespace SharpChess.Model
         }
 
         #endregion
+
+        #region Static methods
+
+        static private Piece.PieceNames _pieceType = Piece.PieceNames.Pawn;
+
+        /// <summary>
+        ///  static method to determine if a square is attacked by this piece
+        /// </summary>
+        /// <param name="square"></param>
+        /// <param name="player"></param>
+        /// <returns></returns>
+        static public bool DoesPieceAttackSquare(Square square, Player player)
+        {
+            Piece piece;
+            piece = Board.GetPiece(square.Ordinal - player.PawnAttackLeftOffset);
+            if (piece != null && piece.Name == _pieceType && piece.Player.Colour == player.Colour)
+            {
+                return true;
+            }
+
+            piece = Board.GetPiece(square.Ordinal - player.PawnAttackRightOffset);
+            if (piece != null && piece.Name == _pieceType && piece.Player.Colour == player.Colour)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        #endregion     
     }
 }

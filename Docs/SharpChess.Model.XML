@@ -3569,6 +3569,7 @@
             <param name="square"></param>
             <param name="player"></param>
             <returns></returns>
+            
         </member>
         <member name="P:SharpChess.Model.PieceKnight.Abbreviation">
             <summary>
@@ -3652,6 +3653,14 @@
             Value of the cheapest forked piece.
             </returns>
         </member>
+        <member name="M:SharpChess.Model.PiecePawn.DoesPieceAttackSquare(SharpChess.Model.Square,SharpChess.Model.Player)">
+            <summary>
+             static method to determine if a square is attacked by this piece
+            </summary>
+            <param name="square"></param>
+            <param name="player"></param>
+            <returns></returns>
+        </member>
         <member name="P:SharpChess.Model.PiecePawn.Abbreviation">
             <summary>
               Gets Abbreviation.
@@ -3726,6 +3735,14 @@
             <param name="movesType">
             Types of moves to include. e.g. All, or captures-only.
             </param>
+        </member>
+        <member name="M:SharpChess.Model.PieceQueen.DoesPieceAttackSquare(SharpChess.Model.Square,SharpChess.Model.Player)">
+            <summary>
+             static method to determine if a square is attacked by this piece
+            </summary>
+            <param name="square"></param>
+            <param name="player"></param>
+            <returns></returns>
         </member>
         <member name="P:SharpChess.Model.PieceQueen.Abbreviation">
             <summary>

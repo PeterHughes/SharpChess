@@ -89,9 +89,6 @@ namespace SharpChess.Model
         /// </param>
         void GenerateLazyMoves(Moves moves, Moves.MoveListNames movesType);
 
-        // Is a given square attacked by this piece type? 
-//        bool DoesPieceAttackSquare(Square square);
-
         #endregion
     }
 }
