@@ -464,6 +464,18 @@ namespace SharpChess.Model
             }
         }
 
+        public bool CanAttackSquare(Square target_square)
+        {
+            Square square;
+            for (int i = 0; i < moveVectors.Length; i++)
+            {
+                square = Board.GetSquare(this.Base.Square.Ordinal + moveVectors[i]);
+                if (square.Ordinal == target_square.Ordinal)
+                    return true;
+            }
+            return false;
+        }
+
         #endregion
 
         #region Static methods

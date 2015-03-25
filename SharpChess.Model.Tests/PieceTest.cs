@@ -65,5 +65,53 @@ namespace SharpChess.Model.Tests
             Assert.IsTrue(s.PlayerCanAttackSquare(Game_Accessor.PlayerBlack));
 
         }
+
+        [TestMethod]
+        public void KnightAttackTest()
+        {
+            // just test that a knight in center of board can attack squares
+            string fen = "8/8/8/8/3N4/8/8/8 w - - 0 1";
+            Game_Accessor.NewInternal(fen);
+            string[] good_squares = { "b3", "b5", "b5", "c2", "c6", "e2", "e6", "f3", "f5" };
+
+            PieceKnight knight = (PieceKnight)Game_Accessor.PlayerWhite.Pieces.Item(0).Top;
+            foreach (string s in good_squares)
+            {
+                bool foo = knight.CanAttackSquare(Board_Accessor.GetSquare(s));
+                Assert.IsTrue(foo);
+            }
+
+            string[] bad_squares = { "a3", "b6", "b7", "c1", "c5", "e1", "e8", "f4", "h5" };
+            foreach (string s in bad_squares)
+            {
+                bool foo = knight.CanAttackSquare(Board_Accessor.GetSquare(s));
+                Assert.IsFalse(foo);
+            }
+
+        }
+
+        [TestMethod]
+        public void KingAttackTest()
+        {
+            // just test that a king in center of board can attack squares
+            string fen = "8/8/8/8/3K4/8/8/8 w - - 0 1";
+            Game_Accessor.NewInternal(fen);
+            string[] good_squares = { "c3", "c4", "c5", "d3", "d5", "e3", "e4", "e5" };
+
+            PieceKing king = (PieceKing)Game_Accessor.PlayerWhite.Pieces.Item(0).Top;
+            foreach (string s in good_squares)
+            {
+                bool foo = king.CanAttackSquare(Board_Accessor.GetSquare(s));
+                Assert.IsTrue(foo);
+            }
+
+            string[] bad_squares = { "b3", "b5", "a8", "c2", "c6", "d4", "e6", "f3", "f5" };
+            foreach (string s in bad_squares)
+            {
+                bool foo = king.CanAttackSquare(Board_Accessor.GetSquare(s));
+                Assert.IsFalse(foo);
+            }
+        }
+
     }
 }
