@@ -314,6 +314,7 @@ namespace SharpChess.Model
         }
 
         #endregion
+       
 
         #region Public Properties
 
