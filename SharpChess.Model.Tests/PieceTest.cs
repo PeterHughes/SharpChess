@@ -90,7 +90,7 @@ namespace SharpChess.Model.Tests
         }
 
         [TestMethod]
-        public void KnightAttackTest()
+        public void AttackByKnightTest()
         {
             // just test that a knight in center of board can attack squares
             string fen = "8/8/8/8/3N4/8/8/8 w - - 0 1";
@@ -114,9 +114,8 @@ namespace SharpChess.Model.Tests
         }
 
         [TestMethod]
-        public void KingAttackTest()
+        public void AttackByKingTest()
         {
-            // just test that a king in center of board can attack squares
             string fen = "8/8/8/8/3K4/8/8/8 w - - 0 1";
             Game_Accessor.NewInternal(fen);
             string[] good_squares = { "c3", "c4", "c5", "d3", "d5", "e3", "e4", "e5" };
@@ -138,9 +137,8 @@ namespace SharpChess.Model.Tests
 
 
         [TestMethod]
-        public void BishopAttackTest()
+        public void AttackByBishopTest()
         {
-            // just test that a king in center of board can attack squares
             string fen = "8/8/8/8/3B4/8/8/8 w - - 0 1";
             Game_Accessor.NewInternal(fen);
             string[] good_squares = { "a1", "b2", "c3", "e5", "f6", "g7", "h8",
@@ -162,9 +160,8 @@ namespace SharpChess.Model.Tests
         }
 
         [TestMethod]
-        public void RookAttackTest()
+        public void AttackbyRookTest()
         {
-            // just test that a king in center of board can attack squares
             string fen = "8/8/8/8/3R4/8/8/8 w - - 0 1";
             Game_Accessor.NewInternal(fen);
             string[] good_squares = { "a4", "b4", "c4", "e4", "f4", "g4", "h4",
@@ -186,9 +183,8 @@ namespace SharpChess.Model.Tests
         }
 
         [TestMethod]
-        public void QueenAttackTest()
+        public void AttackbyQueenTest()
         {
-            // just test that a king in center of board can attack squares
             string fen = "8/8/8/8/3Q4/8/8/8 w - - 0 1";
             Game_Accessor.NewInternal(fen);
             string[] good_squares = { "a4", "b4", "c4", "e4", "f4", "g4", "h4",
@@ -208,6 +204,28 @@ namespace SharpChess.Model.Tests
             foreach (string s in bad_squares)
             {
                 bool canAttack = queen.CanAttackSquare(Board_Accessor.GetSquare(s));
+                Assert.IsFalse(canAttack);
+            }
+        }
+
+        [TestMethod]
+        public void AttackbyPawnTest()
+        {
+            string fen = "8/8/8/8/3P4/8/8/8 w - - 0 1";
+            Game_Accessor.NewInternal(fen);
+            string[] good_squares = { "c5", "e5"};
+
+            PiecePawn pawn = (PiecePawn)Game_Accessor.PlayerWhite.Pieces.Item(0).Top;
+            foreach (string s in good_squares)
+            {
+                bool canAttack = pawn.CanAttackSquare(Board_Accessor.GetSquare(s));
+                Assert.IsTrue(canAttack);
+            }
+
+            string[] bad_squares = { "b3", "b5", "a8", "c2", "c6", "d4", "e6", "f3", "f5" };
+            foreach (string s in bad_squares)
+            {
+                bool canAttack = pawn.CanAttackSquare(Board_Accessor.GetSquare(s));
                 Assert.IsFalse(canAttack);
             }
         }
