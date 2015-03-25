@@ -186,7 +186,7 @@ namespace SharpChess.Model
 
         #endregion
 
-        #region Public static methods
+        #region Static methods
 
         static private Piece.PieceNames _pieceType = Piece.PieceNames.Queen;
 
