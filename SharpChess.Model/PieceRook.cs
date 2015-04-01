@@ -299,8 +299,22 @@ namespace SharpChess.Model
                 }
             }
             return false;
-
         }
+
+        static public bool DoesPieceAttackSquare(Square square, Player player, out Piece attackingPiece)
+        {
+            attackingPiece = null;
+            for (int i = 0; i < moveVectors.Length; i++)
+            {
+                if (Board.LinesFirstPiece(player.Colour, _pieceType, square, moveVectors[i]) != null)
+                {
+                    attackingPiece = Board.LinesFirstPiece(player.Colour, _pieceType, square, moveVectors[i]);
+                    return true;
+                }
+            }
+            return false;
+        }
+
 
         #endregion
     }

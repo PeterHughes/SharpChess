@@ -551,10 +551,10 @@ namespace SharpChess.Model
             Square square;
 
             square = Board.GetSquare(this.Base.Square.Ordinal + this.Base.Player.PawnAttackLeftOffset);
-            if (target_square.Ordinal == square.Ordinal)
+            if (square != null && target_square.Ordinal == square.Ordinal)
                 return true;
             square = Board.GetSquare(this.Base.Square.Ordinal + this.Base.Player.PawnAttackRightOffset);
-            if (target_square.Ordinal == square.Ordinal)
+            if (square != null && target_square.Ordinal == square.Ordinal)
                 return true;
 
             return false;
@@ -623,6 +623,26 @@ namespace SharpChess.Model
             piece = Board.GetPiece(square.Ordinal - player.PawnAttackRightOffset);
             if (piece != null && piece.Name == _pieceType && piece.Player.Colour == player.Colour)
             {
+                return true;
+            }
+            return false;
+        }
+
+        static public bool DoesPieceAttackSquare(Square square, Player player, out Piece attackingPiece)
+        {
+            attackingPiece = null;
+            Piece piece;
+            piece = Board.GetPiece(square.Ordinal - player.PawnAttackLeftOffset);
+            if (piece != null && piece.Name == _pieceType && piece.Player.Colour == player.Colour)
+            {
+                attackingPiece = piece;
+                return true;
+            }
+
+            piece = Board.GetPiece(square.Ordinal - player.PawnAttackRightOffset);
+            if (piece != null && piece.Name == _pieceType && piece.Player.Colour == player.Colour)
+            {
+                attackingPiece = piece;
                 return true;
             }
             return false;

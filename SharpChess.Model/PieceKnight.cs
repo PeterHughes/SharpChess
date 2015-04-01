@@ -222,7 +222,7 @@ namespace SharpChess.Model
             for (int i = 0; i < moveVectors.Length; i++)
             {
                 square = Board.GetSquare(this.Base.Square.Ordinal + moveVectors[i]);
-                if (square.Ordinal == target_square.Ordinal)
+                if (square != null && square.Ordinal == target_square.Ordinal)
                     return true;
             }
             return false;
@@ -241,6 +241,22 @@ namespace SharpChess.Model
         /// <param name="player"></param>
         /// <returns></returns>
         /// 
+        static public bool DoesPieceAttackSquare(Square square, Player player, out Piece attackingpiece)
+        {
+            Piece piece;
+            for (int i = 0; i < moveVectors.Length; i++)
+            {
+                piece = Board.GetPiece(square.Ordinal + moveVectors[i]);
+                if (piece != null && piece.Name == _pieceType && piece.Player.Colour == player.Colour)
+                {
+                    attackingpiece = piece;
+                    return true;
+                }
+            }
+            attackingpiece = null;
+            return false;
+        }
+
         static public bool DoesPieceAttackSquare(Square square, Player player)
         {
             Piece piece;
@@ -254,6 +270,7 @@ namespace SharpChess.Model
             }
             return false;
         }
+
 
         #endregion 
     }

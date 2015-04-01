@@ -551,7 +551,27 @@ namespace SharpChess.Model
                     return PieceRook.DoesPieceAttackSquare(square, player);
             }
             return false;
+        }
 
+        public static bool CanPlayerPieceNameAttackSquare(Square square, Player player, Piece.PieceNames PieceName, out Piece attackingPiece)
+        {
+            attackingPiece = null;
+            switch (PieceName)
+            {
+                case PieceNames.Bishop:
+                    return PieceBishop.DoesPieceAttackSquare(square, player,out attackingPiece);
+                case PieceNames.King:
+                    return PieceKing.DoesPieceAttackSquare(square, player, out attackingPiece);
+                case PieceNames.Knight:
+                    return PieceKnight.DoesPieceAttackSquare(square, player, out attackingPiece);
+                case PieceNames.Pawn:
+                    return PiecePawn.DoesPieceAttackSquare(square, player, out attackingPiece);
+                case PieceNames.Queen:
+                    return PieceQueen.DoesPieceAttackSquare(square, player, out attackingPiece);
+                case PieceNames.Rook:
+                    return PieceRook.DoesPieceAttackSquare(square, player, out attackingPiece);
+            }
+            return false;
         }
 
         public bool CanAttackSquare(Square square)

@@ -560,79 +560,11 @@ namespace SharpChess.Model
             Piece piece;
             Piece pieceBest = null;
 
-            // Pawn
-            piece = Board.GetPiece(this.Ordinal - player.PawnAttackLeftOffset);
-            if (piece != null && piece.Name == Piece.PieceNames.Pawn && piece.Player.Colour == player.Colour)
+            foreach (Piece.PieceNames pieceName in player.PieceTypes())
             {
-                return piece;
-            }
-
-            piece = Board.GetPiece(this.Ordinal - player.PawnAttackRightOffset);
-            if (piece != null && piece.Name == Piece.PieceNames.Pawn && piece.Player.Colour == player.Colour)
-            {
-                return piece;
-            }
-
-            // Knight
-            for (int i = 0; i < PieceKnight.moveVectors.Length; i++)
-            {
-                piece = Board.GetPiece(this.Ordinal + PieceKnight.moveVectors[i]);
-                if (piece != null && piece.Name == Piece.PieceNames.Knight && piece.Player.Colour == player.Colour)
-                {
+                if (Piece.CanPlayerPieceNameAttackSquare(this, player, pieceName, out piece))
                     return piece;
-                }
             }
-
-            // Bishop & Queen
-            for (int i = 0; i < PieceBishop.moveVectors.Length; i++)
-            {
-                piece = Board.LinesFirstPiece(player.Colour, Piece.PieceNames.Bishop, this, PieceBishop.moveVectors[i]);
-                if (piece != null)
-                {
-                    switch (piece.Name)
-                    {
-                        case Piece.PieceNames.Bishop:
-                            return piece;
-                        case Piece.PieceNames.Queen:
-                            pieceBest = piece;
-                            break;
-                    }
-                }
-            }
-
-            // Rook & Queen
-            for (int i = 0; i < PieceRook.moveVectors.Length; i++)
-            {
-                piece = Board.LinesFirstPiece(player.Colour, Piece.PieceNames.Rook, this, PieceRook.moveVectors[i]);
-                if (piece != null)
-                {
-                    switch (piece.Name)
-                    {
-                        case Piece.PieceNames.Rook:
-                            return piece;
-                        case Piece.PieceNames.Queen:
-                            pieceBest = piece;
-                            break;
-                    }
-                }
-            }
-
-            if (pieceBest != null)
-            {
-                return pieceBest; // This means a queen was found, but not a Bishop or Rook
-            }
-
-            // King!
-            for (int i = 0; i < PieceKing.moveVectors.Length; i++)
-            {
-                piece = Board.GetPiece(this.Ordinal + PieceKing.moveVectors[i]);
-                if (piece != null && piece.Name == Piece.PieceNames.King && piece.Player.Colour == player.Colour)
-                {
-                    return piece;
-                }
-            }
-
-
             return null;
         }
 

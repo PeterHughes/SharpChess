@@ -215,7 +215,7 @@ namespace SharpChess.Model.Tests
             Game_Accessor.NewInternal(fen);
             string[] good_squares = { "c5", "e5"};
 
-            Piece pawn = Game_Accessor.PlayerWhite.Pieces.Item(0);
+            Piece pawn = Game_Accessor.PlayerWhite.Pieces.Item(0);            
             foreach (string s in good_squares)
             {
                 bool canAttack = pawn.CanAttackSquare(Board_Accessor.GetSquare(s));
@@ -228,6 +228,26 @@ namespace SharpChess.Model.Tests
                 bool canAttack = pawn.CanAttackSquare(Board_Accessor.GetSquare(s));
                 Assert.IsFalse(canAttack);
             }
+        }
+
+        [TestMethod]
+        public void CheapestPieceDefendingThisSquareTest()
+        {
+            string fen = "1b1k3r/p1q3r1/npp1pp1n/2p5/8/3K4/8/8";
+            Game_Accessor.NewInternal(fen);
+            Square s = Board_Accessor.GetSquare("g4");
+            Piece p = s.CheapestPieceDefendingThisSquare(Game_Accessor.PlayerBlack);
+            Assert.IsTrue(p.Top.Name == Piece.PieceNames.Knight);
+
+            // time this
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            for (int i = 0; i < 1000000; i++)
+            {
+                p = s.CheapestPieceDefendingThisSquare(Game_Accessor.PlayerBlack);
+            }
+            stopwatch.Stop();
+            Debug.WriteLine("Time elapsed: {0}", stopwatch.Elapsed);
         }
 
     }
