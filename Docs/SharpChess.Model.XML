@@ -3571,7 +3571,7 @@
             Types of moves to include. e.g. All, or captures-only.
             </param>
         </member>
-        <member name="M:SharpChess.Model.PieceKnight.DoesPieceAttackSquare(SharpChess.Model.Square,SharpChess.Model.Player,SharpChess.Model.Piece@)">
+        <member name="M:SharpChess.Model.PieceKnight.DoesPieceAttackSquare(SharpChess.Model.Square,SharpChess.Model.Player)">
             <summary>
              static method to determine if a square is attacked by this piece
             </summary>

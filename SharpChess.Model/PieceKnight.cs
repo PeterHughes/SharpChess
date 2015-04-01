@@ -241,6 +241,16 @@ namespace SharpChess.Model
         /// <param name="player"></param>
         /// <returns></returns>
         /// 
+        static public bool DoesPieceAttackSquare(Square square, Player player)
+        {
+            return Piece.DoesLeaperPieceTypeAttackSquare(square, player, _pieceType, moveVectors);
+        }
+
+        static public bool DoesPieceAttackSquare(Square square, Player player, out Piece attackingPiece)
+        {
+            return Piece.DoesLeaperPieceTypeAttackSquare(square, player, _pieceType, moveVectors, out attackingPiece);
+        }
+/*
         static public bool DoesPieceAttackSquare(Square square, Player player, out Piece attackingpiece)
         {
             Piece piece;
@@ -269,7 +279,7 @@ namespace SharpChess.Model
                 }
             }
             return false;
-        }
+        }*/
 
 
         #endregion 

@@ -574,6 +574,38 @@ namespace SharpChess.Model
             return false;
         }
 
+        static public bool DoesLeaperPieceTypeAttackSquare(Square square, Player player, PieceNames pieceName, int[] vector)
+        {
+            Piece piece;
+            for (int i = 0; i < vector.Length; i++)
+            {
+                piece = Board.GetPiece(square.Ordinal + vector[i]);
+                if (piece != null && piece.Name == pieceName && piece.Player.Colour == player.Colour)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        static public bool DoesLeaperPieceTypeAttackSquare(Square square, Player player, PieceNames pieceName, int[] vector, out Piece attackingPiece)
+        {
+            Piece piece;
+            attackingPiece = null;
+            for (int i = 0; i < vector.Length; i++)
+            {
+                piece = Board.GetPiece(square.Ordinal + vector[i]);
+                if (piece != null && piece.Name == pieceName && piece.Player.Colour == player.Colour)
+                {
+                    attackingPiece = piece;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+
+
         public bool CanAttackSquare(Square square)
         {
             return this.Top.CanAttackSquare(square);

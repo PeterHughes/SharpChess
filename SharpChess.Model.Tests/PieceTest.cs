@@ -250,5 +250,23 @@ namespace SharpChess.Model.Tests
             Debug.WriteLine("Time elapsed: {0}", stopwatch.Elapsed);
         }
 
+        [TestMethod]
+        public void CanPieceTypeAttackSquareTest()
+        {
+            string fen = "1b1k3r/p1q3r1/npp1pp1n/2p5/8/3K4/8/8";
+            Game_Accessor.NewInternal(fen);
+            Square s = Board_Accessor.GetSquare("g4");
+            Assert.IsTrue(Piece.CanPlayerPieceNameAttackSquare(s,Game_Accessor.PlayerBlack,Piece.PieceNames.Rook));
+            Assert.IsTrue(Piece.CanPlayerPieceNameAttackSquare(s,Game_Accessor.PlayerBlack,Piece.PieceNames.Knight));
+            Assert.IsFalse(Piece.CanPlayerPieceNameAttackSquare(s,Game_Accessor.PlayerBlack,Piece.PieceNames.Queen));
+            Assert.IsFalse(Piece.CanPlayerPieceNameAttackSquare(s,Game_Accessor.PlayerBlack,Piece.PieceNames.Bishop));
+            Assert.IsFalse(Piece.CanPlayerPieceNameAttackSquare(s,Game_Accessor.PlayerBlack,Piece.PieceNames.Pawn));
+            Assert.IsFalse(Piece.CanPlayerPieceNameAttackSquare(s,Game_Accessor.PlayerBlack,Piece.PieceNames.King));
+
+
+            s = Board_Accessor.GetSquare("d4");
+            Assert.IsTrue(Piece.CanPlayerPieceNameAttackSquare(s, Game_Accessor.PlayerWhite, Piece.PieceNames.King));
+            Assert.IsTrue(Piece.CanPlayerPieceNameAttackSquare(s, Game_Accessor.PlayerBlack, Piece.PieceNames.Pawn));
+        }
     }
 }
