@@ -468,82 +468,12 @@ namespace SharpChess.Model
         {
 
             Piece piece;
-            int value = 0;
-            int bestValue = 0;
 
-            // Pawn
-            piece = Board.GetPiece(this.Ordinal - player.PawnAttackLeftOffset);
-            if (piece != null && piece.Name == Piece.PieceNames.Pawn && piece.Player.Colour == player.Colour)
+            foreach (Piece.PieceNames pieceName in player.PieceTypes())
             {
-                return piece.Value;
-            }
-
-            piece = Board.GetPiece(this.Ordinal - player.PawnAttackRightOffset);
-            if (piece != null && piece.Name == Piece.PieceNames.Pawn && piece.Player.Colour == player.Colour)
-            {
-                return piece.Value;
-            }
-
-            // Knight
-            for (int i = 0; i < PieceKnight.moveVectors.Length; i++)
-            {
-                piece = Board.GetPiece(this.Ordinal + PieceKnight.moveVectors[i]);
-                if (piece != null && piece.Name == Piece.PieceNames.Knight && piece.Player.Colour == player.Colour)
-                {
+                if (Piece.CanPlayerPieceNameAttackSquare(this, player, pieceName, out piece))
                     return piece.Value;
-                }
             }
-
-            // Bishop & Queen
-            for (int i = 0; i < PieceBishop.moveVectors.Length; i++)
-            {
-                piece = Board.LinesFirstPiece(player.Colour, Piece.PieceNames.Bishop, this, PieceBishop.moveVectors[i]);
-                value = piece != null ? piece.Value : 0;
-                if (value > 0 && value < 9000)
-                {
-                    return value;
-                }
-
-                if (value > 0)
-                {
-                    bestValue = value;
-                }
-            }
-
-            // Rook & Queen
-            for (int i = 0; i < PieceRook.moveVectors.Length; i++)
-            {
-                piece = Board.LinesFirstPiece(player.Colour, Piece.PieceNames.Rook, this, PieceRook.moveVectors[i]);
-                value = piece != null ? piece.Value : 0;
-                if (value > 0 && value < 9000)
-                {
-                    return value;
-                }
-
-                if (value > 0)
-                {
-                    bestValue = value;
-                }
-            }
-
-            if (bestValue > 0)
-            {
-                return bestValue; // This means a queen was found, but not a Bishop or Rook
-            }
-
-
-
-            // King!
-            for (int i = 0; i < PieceKing.moveVectors.Length; i++)
-            {
-                piece = Board.GetPiece(this.Ordinal + PieceKing.moveVectors[i]);
-                if (piece != null && piece.Name == Piece.PieceNames.King && piece.Player.Colour == player.Colour)
-                {
-                    return piece.Value;
-                }
-
-            }
-
             return 15000;
         }
 
