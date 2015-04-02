@@ -466,6 +466,7 @@ namespace SharpChess.Model
         /// </returns>
         public int DefencePointsForPlayer(Player player)
         {
+
             Piece piece;
             int value = 0;
             int bestValue = 0;
@@ -558,7 +559,6 @@ namespace SharpChess.Model
         public Piece CheapestPieceDefendingThisSquare(Player player)
         {
             Piece piece;
-            Piece pieceBest = null;
 
             foreach (Piece.PieceNames pieceName in player.PieceTypes())
             {
