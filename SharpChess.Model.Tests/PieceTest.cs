@@ -69,48 +69,22 @@ namespace SharpChess.Model.Tests
         [TestMethod]
         public void SquareAttackPerfTest()
         {
-            string fen = "k7/8/8/8/3N4/8/8/K7 w - - 0 1";
+            string fen = "3k4/8/8/8/8/3K4/8/8";
             Game_Accessor.NewInternal(fen);
             Square s;
-            // white king is in the corner, check that it can attack everything around it
 
-            // time this
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
-            for (int i = 0; i < 100000; i++)
+            for (int i = 0; i < 1000000; i++)
             {
 
-            s = Board_Accessor.GetSquare("b1");
-            Assert.IsTrue(s.PlayerCanAttackSquare(Game_Accessor.PlayerWhite));
-            s = Board_Accessor.GetSquare("a2");
-            Assert.IsTrue(s.PlayerCanAttackSquare(Game_Accessor.PlayerWhite));
-            s = Board_Accessor.GetSquare("b2");
-            Assert.IsTrue(s.PlayerCanAttackSquare(Game_Accessor.PlayerWhite));
-
-            // white can't attack far away squares
-            s = Board_Accessor.GetSquare("h8");
-            Assert.IsFalse(s.PlayerCanAttackSquare(Game_Accessor.PlayerWhite));
-            s = Board_Accessor.GetSquare("b8");
-            Assert.IsFalse(s.PlayerCanAttackSquare(Game_Accessor.PlayerWhite));
-
-            // white knights can attack b3
-            s = Board_Accessor.GetSquare("b3");
-            Assert.IsTrue(s.PlayerCanAttackSquare(Game_Accessor.PlayerWhite));
-
-            // black king can attack around it
-            s = Board_Accessor.GetSquare("a7");
-            Assert.IsTrue(s.PlayerCanAttackSquare(Game_Accessor.PlayerBlack));
-
-            s = Board_Accessor.GetSquare("b7");
-            Assert.IsTrue(s.PlayerCanAttackSquare(Game_Accessor.PlayerBlack));
-
-            s = Board_Accessor.GetSquare("b8");
-            Assert.IsTrue(s.PlayerCanAttackSquare(Game_Accessor.PlayerBlack));
+                s = Board_Accessor.GetSquare("c2");
+                s.PlayerCanAttackSquare(Game_Accessor.PlayerWhite);
             }
             stopwatch.Stop();
+            s = Board_Accessor.GetSquare("c2");
+            Assert.IsTrue(s.PlayerCanAttackSquare(Game_Accessor.PlayerWhite));
             Debug.WriteLine("Time elapsed: {0}", stopwatch.Elapsed);
-
-
         }
 
 
