@@ -297,77 +297,10 @@ namespace SharpChess.Model
         /// </param>
         public void AttackersMoveList(Moves moves, Player player)
         {
-            Piece piece;
-
-            // Pawn
-            piece = Board.GetPiece(this.Ordinal - player.PawnAttackLeftOffset);
-            if (piece != null && piece.Name == Piece.PieceNames.Pawn && piece.Player.Colour == player.Colour)
+            foreach (Piece p in player.Pieces)
             {
-                moves.Add(
-                    0, 
-                    0, 
-                    Move.MoveNames.Standard, 
-                    Board.GetPiece(this.Ordinal - player.PawnAttackLeftOffset), 
-                    Board.GetSquare(this.Ordinal - player.PawnAttackLeftOffset), 
-                    this, 
-                    this.Piece, 
-                    0, 
-                    0);
-            }
-
-            piece = Board.GetPiece(this.Ordinal - player.PawnAttackRightOffset);
-            if (piece != null && piece.Name == Piece.PieceNames.Pawn && piece.Player.Colour == player.Colour)
-            {
-                moves.Add(
-                    0, 
-                    0, 
-                    Move.MoveNames.Standard, 
-                    Board.GetPiece(this.Ordinal - player.PawnAttackRightOffset), 
-                    Board.GetSquare(this.Ordinal - player.PawnAttackRightOffset), 
-                    this, 
-                    this.Piece, 
-                    0, 
-                    0);
-            }
-
-            // Knight
-            for (int i = 0; i < PieceKnight.moveVectors.Length; i++)
-            {
-                piece = Board.GetPiece(this.Ordinal + PieceKnight.moveVectors[i]);
-                if (piece != null && piece.Name == Piece.PieceNames.Knight && piece.Player.Colour == player.Colour)
-                {
-                    moves.Add(0, 0, Move.MoveNames.Standard, piece, piece.Square, this, this.Piece, 0, 0);
-                }
-            }
-
-            // Bishop & Queen
-            for (int i = 0; i < PieceBishop.moveVectors.Length; i++)
-            {
-                if ((piece = Board.LinesFirstPiece(player.Colour, Piece.PieceNames.Bishop, this, PieceBishop.moveVectors[i])) != null)
-                {
-                    moves.Add(0, 0, Move.MoveNames.Standard, piece, piece.Square, this, this.Piece, 0, 0);
-                }
-
-            }
-
-            // Rook & Queen
-            for (int i = 0; i < PieceRook.moveVectors.Length; i++)
-            {
-                if ((piece = Board.LinesFirstPiece(player.Colour, Piece.PieceNames.Rook, this, PieceRook.moveVectors[i])) != null)
-                {
-                    moves.Add(0, 0, Move.MoveNames.Standard, piece, piece.Square, this, this.Piece, 0, 0);
-                }
-            }
-
-            // King!
-            for (int i = 0; i < PieceKing.moveVectors.Length; i++)
-            {
-                piece = Board.GetPiece(this.Ordinal + PieceKing.moveVectors[i]);
-                if (piece != null && piece.Name == Piece.PieceNames.King && piece.Player.Colour == player.Colour)
-                {
-                    moves.Add(0, 0, Move.MoveNames.Standard, piece, piece.Square, this, this.Piece, 0, 0);
-                }
-
+                if (p.CanAttackSquare(this))
+                    moves.Add(0, 0, Move.MoveNames.Standard, p, p.Square, this, this.Piece, 0, 0);
             }
         }
 
