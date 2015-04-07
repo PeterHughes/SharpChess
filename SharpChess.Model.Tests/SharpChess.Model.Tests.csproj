@@ -54,7 +54,6 @@
     <Compile Include="GameTest.cs" />
     <Compile Include="HashTableCheckTest.cs" />
     <Compile Include="MovesTest.cs" />
-    <Compile Include="PieceTest.cs" />
     <Compile Include="PlayerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

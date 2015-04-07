@@ -464,41 +464,7 @@ namespace SharpChess.Model
             }
         }
 
-        public bool CanAttackSquare(Square target_square)
-        {
-            Square square;
-            for (int i = 0; i < moveVectors.Length; i++)
-            {
-                square = Board.GetSquare(this.Base.Square.Ordinal + moveVectors[i]);
-                if (square != null && square.Ordinal == target_square.Ordinal)
-                    return true;
-            }
-            return false;
-        }
-
         #endregion
-
-        #region Static methods
-
-        static private Piece.PieceNames _pieceType = Piece.PieceNames.King;
-
-        /// <summary>
-        ///  static method to determine if a square is attacked by this piece
-        /// </summary>
-        /// <param name="square"></param>
-        /// <param name="player"></param>
-        /// <returns></returns>
-        static public bool DoesPieceAttackSquare(Square square, Player player)            
-        {
-            return Piece.DoesLeaperPieceTypeAttackSquare(square, player, _pieceType, moveVectors);
-        }
-
-        static public bool DoesPieceAttackSquare(Square square, Player player, out Piece attackingPiece)
-        {
-            return Piece.DoesLeaperPieceTypeAttackSquare(square, player, _pieceType, moveVectors, out attackingPiece);
-        }
-
-        #endregion 
 
         #region Methods
 

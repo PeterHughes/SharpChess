@@ -28,7 +28,6 @@ namespace SharpChess.Model
     #region Using
 
     using SharpChess.Model.AI;
-    using System.Collections.Generic;
 
     #endregion
 
@@ -48,7 +47,6 @@ namespace SharpChess.Model
             this.MaterialCount = 7;
             this.PawnCountInPlay = 8;
             this.Pieces = new Pieces();
-            this._PieceTypes = new List<Piece.PieceNames>();
             this.CapturedEnemyPieces = new Pieces();
             this.Brain = new Brain(this);
         }
@@ -116,10 +114,6 @@ namespace SharpChess.Model
         }
 
         #endregion
-
-
-        private List<Piece.PieceNames> _PieceTypes;
-
 
         #region Public Properties
 
@@ -330,20 +324,6 @@ namespace SharpChess.Model
         ///   Gets all the player's pieces in play.
         /// </summary>
         public Pieces Pieces { get; private set; }
-
-            
-        /// get a list of all piecetypes
-        public List<Piece.PieceNames> PieceTypes()
-        {
-            this._PieceTypes.Clear();
-
-            foreach (Piece piece in this.Pieces)
-            {
-                if (!this._PieceTypes.Contains(piece.Name))
-                    _PieceTypes.Add(piece.Name);
-            }
-            return this._PieceTypes;
-        }
 
         /// <summary>
         ///   Gets positional points for all the player's pieces in play, including matieral value.

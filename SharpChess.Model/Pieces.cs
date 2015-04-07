@@ -42,7 +42,6 @@ namespace SharpChess.Model
         /// Internal ArrayList of pieces.
         /// </summary>
         private readonly ArrayList pieces = new ArrayList();
-        private static PieceSort sorter = new PieceSort();
 
         #endregion
 
@@ -154,32 +153,9 @@ namespace SharpChess.Model
         /// </summary>
         public void SortByScore()
         {
-            this.pieces.Sort(sorter);
+            this.pieces.Sort();
         }
 
         #endregion
-    }
-
-    public class PieceSort : System.Collections.IComparer
-    {
-        public int Compare(System.Object a, System.Object b)
-        {
-            if (b == null)
-                return 1;
-            Piece x = (Piece)a;
-            Piece y = (Piece)b;
-            if (x.Value > y.Value)
-                return 1;
-            else if (x.Value < y.Value)
-                return -1;
-            else if (x.Value == y.Value)
-            {
-                if (y.Name == Piece.PieceNames.Knight) // bishops beat knights
-                    return 1;
-                else
-                    return -1;
-            }
-            return 1;
-        }
     }
 }
