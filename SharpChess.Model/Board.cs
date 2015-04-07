@@ -456,7 +456,7 @@ namespace SharpChess.Model
                 {
                     return null;
                 }
-                else if (square.Piece.Name == pieceName || square.Piece.Name == Piece.PieceNames.Queen)
+                else if (square.Piece.Name == pieceName)
                 {
                     return square.Piece;
                 }

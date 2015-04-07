@@ -545,6 +545,22 @@ namespace SharpChess.Model
             }
         }
 
+        public bool CanAttackSquare(Square target_square)
+        {
+            int intOrdinal = this.Base.Square.Ordinal;
+            Square square;
+
+            square = Board.GetSquare(this.Base.Square.Ordinal + this.Base.Player.PawnAttackLeftOffset);
+            if (square != null && target_square.Ordinal == square.Ordinal)
+                return true;
+            square = Board.GetSquare(this.Base.Square.Ordinal + this.Base.Player.PawnAttackRightOffset);
+            if (square != null && target_square.Ordinal == square.Ordinal)
+                return true;
+
+            return false;
+
+        }
+
         #endregion
 
         #region Methods
@@ -584,5 +600,54 @@ namespace SharpChess.Model
         }
 
         #endregion
+
+        #region Static methods
+
+        static private Piece.PieceNames _pieceType = Piece.PieceNames.Pawn;
+
+        /// <summary>
+        ///  static method to determine if a square is attacked by this piece
+        /// </summary>
+        /// <param name="square"></param>
+        /// <param name="player"></param>
+        /// <returns></returns>
+        static public bool DoesPieceAttackSquare(Square square, Player player)
+        {
+            Piece piece;
+            piece = Board.GetPiece(square.Ordinal - player.PawnAttackLeftOffset);
+            if (piece != null && piece.Name == _pieceType && piece.Player.Colour == player.Colour)
+            {
+                return true;
+            }
+
+            piece = Board.GetPiece(square.Ordinal - player.PawnAttackRightOffset);
+            if (piece != null && piece.Name == _pieceType && piece.Player.Colour == player.Colour)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        static public bool DoesPieceAttackSquare(Square square, Player player, out Piece attackingPiece)
+        {
+            attackingPiece = null;
+            Piece piece;
+            piece = Board.GetPiece(square.Ordinal - player.PawnAttackLeftOffset);
+            if (piece != null && piece.Name == _pieceType && piece.Player.Colour == player.Colour)
+            {
+                attackingPiece = piece;
+                return true;
+            }
+
+            piece = Board.GetPiece(square.Ordinal - player.PawnAttackRightOffset);
+            if (piece != null && piece.Name == _pieceType && piece.Player.Colour == player.Colour)
+            {
+                attackingPiece = piece;
+                return true;
+            }
+            return false;
+        }
+
+        #endregion     
     }
 }

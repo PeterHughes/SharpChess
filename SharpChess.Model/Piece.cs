@@ -314,6 +314,7 @@ namespace SharpChess.Model
         }
 
         #endregion
+       
 
         #region Public Properties
 
@@ -524,6 +525,91 @@ namespace SharpChess.Model
         #endregion
 
         #region Public Methods
+
+        /// <summary>
+        ///  can a given player's piece name attack a given square?
+        /// </summary>
+        /// <param name="square"></param>
+        /// <param name="player"></param>
+        /// <param name="PieceName"></param>
+        /// <returns></returns>
+        public static bool CanPlayerPieceNameAttackSquare(Square square, Player player, Piece.PieceNames PieceName)
+        {
+            switch (PieceName)
+            {
+                case PieceNames.Bishop:
+                    return PieceBishop.DoesPieceAttackSquare(square, player);
+                case PieceNames.King:
+                    return PieceKing.DoesPieceAttackSquare(square, player);
+                case PieceNames.Knight:
+                    return PieceKnight.DoesPieceAttackSquare(square, player);
+                case PieceNames.Pawn:
+                    return PiecePawn.DoesPieceAttackSquare(square, player);
+                case PieceNames.Queen:
+                    return PieceQueen.DoesPieceAttackSquare(square, player);
+                case PieceNames.Rook:
+                    return PieceRook.DoesPieceAttackSquare(square, player);
+            }
+            return false;
+        }
+
+        public static bool CanPlayerPieceNameAttackSquare(Square square, Player player, Piece.PieceNames PieceName, out Piece attackingPiece)
+        {
+            attackingPiece = null;
+            switch (PieceName)
+            {
+                case PieceNames.Bishop:
+                    return PieceBishop.DoesPieceAttackSquare(square, player,out attackingPiece);
+                case PieceNames.King:
+                    return PieceKing.DoesPieceAttackSquare(square, player, out attackingPiece);
+                case PieceNames.Knight:
+                    return PieceKnight.DoesPieceAttackSquare(square, player, out attackingPiece);
+                case PieceNames.Pawn:
+                    return PiecePawn.DoesPieceAttackSquare(square, player, out attackingPiece);
+                case PieceNames.Queen:
+                    return PieceQueen.DoesPieceAttackSquare(square, player, out attackingPiece);
+                case PieceNames.Rook:
+                    return PieceRook.DoesPieceAttackSquare(square, player, out attackingPiece);
+            }
+            return false;
+        }
+
+        static public bool DoesLeaperPieceTypeAttackSquare(Square square, Player player, PieceNames pieceName, int[] vector)
+        {
+            Piece piece;
+            for (int i = 0; i < vector.Length; i++)
+            {
+                piece = Board.GetPiece(square.Ordinal + vector[i]);
+                if (piece != null && piece.Name == pieceName && piece.Player.Colour == player.Colour)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        static public bool DoesLeaperPieceTypeAttackSquare(Square square, Player player, PieceNames pieceName, int[] vector, out Piece attackingPiece)
+        {
+            Piece piece;
+            attackingPiece = null;
+            for (int i = 0; i < vector.Length; i++)
+            {
+                piece = Board.GetPiece(square.Ordinal + vector[i]);
+                if (piece != null && piece.Name == pieceName && piece.Player.Colour == player.Colour)
+                {
+                    attackingPiece = piece;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+
+
+        public bool CanAttackSquare(Square square)
+        {
+            return this.Top.CanAttackSquare(square);
+        }
 
         /// <summary>
         /// Indicates whether the piece would be attackable by a nearby enemy pawm, if the enemy pawn were to advance.

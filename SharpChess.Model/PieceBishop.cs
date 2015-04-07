@@ -203,6 +203,72 @@ namespace SharpChess.Model
             }
         }
 
+        public bool CanAttackSquare(Square target_square)
+        {
+            int intOrdinal = this.Base.Square.Ordinal;
+            Square square;
+
+            for (int i = 0; i < moveVectors.Length; i++)
+            {
+                intOrdinal = this.Base.Square.Ordinal + moveVectors[i];
+                while ((square = Board.GetSquare(intOrdinal)) != null)
+                {
+                    if (square.Ordinal == target_square.Ordinal)
+                        return true;
+
+                    if (square.Piece == null)
+                    {
+                        intOrdinal += moveVectors[i];
+                        continue;
+                    }
+                    else
+                        break;
+                }
+            }
+            return false;
+        }
+
         #endregion
+
+        #region Static methods
+
+        static private Piece.PieceNames _pieceType = Piece.PieceNames.Bishop;
+        
+        /// <summary>
+        ///  static method to determine if a square is attacked by this piece
+        /// </summary>
+        /// <param name="square"></param>
+        /// <param name="player"></param>
+        /// <returns></returns>
+        static public bool DoesPieceAttackSquare(Square square, Player player)
+        {
+            for (int i = 0; i < moveVectors.Length; i++)
+            {
+                if (Board.LinesFirstPiece(player.Colour, _pieceType, square, moveVectors[i]) != null)
+                {
+                    return true;
+                }
+            }
+            return false;
+
+        }
+
+        static public bool DoesPieceAttackSquare(Square square, Player player, out Piece attackingPiece)
+        {
+            attackingPiece = null;
+            for (int i = 0; i < moveVectors.Length; i++)
+            {
+                if (Board.LinesFirstPiece(player.Colour, _pieceType, square, moveVectors[i]) != null)
+                {
+                    attackingPiece = Board.LinesFirstPiece(player.Colour, _pieceType, square, moveVectors[i]);
+                    return true;
+                }
+            }
+            return false;
+
+        }
+
+        #endregion 
+
     }
 }

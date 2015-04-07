@@ -2890,6 +2890,15 @@
             Piece identifier.
             </param>
         </member>
+        <member name="M:SharpChess.Model.Piece.CanPlayerPieceNameAttackSquare(SharpChess.Model.Square,SharpChess.Model.Player,SharpChess.Model.Piece.PieceNames)">
+            <summary>
+             can a given player's piece name attack a given square?
+            </summary>
+            <param name="square"></param>
+            <param name="player"></param>
+            <param name="PieceName"></param>
+            <returns></returns>
+        </member>
         <member name="M:SharpChess.Model.Piece.CanBeDrivenAwayByPawn">
             <summary>
             Indicates whether the piece would be attackable by a nearby enemy pawm, if the enemy pawn were to advance.
@@ -3346,6 +3355,14 @@
             Types of moves to include. e.g. All, or captures-only.
             </param>
         </member>
+        <member name="M:SharpChess.Model.PieceBishop.DoesPieceAttackSquare(SharpChess.Model.Square,SharpChess.Model.Player)">
+            <summary>
+             static method to determine if a square is attacked by this piece
+            </summary>
+            <param name="square"></param>
+            <param name="player"></param>
+            <returns></returns>
+        </member>
         <member name="P:SharpChess.Model.PieceBishop.Abbreviation">
             <summary>
             Gets Abbreviation.
@@ -3442,6 +3459,14 @@
             <param name="movesType">
             Types of moves to include. e.g. All, or captures-only.
             </param>
+        </member>
+        <member name="M:SharpChess.Model.PieceKing.DoesPieceAttackSquare(SharpChess.Model.Square,SharpChess.Model.Player)">
+            <summary>
+             static method to determine if a square is attacked by this piece
+            </summary>
+            <param name="square"></param>
+            <param name="player"></param>
+            <returns></returns>
         </member>
         <member name="M:SharpChess.Model.PieceKing.MoveSquares(SharpChess.Model.Squares@)">
             <summary>
@@ -3546,6 +3571,15 @@
             Types of moves to include. e.g. All, or captures-only.
             </param>
         </member>
+        <member name="M:SharpChess.Model.PieceKnight.DoesPieceAttackSquare(SharpChess.Model.Square,SharpChess.Model.Player)">
+            <summary>
+             static method to determine if a square is attacked by this piece
+            </summary>
+            <param name="square"></param>
+            <param name="player"></param>
+            <returns></returns>
+            
+        </member>
         <member name="P:SharpChess.Model.PieceKnight.Abbreviation">
             <summary>
             Gets Abbreviation.
@@ -3628,6 +3662,14 @@
             Value of the cheapest forked piece.
             </returns>
         </member>
+        <member name="M:SharpChess.Model.PiecePawn.DoesPieceAttackSquare(SharpChess.Model.Square,SharpChess.Model.Player)">
+            <summary>
+             static method to determine if a square is attacked by this piece
+            </summary>
+            <param name="square"></param>
+            <param name="player"></param>
+            <returns></returns>
+        </member>
         <member name="P:SharpChess.Model.PiecePawn.Abbreviation">
             <summary>
               Gets Abbreviation.
@@ -3703,6 +3745,14 @@
             Types of moves to include. e.g. All, or captures-only.
             </param>
         </member>
+        <member name="M:SharpChess.Model.PieceQueen.DoesPieceAttackSquare(SharpChess.Model.Square,SharpChess.Model.Player)">
+            <summary>
+             static method to determine if a square is attacked by this piece
+            </summary>
+            <param name="square"></param>
+            <param name="player"></param>
+            <returns></returns>
+        </member>
         <member name="P:SharpChess.Model.PieceQueen.Abbreviation">
             <summary>
             Gets Abbreviation.
@@ -3776,6 +3826,14 @@
             <param name="movesType">
             Types of moves to include. e.g. All, or captures-only.
             </param>
+        </member>
+        <member name="M:SharpChess.Model.PieceRook.DoesPieceAttackSquare(SharpChess.Model.Square,SharpChess.Model.Player)">
+            <summary>
+             static method to determine if a square is attacked by this piece
+            </summary>
+            <param name="square"></param>
+            <param name="player"></param>
+            <returns></returns>
         </member>
         <member name="P:SharpChess.Model.PieceRook.Abbreviation">
             <summary>
@@ -3911,6 +3969,9 @@
             <summary>
               Initializes a new instance of the <see cref="T:SharpChess.Model.Player"/> class.
             </summary>
+        </member>
+        <member name="M:SharpChess.Model.Player.PieceTypes">
+            get a list of all piecetypes
         </member>
         <member name="M:SharpChess.Model.Player.CanClaimMoveRepetitionDraw(System.Int32)">
             <summary>
@@ -4440,7 +4501,7 @@
             Determines whether the specified player can attack this square.
             </summary>
             <param name="player">
-            The player being tested.
+            The player being tested. (
             </param>
             <returns>
             True if player can move a piece to this square.
