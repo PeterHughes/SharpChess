@@ -110,6 +110,8 @@
               Gets the Search algorithm. http://chessprogramming.wikispaces.com/Search
             </summary>
         </member>
+//<Summary
+>
         <member name="P:SharpChess.Model.AI.Brain.ThinkingTimeAllotted">
             <summary>
               Gets ThinkingTimeAllotted.
