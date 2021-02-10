@@ -8,6 +8,8 @@ SharpChess has been wholly developed using, C# (C Sharp), and runs on Microsoft 
 
 Find out more about SharpChess at http://SharpChess.com
 
+Haha Another change!
+
 An excellent resource for chess programming can be found at http://chessprogramming.wikispaces.com
 
 ---------------------------------------------------------------
